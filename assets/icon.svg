@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">직무역량 로드맵 아이콘</title>
+  <desc id="desc">공학 직무역량 파일럿 앱을 나타내는 간단한 로드맵 아이콘</desc>
+  <rect width="512" height="512" rx="96" fill="#155e75"/>
+  <path d="M126 148h260v52H126z" fill="#f6f8f4"/>
+  <path d="M126 230h176v52H126z" fill="#f2c94c"/>
+  <path d="M126 312h260v52H126z" fill="#f6f8f4"/>
+  <circle cx="366" cy="256" r="44" fill="#a64b2a"/>
+  <path d="M352 256l12 12 28-32" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

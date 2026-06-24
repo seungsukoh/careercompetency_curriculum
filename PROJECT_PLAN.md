@@ -1,8 +1,8 @@
 # 대학생 직무역량 커리큘럼 서비스 기획 및 구현 계획
 
 작성일: 2026-06-24  
-대상 저장소: `github.com/seungcukoh/careercompetency_curriculum`  
-현재 상태: 로컬 작업 폴더는 비어 있으며, 원격 GitHub 저장소는 `Repository not found`로 접근 실패함
+대상 저장소: `github.com/seungsukoh/careercompetency_curriculum`  
+현재 상태: GitHub 원격 저장소와 연결 완료
 
 ## 1. 전문가 그룹 논의 요약
 
@@ -239,7 +239,7 @@ MVP에서는 복잡한 AI 추천보다 규칙 기반 추천으로 시작한다.
 
 | 영역 | 제안 |
 |---|---|
-| 프론트엔드 | Next.js, TypeScript, Tailwind CSS |
+| 프론트엔드 | 무료 파일럿은 의존성 없는 정적 PWA, 이후 Next.js/TypeScript 확장 |
 | 백엔드 | Next.js API Routes 또는 Supabase |
 | 데이터베이스 | PostgreSQL, 초기에는 Supabase 또는 SQLite/Prisma도 가능 |
 | 인증 | MVP에서는 선택 사항. 진행관리 저장이 필요하면 Supabase Auth 또는 Clerk |
@@ -271,6 +271,8 @@ MVP에서는 복잡한 AI 추천보다 규칙 기반 추천으로 시작한다.
 | 주의점 | Node.js 전용 패키지, 파일시스템 의존 API, 긴 서버 작업은 Cloudflare 런타임 제약을 확인해야 함 |
 
 구현 전략은 Cloudflare 친화적으로 단순하게 시작하는 것이다. MVP 단계에서는 데이터 seed를 JSON/CSV 또는 Supabase에 두고, 사용자 진행상황은 로컬 스토리지 또는 Supabase에 저장한다. 이렇게 하면 Cloudflare Pages에서 빠르게 공개하고, 나중에 관리자 기능이나 추천 API가 커질 때 Workers/Functions로 확장할 수 있다.
+
+무료 파일럿에서는 휴대폰 앱 검증을 위해 네이티브 앱보다 PWA를 우선한다. PWA는 Cloudflare Pages에서 무료로 배포할 수 있고, 학생은 모바일 브라우저에서 홈 화면에 추가해 앱처럼 사용할 수 있다. 네이티브 앱은 파일럿 지표로 반복 사용과 저장 니즈가 확인된 뒤 검토한다.
 
 ## 10. 8주 구현 로드맵
 

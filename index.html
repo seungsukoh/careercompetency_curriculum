@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#155e75">
+    <meta name="description" content="기계공학과 전자공학 대학생을 위한 직무역량 로드맵 파일럿">
+    <title>직무역량 로드맵</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="assets/icon.svg">
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">무료 파일럿</p>
+          <h1>직무역량 로드맵</h1>
+        </div>
+        <button class="ghost-button" id="installButton" type="button" hidden>앱으로 설치</button>
+      </header>
+
+      <main class="layout">
+        <aside class="panel profile-panel" aria-label="프로필 설정">
+          <div class="panel-heading">
+            <p class="eyebrow">내 기준</p>
+            <h2>직무 추천 조건</h2>
+          </div>
+          <label>
+            전공
+            <select id="majorSelect">
+              <option value="mechanical">기계공학</option>
+              <option value="electrical">전자공학</option>
+              <option value="both">기계/전자 융합</option>
+            </select>
+          </label>
+          <label>
+            학년
+            <select id="yearSelect">
+              <option value="2">2학년</option>
+              <option value="3" selected>3학년</option>
+              <option value="4">4학년 이상</option>
+            </select>
+          </label>
+          <label>
+            관심 산업
+            <select id="industrySelect">
+              <option value="all">전체</option>
+              <option value="mobility">자동차·모빌리티</option>
+              <option value="semiconductor">반도체</option>
+              <option value="manufacturing">제조·품질</option>
+              <option value="robotics">로봇·자동화</option>
+              <option value="electronics">전자·하드웨어</option>
+            </select>
+          </label>
+
+          <div class="metric-strip" aria-label="진행 요약">
+            <div>
+              <strong id="selectedTrackMetric">0</strong>
+              <span>선택 트랙</span>
+            </div>
+            <div>
+              <strong id="diagnosticMetric">0%</strong>
+              <span>진단 점수</span>
+            </div>
+            <div>
+              <strong id="savedMetric">0</strong>
+              <span>완료/저장</span>
+            </div>
+          </div>
+
+          <button class="primary-button full-width" id="copySummaryButton" type="button">파일럿 결과 복사</button>
+        </aside>
+
+        <section class="workspace">
+          <nav class="tabs" aria-label="화면 전환">
+            <button class="tab is-active" type="button" data-view="tracks">직무</button>
+            <button class="tab" type="button" data-view="diagnosis">진단</button>
+            <button class="tab" type="button" data-view="roadmap">로드맵</button>
+            <button class="tab" type="button" data-view="library">자료</button>
+            <button class="tab" type="button" data-view="saved">저장</button>
+          </nav>
+
+          <section class="view is-active" id="tracksView">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">직무 트랙</p>
+                <h2>관심 직무를 선택하세요</h2>
+              </div>
+              <span class="status-pill" id="trackCount">0개 트랙</span>
+            </div>
+            <div class="track-grid" id="trackList"></div>
+            <article class="detail-panel" id="trackDetail"></article>
+          </section>
+
+          <section class="view" id="diagnosisView">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">역량 진단</p>
+                <h2 id="diagnosisTitle">트랙을 먼저 선택하세요</h2>
+              </div>
+              <span class="status-pill" id="scoreBadge">0%</span>
+            </div>
+            <div class="progress-bar" aria-label="진단 진행률">
+              <span id="scoreBar"></span>
+            </div>
+            <div class="checklist" id="diagnosticList"></div>
+            <div class="gap-list" id="gapList"></div>
+          </section>
+
+          <section class="view" id="roadmapView">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">4주 계획</p>
+                <h2 id="roadmapTitle">로드맵</h2>
+              </div>
+              <span class="status-pill">무료 공개자료 기반</span>
+            </div>
+            <div class="roadmap" id="roadmapList"></div>
+          </section>
+
+          <section class="view" id="libraryView">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">자료 라이브러리</p>
+                <h2>직무역량 자료</h2>
+              </div>
+              <label class="compact-filter">
+                난이도
+                <select id="difficultyFilter">
+                  <option value="all">전체</option>
+                  <option value="입문">입문</option>
+                  <option value="기초실습">기초실습</option>
+                  <option value="적용">적용</option>
+                </select>
+              </label>
+            </div>
+            <div class="resource-list" id="resourceList"></div>
+          </section>
+
+          <section class="view" id="savedView">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">내 계획</p>
+                <h2>저장한 자료</h2>
+              </div>
+              <button class="ghost-button" id="clearSavedButton" type="button">저장 비우기</button>
+            </div>
+            <div class="resource-list" id="savedList"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
