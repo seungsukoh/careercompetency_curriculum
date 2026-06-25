@@ -40,6 +40,6 @@ python -m http.server 8787
 - `docs/PROJECT_SYNC.md`: 병렬 작업 시 공유할 계획/진행 기준 파일과 동기화 규칙
 - `docs/REQUIREMENTS_VALIDATION_CRITERIA.md`: 요구사항과 검증 기준
 - `docs/QA_CHECKLIST.md`: 요구사항별 QA 체크리스트
-- `docs/QA_RESULTS_2026-06-25.md`: 현재 정적 QA 결과와 남은 P0 항목
+- `docs/QA_RESULTS_2026-06-25.md`: 현재 QA 결과와 배포/파일럿 전 남은 작업
 - `docs/FREE_PILOT_PLAYBOOK.md`: 무료 파일럿 운영안
 - `PROJECT_PLAN.md`: 전체 기획 및 구현 계획
