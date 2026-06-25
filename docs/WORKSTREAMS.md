@@ -15,7 +15,7 @@
 | 데이터 모델 | 자료/직무/로드맵 스키마와 마이그레이션 경계 관리 | resource schema, progress schema | `app.js`, 추후 `data/*.json` |
 | 앱 UI/UX | 학생이 보는 화면, 저장/완료 체크, 모바일 사용성 | 정적 PWA 화면 | `index.html`, `styles.css`, `app.js` |
 | 검증/QA | 브라우저 동작, 모바일 레이아웃, 저장/복사 흐름 확인 | 검수 결과, 버그 목록 | `README.md`, 필요 시 `docs/QA_CHECKLIST.md` |
-| 배포/운영 | Cloudflare Pages 배포, 캐시, 업데이트 절차 | 배포 절차, 운영 절차 | `README.md`, `sw.js`, `manifest.webmanifest` |
+| 배포/운영 | Cloudflare Pages 배포, 캐시, 업데이트 절차 | 배포 절차, 운영 절차 | `README.md`, `package.json`, `vite.config.js`, `public/sw.js`, `public/manifest.webmanifest` |
 
 ## 병렬 작업 규칙
 

@@ -2,7 +2,7 @@
 
 ## ADR-001: 1차 제품은 정적 PWA로 유지한다
 
-결정: 초기 파일럿은 의존성 없는 정적 PWA로 유지한다.
+결정: 초기 파일럿은 Vite로 빌드되는 정적 PWA로 유지한다.
 
 이유:
 
@@ -13,6 +13,7 @@
 결과:
 
 - Cloudflare Pages에 적합하다.
+- 배포 산출물은 `npm run build`로 생성되는 `dist` 디렉터리다.
 - 사용자 진행상태는 우선 `localStorage`에 저장한다.
 - 서버 기능은 파일럿 검증 후 도입한다.
 
@@ -102,7 +103,7 @@
 - PM/전략: `docs/PRODUCT_STRATEGY_REVIEW.md`, `docs/PM_ACTION_PLAN.md`
 - 자료 큐레이션: `docs/RESOURCE_CURATION_POLICY.md`, 추후 `data/resources.json`
 - 앱 UI/UX: `index.html`, `styles.css`, `app.js`
-- QA/운영: `README.md`, `docs/QA_CHECKLIST.md`, `sw.js`
+- QA/운영: `README.md`, `docs/QA_CHECKLIST.md`, `public/sw.js`, `public/manifest.webmanifest`
 
 이유:
 

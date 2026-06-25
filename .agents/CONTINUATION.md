@@ -85,6 +85,6 @@ The technical P0 gate is currently passing in `docs/QA_RESULTS_2026-06-25.md`:
 Next concrete steps:
 
 1. Create and push a savepoint commit.
-2. Prepare or verify the Cloudflare Pages deployment URL.
+2. Prepare or verify the Cloudflare Pages deployment URL with Vite settings (`npm run build`, `dist`).
 3. Smoke test the deployed URL.
 4. Start the 5-student pilot and record R15 outcome metrics.

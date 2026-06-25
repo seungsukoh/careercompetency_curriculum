@@ -2,14 +2,14 @@
   "name": "직무역량 로드맵",
   "short_name": "역량로드맵",
   "description": "기계공학과 전자공학 대학생을 위한 직무역량 로드맵 파일럿",
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#eef3f0",
   "theme_color": "#155e75",
   "lang": "ko",
   "icons": [
     {
-      "src": "assets/icon.svg",
+      "src": "/assets/icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"

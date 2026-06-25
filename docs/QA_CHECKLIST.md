@@ -6,8 +6,9 @@
 
 검증 환경:
 
-- 로컬 서버: `python -m http.server 8787`
-- URL: `http://localhost:8787`
+- 개발 서버: `npm run dev`
+- 배포 산출물 확인: `npm run build` 후 `npm run preview`
+- URL: 터미널에 표시되는 Vite 로컬 URL
 - 브라우저: Chrome 또는 Edge 최신 버전
 - 화면 폭: 데스크톱 1280px 이상, 모바일 390px 안팎
 

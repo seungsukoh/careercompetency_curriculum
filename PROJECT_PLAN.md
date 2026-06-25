@@ -239,7 +239,7 @@ MVP에서는 복잡한 AI 추천보다 규칙 기반 추천으로 시작한다.
 
 | 영역 | 제안 |
 |---|---|
-| 프론트엔드 | 무료 파일럿은 의존성 없는 정적 PWA, 이후 Next.js/TypeScript 확장 |
+| 프론트엔드 | 무료 파일럿은 Vite로 빌드되는 정적 PWA, 이후 Next.js/TypeScript 확장 |
 | 백엔드 | Next.js API Routes 또는 Supabase |
 | 데이터베이스 | PostgreSQL, 초기에는 Supabase 또는 SQLite/Prisma도 가능 |
 | 인증 | MVP에서는 선택 사항. 진행관리 저장이 필요하면 Supabase Auth 또는 Clerk |
@@ -373,7 +373,7 @@ MVP에서는 복잡한 AI 추천보다 규칙 기반 추천으로 시작한다.
 
 ## 15. 현재 진행 상태 - 2026-06-25
 
-현재 구현은 Next.js가 아니라 의존성 없는 정적 PWA로 좁혀 진행한다. 이는 무료 파일럿과 Cloudflare Pages 배포를 우선하기 위한 결정이다.
+현재 구현은 Next.js가 아니라 Vite로 빌드되는 정적 PWA로 좁혀 진행한다. 이는 무료 파일럿과 Cloudflare Pages 배포를 우선하기 위한 결정이다.
 
 최근 반영:
 

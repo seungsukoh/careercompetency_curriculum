@@ -14,29 +14,40 @@
 
 ## 로컬 실행
 
-정적 파일만 사용하므로 `index.html`을 브라우저에서 열면 됩니다. PWA 서비스 워커까지 확인하려면 로컬 서버로 실행합니다.
+Vite 개발 서버로 실행합니다.
 
 ```powershell
-python -m http.server 8787
+npm install
+npm run dev
 ```
 
-그 다음 `http://localhost:8787`로 접속합니다.
+그 다음 터미널에 표시되는 로컬 URL로 접속합니다.
+
+배포 산출물을 로컬에서 확인하려면 다음을 실행합니다.
+
+```powershell
+npm run build
+npm run preview
+```
 
 ## Cloudflare Pages 배포
 
 1. Cloudflare Pages에서 GitHub 저장소를 연결합니다.
-2. Framework preset은 `None`으로 둡니다.
-3. Build command는 비워둡니다.
-4. Build output directory는 `.`로 설정합니다.
+2. Framework preset은 `Vite`로 둡니다.
+3. Build command는 `npm run build`로 설정합니다.
+4. Build output directory는 `dist`로 설정합니다.
 5. 배포 후 Pages URL을 파일럿 참여자에게 공유합니다.
 
 ## 주요 파일
 
+- `package.json`: Vite 빌드/개발 스크립트
+- `vite.config.js`: Vite 빌드 설정
 - `index.html`: 앱 화면 구조
 - `styles.css`: 모바일 우선 UI 스타일
 - `app.js`: 직무 트랙, 진단, 로드맵, 자료 추천 로직
-- `manifest.webmanifest`: PWA 설치 정보
-- `sw.js`: 정적 파일 캐시
+- `public/manifest.webmanifest`: PWA 설치 정보
+- `public/sw.js`: 정적 파일 캐시
+- `public/assets/icon.svg`: PWA 아이콘
 - `docs/PROJECT_SYNC.md`: 병렬 작업 시 공유할 계획/진행 기준 파일과 동기화 규칙
 - `docs/REQUIREMENTS_VALIDATION_CRITERIA.md`: 요구사항과 검증 기준
 - `docs/QA_CHECKLIST.md`: 요구사항별 QA 체크리스트

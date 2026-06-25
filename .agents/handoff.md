@@ -10,14 +10,16 @@ Build a free pilot web app for Korean mechanical/electrical engineering students
 
 ## Current Implementation
 
-- The app is a dependency-free static PWA intended for Cloudflare Pages.
+- The app is a Vite-built static PWA intended for Cloudflare Pages.
 - Main files:
+  - `package.json`: Vite scripts and dev dependency.
+  - `vite.config.js`: Vite build output configuration.
   - `index.html`: app shell, profile filters, tabs, views.
   - `styles.css`: mobile-first responsive UI.
   - `app.js`: seed data, localStorage state, rendering, diagnostics, saved/completed resources, PWA install prompt.
-  - `manifest.webmanifest`: PWA manifest.
-  - `sw.js`: static asset cache service worker.
-  - `assets/icon.svg`: SVG app icon.
+  - `public/manifest.webmanifest`: PWA manifest.
+  - `public/sw.js`: static asset cache service worker.
+  - `public/assets/icon.svg`: SVG app icon.
   - `docs/FREE_PILOT_PLAYBOOK.md`: free pilot operating plan.
   - `PROJECT_PLAN.md`: product and implementation plan.
   - `docs/PROJECT_SYNC.md`: shared source-of-truth files and synchronization rules.
@@ -27,18 +29,14 @@ Build a free pilot web app for Korean mechanical/electrical engineering students
 
 - Remote is configured as `https://github.com/seungsukoh/careercompetency_curriculum.git`.
 - Branch `main` tracks `origin/main`.
-- Latest pushed commit observed before current local edits: `9f59dda Save maintainable pilot direction`.
+- Latest pushed commit observed before current local edits: `9255e2b Update QA readiness docs`.
 - `git log --oneline "@{u}.."` returned no unpushed commits.
-- Current local changes are not committed/pushed yet:
-  - `.agents/CONTINUATION.md`
-  - `.agents/handoff.md`
-  - `PROJECT_PLAN.md`
-  - `README.md`
-  - `app.js`
-  - `docs/PM_ACTION_PLAN.md`
-  - `docs/WORKSTREAMS.md`
-  - `docs/PROJECT_SYNC.md`
-  - `docs/QA_RESULTS_2026-06-25.md`
+- Cloudflare Pages failed on commit `051c8cb` because that deployed commit did not contain `package.json`, while Cloudflare was configured to run `npm run build`.
+- The deployment fix is to push the local Vite migration:
+  - `package.json`, `package-lock.json`, `vite.config.js`, `.gitignore`
+  - `public/manifest.webmanifest`, `public/sw.js`, `public/assets/icon.svg`
+  - root `manifest.webmanifest`, `sw.js`, and `assets/icon.svg` removed
+  - docs updated for Vite build command `npm run build` and output directory `dist`
 
 ## Product Scope Implemented
 
@@ -91,11 +89,11 @@ Build a free pilot web app for Korean mechanical/electrical engineering students
 
 ## Important Constraints
 
-- Keep the MVP static and dependency-free unless the user explicitly changes direction.
+- Keep the MVP static and backend-free. Vite is allowed as the build tool.
 - Prefer Cloudflare Pages deployment assumptions:
-  - Framework preset: None
-  - Build command: blank
-  - Output directory: `.`
+  - Framework preset: Vite
+  - Build command: `npm run build`
+  - Output directory: `dist`
 - Do not add backend/auth/database for the pilot unless required.
 - User-facing content is Korean.
 - If a new session starts and finds local changes or unpushed commits, create/push a savepoint before continuing when possible.
@@ -103,8 +101,8 @@ Build a free pilot web app for Korean mechanical/electrical engineering students
 
 ## Suggested Next Steps
 
-1. Create a savepoint commit and push the current local changes.
-2. Prepare or verify the Cloudflare Pages deployment URL.
+1. Commit and push the Vite deployment fix if it has not already been pushed.
+2. Retry Cloudflare Pages with Framework preset `Vite`, Build command `npm run build`, and Output directory `dist`.
 3. Run a short smoke test on the deployed URL.
 4. Start the 5-student pilot and record R15 outcome metrics.
 5. If YouTube resources are added later, record R7 views/comments/channel-trust signals before treating them as reviewed.
@@ -112,10 +110,11 @@ Build a free pilot web app for Korean mechanical/electrical engineering students
 ## Useful Commands
 
 ```powershell
-python -m http.server 8787
+npm install
+npm run dev
 ```
 
-Open `http://localhost:8787`.
+Open the local URL printed by Vite.
 
 ```powershell
 git status --short
