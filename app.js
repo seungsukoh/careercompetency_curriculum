@@ -170,7 +170,7 @@ const resources = [
   },
   {
     id: "mit-design-manufacturing",
-    title: "Design and Manufacturing II",
+    title: "Design and Manufacturing I",
     provider: "MIT OpenCourseWare",
     type: "대학 OCW",
     language: "영어",
@@ -180,7 +180,7 @@ const resources = [
     skills: ["기계요소설계", "공차·제조성", "문서화"],
     reason: "설계와 제조를 함께 보는 관점을 잡는 데 유용합니다.",
     output: "제품 설계 검토 메모",
-    url: "https://ocw.mit.edu/courses/2-008-design-and-manufacturing-ii-spring-2004/"
+    url: "https://ocw.mit.edu/courses/2-007-design-and-manufacturing-i-spring-2009/"
   },
   {
     id: "mit-numerical-me",
@@ -204,9 +204,9 @@ const resources = [
     language: "한국어",
     difficulty: "입문",
     hours: 1,
-    tracks: ["production-quality", "semiconductor-equipment"],
+    tracks: ["mechanical-cae", "production-quality", "semiconductor-equipment", "electronics-pcb", "embedded-control"],
     skills: ["직무 이해", "문서화", "품질"],
-    reason: "직무 단위와 수행준거를 확인해 직무 설명의 기준점으로 삼을 수 있습니다.",
+    reason: "직무 단위와 수행준거를 확인해 각 트랙의 실제 업무 기준점으로 삼을 수 있습니다.",
     output: "관심 직무 능력단위 3개 요약",
     url: "https://www.ncs.go.kr/"
   },
@@ -321,6 +321,138 @@ const resources = [
     reason: "한국어 전공 기초 강좌를 찾기 위한 출발점입니다.",
     output: "관심 강좌 2개 저장",
     url: "https://www.kmooc.kr/"
+  },
+  {
+    id: "kocw-mechanical-design",
+    title: "KOCW 기계설계·해석 공개강의 검색",
+    provider: "KOCW",
+    type: "대학 OCW",
+    language: "한국어",
+    difficulty: "입문",
+    estimatedMinutes: 60,
+    practiceMinutes: 60,
+    sequenceLevel: 1,
+    tracks: ["mechanical-cae"],
+    skills: ["재료역학", "기계요소설계", "CAD", "FEA"],
+    prerequisites: [],
+    reason: "재료역학, 기계요소설계, 구조해석 키워드로 국내 공개강의를 찾아 기계 설계 트랙의 기초를 보완합니다.",
+    expectedOutput: "기계설계 또는 해석 공개강의 1개 선택과 학습 계획 메모",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-25",
+      nextReviewAt: "2026-07-25"
+    },
+    url: "http://www.kocw.net/home/index.do"
+  },
+  {
+    id: "kocw-production-quality",
+    title: "KOCW 생산·품질 공개강의 검색",
+    provider: "KOCW",
+    type: "대학 OCW",
+    language: "한국어",
+    difficulty: "입문",
+    estimatedMinutes: 60,
+    practiceMinutes: 60,
+    sequenceLevel: 1,
+    tracks: ["production-quality"],
+    skills: ["통계", "SPC", "품질", "공정관리"],
+    prerequisites: [],
+    reason: "품질관리, 생산관리, 통계 키워드로 국내 공개강의를 찾아 공정 데이터와 개선 방법론의 기초를 잡습니다.",
+    expectedOutput: "품질 또는 생산관리 강좌 1개 선택과 핵심 개념 5개 정리",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-25",
+      nextReviewAt: "2026-07-25"
+    },
+    url: "http://www.kocw.net/home/index.do"
+  },
+  {
+    id: "kocw-semiconductor",
+    title: "KOCW 반도체 공정·소자 공개강의 검색",
+    provider: "KOCW",
+    type: "대학 OCW",
+    language: "한국어",
+    difficulty: "입문",
+    estimatedMinutes: 60,
+    practiceMinutes: 60,
+    sequenceLevel: 1,
+    tracks: ["semiconductor-equipment"],
+    skills: ["반도체 소자", "공정 흐름", "계측"],
+    prerequisites: [],
+    reason: "반도체 공정, 반도체 소자, 전자재료 키워드로 국내 공개강의를 찾아 공정·장비 직무의 전공 기초를 보완합니다.",
+    expectedOutput: "반도체 공정 흐름 또는 소자 개념 요약 1쪽",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-25",
+      nextReviewAt: "2026-07-25"
+    },
+    url: "http://www.kocw.net/home/index.do"
+  },
+  {
+    id: "kocw-electronics-circuit",
+    title: "KOCW 회로·전자회로 공개강의 검색",
+    provider: "KOCW",
+    type: "대학 OCW",
+    language: "한국어",
+    difficulty: "입문",
+    estimatedMinutes: 60,
+    practiceMinutes: 60,
+    sequenceLevel: 1,
+    tracks: ["electronics-pcb"],
+    skills: ["회로이론", "전자회로", "계측"],
+    prerequisites: [],
+    reason: "회로이론, 전자회로, 계측 키워드로 국내 공개강의를 찾아 PCB·하드웨어 트랙의 기본기를 보완합니다.",
+    expectedOutput: "회로 기본 개념 5개와 측정 질문 3개 정리",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-25",
+      nextReviewAt: "2026-07-25"
+    },
+    url: "http://www.kocw.net/home/index.do"
+  },
+  {
+    id: "kocw-embedded-control",
+    title: "KOCW 임베디드·제어 공개강의 검색",
+    provider: "KOCW",
+    type: "대학 OCW",
+    language: "한국어",
+    difficulty: "입문",
+    estimatedMinutes: 60,
+    practiceMinutes: 60,
+    sequenceLevel: 1,
+    tracks: ["embedded-control"],
+    skills: ["C언어", "제어공학", "MCU", "디버깅"],
+    prerequisites: [],
+    reason: "제어공학, 임베디드, 마이크로프로세서 키워드로 국내 공개강의를 찾아 펌웨어와 제어 기초를 연결합니다.",
+    expectedOutput: "제어 또는 임베디드 강좌 1개 선택과 실습 목표 1개 작성",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-25",
+      nextReviewAt: "2026-07-25"
+    },
+    url: "http://www.kocw.net/home/index.do"
+  },
+  {
+    id: "step-engineering",
+    title: "STEP 산업기술 온라인 과정 검색",
+    provider: "STEP",
+    type: "무료교육",
+    language: "한국어",
+    difficulty: "기초실습",
+    estimatedMinutes: 90,
+    practiceMinutes: 60,
+    sequenceLevel: 2,
+    tracks: ["mechanical-cae", "production-quality", "semiconductor-equipment", "electronics-pcb", "embedded-control"],
+    skills: ["직무 이해", "도구역량", "문제해결"],
+    prerequisites: ["관심 직무 트랙 선택"],
+    reason: "산업기술 분야의 한국어 온라인 과정을 확인해 공개강의 이후 실습형 보완 자료 후보를 찾습니다.",
+    expectedOutput: "선택 트랙과 관련된 실습형 과정 1개 저장",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-25",
+      nextReviewAt: "2026-07-25"
+    },
+    url: "https://www.step.or.kr/"
   }
 ].map(normalizeResource);
 
@@ -675,6 +807,7 @@ function renderResourceCard(resource) {
   const saved = state.saved.includes(resource.id);
   const completed = state.completed.includes(resource.id);
   const prerequisites = resource.prerequisites.length ? resource.prerequisites.join(", ") : "없음";
+  const checkedAt = resource.engagement?.checkedAt ? `확인 ${resource.engagement.checkedAt}` : "확인 예정";
   return `
     <article class="resource-card ${completed ? "is-completed" : ""}">
       <div class="resource-meta">
@@ -685,6 +818,7 @@ function renderResourceCard(resource) {
         <span class="badge">${resource.difficulty}</span>
         <span class="badge">총 ${formatMinutes(resource.totalMinutes)}</span>
         <span class="badge">${formatQualityStatus(resource.qualityStatus)}</span>
+        <span class="badge">${checkedAt}</span>
       </div>
       <h3>${resource.title}</h3>
       <p>${resource.reason}</p>
@@ -708,9 +842,9 @@ function renderResourceCard(resource) {
 }
 
 function sortResourcesForLearning(a, b) {
+  if (a.languageCode !== b.languageCode) return a.languageCode === "ko" ? -1 : 1;
   const sequenceDiff = a.sequenceLevel - b.sequenceLevel;
   if (sequenceDiff !== 0) return sequenceDiff;
-  if (a.languageCode !== b.languageCode) return a.languageCode === "ko" ? -1 : 1;
   return a.totalMinutes - b.totalMinutes;
 }
 

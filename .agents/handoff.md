@@ -1,6 +1,6 @@
 # Development Handoff
 
-Date: 2026-06-24
+Date: 2026-06-25
 Workspace: `C:\workspace\careercompetency_curriculum`
 Branch: `main` tracking `origin/main`
 
@@ -20,13 +20,25 @@ Build a free pilot web app for Korean mechanical/electrical engineering students
   - `assets/icon.svg`: SVG app icon.
   - `docs/FREE_PILOT_PLAYBOOK.md`: free pilot operating plan.
   - `PROJECT_PLAN.md`: product and implementation plan.
+  - `docs/PROJECT_SYNC.md`: shared source-of-truth files and synchronization rules.
+  - `docs/QA_RESULTS_2026-06-25.md`: latest QA result and remaining deployment/pilot work.
 
 ## Git State Observed
 
-- `PROJECT_PLAN.md` is modified from the initial commit.
-- These files/directories are currently untracked: `README.md`, `app.js`, `assets/`, `docs/`, `index.html`, `manifest.webmanifest`, `styles.css`, `sw.js`.
 - Remote is configured as `https://github.com/seungsukoh/careercompetency_curriculum.git`.
-- Last commit: `0f0b24f Add project planning document`.
+- Branch `main` tracks `origin/main`.
+- Latest pushed commit observed before current local edits: `9f59dda Save maintainable pilot direction`.
+- `git log --oneline "@{u}.."` returned no unpushed commits.
+- Current local changes are not committed/pushed yet:
+  - `.agents/CONTINUATION.md`
+  - `.agents/handoff.md`
+  - `PROJECT_PLAN.md`
+  - `README.md`
+  - `app.js`
+  - `docs/PM_ACTION_PLAN.md`
+  - `docs/WORKSTREAMS.md`
+  - `docs/PROJECT_SYNC.md`
+  - `docs/QA_RESULTS_2026-06-25.md`
 
 ## Product Scope Implemented
 
@@ -41,7 +53,10 @@ Build a free pilot web app for Korean mechanical/electrical engineering students
 - Competency checklist per selected track with percent score and gap list.
 - 4-week roadmap per selected track.
 - Resource library filtered by selected track and difficulty.
+- Seed resources now include 18 resources; every track has at least 4 Korean-accessible resources.
 - Save and complete resource actions persisted in localStorage.
+- Resource list now sorts Korean-accessible resources before English resources, then by learning sequence.
+- Resource cards now show quality status and checked date.
 - Pilot summary copy button.
 - PWA install prompt and service worker registration.
 
@@ -52,10 +67,12 @@ Build a free pilot web app for Korean mechanical/electrical engineering students
 - Instructor support is deferred, but student result summaries should remain useful for future advising conversations.
 - Product strategy review is documented in `docs/PRODUCT_STRATEGY_REVIEW.md`.
 - PM execution plan is documented in `docs/PM_ACTION_PLAN.md`.
+- Shared planning/progress synchronization rules are documented in `docs/PROJECT_SYNC.md`.
 - Parallel workstream structure is documented in `docs/WORKSTREAMS.md`.
 - Architecture and maintainability decisions are documented in `docs/ARCHITECTURE_DECISIONS.md`.
 - Requirement-based validation criteria are documented in `docs/REQUIREMENTS_VALIDATION_CRITERIA.md`.
 - QA should use `docs/QA_CHECKLIST.md` and record pass/fail by requirement ID.
+- Latest QA is documented in `docs/QA_RESULTS_2026-06-25.md`; R1-R6, R8-R11, R13, R14 passed and R15 is ready for pilot measurement.
 - Start with Korean-accessible resources first, then expand to English/global resources after the pilot validates the curriculum flow.
 - Resource cards should eventually include estimated learning time.
 - Resource search and ranking should use engagement signals such as YouTube views, comments, likes, channel credibility, and playlist structure as triage signals, while still checking officialness, freshness, fit, and expected output.
@@ -86,12 +103,11 @@ Build a free pilot web app for Korean mechanical/electrical engineering students
 
 ## Suggested Next Steps
 
-1. Use `docs/REQUIREMENTS_VALIDATION_CRITERIA.md` as the source of truth before adding features.
-2. Run QA with `docs/QA_CHECKLIST.md` and mark pass/fail by requirement ID.
-3. Fix only P0 validation failures before adding P1/P2 features.
-4. Finish verifying the updated resource card UI and manual completion checks.
-5. Verify responsive layout on desktop and mobile widths.
-6. After verification, stage and commit the static PWA files.
+1. Create a savepoint commit and push the current local changes.
+2. Prepare or verify the Cloudflare Pages deployment URL.
+3. Run a short smoke test on the deployed URL.
+4. Start the 5-student pilot and record R15 outcome metrics.
+5. If YouTube resources are added later, record R7 views/comments/channel-trust signals before treating them as reviewed.
 
 ## Useful Commands
 
