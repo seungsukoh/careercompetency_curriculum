@@ -309,6 +309,114 @@ const resources = [
     url: "https://www.itl.nist.gov/div898/handbook/"
   },
   {
+    id: "asq-quality-tools",
+    title: "ASQ Quality Tools",
+    provider: "ASQ",
+    type: "협회 교육자료",
+    language: "영어",
+    difficulty: "입문",
+    estimatedMinutes: 45,
+    practiceMinutes: 45,
+    sequenceLevel: 1,
+    tracks: ["production-quality"],
+    skills: ["품질", "문제해결", "Pareto", "FMEA"],
+    prerequisites: [],
+    reason: "공정 문제를 정의할 때 쓸 수 있는 품질 도구를 빠르게 고르고 적용하기 좋습니다.",
+    expectedOutput: "품질 도구 1개를 선택한 공정 문제 정의 메모",
+    qualityStatus: "candidate",
+    url: "https://asq.org/quality-resources/quality-tools"
+  },
+  {
+    id: "quality-one-fmea",
+    title: "FMEA Training Resources",
+    provider: "Quality-One",
+    type: "기업 기술교육자료",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 75,
+    practiceMinutes: 60,
+    sequenceLevel: 2,
+    tracks: ["production-quality"],
+    skills: ["FMEA", "문제해결", "품질"],
+    prerequisites: ["공정 문제 정의"],
+    reason: "불량 원인, 영향, 검출 방법을 FMEA 표로 바꾸는 주차에 바로 연결됩니다.",
+    expectedOutput: "불량 사례 FMEA 표 초안",
+    qualityStatus: "candidate",
+    url: "https://quality-one.com/fmea/"
+  },
+  {
+    id: "asq-fmea",
+    title: "Failure Mode and Effects Analysis",
+    provider: "ASQ",
+    type: "협회 교육자료",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 60,
+    practiceMinutes: 60,
+    sequenceLevel: 2,
+    tracks: ["production-quality"],
+    skills: ["FMEA", "품질", "문제해결"],
+    prerequisites: ["공정 문제 정의"],
+    reason: "FMEA 주차에서 고장 모드, 영향, 원인, 현재 관리 방법을 구분할 때 참고합니다.",
+    expectedOutput: "고장 모드별 영향·원인·관리 방법 정리",
+    qualityStatus: "candidate",
+    url: "https://asq.org/quality-resources/fmea"
+  },
+  {
+    id: "asq-eight-d",
+    title: "8D Problem Solving",
+    provider: "ASQ",
+    type: "협회 교육자료",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 60,
+    practiceMinutes: 60,
+    sequenceLevel: 2,
+    tracks: ["production-quality"],
+    skills: ["8D 문제해결", "문제해결", "품질"],
+    prerequisites: ["원인 가설"],
+    reason: "개선 보고서 주차에서 임시조치, 원인분석, 재발방지 구조를 잡는 데 사용합니다.",
+    expectedOutput: "8D 개선 보고서 초안",
+    qualityStatus: "candidate",
+    url: "https://asq.org/quality-resources/eight-disciplines-8d"
+  },
+  {
+    id: "lean-a3-problem-solving",
+    title: "A3 Problem Solving",
+    provider: "Lean Enterprise Institute",
+    type: "협회 교육자료",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 60,
+    practiceMinutes: 60,
+    sequenceLevel: 2,
+    tracks: ["production-quality"],
+    skills: ["문제해결", "8D 문제해결", "개선"],
+    prerequisites: ["원인 가설"],
+    reason: "개선 보고서 주차에서 문제, 원인, 대책, 후속 확인을 한 장 구조로 정리할 때 사용합니다.",
+    expectedOutput: "A3 개선 보고서 초안",
+    qualityStatus: "candidate",
+    url: "https://www.lean.org/lexicon-terms/a3-report/"
+  },
+  {
+    id: "moresteam-doe",
+    title: "Design of Experiments 교육자료",
+    provider: "MoreSteam",
+    type: "기업 기술교육자료",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 90,
+    practiceMinutes: 90,
+    sequenceLevel: 3,
+    tracks: ["production-quality", "semiconductor-equipment"],
+    skills: ["DOE", "통계", "공정관리"],
+    prerequisites: ["통계 기초", "공정 변수 정의"],
+    reason: "공정 조건을 바꿔 검증해야 하는 주차에서 변수와 실험 설계를 연결합니다.",
+    expectedOutput: "조건 변경 DOE 검토 메모",
+    qualityStatus: "candidate",
+    url: "https://www.moresteam.com/toolbox/design-of-experiments.cfm"
+  },
+  {
     id: "kmooc",
     title: "K-MOOC 공학 전공기초 후보 검수",
     provider: "K-MOOC",
@@ -1110,6 +1218,12 @@ const resourceTaskLinks = {
   "mit-microelectronic": ["공정 흐름 매핑", "전원 요구사항 정의"],
   "analog-dialogue": ["센서 신호 증폭 회로", "검증 리포트"],
   "nist-spc": ["관리도와 Cpk 계산", "원인 가설과 FMEA", "수율 Pareto 분석"],
+  "asq-quality-tools": ["공정 문제 정의", "원인 가설과 FMEA"],
+  "quality-one-fmea": ["원인 가설과 FMEA"],
+  "asq-fmea": ["원인 가설과 FMEA"],
+  "asq-eight-d": ["8D 개선 보고서"],
+  "lean-a3-problem-solving": ["8D 개선 보고서"],
+  "moresteam-doe": ["조건 변경 검토표", "관리도와 Cpk 계산"],
   kmooc: ["제품 요구사항 분해", "공정 문제 정의", "공정 흐름 매핑", "전원 요구사항 정의", "MCU 주변장치 설계"],
   "kocw-mechanical-design": ["제품 요구사항 분해", "손계산과 CAD 초안", "해석 조건 검증"],
   "kocw-production-quality": ["공정 문제 정의", "관리도와 Cpk 계산", "원인 가설과 FMEA"],
@@ -1697,11 +1811,15 @@ function renderRoadmap() {
   const role = getSelectedRole(track.id);
   const tasks = getVisibleRoadmapTasks(track.id);
   const context = getRecommendationContext(track, getGapSkills(track.id), tasks);
+  const roadmapResourceUseCounts = new Map();
   elements.roadmapTitle.textContent = `${track.title}${role ? ` · ${role.title}` : ""} ${getDurationLabel()} 로드맵`;
   elements.roadmapList.innerHTML = tasks.map((task, index) => {
     const stepId = getRoadmapStepId(track.id, task);
     const completed = state.completedRoadmap.includes(stepId);
-    const linkedResources = getRoadmapResourcesForTask(track, task, context);
+    const linkedResources = getRoadmapResourcesForTask(track, task, context, roadmapResourceUseCounts);
+    linkedResources.forEach((resource) => {
+      roadmapResourceUseCounts.set(resource.id, (roadmapResourceUseCounts.get(resource.id) || 0) + 1);
+    });
     return `
     <article class="week-card ${completed ? "is-completed" : ""}">
       <span class="week-number">${task.weekLabel || `${index + 1}주차`}</span>
@@ -1723,7 +1841,7 @@ function renderRoadmap() {
       </div>
       <div class="roadmap-resource-block">
         <h4>추천 교육자료</h4>
-        <p class="roadmap-resource-guide">교육 제목을 누르면 연결 이유와 교육 링크가 열립니다.</p>
+        <p class="roadmap-resource-guide">이번 주 산출물에 맞춘 교육자료입니다. 교육 제목을 누르면 연결 이유와 교육 링크가 열립니다.</p>
         ${linkedResources.length
           ? `<div class="roadmap-resource-list">${linkedResources.map((resource) => renderRoadmapResourceItem(resource, task, context)).join("")}</div>`
           : `<div class="empty-state compact">이 과제에 연결된 교육자료 후보가 아직 없습니다.</div>`}
@@ -1903,26 +2021,179 @@ function getRecommendedResources(track, context) {
   return pool.sort((a, b) => sortResourcesForLearning(a, b, context));
 }
 
-function getRoadmapResourcesForTask(track, task, context) {
-  const directlyLinked = resources
-    .filter((resource) => resource.tracks.includes(track.id))
-    .filter((resource) => getResourceLinkedTasks(resource.id, [task]).length);
+function getRoadmapResourcesForTask(track, task, context, resourceUseCounts = new Map()) {
+  const trackResources = resources.filter((resource) => resource.tracks.includes(track.id));
+  const directlyLinked = trackResources.filter((resource) => getResourceLinkedTasks(resource.id, [task]).length);
+  const taskMatched = trackResources.filter((resource) => (
+    getTaskMatchedSkills(resource, task).length
+    || getTaskResourceKeywordMatches(resource, task).length
+    || getTaskRoleKeywordMatches(resource, task, context.role).length
+  ));
+  const preferredPool = uniqueResources([...directlyLinked, ...taskMatched]);
+  const pool = preferredPool.length >= 3
+    ? preferredPool
+    : uniqueResources([...preferredPool, ...trackResources]);
 
-  const fallback = resources
-    .filter((resource) => resource.tracks.includes(track.id))
-    .filter((resource) => resource.skills.some((skill) => getTaskSearchText(task).includes(skill)));
+  const ranked = pool
+    .map((resource) => ({
+      resource,
+      score: getTaskResourceScore(resource, task, context, resourceUseCounts)
+    }))
+    .sort((a, b) => {
+      const scoreDiff = b.score - a.score;
+      if (scoreDiff !== 0) return scoreDiff;
+      return sortResourcesForLearning(a.resource, b.resource, context);
+    });
+  const unusedRelevant = ranked.filter((item) => getRoadmapResourceUseCount(resourceUseCounts, item.resource.id) === 0 && item.score >= 8);
+  const selected = unusedRelevant.slice(0, 3);
 
-  return [...new Map([...directlyLinked, ...fallback].map((resource) => [resource.id, resource])).values()]
-    .sort((a, b) => sortResourcesForLearning(a, b, context))
-    .slice(0, 3);
+  if (selected.length < 3) {
+    selected.push(...ranked
+      .filter((item) => !selected.some((selectedItem) => selectedItem.resource.id === item.resource.id))
+      .slice(0, 3 - selected.length));
+  }
+
+  return selected.map((item) => item.resource);
 }
+
+function uniqueResources(resourceList) {
+  return [...new Map(resourceList.map((resource) => [resource.id, resource])).values()];
+}
+
+function getTaskResourceScore(resource, task, context, resourceUseCounts = new Map()) {
+  const directTaskMatches = getResourceLinkedTasks(resource.id, [task]).length;
+  const matchedSkills = getTaskMatchedSkills(resource, task).length;
+  const keywordMatches = getTaskResourceKeywordMatches(resource, task).length;
+  const roleKeywordMatches = getTaskRoleKeywordMatches(resource, task, context.role).length;
+  const gapMatches = getTaskGapMatches(resource, task, context.gapSkills).length;
+  const outputMatches = getTaskOutputMatches(resource, task).length;
+  const otherLinkedTaskMatches = getOtherLinkedTaskMatches(resource, task, context).length;
+  const alreadyUsedPenalty = getRoadmapResourceUseCount(resourceUseCounts, resource.id) * 220;
+
+  return directTaskMatches * 160
+    + matchedSkills * 45
+    + Math.min(keywordMatches, 6) * 10
+    + gapMatches * 35
+    + roleKeywordMatches * 18
+    + outputMatches * 14
+    + getResourcePriorityScore(resource, context) * 0.15
+    - (directTaskMatches ? 0 : otherLinkedTaskMatches * 180)
+    - alreadyUsedPenalty;
+}
+
+function getRoadmapResourceUseCount(resourceUseCounts, resourceId) {
+  return resourceUseCounts instanceof Map
+    ? resourceUseCounts.get(resourceId) || 0
+    : Number(resourceUseCounts?.has?.(resourceId) || 0);
+}
+
+function getTaskResourceSignals(resource, task, context) {
+  const signals = [];
+  const directTaskMatches = getResourceLinkedTasks(resource.id, [task]);
+  const matchedSkills = getTaskMatchedSkills(resource, task);
+  const gapMatches = getTaskGapMatches(resource, task, context.gapSkills);
+  const roleKeywordMatches = getTaskRoleKeywordMatches(resource, task, context.role);
+
+  if (directTaskMatches.length) signals.push("이번 주 과제 직접 연결");
+  if (matchedSkills.length) signals.push(`과제 역량: ${matchedSkills.slice(0, 2).join(", ")}`);
+  if (gapMatches.length) signals.push(`진단 보완: ${gapMatches.slice(0, 2).join(", ")}`);
+  if (roleKeywordMatches.length) signals.push(`세부 직무 키워드: ${roleKeywordMatches.slice(0, 2).join(", ")}`);
+  if (!signals.length) signals.push(`이번 주 산출물: ${task.deliverable}`);
+
+  return signals;
+}
+
+function getTaskMatchedSkills(resource, task) {
+  const taskText = getTaskSearchText(task).toLowerCase();
+  return (resource.skills || []).filter((skill) => taskText.includes(skill.toLowerCase()));
+}
+
+function getTaskGapMatches(resource, task, gapSkills) {
+  const taskText = getTaskSearchText(task).toLowerCase();
+  const resourceText = getResourceSearchText(resource);
+  return gapSkills.filter((skill) => {
+    const normalized = skill.toLowerCase();
+    return taskText.includes(normalized) && resourceText.includes(normalized);
+  });
+}
+
+function getTaskRoleKeywordMatches(resource, task, role) {
+  if (!role) return [];
+  const taskText = getTaskSearchText(task).toLowerCase();
+  const resourceText = getResourceSearchText(resource);
+  return role.postingKeywords.filter((keyword) => {
+    const normalized = keyword.toLowerCase();
+    return taskText.includes(normalized) && resourceText.includes(normalized);
+  });
+}
+
+function getTaskOutputMatches(resource, task) {
+  const resourceText = getResourceSearchText(resource);
+  return getSearchTokens(task.deliverable).filter((token) => resourceText.includes(token));
+}
+
+function getOtherLinkedTaskMatches(resource, task, context) {
+  const currentTaskTitle = task.baseTitle || task.title;
+  return getResourceLinkedTasks(resource.id, context.visibleTasks)
+    .filter((taskTitle) => taskTitle !== currentTaskTitle);
+}
+
+function getTaskResourceKeywordMatches(resource, task) {
+  const resourceText = getResourceSearchText(resource);
+  return getSearchTokens(getTaskSearchText(task))
+    .filter((token) => !roadmapResourceStopwords.has(token))
+    .filter((token) => resourceText.includes(token));
+}
+
+function getResourceSearchText(resource) {
+  return [
+    resource.title,
+    resource.provider,
+    resource.type,
+    resource.reason,
+    resource.expectedOutput,
+    resource.output,
+    ...(resource.skills || []),
+    ...(resource.prerequisites || [])
+  ].join(" ").toLowerCase();
+}
+
+function getSearchTokens(text) {
+  return [...new Set(String(text || "")
+    .toLowerCase()
+    .split(/[^0-9a-z가-힣/+.#]+/i)
+    .filter((token) => token.length >= 2))];
+}
+
+const roadmapResourceStopwords = new Set([
+  "과제",
+  "교육",
+  "자료",
+  "후보",
+  "기록",
+  "요약",
+  "정리",
+  "검토",
+  "선택",
+  "연결",
+  "기초",
+  "실습",
+  "산출물",
+  "보고서",
+  "가능",
+  "이번",
+  "주차",
+  "관심",
+  "직무"
+]);
 
 function renderRoadmapResourceItem(resource, task, context) {
   const saved = state.saved.includes(resource.id);
   const completed = state.completed.includes(resource.id);
-  const signals = getResourceSignals(resource, context)
+  const taskSignals = getTaskResourceSignals(resource, task, context);
+  const signals = [...taskSignals, ...getResourceSignals(resource, context)]
     .filter((signal) => !signal.startsWith("로드맵 연결"))
-    .slice(0, 2);
+    .slice(0, 3);
 
   return `
     <details class="roadmap-resource-item ${completed ? "is-completed" : ""}">
