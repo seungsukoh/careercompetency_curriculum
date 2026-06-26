@@ -705,6 +705,240 @@ const resources = [
       nextReviewAt: "2026-07-25"
     },
     url: "https://www.step.or.kr/"
+  },
+  {
+    id: "hrd-net-job-training",
+    title: "HRD-Net 직업훈련 취업스킬 후보",
+    provider: "HRD-Net",
+    type: "직업훈련",
+    language: "한국어",
+    difficulty: "기초실습",
+    estimatedMinutes: 90,
+    practiceMinutes: 60,
+    sequenceLevel: 2,
+    tracks: ["mechanical-cae", "production-quality", "semiconductor-equipment", "electronics-pcb", "embedded-control"],
+    skills: ["직무 이해", "도구역량", "문서화", "자격증"],
+    prerequisites: ["관심 직무 트랙 선택"],
+    reason: "취업용 실무 스킬이나 자격 과정이 필요한 경우 직무명으로 검색해 실제 수강 가능한 훈련을 고릅니다.",
+    expectedOutput: "관심 직무와 연결되는 HRD-Net 과정 1개와 수강 목적 기록",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-26",
+      nextReviewAt: "2026-07-26"
+    },
+    url: "https://www.hrd.go.kr/"
+  },
+  {
+    id: "digital-learning-ai-it-basics",
+    title: "디지털배움터 AI·IT 기초 후보",
+    provider: "디지털배움터",
+    type: "무료교육",
+    language: "한국어",
+    difficulty: "입문",
+    estimatedMinutes: 60,
+    practiceMinutes: 30,
+    sequenceLevel: 1,
+    tracks: ["production-quality", "semiconductor-equipment", "electronics-pcb", "embedded-control"],
+    skills: ["AI 기초", "IT 기초", "데이터 분석", "직무 이해"],
+    prerequisites: [],
+    reason: "AI·IT 활용이 처음인 학생이 데이터, 디지털 도구, 자동화 용어를 가볍게 정리할 때 사용합니다.",
+    expectedOutput: "관심 직무에서 쓸 AI·IT 용어 5개와 활용 예시",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-26",
+      nextReviewAt: "2026-07-26"
+    },
+    url: "https://www.xn--2z1bw8k1pjz5ccumkb.kr/"
+  },
+  {
+    id: "gseek-career-certificate",
+    title: "GSEEK 자격증·취업기초 후보",
+    provider: "GSEEK",
+    type: "무료교육",
+    language: "한국어",
+    difficulty: "입문",
+    estimatedMinutes: 60,
+    practiceMinutes: 45,
+    sequenceLevel: 1,
+    tracks: ["mechanical-cae", "production-quality", "electronics-pcb", "embedded-control"],
+    skills: ["자격증", "문서화", "직무 이해"],
+    prerequisites: [],
+    reason: "전공 심화 전 취업 기초, 자격증, 문서화 습관을 한국어로 빠르게 보완할 때 연결합니다.",
+    expectedOutput: "지원 직무와 연결되는 자격·취업 강좌 1개와 보완 이유",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-26",
+      nextReviewAt: "2026-07-26"
+    },
+    url: "https://www.gseek.kr/"
+  },
+  {
+    id: "coursera-engineering-data",
+    title: "Coursera 공학 데이터·분석 무료청강 후보",
+    provider: "Coursera",
+    type: "글로벌 무료청강",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 120,
+    practiceMinutes: 90,
+    sequenceLevel: 3,
+    tracks: ["production-quality", "semiconductor-equipment", "mechanical-cae"],
+    skills: ["데이터 분석", "통계", "Python/SQL", "수율분석"],
+    prerequisites: ["기초 통계", "스프레드시트 또는 Python 기초"],
+    reason: "공정·수율·시험 데이터를 다루는 직무에서 글로벌 강좌를 무료청강으로 보완할 때 적합합니다.",
+    expectedOutput: "공정 또는 시험 데이터 분석 강좌 1개와 적용할 데이터 과제",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-26",
+      nextReviewAt: "2026-07-26"
+    },
+    url: "https://www.coursera.org/search?query=engineering%20data%20analysis"
+  },
+  {
+    id: "coursera-embedded-control",
+    title: "Coursera 임베디드·제어 무료청강 후보",
+    provider: "Coursera",
+    type: "글로벌 무료청강",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 120,
+    practiceMinutes: 90,
+    sequenceLevel: 3,
+    tracks: ["embedded-control", "electronics-pcb"],
+    skills: ["C언어", "제어", "센서", "검증"],
+    prerequisites: ["C언어 기초", "제어공학 기초"],
+    reason: "제어, 센서, 임베디드 시스템 강좌를 면접 설명용 산출물과 연결할 때 사용합니다.",
+    expectedOutput: "임베디드·제어 강좌 1개와 PID/센서 과제 적용 메모",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-26",
+      nextReviewAt: "2026-07-26"
+    },
+    url: "https://www.coursera.org/search?query=embedded%20systems%20control"
+  },
+  {
+    id: "edx-engineering-systems",
+    title: "edX 공학 시스템·전공심화 후보",
+    provider: "edX",
+    type: "글로벌 무료청강",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 120,
+    practiceMinutes: 90,
+    sequenceLevel: 3,
+    tracks: ["mechanical-cae", "semiconductor-equipment", "electronics-pcb", "embedded-control"],
+    skills: ["전공지식", "모델링", "전자회로", "공정 흐름"],
+    prerequisites: ["전공 기초"],
+    reason: "MIT·Harvard 등 글로벌 전공 강좌를 심화 개념 보완이나 면접 근거 자료로 연결합니다.",
+    expectedOutput: "직무 과제와 연결되는 edX 강좌 1개와 핵심 단원 2개 기록",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-26",
+      nextReviewAt: "2026-07-26"
+    },
+    url: "https://www.edx.org/search?q=engineering"
+  },
+  {
+    id: "khan-math-physics-basics",
+    title: "Khan Academy 수학·물리 기본기",
+    provider: "Khan Academy",
+    type: "무료교육",
+    language: "영어",
+    difficulty: "입문",
+    estimatedMinutes: 90,
+    practiceMinutes: 60,
+    sequenceLevel: 1,
+    tracks: ["mechanical-cae", "production-quality", "semiconductor-equipment", "electronics-pcb", "embedded-control"],
+    skills: ["수학", "물리", "통계", "전공지식"],
+    prerequisites: [],
+    reason: "전공 강의가 어렵게 느껴질 때 수학·물리·통계 기본기를 짧게 보완하는 자료입니다.",
+    expectedOutput: "이번 주 과제에 필요한 수학·물리 개념 3개 풀이 기록",
+    qualityStatus: "verified",
+    url: "https://www.khanacademy.org/"
+  },
+  {
+    id: "freecodecamp-python-data",
+    title: "freeCodeCamp Python·데이터 프로젝트",
+    provider: "freeCodeCamp",
+    type: "프로젝트 무료교육",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 120,
+    practiceMinutes: 120,
+    sequenceLevel: 3,
+    tracks: ["production-quality", "semiconductor-equipment", "embedded-control"],
+    skills: ["Python/SQL", "데이터 분석", "Git", "문서화"],
+    prerequisites: ["프로그래밍 입문"],
+    reason: "공정 데이터, 수율 분석, 로그 정리 과제를 코드 기반 포트폴리오로 남길 때 적합합니다.",
+    expectedOutput: "CSV 분석 노트북 또는 GitHub README 초안",
+    qualityStatus: "verified",
+    url: "https://www.freecodecamp.org/learn/data-analysis-with-python/"
+  },
+  {
+    id: "inflearn-free-it-practice",
+    title: "인프런 무료 IT·임베디드 실습 후보",
+    provider: "인프런",
+    type: "무료교육",
+    language: "한국어",
+    difficulty: "기초실습",
+    estimatedMinutes: 90,
+    practiceMinutes: 90,
+    sequenceLevel: 2,
+    tracks: ["electronics-pcb", "embedded-control", "production-quality"],
+    skills: ["C언어", "Python/SQL", "Git", "디버깅"],
+    prerequisites: ["기초 프로그래밍"],
+    reason: "한국어로 C, Python, Git, 실습형 IT 보완이 필요할 때 무료 강좌 후보를 고릅니다.",
+    expectedOutput: "실습 강좌 1개와 직무 과제에 적용할 코드/문서화 계획",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-26",
+      nextReviewAt: "2026-07-26"
+    },
+    url: "https://www.inflearn.com/courses?s=%EB%AC%B4%EB%A3%8C"
+  },
+  {
+    id: "udemy-free-practical-tools",
+    title: "Udemy 무료 실전 도구 강의 후보",
+    provider: "Udemy",
+    type: "무료교육 후보",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 90,
+    practiceMinutes: 60,
+    sequenceLevel: 2,
+    tracks: ["mechanical-cae", "production-quality", "electronics-pcb", "embedded-control"],
+    skills: ["도구역량", "문제해결", "문서화"],
+    prerequisites: ["관심 직무 트랙 선택"],
+    reason: "CAD, Python, 회로, 품질 도구처럼 바로 써먹는 스킬을 짧게 보완할 후보로만 사용합니다.",
+    expectedOutput: "실전 도구 강좌 1개와 직무 산출물 적용 계획",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-26",
+      nextReviewAt: "2026-07-26"
+    },
+    url: "https://www.udemy.com/courses/free/"
+  },
+  {
+    id: "youtube-official-engineering",
+    title: "YouTube 대학·기업 공식강의 후보",
+    provider: "YouTube",
+    type: "공개강의 후보",
+    language: "한국어/영어",
+    difficulty: "입문",
+    estimatedMinutes: 45,
+    practiceMinutes: 45,
+    sequenceLevel: 1,
+    tracks: ["mechanical-cae", "production-quality", "semiconductor-equipment", "electronics-pcb", "embedded-control"],
+    skills: ["직무 이해", "전공지식", "도구역량"],
+    prerequisites: [],
+    reason: "대학·기업 공식 채널의 짧은 강의만 후보로 보고, 출처가 불명확한 영상은 저장하지 않습니다.",
+    expectedOutput: "공식 영상 1개와 이번 주 과제에 연결되는 개념 3개",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-26",
+      nextReviewAt: "2026-07-26"
+    },
+    url: "https://www.youtube.com/results?search_query=engineering+lecture+mechanical+electronics"
   }
 ].map(normalizeResource);
 
@@ -1416,35 +1650,46 @@ const resourceTaskLinks = {
   "kocw-semiconductor": ["공정 흐름 매핑", "식각 장비 변수 정리", "수율 Pareto 분석"],
   "kocw-electronics-circuit": ["전원 요구사항 정의", "센서 신호 증폭 회로", "검증 리포트"],
   "kocw-embedded-control": ["MCU 주변장치 설계", "UART 센서 프로토콜", "PID 응답 실험"],
-  "step-engineering": ["설계 변경 제안", "8D 개선 보고서", "조건 변경 검토표", "PCB 리뷰 체크리스트", "디버깅 노트와 README"]
+  "step-engineering": ["설계 변경 제안", "8D 개선 보고서", "조건 변경 검토표", "PCB 리뷰 체크리스트", "디버깅 노트와 README"],
+  "hrd-net-job-training": ["제품 요구사항 분해", "8D 개선 보고서", "조건 변경 검토표", "PCB 리뷰 체크리스트", "디버깅 노트와 README"],
+  "digital-learning-ai-it-basics": ["공정 문제 정의", "수율 Pareto 분석", "MCU 주변장치 설계", "검증 리포트"],
+  "gseek-career-certificate": ["제품 요구사항 분해", "공정 문제 정의", "전원 요구사항 정의", "MCU 주변장치 설계"],
+  "coursera-engineering-data": ["관리도와 Cpk 계산", "수율 Pareto 분석", "해석 조건 검증", "조건 변경 검토표"],
+  "coursera-embedded-control": ["PID 응답 실험", "UART 센서 프로토콜", "디버깅 노트와 README", "검증 리포트"],
+  "edx-engineering-systems": ["해석 조건 검증", "공정 흐름 매핑", "전원 요구사항 정의", "PID 응답 실험"],
+  "khan-math-physics-basics": ["손계산과 CAD 초안", "관리도와 Cpk 계산", "전원 요구사항 정의", "PID 응답 실험"],
+  "freecodecamp-python-data": ["관리도와 Cpk 계산", "수율 Pareto 분석", "디버깅 노트와 README"],
+  "inflearn-free-it-practice": ["UART 센서 프로토콜", "디버깅 노트와 README", "검증 리포트"],
+  "udemy-free-practical-tools": ["손계산과 CAD 초안", "PCB 리뷰 체크리스트", "8D 개선 보고서", "디버깅 노트와 README"],
+  "youtube-official-engineering": ["제품 요구사항 분해", "공정 문제 정의", "공정 흐름 매핑", "전원 요구사항 정의", "MCU 주변장치 설계"]
 };
 
 const roleResourceLinks = {
-  "mechanical-design-engineer": ["kocw-mechanical-design", "mit-design-manufacturing", "step-engineering", "optimization-onramp"],
-  "cae-analysis-engineer": ["matlab-onramp", "simscape-onramp", "mit-numerical-me", "kocw-mechanical-design", "signal-processing-onramp"],
-  "manufacturing-design-engineer": ["mit-design-manufacturing", "kocw-mechanical-design", "step-engineering", "optimization-onramp"],
-  "thermal-cfd-engineer": ["matlab-onramp", "simscape-onramp", "mit-numerical-me", "signal-processing-onramp"],
-  "mechanical-test-engineer": ["matlab-onramp", "signal-processing-onramp", "step-engineering", "kocw-mechanical-design"],
-  "process-engineer": ["nist-spc", "moresteam-doe", "matlab-onramp", "optimization-onramp", "kocw-production-quality"],
-  "quality-engineer": ["kocw-production-quality", "nist-spc", "asq-fmea", "asq-eight-d", "quality-one-fmea"],
-  "production-data-engineer": ["matlab-onramp", "machine-learning-onramp", "nist-spc", "kocw-production-quality"],
-  "production-technology-engineer": ["step-engineering", "moresteam-doe", "simulink-onramp", "optimization-onramp"],
-  "supplier-quality-engineer": ["asq-eight-d", "quality-one-fmea", "lean-a3-problem-solving", "ncs"],
-  "semiconductor-process-engineer": ["kocw-semiconductor", "nist-spc", "moresteam-doe", "matlab-onramp", "optimization-onramp"],
-  "semiconductor-equipment-engineer": ["kocw-semiconductor", "simulink-onramp", "simscape-onramp", "matlab-onramp", "signal-processing-onramp"],
-  "semiconductor-yield-engineer": ["matlab-onramp", "machine-learning-onramp", "nist-spc", "kocw-semiconductor"],
-  "etch-process-engineer": ["kocw-semiconductor", "moresteam-doe", "nist-spc", "matlab-onramp"],
-  "metrology-engineer": ["signal-processing-onramp", "matlab-onramp", "nist-spc", "kocw-semiconductor"],
-  "hardware-design-engineer": ["mit-circuits", "ti-precision-labs", "simscape-onramp", "analog-dialogue", "matlab-onramp"],
-  "pcb-design-engineer": ["kocw-electronics-circuit", "ti-precision-labs", "analog-dialogue", "step-engineering"],
-  "validation-engineer": ["signal-processing-onramp", "matlab-onramp", "ti-precision-labs", "analog-dialogue", "simulink-onramp"],
-  "power-hardware-engineer": ["simscape-onramp", "ti-precision-labs", "kocw-electronics-circuit", "simulink-onramp"],
-  "emc-test-engineer": ["signal-processing-onramp", "analog-dialogue", "ti-precision-labs", "kocw-electronics-circuit"],
-  "embedded-firmware-engineer": ["stm32-education", "kocw-embedded-control", "stateflow-onramp", "simulink-onramp"],
-  "control-engineer": ["control-design-onramp", "simulink-onramp", "matlab-onramp", "signal-processing-onramp", "sensor-fusion-onramp"],
-  "robotics-software-engineer": ["ros-tutorials", "sensor-fusion-onramp", "simulink-onramp", "matlab-onramp"],
-  "embedded-linux-engineer": ["kocw-embedded-control", "stm32-education", "ros-tutorials", "step-engineering"],
-  "motor-control-engineer": ["control-design-onramp", "simulink-onramp", "simscape-onramp", "stateflow-onramp", "matlab-onramp"]
+  "mechanical-design-engineer": ["kocw-mechanical-design", "mit-design-manufacturing", "step-engineering", "optimization-onramp", "khan-math-physics-basics", "udemy-free-practical-tools"],
+  "cae-analysis-engineer": ["matlab-onramp", "simscape-onramp", "mit-numerical-me", "kocw-mechanical-design", "signal-processing-onramp", "coursera-engineering-data", "edx-engineering-systems"],
+  "manufacturing-design-engineer": ["mit-design-manufacturing", "kocw-mechanical-design", "step-engineering", "optimization-onramp", "hrd-net-job-training", "udemy-free-practical-tools"],
+  "thermal-cfd-engineer": ["matlab-onramp", "simscape-onramp", "mit-numerical-me", "signal-processing-onramp", "edx-engineering-systems", "coursera-engineering-data"],
+  "mechanical-test-engineer": ["matlab-onramp", "signal-processing-onramp", "step-engineering", "kocw-mechanical-design", "hrd-net-job-training", "youtube-official-engineering"],
+  "process-engineer": ["nist-spc", "moresteam-doe", "matlab-onramp", "optimization-onramp", "kocw-production-quality", "coursera-engineering-data", "hrd-net-job-training"],
+  "quality-engineer": ["kocw-production-quality", "nist-spc", "asq-fmea", "asq-eight-d", "quality-one-fmea", "hrd-net-job-training", "gseek-career-certificate"],
+  "production-data-engineer": ["matlab-onramp", "machine-learning-onramp", "nist-spc", "kocw-production-quality", "coursera-engineering-data", "freecodecamp-python-data", "digital-learning-ai-it-basics"],
+  "production-technology-engineer": ["step-engineering", "moresteam-doe", "simulink-onramp", "optimization-onramp", "hrd-net-job-training", "udemy-free-practical-tools"],
+  "supplier-quality-engineer": ["asq-eight-d", "quality-one-fmea", "lean-a3-problem-solving", "ncs", "hrd-net-job-training", "gseek-career-certificate"],
+  "semiconductor-process-engineer": ["kocw-semiconductor", "nist-spc", "moresteam-doe", "matlab-onramp", "optimization-onramp", "edx-engineering-systems", "coursera-engineering-data"],
+  "semiconductor-equipment-engineer": ["kocw-semiconductor", "simulink-onramp", "simscape-onramp", "matlab-onramp", "signal-processing-onramp", "edx-engineering-systems", "hrd-net-job-training"],
+  "semiconductor-yield-engineer": ["matlab-onramp", "machine-learning-onramp", "nist-spc", "kocw-semiconductor", "coursera-engineering-data", "freecodecamp-python-data", "digital-learning-ai-it-basics"],
+  "etch-process-engineer": ["kocw-semiconductor", "moresteam-doe", "nist-spc", "matlab-onramp", "edx-engineering-systems", "coursera-engineering-data"],
+  "metrology-engineer": ["signal-processing-onramp", "matlab-onramp", "nist-spc", "kocw-semiconductor", "coursera-engineering-data", "freecodecamp-python-data"],
+  "hardware-design-engineer": ["mit-circuits", "ti-precision-labs", "simscape-onramp", "analog-dialogue", "matlab-onramp", "edx-engineering-systems", "khan-math-physics-basics"],
+  "pcb-design-engineer": ["kocw-electronics-circuit", "ti-precision-labs", "analog-dialogue", "step-engineering", "inflearn-free-it-practice", "udemy-free-practical-tools"],
+  "validation-engineer": ["signal-processing-onramp", "matlab-onramp", "ti-precision-labs", "analog-dialogue", "simulink-onramp", "freecodecamp-python-data", "youtube-official-engineering"],
+  "power-hardware-engineer": ["simscape-onramp", "ti-precision-labs", "kocw-electronics-circuit", "simulink-onramp", "edx-engineering-systems", "khan-math-physics-basics"],
+  "emc-test-engineer": ["signal-processing-onramp", "analog-dialogue", "ti-precision-labs", "kocw-electronics-circuit", "udemy-free-practical-tools", "youtube-official-engineering"],
+  "embedded-firmware-engineer": ["stm32-education", "kocw-embedded-control", "stateflow-onramp", "simulink-onramp", "freecodecamp-python-data", "inflearn-free-it-practice"],
+  "control-engineer": ["control-design-onramp", "simulink-onramp", "matlab-onramp", "signal-processing-onramp", "sensor-fusion-onramp", "coursera-embedded-control", "edx-engineering-systems"],
+  "robotics-software-engineer": ["ros-tutorials", "sensor-fusion-onramp", "simulink-onramp", "matlab-onramp", "coursera-embedded-control", "freecodecamp-python-data"],
+  "embedded-linux-engineer": ["kocw-embedded-control", "stm32-education", "ros-tutorials", "step-engineering", "freecodecamp-python-data", "inflearn-free-it-practice"],
+  "motor-control-engineer": ["control-design-onramp", "simulink-onramp", "simscape-onramp", "stateflow-onramp", "matlab-onramp", "coursera-embedded-control", "edx-engineering-systems"]
 };
 
 const storageKey = "careerCompetencyPilot";
@@ -2425,7 +2670,7 @@ function getGoalResourceScore(resource, context) {
     "근거",
     "메모"
   ]);
-  const officialSource = /공식|정부|협회|대학|ocw|무료교육|mathworks|ncs|nist|asq/.test(text) ? 1 : 0;
+  const officialSource = /공식|정부|협회|대학|ocw|무료교육|무료청강|mathworks|ncs|nist|asq|coursera|edx|khan|freecodecamp|hrd-net|gseek|인프런|udemy|youtube/.test(text) ? 1 : 0;
   let score = 0;
 
   if (goalKey === "explore") {
