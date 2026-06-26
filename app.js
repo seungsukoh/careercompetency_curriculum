@@ -1162,6 +1162,7 @@ function bindElements() {
     "roleGroupFilter",
     "trackList",
     "trackDetail",
+    "diagnosisGuide",
     "diagnosisTitle",
     "scoreBadge",
     "scoreBar",
@@ -1581,15 +1582,18 @@ function renderDiagnostics() {
   const role = getSelectedRole(track.id);
   const questions = getDiagnosticItems(track);
   elements.diagnosisTitle.textContent = role ? `${track.title} · ${role.title}` : track.title;
+  elements.diagnosisGuide.innerHTML = renderDiagnosisGuide(track, role, questions);
   elements.diagnosticList.innerHTML = questions.map((item) => {
     const checked = Boolean(state.checked[item.id]);
     return `
-      <label class="check-item">
-        <input type="checkbox" data-check-id="${item.id}" ${checked ? "checked" : ""}>
+      <label class="check-item ${checked ? "is-checked" : ""}">
+        <input type="checkbox" data-check-id="${item.id}" aria-label="${item.skill} 역량 보유 여부" ${checked ? "checked" : ""}>
         <span>
           <span class="diagnostic-source">${item.source}</span>
+          <span class="diagnostic-state">${checked ? "할 수 있음" : "보완 필요로 둠"}</span>
           <strong>${item.skill}</strong>
-          ${item.question}
+          <span class="diagnostic-question">${item.question}</span>
+          <span class="diagnostic-choice-rule">체크 기준: 도움 없이 설명하거나 간단한 산출물로 증명할 수 있을 때만 체크하세요.</span>
         </span>
       </label>
     `;
@@ -1617,9 +1621,32 @@ function renderDiagnostics() {
       <article class="gap-item">
         <strong>${item.skill}</strong>
         <p>${item.question}</p>
+        <p class="gap-action">이 항목은 로드맵과 교육자료 추천에서 우선 보완 대상으로 사용됩니다.</p>
       </article>
     `).join("")
     : `<div class="empty-state">현재 체크리스트 기준으로 큰 공백이 없습니다. 산출물 정리 단계로 넘어가세요.</div>`;
+}
+
+function renderDiagnosisGuide(track, role, questions) {
+  const roleItems = questions.filter((item) => item.source === role?.title).length;
+  const industryItems = questions.filter((item) => item.source === getIndustryLabel()).length;
+  const diagnosisScope = [
+    "트랙 공통",
+    role ? `${role.title} ${roleItems}개` : "",
+    industryItems ? `${getIndustryLabel()} 산업 ${industryItems}개` : ""
+  ].filter(Boolean).join(" · ");
+  return `
+    <div>
+      <p class="eyebrow">선택 기준</p>
+      <h3>채용공고에서 요구하는 역량을 이미 증명할 수 있으면 체크</h3>
+      <p>${diagnosisScope} 기준으로 진단합니다.</p>
+    </div>
+    <div class="diagnosis-guide-grid">
+      <span><strong>체크</strong>혼자 설명, 실습, 산출물 중 하나로 증명 가능</span>
+      <span><strong>미체크</strong>개념만 들어봤거나 예제를 보고도 막히는 상태</span>
+      <span><strong>헷갈림</strong>미체크로 두면 로드맵에서 우선 보완</span>
+    </div>
+  `;
 }
 
 function getDiagnosticScore(trackId) {
@@ -1695,7 +1722,8 @@ function renderRoadmap() {
         <ul class="rubric-list">${task.rubric.map((item) => `<li>${item}</li>`).join("")}</ul>
       </div>
       <div class="roadmap-resource-block">
-        <h4>연결 교육 확인</h4>
+        <h4>추천 교육자료</h4>
+        <p class="roadmap-resource-guide">교육 제목을 누르면 연결 이유와 교육 링크가 열립니다.</p>
         ${linkedResources.length
           ? `<div class="roadmap-resource-list">${linkedResources.map((resource) => renderRoadmapResourceItem(resource, task, context)).join("")}</div>`
           : `<div class="empty-state compact">이 과제에 연결된 교육자료 후보가 아직 없습니다.</div>`}
@@ -1899,8 +1927,11 @@ function renderRoadmapResourceItem(resource, task, context) {
   return `
     <details class="roadmap-resource-item ${completed ? "is-completed" : ""}">
       <summary>
-        <strong>${resource.title}</strong>
-        <span>${completed ? "완료됨" : "교육 상세 확인"}</span>
+        <span class="roadmap-resource-title">
+          <strong>${resource.title}</strong>
+          <em>${resource.provider} · ${formatMinutes(resource.totalMinutes)}</em>
+        </span>
+        <span class="roadmap-resource-status">${completed ? "완료됨" : "교육 확인"}</span>
       </summary>
       <div class="roadmap-resource-detail">
         <p>${resource.provider} · ${resource.difficulty} · ${formatMinutes(resource.totalMinutes)}</p>
