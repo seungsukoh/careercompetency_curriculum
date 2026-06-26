@@ -102,7 +102,6 @@
             <button class="tab" type="button" data-view="diagnosis">진단</button>
             <button class="tab" type="button" data-view="roadmap">로드맵</button>
             <button class="tab" type="button" data-view="saved">내 계획</button>
-            <button class="tab" type="button" data-view="library">자료 탐색</button>
           </nav>
 
           <section class="view is-active" id="tracksView">
@@ -159,26 +158,6 @@
               <span class="status-pill">핵심 과제 우선</span>
             </div>
             <div class="roadmap" id="roadmapList"></div>
-          </section>
-
-          <section class="view" id="libraryView">
-            <div class="section-heading">
-              <div>
-                <p class="eyebrow">로드맵 외 후보 확인</p>
-                <h2>보조 교육자료 탐색</h2>
-              </div>
-              <label class="compact-filter">
-                난이도
-                <select id="difficultyFilter">
-                  <option value="all">전체</option>
-                  <option value="입문">입문</option>
-                  <option value="기초실습">기초실습</option>
-                  <option value="적용">적용</option>
-                </select>
-              </label>
-            </div>
-            <div class="resource-guidance" id="resourceGuidance"></div>
-            <div class="resource-list" id="resourceList"></div>
           </section>
 
           <section class="view" id="savedView">

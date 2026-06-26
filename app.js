@@ -1234,6 +1234,7 @@ const resourceTaskLinks = {
 };
 
 const storageKey = "careerCompetencyPilot";
+const primaryViews = ["tracks", "diagnosis", "roadmap", "saved"];
 
 const defaultState = {
   selectedTrackId: "production-quality",
@@ -1284,9 +1285,6 @@ function bindElements() {
     "gapList",
     "roadmapTitle",
     "roadmapList",
-    "difficultyFilter",
-    "resourceGuidance",
-    "resourceList",
     "savedList",
     "summaryPreview",
     "clearSavedButton",
@@ -1341,13 +1339,6 @@ function bindEvents() {
     render();
   });
 
-  elements.difficultyFilter.addEventListener("change", (event) => {
-    state.difficulty = event.target.value;
-    saveState();
-    renderResources();
-    renderSummaryPreview();
-  });
-
   document.querySelectorAll(".tab").forEach((button) => {
     button.addEventListener("click", () => {
       state.view = button.dataset.view;
@@ -1390,6 +1381,7 @@ function loadState() {
       profile: { ...defaultState.profile, ...(stored?.profile || {}) },
       roleSearch: typeof stored?.roleSearch === "string" ? stored.roleSearch : defaultState.roleSearch,
       roleGroupFilter: stored?.roleGroupFilter || defaultState.roleGroupFilter,
+      view: normalizeView(stored?.view, defaultState.view),
       selectedRoles: { ...defaultState.selectedRoles, ...(stored?.selectedRoles || {}) },
       checked: stored?.checked || defaultState.checked,
       saved: Array.isArray(stored?.saved) ? stored.saved : defaultState.saved,
@@ -1405,13 +1397,17 @@ function saveState() {
   localStorage.setItem(storageKey, JSON.stringify(state));
 }
 
+function normalizeView(view, fallback = "roadmap") {
+  if (primaryViews.includes(view)) return view;
+  return fallback;
+}
+
 function render() {
   elements.majorSelect.value = state.profile.major;
   elements.yearSelect.value = state.profile.year;
   elements.industrySelect.value = state.profile.industry;
   elements.goalSelect.value = state.profile.goal;
   elements.durationSelect.value = state.profile.durationWeeks;
-  elements.difficultyFilter.value = state.difficulty;
   elements.roleSearchInput.value = state.roleSearch || "";
   elements.roleGroupFilter.value = state.roleGroupFilter || "all";
   const changedTrack = syncSelectedTrackWithProfile();
@@ -1428,6 +1424,7 @@ function render() {
 }
 
 function renderViews() {
+  state.view = normalizeView(state.view);
   document.querySelectorAll(".tab").forEach((button) => {
     button.classList.toggle("is-active", button.dataset.view === state.view);
   });
@@ -2000,6 +1997,7 @@ function getNextCurriculumTask(trackId) {
 }
 
 function renderResources() {
+  if (!elements.resourceList) return;
   const track = getSelectedTrack();
   const gapSkills = getGapSkills(track.id);
   const context = getRecommendationContext(track, gapSkills);

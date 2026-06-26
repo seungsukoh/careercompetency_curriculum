@@ -231,7 +231,7 @@ input::placeholder {
 
 .tabs {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0;
   border-bottom: 1px solid var(--line);
   background: #f8faf7;
@@ -984,7 +984,7 @@ li {
 
   .tabs {
     overflow-x: auto;
-    grid-template-columns: repeat(5, minmax(72px, 1fr));
+    grid-template-columns: repeat(4, minmax(72px, 1fr));
   }
 
   .tab {
