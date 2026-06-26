@@ -99,10 +99,10 @@
         <section class="workspace">
           <nav class="tabs" aria-label="화면 전환">
             <button class="tab is-active" type="button" data-view="tracks">직무</button>
-            <button class="tab" type="button" data-view="roadmap">로드맵</button>
             <button class="tab" type="button" data-view="diagnosis">진단</button>
-            <button class="tab" type="button" data-view="library">교육자료</button>
+            <button class="tab" type="button" data-view="roadmap">로드맵</button>
             <button class="tab" type="button" data-view="saved">내 계획</button>
+            <button class="tab" type="button" data-view="library">자료 탐색</button>
           </nav>
 
           <section class="view is-active" id="tracksView">
@@ -164,8 +164,8 @@
           <section class="view" id="libraryView">
             <div class="section-heading">
               <div>
-                <p class="eyebrow">로드맵 연계 교육자료</p>
-                <h2>직무역량 교육자료</h2>
+                <p class="eyebrow">로드맵 외 후보 확인</p>
+                <h2>보조 교육자료 탐색</h2>
               </div>
               <label class="compact-filter">
                 난이도
@@ -187,7 +187,10 @@
                 <p class="eyebrow">내 계획</p>
                 <h2>내 계획에 추가한 교육자료</h2>
               </div>
-              <button class="ghost-button" id="clearSavedButton" type="button">계획 비우기</button>
+              <div class="section-actions">
+                <button class="primary-button" id="exportPlanButton" type="button">엑셀로 내보내기</button>
+                <button class="ghost-button" id="clearSavedButton" type="button">계획 비우기</button>
+              </div>
             </div>
             <div class="resource-list" id="savedList"></div>
           </section>

@@ -1290,6 +1290,7 @@ function bindElements() {
     "savedList",
     "summaryPreview",
     "clearSavedButton",
+    "exportPlanButton",
     "copySummaryButton",
     "installButton"
   ].forEach((id) => {
@@ -1363,6 +1364,7 @@ function bindEvents() {
   });
 
   elements.copySummaryButton.addEventListener("click", copyPilotSummary);
+  elements.exportPlanButton.addEventListener("click", exportPlanAsExcel);
 
   window.addEventListener("beforeinstallprompt", (event) => {
     event.preventDefault();
@@ -2505,6 +2507,233 @@ function buildPilotSummary() {
     "내 계획 교육자료:",
     savedTitles
   ].join("\n");
+}
+
+function exportPlanAsExcel() {
+  try {
+    const track = getSelectedTrack();
+    const workbook = buildPlanExportWorkbook();
+    const xml = buildExcelXml(workbook);
+    const fileName = sanitizeFileName(`직무역량_내계획_${track.title}_${formatExportDate()}.xls`);
+    downloadTextFile(fileName, xml, "application/vnd.ms-excel;charset=utf-8");
+    elements.exportPlanButton.textContent = "내보내기 완료";
+  } catch {
+    elements.exportPlanButton.textContent = "내보내기 실패";
+  }
+
+  setTimeout(() => {
+    elements.exportPlanButton.textContent = "엑셀로 내보내기";
+  }, 1800);
+}
+
+function buildPlanExportWorkbook() {
+  return [
+    { name: "요약", rows: buildSummaryExportRows() },
+    { name: "내 계획", rows: buildSavedResourceExportRows() },
+    { name: "로드맵", rows: buildRoadmapExportRows() },
+    { name: "진단", rows: buildDiagnosisExportRows() }
+  ];
+}
+
+function buildSummaryExportRows() {
+  const track = getSelectedTrack();
+  const role = getSelectedRole(track.id);
+  const gapSkills = getGapSkills(track.id);
+  const visibleTasks = getVisibleRoadmapTasks(track.id);
+  const nextTask = getNextCurriculumTask(track.id);
+  const context = getRecommendationContext(track, gapSkills, visibleTasks);
+  const nextResource = getRecommendedResources(track, context)[0]?.title || "없음";
+  const completedWeeks = visibleTasks
+    .map((task) => getRoadmapStepId(track.id, task))
+    .filter((stepId) => state.completedRoadmap.includes(stepId)).length;
+
+  return [
+    ["항목", "내용"],
+    ["내보낸 날짜", formatExportDate()],
+    ["전공", getSelectLabel(elements.majorSelect)],
+    ["학년", getSelectLabel(elements.yearSelect)],
+    ["관심 산업", getSelectLabel(elements.industrySelect)],
+    ["학습 목표", learningGoals[state.profile.goal]?.label || state.profile.goal],
+    ["준비 기간", getDurationLabel()],
+    ["직무군", track.title],
+    ["선택 직무", role?.title || "미선택"],
+    ["진단 점수", `${getDiagnosticScore(track.id)}%`],
+    ["보완 역량", gapSkills.slice(0, 8).join(", ") || "큰 공백 없음"],
+    ["다음 과제", `${nextTask.title} - ${nextTask.deliverable}`],
+    ["다음 추천 교육자료", nextResource],
+    ["완료 주차", `${completedWeeks}/${visibleTasks.length}`],
+    ["내 계획 교육자료", `${state.saved.length}개`],
+    ["완료 교육자료", `${state.completed.length}개`]
+  ];
+}
+
+function buildSavedResourceExportRows() {
+  const track = getSelectedTrack();
+  const visibleTasks = getVisibleRoadmapTasks(track.id);
+  const savedResources = getSavedResources();
+  const rows = [[
+    "상태",
+    "교육자료",
+    "제공처",
+    "유형",
+    "난이도",
+    "언어",
+    "총 시간",
+    "학습",
+    "실습",
+    "선행",
+    "연결 과제",
+    "산출물",
+    "URL"
+  ]];
+
+  if (!savedResources.length) {
+    rows.push(["내 계획에 추가된 교육자료가 없습니다.", "", "", "", "", "", "", "", "", "", "", "", ""]);
+    return rows;
+  }
+
+  savedResources.forEach((resource) => {
+    rows.push([
+      state.completed.includes(resource.id) ? "완료" : "진행",
+      resource.title,
+      resource.provider,
+      resource.type,
+      resource.difficulty,
+      resource.language,
+      formatMinutes(resource.totalMinutes),
+      formatMinutes(resource.estimatedMinutes),
+      formatMinutes(resource.practiceMinutes),
+      resource.prerequisites.length ? resource.prerequisites.join(", ") : "없음",
+      getResourceLinkedTasks(resource.id, visibleTasks).join(", ") || "직무 공통",
+      resource.expectedOutput,
+      resource.url
+    ]);
+  });
+
+  return rows;
+}
+
+function buildRoadmapExportRows() {
+  const track = getSelectedTrack();
+  const tasks = getVisibleRoadmapTasks(track.id);
+  const context = getRecommendationContext(track, getGapSkills(track.id), tasks);
+  const resourceUseCounts = new Map();
+  const rows = [["주차", "단계", "과제", "목표", "예상 시간", "산출물", "추천 교육자료", "완료 여부"]];
+
+  tasks.forEach((task) => {
+    const linkedResources = getRoadmapResourcesForTask(track, task, context, resourceUseCounts);
+    linkedResources.forEach((resource) => {
+      resourceUseCounts.set(resource.id, (resourceUseCounts.get(resource.id) || 0) + 1);
+    });
+    rows.push([
+      task.weekLabel,
+      task.phase || "",
+      task.title,
+      task.objective,
+      task.time,
+      task.deliverable,
+      linkedResources.map((resource) => resource.title).join("\n"),
+      state.completedRoadmap.includes(getRoadmapStepId(track.id, task)) ? "완료" : "진행"
+    ]);
+  });
+
+  return rows;
+}
+
+function buildDiagnosisExportRows() {
+  const track = getSelectedTrack();
+  const rows = [["출처", "역량", "진단 문항", "체크 여부"]];
+  getDiagnosticItems(track).forEach((item) => {
+    rows.push([
+      item.source,
+      item.skill,
+      item.question,
+      state.checked[item.id] ? "체크됨" : "보완 필요"
+    ]);
+  });
+  return rows;
+}
+
+function getSavedResources() {
+  return resources
+    .filter((resource) => state.saved.includes(resource.id))
+    .sort((a, b) => sortResourcesForLearning(a, b));
+}
+
+function buildExcelXml(sheets) {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Styles>
+    <Style ss:ID="Default" ss:Name="Normal">
+      <Alignment ss:Vertical="Top" ss:WrapText="1"/>
+      <Font ss:FontName="Malgun Gothic" ss:Size="10"/>
+    </Style>
+    <Style ss:ID="Header">
+      <Alignment ss:Vertical="Center" ss:WrapText="1"/>
+      <Font ss:FontName="Malgun Gothic" ss:Size="10" ss:Bold="1"/>
+      <Interior ss:Color="#E6F2EC" ss:Pattern="Solid"/>
+    </Style>
+  </Styles>
+  ${sheets.map((sheet) => buildExcelWorksheet(sheet.name, sheet.rows)).join("\n")}
+</Workbook>`;
+}
+
+function buildExcelWorksheet(name, rows) {
+  const columnCount = Math.max(...rows.map((row) => row.length));
+  const columns = Array.from({ length: columnCount }, () => `<Column ss:Width="160"/>`).join("");
+  return `<Worksheet ss:Name="${escapeXml(name.slice(0, 31))}">
+    <Table>
+      ${columns}
+      ${rows.map((row, rowIndex) => buildExcelRow(row, rowIndex === 0)).join("\n")}
+    </Table>
+  </Worksheet>`;
+}
+
+function buildExcelRow(row, isHeader) {
+  return `<Row>${row.map((value) => buildExcelCell(value, isHeader)).join("")}</Row>`;
+}
+
+function buildExcelCell(value, isHeader) {
+  const type = typeof value === "number" && Number.isFinite(value) ? "Number" : "String";
+  return `<Cell ss:StyleID="${isHeader ? "Header" : "Default"}"><Data ss:Type="${type}">${escapeXml(value)}</Data></Cell>`;
+}
+
+function escapeXml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+function downloadTextFile(fileName, content, mimeType) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function sanitizeFileName(fileName) {
+  return fileName.replace(/[\\/:*?"<>|]/g, "-").replace(/\s+/g, "_");
+}
+
+function formatExportDate() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 async function copyPilotSummary() {
