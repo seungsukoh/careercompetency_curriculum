@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#155e75">
-    <meta name="description" content="기계공학과 전자공학 대학생을 위한 직무역량 로드맵 파일럿">
-    <title>직무역량 로드맵</title>
+    <meta name="description" content="기계공학과 전자공학 대학생을 위한 직무역량 교육 로드맵 파일럿">
+    <title>직무역량 교육 로드맵</title>
     <link rel="manifest" href="/manifest.webmanifest">
     <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/assets/icon.svg">
@@ -17,16 +17,16 @@
       <header class="app-header">
         <div>
           <p class="eyebrow">무료 파일럿</p>
-          <h1>직무역량 로드맵</h1>
+          <h1>직무역량 교육 로드맵</h1>
         </div>
-        <button class="ghost-button" id="installButton" type="button" hidden>앱으로 설치</button>
+        <button class="ghost-button" id="installButton" type="button" hidden>홈 화면에 설치</button>
       </header>
 
       <main class="layout">
         <aside class="panel profile-panel" aria-label="프로필 설정">
           <div class="panel-heading">
             <p class="eyebrow">내 기준</p>
-            <h2>직무 추천 조건</h2>
+            <h2>직무역량 교육 조건</h2>
           </div>
           <label>
             전공
@@ -64,11 +64,20 @@
               <option value="interview">면접 준비</option>
             </select>
           </label>
+          <label>
+            준비 기간
+            <select id="durationSelect">
+              <option value="2">2주 집중</option>
+              <option value="4" selected>4주 기본</option>
+              <option value="8">8주 심화</option>
+              <option value="12">12주 포트폴리오</option>
+            </select>
+          </label>
 
           <div class="metric-strip" aria-label="진행 요약">
             <div>
               <strong id="selectedTrackMetric">0</strong>
-              <span>선택 트랙</span>
+              <span>선택 직무</span>
             </div>
             <div>
               <strong id="diagnosticMetric">0%</strong>
@@ -76,7 +85,7 @@
             </div>
             <div>
               <strong id="savedMetric">0</strong>
-              <span>완료/저장</span>
+              <span>완료/계획</span>
             </div>
           </div>
 
@@ -90,19 +99,19 @@
         <section class="workspace">
           <nav class="tabs" aria-label="화면 전환">
             <button class="tab is-active" type="button" data-view="tracks">직무</button>
-            <button class="tab" type="button" data-view="diagnosis">진단</button>
             <button class="tab" type="button" data-view="roadmap">로드맵</button>
-            <button class="tab" type="button" data-view="library">자료</button>
-            <button class="tab" type="button" data-view="saved">저장</button>
+            <button class="tab" type="button" data-view="diagnosis">진단</button>
+            <button class="tab" type="button" data-view="library">교육자료</button>
+            <button class="tab" type="button" data-view="saved">내 계획</button>
           </nav>
 
           <section class="view is-active" id="tracksView">
             <div class="section-heading">
               <div>
-                <p class="eyebrow">직무 트랙</p>
-                <h2>관심 직무를 선택하세요</h2>
+                <p class="eyebrow">채용공고 직무</p>
+                <h2>지원하려는 직무명을 선택하세요</h2>
               </div>
-              <span class="status-pill" id="trackCount">0개 트랙</span>
+              <span class="status-pill" id="trackCount">0개 직무</span>
             </div>
             <div class="track-grid" id="trackList"></div>
             <article class="detail-panel" id="trackDetail"></article>
@@ -126,10 +135,10 @@
           <section class="view" id="roadmapView">
             <div class="section-heading">
               <div>
-                <p class="eyebrow">4주 계획</p>
+                <p class="eyebrow">기간 맞춤 계획</p>
                 <h2 id="roadmapTitle">로드맵</h2>
               </div>
-              <span class="status-pill">무료 공개자료 기반</span>
+              <span class="status-pill">핵심 과제 우선</span>
             </div>
             <div class="roadmap" id="roadmapList"></div>
           </section>
@@ -137,8 +146,8 @@
           <section class="view" id="libraryView">
             <div class="section-heading">
               <div>
-                <p class="eyebrow">자료 라이브러리</p>
-                <h2>직무역량 자료</h2>
+                <p class="eyebrow">로드맵 연계 교육자료</p>
+                <h2>직무역량 교육자료</h2>
               </div>
               <label class="compact-filter">
                 난이도
@@ -158,9 +167,9 @@
             <div class="section-heading">
               <div>
                 <p class="eyebrow">내 계획</p>
-                <h2>저장한 자료</h2>
+                <h2>내 계획에 추가한 교육자료</h2>
               </div>
-              <button class="ghost-button" id="clearSavedButton" type="button">저장 비우기</button>
+              <button class="ghost-button" id="clearSavedButton" type="button">계획 비우기</button>
             </div>
             <div class="resource-list" id="savedList"></div>
           </section>

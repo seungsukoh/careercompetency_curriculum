@@ -200,7 +200,7 @@ const resources = [
     id: "ncs",
     title: "국가직무능력표준 NCS",
     provider: "NCS",
-    type: "정부/협회 자료",
+    type: "정부/협회 교육자료",
     language: "한국어",
     difficulty: "입문",
     hours: 1,
@@ -248,7 +248,7 @@ const resources = [
     hours: 5,
     tracks: ["embedded-control", "electronics-pcb"],
     skills: ["MCU", "통신", "디버깅"],
-    reason: "MCU 주변장치와 개발 흐름을 공식 자료로 확인할 수 있습니다.",
+    reason: "MCU 주변장치와 개발 흐름을 공식 교육자료로 확인할 수 있습니다.",
     output: "GPIO 또는 UART 실습 계획",
     url: "https://www.st.com/content/st_com/en/support/learning/stm32-education.html"
   },
@@ -284,7 +284,7 @@ const resources = [
     id: "analog-dialogue",
     title: "Analog Dialogue",
     provider: "Analog Devices",
-    type: "기업 기술자료",
+    type: "기업 기술교육자료",
     language: "영어",
     difficulty: "적용",
     hours: 3,
@@ -298,13 +298,13 @@ const resources = [
     id: "nist-spc",
     title: "Engineering Statistics Handbook",
     provider: "NIST/SEMATECH",
-    type: "정부/협회 자료",
+    type: "정부/협회 교육자료",
     language: "영어",
     difficulty: "기초실습",
     hours: 6,
     tracks: ["production-quality", "semiconductor-equipment"],
     skills: ["통계", "SPC", "DOE"],
-    reason: "공정 데이터, 관리도, 실험계획법의 기준 자료로 활용하기 좋습니다.",
+    reason: "공정 데이터, 관리도, 실험계획법의 기준 교육자료로 활용하기 좋습니다.",
     output: "관리도 또는 DOE 개념 요약",
     url: "https://www.itl.nist.gov/div898/handbook/"
   },
@@ -459,7 +459,7 @@ const resources = [
 const roadmaps = {
   "mechanical-cae": [
     ["직무 이해", "설계 업무와 산출물을 정리하고 관심 제품을 하나 고릅니다.", "제품 구조와 요구사항 1쪽 요약"],
-    ["전공·도구 보완", "재료역학, CAD, 수치해석 자료를 보며 작은 부품을 모델링합니다.", "부품 모델과 주요 치수표"],
+    ["전공·도구 보완", "재료역학, CAD, 수치해석 교육자료를 보며 작은 부품을 모델링합니다.", "부품 모델과 주요 치수표"],
     ["해석 적용", "하중과 구속조건을 정의하고 해석 가정을 문서화합니다.", "경계조건과 결과 해석 노트"],
     ["포트폴리오 정리", "설계 변경안과 근거를 리포트로 정리합니다.", "설계 검토 보고서"]
   ],
@@ -757,7 +757,7 @@ const learningGoals = {
   },
   portfolio: {
     label: "포트폴리오",
-    summary: "실습 시간과 산출물이 분명한 자료를 우선 봅니다.",
+    summary: "실습 시간과 산출물이 분명한 교육자료를 우선 봅니다.",
     preferredDifficulties: ["기초실습", "적용"],
     prioritySkills: ["문서화", "검증", "문제해결", "도구역량"]
   },
@@ -770,9 +770,25 @@ const learningGoals = {
 };
 
 const yearGuidance = {
-  "2": "입문 자료와 직무 용어 정리를 우선하세요.",
+  "2": "입문 교육자료와 직무 용어 정리를 우선하세요.",
   "3": "전공 보완과 작은 실습 산출물을 함께 가져가세요.",
   "4": "면접에서 설명할 수 있는 결과물과 검증 근거를 남기세요."
+};
+
+const durationLabels = {
+  "2": "2주 집중",
+  "4": "4주 기본",
+  "8": "8주 심화",
+  "12": "12주 포트폴리오"
+};
+
+const industryLabels = {
+  all: "전체",
+  mobility: "자동차·모빌리티",
+  semiconductor: "반도체",
+  manufacturing: "제조·품질",
+  robotics: "로봇·자동화",
+  electronics: "전자·하드웨어"
 };
 
 const starterKeywords = {
@@ -783,11 +799,332 @@ const starterKeywords = {
   "embedded-control": "임베디드 C언어 MCU 제어공학 UART"
 };
 
+const jobRoles = {
+  "mechanical-cae": [
+    {
+      id: "mechanical-design-engineer",
+      title: "기구설계 엔지니어",
+      postingKeywords: ["기구설계", "3D CAD", "도면", "공차", "시제품"],
+      industries: ["mobility", "robotics", "manufacturing", "all"],
+      focus: "제품 요구사항을 3D 형상, 2D 도면, 공차, BOM, 시제품 검증 계획으로 바꾸는 직무",
+      responsibilities: ["신규 제품 또는 모듈의 기구 구조 설계", "3D CAD 모델링과 2D 도면 작성", "공차·조립성·재료·가공성을 고려한 설계 검토", "시제품 제작 이슈 반영과 설계 변경"],
+      requirements: ["기계공학 기초와 기계요소 이해", "CATIA, SolidWorks, Creo 등 3D CAD 활용", "도면 해석과 치수·공차 표기 이해", "가공·사출·판금·조립 같은 제조 방식 기초"],
+      preferred: ["GD&T 또는 공차 누적 검토", "양산 이관 경험 또는 DFM/DFA 이해", "시험 결과를 설계 변경 근거로 문서화하는 역량"]
+    },
+    {
+      id: "cae-analysis-engineer",
+      title: "CAE 해석 엔지니어",
+      postingKeywords: ["구조해석", "열해석", "FEA", "경계조건", "검증"],
+      industries: ["mobility", "robotics", "manufacturing", "all"],
+      focus: "구조·열·진동 문제를 모델링하고 해석 조건과 시험 결과를 연결해 설계 의사결정을 돕는 직무",
+      responsibilities: ["구조·열·진동 해석 모델 구성", "하중, 구속, 접촉, 재료 물성 정의", "메시 민감도와 결과 수렴성 확인", "시험 또는 손계산과 해석 결과 비교"],
+      requirements: ["재료역학, 열전달, 진동 기초", "ANSYS, Abaqus, HyperWorks 등 FEA 도구 이해", "해석 가정과 경계조건 문서화", "결과를 설계 변경안으로 번역하는 리포트 작성"],
+      preferred: ["시험 데이터 상관성 검토", "자동화 스크립트 또는 MATLAB/Python 활용", "규격·내구·안전율 기준 이해"]
+    },
+    {
+      id: "manufacturing-design-engineer",
+      title: "제조성 설계 엔지니어",
+      postingKeywords: ["DFM", "DFA", "공차", "시제품", "양산성"],
+      industries: ["manufacturing", "mobility", "all"],
+      focus: "설계안이 실제 제작, 조립, 검사, 양산 조건에서 반복 가능하도록 제조 리스크를 줄이는 직무",
+      responsibilities: ["설계 단계 DFM/DFA 검토", "시제품 제작 이슈와 양산 불량 가능성 분석", "금형·가공·조립·검사 조건을 설계에 반영", "협력사 또는 생산부서 피드백 기반 설계 변경"],
+      requirements: ["공차와 조립 구조 이해", "주요 제조공정과 검사 방식 기초", "설계 변경 전후 영향 비교", "문제 원인과 개선안을 표준 문서로 정리"],
+      preferred: ["원가·공정성·품질 균형 판단", "APQP/PPAP 또는 양산 이관 절차 이해", "현장 이슈를 설계 요구사항으로 재정의하는 역량"]
+    },
+    {
+      id: "thermal-cfd-engineer",
+      title: "열·유동 해석 엔지니어",
+      postingKeywords: ["열해석", "CFD", "냉각", "유동", "온도"],
+      industries: ["mobility", "robotics", "electronics", "manufacturing", "all"],
+      focus: "발열, 냉각, 유동 조건을 모델링해 제품 온도와 성능 리스크를 검증하는 직무",
+      responsibilities: ["발열원, 냉각 경로, 유동 조건 정의", "열전달·유동 해석 모델 구성", "온도 측정 또는 시험 조건과 해석 결과 비교", "방열 구조나 냉각 조건 개선안 제안"],
+      requirements: ["열전달, 유체역학, 수치해석 기초", "CFD 또는 열해석 도구 기본 이해", "경계조건과 물성값 설정 근거 문서화", "온도·유량·압력 결과 해석"],
+      preferred: ["전자제품 방열 또는 배터리 열관리 이해", "시험 데이터와 해석 결과 상관성 검토", "MATLAB/Python 데이터 후처리"]
+    },
+    {
+      id: "mechanical-test-engineer",
+      title: "기계 신뢰성·시험평가 엔지니어",
+      postingKeywords: ["시험평가", "신뢰성", "내구", "진동", "검증"],
+      industries: ["mobility", "robotics", "manufacturing", "all"],
+      focus: "제품 요구사항을 시험 조건과 판정 기준으로 바꿔 내구·진동·환경 신뢰성을 검증하는 직무",
+      responsibilities: ["시험 항목과 Pass/Fail 기준 정의", "내구, 진동, 온습도 등 시험 조건 설계", "시험 중 이상 현상과 파손 원인 정리", "개선 전후 시험 결과 비교 리포트 작성"],
+      requirements: ["재료역학과 시험 규격 기초", "센서, 계측, 데이터 로깅 이해", "파손 모드와 설계 원인 연결", "시험 결과를 설계 변경 근거로 문서화"],
+      preferred: ["KS/ISO/자동차 규격 이해", "시험 치구 설계 경험", "신뢰성 지표와 수명 추정 기초"]
+    }
+  ],
+  "production-quality": [
+    {
+      id: "process-engineer",
+      title: "공정기술 엔지니어",
+      postingKeywords: ["공정조건", "수율", "설비", "개선", "DOE"],
+      industries: ["manufacturing", "semiconductor", "mobility", "electronics", "all"],
+      focus: "공정 조건, 설비 상태, 품질 데이터를 연결해 수율·품질·생산성을 개선하는 직무",
+      responsibilities: ["공정 조건 설정과 표준화", "불량·수율·생산성 지표 모니터링", "설비 이상과 공정 변수 간 원인 분석", "DOE, SPC, FMEA, 8D 기반 개선 실행"],
+      requirements: ["공정 흐름과 CTQ 이해", "Excel/Python/Minitab 기반 데이터 분석", "관리도, Cpk, Pareto 해석", "현장 부서와 협업해 조건 변경을 관리"],
+      preferred: ["MES 또는 설비 로그 이해", "Lean/Six Sigma 문제해결", "표준작업서·작업조건표 작성 경험"]
+    },
+    {
+      id: "quality-engineer",
+      title: "품질보증·품질관리 엔지니어",
+      postingKeywords: ["SPC", "Cpk", "FMEA", "8D", "ISO/IATF"],
+      industries: ["manufacturing", "mobility", "electronics", "all"],
+      focus: "검사 데이터와 고객 요구사항을 기준으로 품질 리스크를 예방하고 불량 재발을 막는 직무",
+      responsibilities: ["수입·공정·출하 품질 관리", "SPC, Cpk, 검사 기준 운영", "FMEA, Control Plan, 8D 보고서 작성", "고객 클레임과 내부 불량 개선 추적"],
+      requirements: ["통계적 품질관리와 측정 시스템 이해", "ISO 9001, IATF 16949 등 품질 시스템 기초", "도면·규격·검사성적서 해석", "원인분석과 재발방지 문서화"],
+      preferred: ["MSA, APQP, PPAP 이해", "협력사 품질 또는 감사 대응", "영문 품질 문서와 고객 커뮤니케이션"]
+    },
+    {
+      id: "production-data-engineer",
+      title: "생산 데이터 분석 담당",
+      postingKeywords: ["MES", "공정데이터", "Python", "SQL", "Pareto"],
+      industries: ["manufacturing", "semiconductor", "electronics", "all"],
+      focus: "MES, 설비 로그, 검사 데이터를 정리해 불량·정지·수율 개선 우선순위를 찾는 직무",
+      responsibilities: ["공정·품질 데이터 수집과 전처리", "불량·정지·수율 지표 대시보드 구성", "Pareto, 추세, 상관 분석으로 개선 과제 도출", "현업이 볼 수 있는 분석 리포트 작성"],
+      requirements: ["Python/SQL/Excel 중 하나 이상의 데이터 처리", "통계 기초와 시각화 이해", "MES, ERP, 설비 로그 데이터 구조 이해", "분석 결과를 현장 언어로 설명"],
+      preferred: ["BI 도구 또는 자동 리포트 경험", "이상탐지·예측모델 기초", "공정 조건과 품질 지표를 함께 해석하는 역량"]
+    },
+    {
+      id: "production-technology-engineer",
+      title: "생산기술·라인개선 엔지니어",
+      postingKeywords: ["생산기술", "라인셋업", "Takt time", "설비개선", "자동화"],
+      industries: ["manufacturing", "mobility", "electronics", "all"],
+      focus: "생산 라인의 takt time, 설비 배치, 작업 조건, 자동화 개선으로 생산성을 높이는 직무",
+      responsibilities: ["신규 라인 셋업과 생산 조건 안정화", "공정 병목과 takt time 분석", "설비·치구·작업 방법 개선", "생산성, 불량률, 정지시간 개선 효과 검증"],
+      requirements: ["공정 흐름과 설비 구성 이해", "작업 시간과 라인 밸런싱 기초", "Excel 기반 생산 지표 분석", "현장 개선안을 표준작업으로 정리"],
+      preferred: ["자동화 설비 또는 PLC 기초", "Lean, 5S, Kaizen 이해", "치구 개선이나 설비 투자 효과 산정"]
+    },
+    {
+      id: "supplier-quality-engineer",
+      title: "협력사품질(SQE) 엔지니어",
+      postingKeywords: ["협력사품질", "SQE", "PPAP", "Audit", "8D"],
+      industries: ["manufacturing", "mobility", "electronics", "all"],
+      focus: "협력사 공정과 부품 품질을 평가하고 부적합 재발 방지를 관리하는 직무",
+      responsibilities: ["협력사 품질 이슈와 8D 개선 추적", "수입검사·공정감사·품질회의 운영", "PPAP/APQP 또는 승인 자료 검토", "부품 변경과 공급 리스크 관리"],
+      requirements: ["도면·검사성적서·규격 해석", "FMEA, Control Plan, 8D 이해", "협력사 공정 흐름과 검사 기준 확인", "품질 이슈를 일정과 책임자로 관리"],
+      preferred: ["IATF 16949와 고객 품질 대응", "공급망 리스크 평가", "영문 품질 문서 커뮤니케이션"]
+    }
+  ],
+  "semiconductor-equipment": [
+    {
+      id: "semiconductor-process-engineer",
+      title: "반도체 공정 엔지니어",
+      postingKeywords: ["공정개선", "수율", "계측", "Recipe", "조건변경"],
+      industries: ["semiconductor", "all"],
+      focus: "단위 공정 Recipe와 계측 결과를 연결해 수율, 균일도, 결함 문제를 개선하는 직무",
+      responsibilities: ["노광·식각·증착·CMP 등 단위 공정 조건 관리", "계측 지표와 공정 결과 분석", "Recipe 변경 실험과 DOE 수행", "OCAP, FMEA, Control Plan 같은 표준 문서 관리"],
+      requirements: ["반도체 공정 흐름과 소자 기초", "계측 지표 두께, CD, overlay, defect 이해", "통계·SPC 기반 조건 변경 판단", "클린룸 안전과 공정 리스크 인식"],
+      preferred: ["수율 개선 프로젝트 경험", "Python/SQL 기반 데이터 분석", "공정 이상 발생 시 8D 또는 원인분석 보고"]
+    },
+    {
+      id: "semiconductor-equipment-engineer",
+      title: "반도체 장비 엔지니어",
+      postingKeywords: ["장비조건", "진공", "플라즈마", "Troubleshooting", "PM"],
+      industries: ["semiconductor", "all"],
+      focus: "진공, RF, 가스, 온도, 로봇 이송 등 장비 상태를 해석해 가동률과 공정 안정성을 높이는 직무",
+      responsibilities: ["장비 설치, 유지보수, PM 계획 수행", "알람·로그·센서값 기반 Troubleshooting", "진공·플라즈마·가스·온도 조건 점검", "공정·품질 부서와 장비 이슈 재발 방지"],
+      requirements: ["기계·전기·제어 기초와 도면 해석", "진공, RF power, MFC, valve, pump 역할 이해", "장비 로그와 계측값 비교", "안전 절차와 변경 이력 관리"],
+      preferred: ["PLC, 센서, 통신 인터페이스 이해", "장비 가동률·MTBF·MTTR 지표 활용", "부품 교체 후 성능 검증 계획 수립"]
+    },
+    {
+      id: "semiconductor-yield-engineer",
+      title: "수율·결함 분석 담당",
+      postingKeywords: ["Defect", "Yield", "Pareto", "Wafer map", "수율분석"],
+      industries: ["semiconductor", "all"],
+      focus: "Wafer map, defect, 계측, 공정 이력을 결합해 수율 저하 원인과 개선 우선순위를 찾는 직무",
+      responsibilities: ["수율·결함 데이터 집계와 Pareto 분석", "Wafer map과 공정 이력 기반 원인 후보 도출", "계측·검사 결과와 공정 조건의 상관 분석", "개선 실험 결과 추적과 리포트"],
+      requirements: ["통계, 데이터 전처리, 시각화 기초", "결함 분류와 계측 데이터 이해", "공정 흐름과 장비 조건의 상호 영향 이해", "분석 가설을 실험 계획으로 전환"],
+      preferred: ["Python/SQL/BI 활용", "SPC, DOE, 이상탐지 기초", "공정·장비·품질 부서와 원인 검증 협업"]
+    },
+    {
+      id: "etch-process-engineer",
+      title: "반도체 식각 공정 엔지니어",
+      postingKeywords: ["Etch", "식각", "Plasma", "RF power", "Selectivity"],
+      industries: ["semiconductor", "all"],
+      focus: "플라즈마 식각 recipe와 계측 결과를 연결해 CD, uniformity, residue 문제를 개선하는 직무",
+      responsibilities: ["식각 recipe 조건 관리", "식각률, 선택비, 균일도, CD 결과 분석", "RF power, pressure, gas flow 조건 변경 실험", "잔류물·과식각·언더컷 원인 분석"],
+      requirements: ["플라즈마와 진공 기초", "식각 공정 지표와 계측 이해", "DOE/SPC 기반 조건 변경 판단", "공정 변경 리스크 문서화"],
+      preferred: ["장비 로그와 공정 결과 상관 분석", "OCAP/8D 보고", "Python 기반 데이터 정리"]
+    },
+    {
+      id: "metrology-engineer",
+      title: "반도체 계측·검사 엔지니어",
+      postingKeywords: ["Metrology", "Inspection", "CD", "Defect", "계측"],
+      industries: ["semiconductor", "all"],
+      focus: "CD, 두께, overlay, defect 계측 결과의 신뢰성을 관리하고 공정 개선 판단 기준을 제공하는 직무",
+      responsibilities: ["계측 recipe와 검사 조건 관리", "측정 반복성·재현성 확인", "계측 데이터 이상치와 trend 분석", "공정·수율 팀에 판단 가능한 리포트 제공"],
+      requirements: ["반도체 계측 지표 이해", "측정 오차와 샘플링 기준 이해", "SPC와 trend chart 해석", "공정 이력과 계측 결과 연결"],
+      preferred: ["MSA 또는 gauge R&R 기초", "Defect review 흐름 이해", "SQL/Python 기반 계측 데이터 처리"]
+    }
+  ],
+  "electronics-pcb": [
+    {
+      id: "hardware-design-engineer",
+      title: "하드웨어 설계 엔지니어",
+      postingKeywords: ["회로설계", "부품선정", "전원", "PCB", "검증"],
+      industries: ["electronics", "mobility", "robotics", "all"],
+      focus: "아날로그·디지털·전원 회로 요구사항을 정의하고 부품 선정, PCB 검토, 측정 검증까지 연결하는 직무",
+      responsibilities: ["회로 블록도와 schematic 설계", "전원, 센서, 통신, MCU 주변 회로 구성", "데이터시트 기반 부품 선정과 BOM 작성", "PCB 리뷰와 시제품 bring-up"],
+      requirements: ["회로이론과 전자회로 기초", "전원 리플, 발열, 신호 무결성 이해", "오실로스코프, 멀티미터 등 계측기 사용", "측정 결과를 요구사항과 비교"],
+      preferred: ["EMC/EMI와 ESD 고려", "SPICE 시뮬레이션", "Python/MATLAB 기반 측정 데이터 정리"]
+    },
+    {
+      id: "pcb-design-engineer",
+      title: "PCB 설계·검토 엔지니어",
+      postingKeywords: ["PCB Layout", "Stack-up", "리턴패스", "EMC", "디커플링"],
+      industries: ["electronics", "mobility", "robotics", "all"],
+      focus: "PCB 배치, 배선, 그라운드, 전원 루프, EMC 조건을 검토해 회로가 안정적으로 동작하게 만드는 직무",
+      responsibilities: ["PCB stack-up과 설계 제약 정의", "전원·고속·민감 신호 배치와 배선 검토", "리턴패스, 디커플링, 그라운드 분리 기준 적용", "DFM/DFT와 제조 파일 검토"],
+      requirements: ["PCB CAD와 회로도-레이아웃 연계 이해", "임피던스, 전류 용량, 클리어런스 기초", "EMC/EMI와 전원 무결성 기본 원리", "리뷰 체크리스트 작성"],
+      preferred: ["고속 인터페이스 또는 RF/아날로그 레이아웃", "제조사 DFM 피드백 반영", "측정 포인트와 테스트 편의성 설계"]
+    },
+    {
+      id: "validation-engineer",
+      title: "하드웨어 검증 엔지니어",
+      postingKeywords: ["오실로스코프", "검증", "Test Plan", "Pass/Fail", "리포트"],
+      industries: ["electronics", "mobility", "all"],
+      focus: "테스트 계획과 측정 조건을 세워 하드웨어 요구사항 충족 여부를 재현 가능하게 판단하는 직무",
+      responsibilities: ["검증 항목과 Pass/Fail 기준 정의", "오실로스코프, 로직애널라이저, 전원공급기 설정", "Bring-up, 기능 검증, 신뢰성 시험 지원", "불합격 원인 가설과 리포트 작성"],
+      requirements: ["회로도와 요구사항 해석", "계측기 설정과 프로브 영향 이해", "테스트 로그와 측정값 정리", "이슈 재현 절차와 변경 이력 관리"],
+      preferred: ["자동화 스크립트 Python/LabVIEW", "규격 시험 또는 환경 시험 이해", "개발·품질·생산 부서 이슈 트래킹"]
+    },
+    {
+      id: "power-hardware-engineer",
+      title: "전원회로 설계 엔지니어",
+      postingKeywords: ["Power", "Buck", "LDO", "Ripple", "Thermal"],
+      industries: ["electronics", "mobility", "robotics", "all"],
+      focus: "전원 요구사항, 효율, 리플, 발열 조건을 만족하는 전원 회로를 설계하고 검증하는 직무",
+      responsibilities: ["전원 tree와 부하 전류 산정", "LDO, buck, boost 등 전원 IC 선정", "리플, 효율, 발열 측정", "보호회로와 안정성 검토"],
+      requirements: ["전력전자와 전원회로 기초", "데이터시트 기반 인덕터·커패시터 선정", "오실로스코프 전원 노이즈 측정", "열저항과 발열 계산"],
+      preferred: ["EMI 필터와 layout 고려", "부하 transient 검증", "SPICE 또는 계산 시트 활용"]
+    },
+    {
+      id: "emc-test-engineer",
+      title: "EMC·신뢰성 검증 엔지니어",
+      postingKeywords: ["EMC", "EMI", "ESD", "신뢰성시험", "인증"],
+      industries: ["electronics", "mobility", "all"],
+      focus: "EMC/EMI, ESD, 환경 시험 조건을 기준으로 하드웨어 신뢰성과 인증 리스크를 검증하는 직무",
+      responsibilities: ["EMC/ESD 시험 계획과 사전 점검", "노이즈 원인 후보와 개선안 정리", "환경·신뢰성 시험 결과 관리", "인증 시험 부적합 대응 리포트 작성"],
+      requirements: ["접지, 차폐, 필터, 케이블 영향 이해", "시험 규격과 Pass/Fail 기준 해석", "측정 조건과 재현 절차 문서화", "회로·PCB 개선 포인트 도출"],
+      preferred: ["KC/CE/FCC 또는 자동차 EMC 기초", "시험소 대응 경험", "노이즈 측정 장비 활용"]
+    }
+  ],
+  "embedded-control": [
+    {
+      id: "embedded-firmware-engineer",
+      title: "임베디드 펌웨어 엔지니어",
+      postingKeywords: ["C/C++", "MCU", "UART", "SPI/I2C", "Interrupt"],
+      industries: ["electronics", "mobility", "robotics", "all"],
+      focus: "MCU 주변장치, 통신 인터페이스, 인터럽트, 디버깅을 통해 장치 기능을 안정적으로 구현하는 직무",
+      responsibilities: ["C/C++ 기반 MCU 펌웨어 개발", "GPIO, Timer, ADC, PWM, UART/SPI/I2C/CAN 제어", "인터럽트와 실시간 타이밍 이슈 대응", "디버거, 로그, 계측기로 문제 재현과 수정"],
+      requirements: ["C언어, 포인터, 비트 연산, 메모리 구조 이해", "ARM Cortex-M 등 MCU 구조 기초", "통신 프로토콜과 오류 처리", "Git과 빌드·테스트 절차 이해"],
+      preferred: ["RTOS, bootloader, OTA 경험", "하드웨어 회로도 해석", "Logic Analyzer와 오실로스코프 기반 디버깅"]
+    },
+    {
+      id: "control-engineer",
+      title: "제어 알고리즘 엔지니어",
+      postingKeywords: ["PID", "MPC", "센서융합", "MATLAB", "Validation"],
+      industries: ["mobility", "robotics", "all"],
+      focus: "센서 데이터와 시스템 모델을 바탕으로 제어 알고리즘을 설계, 시뮬레이션, 검증하는 직무",
+      responsibilities: ["PID, 상태공간, MPC 등 제어 알고리즘 설계", "센서 데이터 필터링과 추정 로직 구성", "MATLAB/Simulink 또는 Python 시뮬레이션", "SIL/HIL 또는 실험 데이터로 성능 검증"],
+      requirements: ["제어공학과 신호처리 기초", "오버슈트, 정착시간, 안정성 지표 해석", "센서 노이즈와 샘플링 주기 이해", "모델과 실제 응답 차이를 설명"],
+      preferred: ["모터·로봇·차량 제어 경험", "Kalman filter 또는 sensor fusion", "테스트 시나리오와 검증 리포트 작성"]
+    },
+    {
+      id: "robotics-software-engineer",
+      title: "로봇 소프트웨어 엔지니어",
+      postingKeywords: ["ROS", "ROS2", "센서", "Navigation", "디버깅"],
+      industries: ["robotics", "all"],
+      focus: "ROS 기반 노드, 센서, 제어, 통신을 통합해 로봇 동작을 구현하고 현장 문제를 디버깅하는 직무",
+      responsibilities: ["ROS/ROS2 노드, 토픽, 서비스 구성", "센서 데이터 수집과 좌표계·시간 동기화", "Navigation, perception, 제어 모듈 연동", "Linux 환경 로그 분석과 통합 디버깅"],
+      requirements: ["C++/Python과 Linux 개발환경", "ROS 메시지 구조와 launch/config 이해", "센서 캘리브레이션과 데이터 흐름 파악", "Git 기반 협업과 재현 가능한 실행 문서"],
+      preferred: ["SLAM, path planning, vision 기초", "Gazebo/RViz 시뮬레이션", "현장 테스트 로그 기반 문제 분리"]
+    },
+    {
+      id: "embedded-linux-engineer",
+      title: "임베디드 리눅스 엔지니어",
+      postingKeywords: ["Embedded Linux", "Device Driver", "Kernel", "Yocto", "BSP"],
+      industries: ["electronics", "mobility", "robotics", "all"],
+      focus: "리눅스 기반 보드에서 BSP, 디바이스 드라이버, 부팅, 주변장치 연동을 안정화하는 직무",
+      responsibilities: ["BSP 포팅과 부팅 이슈 분석", "I2C, SPI, UART, GPIO 디바이스 연동", "커널 로그와 드라이버 문제 디버깅", "빌드 환경과 배포 이미지 관리"],
+      requirements: ["Linux, C, shell 기초", "device tree와 kernel log 이해", "하드웨어 회로도와 인터페이스 신호 해석", "Git과 빌드 시스템 사용"],
+      preferred: ["Yocto/Buildroot 경험", "부트로더와 파일시스템 이해", "장기 로그 기반 안정성 이슈 분석"]
+    },
+    {
+      id: "motor-control-engineer",
+      title: "모터제어 펌웨어 엔지니어",
+      postingKeywords: ["Motor Control", "PWM", "Encoder", "FOC", "PID"],
+      industries: ["mobility", "robotics", "electronics", "all"],
+      focus: "모터, 인버터, 센서 피드백을 제어해 속도·위치·토크 응답을 안정화하는 직무",
+      responsibilities: ["PWM, encoder, current sensing 기반 제어 구현", "속도·위치 PID 또는 FOC 제어 튜닝", "보호 로직과 fault 처리", "실험 데이터로 응답 성능 검증"],
+      requirements: ["전기기기와 제어공학 기초", "MCU timer, ADC, interrupt 이해", "오버슈트, 정착시간, ripple 해석", "계측기로 PWM·전류·응답 측정"],
+      preferred: ["BLDC/PMSM 제어 경험", "MATLAB/Simulink 모델 기반 검증", "안전 정지와 오류 복구 설계"]
+    }
+  ]
+};
+
+const roleDiagnostics = {
+  "mechanical-design-engineer": [["3D CAD", "부품의 기능 요구사항을 기준으로 3D 모델의 기준면과 주요 치수를 잡을 수 있다."], ["도면·공차", "2D 도면에 기준 치수, 공차, 재질, 표면처리 정보를 빠뜨리지 않고 표시할 수 있다."], ["조립성", "간섭, 체결, 분해 방향, 작업 공간을 고려해 설계 리스크를 설명할 수 있다."], ["제조공정", "가공, 사출, 판금 중 어떤 공정이 적합한지 설계 형상과 연결해 판단할 수 있다."], ["설계변경", "시제품 문제를 치수·재료·공차 변경안으로 정리하고 변경 근거를 쓸 수 있다."]],
+  "cae-analysis-engineer": [["해석 목적", "구조·열·진동 중 어떤 해석이 필요한지 실패 모드 기준으로 고를 수 있다."], ["경계조건", "하중, 구속, 접촉, 재료 물성이 결과에 미치는 영향을 설명할 수 있다."], ["메시·수렴", "메시 크기나 요소 품질 변화가 결과 신뢰도에 미치는 영향을 비교할 수 있다."], ["상관검증", "손계산 또는 시험 조건으로 해석 결과를 검증할 계획을 세울 수 있다."], ["해석리포트", "해석 결과를 설계 변경 우선순위와 안전율 판단으로 연결해 문서화할 수 있다."]],
+  "manufacturing-design-engineer": [["DFM/DFA", "가공, 조립, 검사 관점에서 설계안의 제조 리스크를 찾을 수 있다."], ["공차누적", "부품 공차가 조립 성능과 불량 가능성에 미치는 영향을 설명할 수 있다."], ["시제품", "시제품 제작 이슈를 설계 변경 요구사항으로 바꿔 정리할 수 있다."], ["양산이관", "양산 전 확인해야 할 금형, 공정, 검사 조건을 체크리스트로 만들 수 있다."], ["원가·품질 균형", "설계 변경이 원가, 품질, 납기에 미치는 영향을 비교할 수 있다."]],
+  "process-engineer": [["공정변수", "온도, 압력, 속도, 설비 조건 중 품질에 영향을 줄 변수를 고를 수 있다."], ["CTQ", "제품 요구사항을 측정 가능한 CTQ와 공정 관리 항목으로 바꿀 수 있다."], ["DOE/SPC", "조건 변경 전후 비교를 위한 실험 계획과 관리 기준을 정할 수 있다."], ["설비이상", "설비 알람, 로그, 품질 데이터를 연결해 원인 후보를 좁힐 수 있다."], ["표준화", "개선 후 작업 조건표나 표준작업서에 반영할 항목을 정리할 수 있다."]],
+  "quality-engineer": [["SPC", "관리도와 Cpk를 기준으로 공정이 안정적인지 판정할 수 있다."], ["FMEA", "고장 모드, 영향, 원인, 검출 방법, 개선안을 표로 정리할 수 있다."], ["8D", "고객 불량 또는 내부 불량을 8D 구조로 정리할 수 있다."], ["품질시스템", "ISO 9001 또는 IATF 16949에서 문서·기록 관리가 왜 필요한지 설명할 수 있다."], ["검사기준", "도면·규격·검사성적서를 보고 Pass/Fail 기준을 정의할 수 있다."]],
+  "production-data-engineer": [["데이터 전처리", "공정 로그에서 결측, 이상치, 기준 시간 단위를 정리할 수 있다."], ["MES/SQL", "MES나 검사 데이터에서 lot, 설비, 시간, 불량 유형을 키로 묶을 수 있다."], ["Pareto", "불량 유형별 우선순위를 차트로 설명할 수 있다."], ["추세·상관", "공정 조건 변화와 품질 지표 변화의 관계를 그래프로 확인할 수 있다."], ["대시보드", "현장 담당자가 바로 볼 수 있는 지표와 해석 문장을 함께 제시할 수 있다."]],
+  "semiconductor-process-engineer": [["공정조건", "조건 변경의 목적, 기대 효과, 리스크를 검토표로 쓸 수 있다."], ["Recipe", "압력, RF power, 가스, 온도 같은 recipe 항목을 결과 지표와 연결할 수 있다."], ["계측지표", "두께, CD, overlay, defect, 수율 지표를 공정 결과와 연결할 수 있다."], ["SPC/OCAP", "관리 이탈이 발생했을 때 확인 순서와 조치 기준을 설명할 수 있다."], ["DOE", "공정 조건 변경 실험에서 고정할 변수와 바꿀 변수를 구분할 수 있다."]],
+  "semiconductor-equipment-engineer": [["장비변수", "진공, RF power, 가스 유량이 장비 상태와 결과 지표에 미치는 영향을 설명할 수 있다."], ["Troubleshooting", "장비 이상 징후를 로그, 알람, 계측값으로 좁힐 수 있다."], ["PM", "예방보전 항목과 장비 가동률 지표 MTBF/MTTR의 의미를 설명할 수 있다."], ["전기·제어", "센서, 밸브, 펌프, 모터 같은 장비 구성요소의 역할을 구분할 수 있다."], ["검증", "부품 교체나 조건 변경 후 확인해야 할 성능 검증 항목을 정할 수 있다."]],
+  "semiconductor-yield-engineer": [["수율분석", "결함 분포와 수율 변화를 기준으로 개선 가설을 세울 수 있다."], ["Wafer map", "웨이퍼 위치별 결함 패턴을 보고 공정·장비 원인 후보를 말할 수 있다."], ["결함분류", "상위 결함 유형을 Pareto로 고르고 확인 실험을 제안할 수 있다."], ["데이터조인", "검사 결과, 계측값, 공정 이력을 lot 또는 wafer 기준으로 연결할 수 있다."], ["개선추적", "개선 전후 수율, 결함률, 재발 여부를 같은 기준으로 비교할 수 있다."]],
+  "hardware-design-engineer": [["전원요구사항", "전압, 전류, 리플, 발열 조건을 수치로 정의할 수 있다."], ["부품선정", "데이터시트 항목을 근거로 부품 선택 이유를 설명할 수 있다."], ["회로블록", "센서, MCU, 전원, 통신 블록 간 신호 흐름을 그릴 수 있다."], ["PCB리뷰", "전원 루프, 그라운드, 민감 신호 배선을 리뷰 항목으로 만들 수 있다."], ["Bring-up", "시제품 전원 인가 전후 확인 순서와 실패 시 확인 항목을 정리할 수 있다."]],
+  "pcb-design-engineer": [["Stack-up", "층 구성, 임피던스, 전류 용량이 PCB 제약에 미치는 영향을 설명할 수 있다."], ["리턴패스", "전류 루프와 리턴패스가 노이즈에 미치는 영향을 설명할 수 있다."], ["디커플링", "디커플링 위치와 값 선정 기준을 체크리스트로 만들 수 있다."], ["EMC", "배치, 접지, 케이블, 커넥터가 EMI/EMC 리스크에 미치는 영향을 설명할 수 있다."], ["DFM/DFT", "제조와 테스트 편의성을 위해 패드, 간격, 측정 포인트를 검토할 수 있다."]],
+  "validation-engineer": [["측정계획", "프로브 위치, 장비 설정, Pass/Fail 기준을 재현 가능하게 적을 수 있다."], ["계측기", "오실로스코프, 로직애널라이저, 전원공급기의 기본 설정값을 목적에 맞게 고를 수 있다."], ["검증리포트", "측정 결과와 요구사항 차이를 원인 가설로 연결할 수 있다."], ["이슈재현", "불합격 현상을 재현 조건, 로그, 변경 이력으로 정리할 수 있다."], ["자동화", "반복 측정이나 로그 정리에 간단한 스크립트가 필요한 상황을 판단할 수 있다."]],
+  "embedded-firmware-engineer": [["주변장치", "GPIO, Timer, ADC, PWM, UART를 기능 요구사항에 매핑할 수 있다."], ["C/메모리", "포인터, 비트 연산, volatile, 버퍼 개념을 펌웨어 문제와 연결할 수 있다."], ["인터럽트", "인터럽트 우선순위와 타이밍 리스크를 설명할 수 있다."], ["통신오류", "UART/SPI/I2C/CAN 통신에서 timeout, checksum, framing 오류를 구분할 수 있다."], ["디버깅", "로그, breakpoint, logic analyzer로 문제 원인을 좁히는 절차를 쓸 수 있다."]],
+  "control-engineer": [["응답지표", "오버슈트, 정착시간, 정상상태 오차로 제어 성능을 비교할 수 있다."], ["모델링", "입력, 출력, 상태, 외란을 구분해 간단한 시스템 모델을 세울 수 있다."], ["튜닝", "P/I/D 변경이 응답에 미치는 영향을 실험으로 설명할 수 있다."], ["센서융합", "센서 노이즈, 샘플링 주기, 필터링이 제어 성능에 미치는 영향을 설명할 수 있다."], ["검증", "시뮬레이션 결과와 실제 실험 결과 차이를 검증 리포트로 정리할 수 있다."]],
+  "robotics-software-engineer": [["ROS", "노드, 토픽, 메시지 구조를 센서 데이터 흐름으로 설명할 수 있다."], ["좌표계", "센서 좌표계, 로봇 기준 좌표계, 시간 동기화가 왜 중요한지 설명할 수 있다."], ["Navigation", "지도, localization, path planning, control이 어떤 순서로 연결되는지 말할 수 있다."], ["통합디버깅", "센서, 제어, 통신 문제를 로그 기준으로 분리할 수 있다."], ["실행문서", "다른 사람이 ROS 패키지를 실행할 수 있도록 launch, config, README를 정리할 수 있다."]],
+  "thermal-cfd-engineer": [["열경계조건", "발열량, 대류 조건, 접촉 열저항을 해석 조건으로 정의할 수 있다."], ["CFD모델", "유동 입구·출구 조건과 압력 손실이 결과에 미치는 영향을 설명할 수 있다."], ["냉각설계", "방열판, 팬, 통풍구 중 어떤 개선이 필요한지 온도 결과로 판단할 수 있다."], ["시험상관", "열화상 또는 온도 센서 측정값과 해석 결과를 비교할 수 있다."], ["후처리", "온도 분포와 최대 온도 위치를 설계 변경 근거로 정리할 수 있다."]],
+  "mechanical-test-engineer": [["시험계획", "요구사항을 시험 항목, 조건, 판정 기준으로 바꿀 수 있다."], ["계측", "하중, 변위, 진동, 온도 데이터를 어떤 센서로 측정할지 고를 수 있다."], ["파손분석", "파손 위치와 하중 조건을 연결해 원인 후보를 세울 수 있다."], ["신뢰성", "반복 시험, 환경 시험, 내구 시험의 목적 차이를 설명할 수 있다."], ["시험리포트", "시험 조건, 결과, 이상 현상, 개선안을 한 장으로 정리할 수 있다."]],
+  "production-technology-engineer": [["Takt time", "공정별 작업시간을 비교해 병목 공정을 찾을 수 있다."], ["라인셋업", "공정 순서, 설비 배치, 작업자 동선을 생산 흐름으로 설명할 수 있다."], ["설비개선", "정지시간과 불량률을 기준으로 설비 개선 우선순위를 정할 수 있다."], ["자동화", "수작업을 자동화할 때 필요한 센서, 치구, 안전 조건을 말할 수 있다."], ["표준작업", "개선 후 작업 조건과 검사 기준을 표준작업서에 반영할 수 있다."]],
+  "supplier-quality-engineer": [["협력사평가", "협력사 공정 흐름과 검사 기준을 확인할 체크 항목을 만들 수 있다."], ["PPAP/APQP", "승인 자료에서 도면, 공정흐름도, Control Plan의 관계를 설명할 수 있다."], ["수입검사", "부품 규격과 검사성적서로 수입 품질 판정을 할 수 있다."], ["8D추적", "협력사 개선 대책의 임시조치와 영구조치를 구분할 수 있다."], ["Audit", "품질 감사에서 확인할 기록과 현장 증거를 구분할 수 있다."]],
+  "etch-process-engineer": [["식각지표", "식각률, 선택비, 균일도, CD 변화를 결과 지표로 설명할 수 있다."], ["Plasma", "RF power, pressure, gas flow가 플라즈마 식각에 미치는 영향을 말할 수 있다."], ["Recipe변경", "변경할 식각 조건과 고정할 조건을 구분해 DOE 계획을 세울 수 있다."], ["Defect", "residue, over etch, undercut 같은 불량을 공정 조건과 연결할 수 있다."], ["OCAP", "관리 이탈 발생 시 확인 순서와 중단 기준을 정할 수 있다."]],
+  "metrology-engineer": [["계측Recipe", "측정 위치, 샘플 수, 반복 측정 조건을 계측 recipe로 정의할 수 있다."], ["측정오차", "반복성, 재현성, 장비 drift가 계측값에 미치는 영향을 설명할 수 있다."], ["Trend", "CD, 두께, defect trend로 공정 이상 징후를 찾을 수 있다."], ["데이터연결", "계측 결과를 lot, wafer, 공정 조건과 연결해 볼 수 있다."], ["리포트", "계측 결과가 공정 변경 또는 수율 판단에 주는 의미를 한 문단으로 쓸 수 있다."]],
+  "power-hardware-engineer": [["전원Tree", "입력 전압, 출력 전압, 부하 전류를 전원 tree로 정리할 수 있다."], ["소자선정", "LDO, buck, boost 중 적합한 전원 구조를 효율과 발열 기준으로 고를 수 있다."], ["Ripple측정", "오실로스코프로 리플과 transient를 측정할 조건을 정할 수 있다."], ["발열", "전력 손실과 열저항으로 대략적인 온도 상승을 계산할 수 있다."], ["Layout", "전원 루프와 그라운드 배치가 노이즈에 미치는 영향을 설명할 수 있다."]],
+  "emc-test-engineer": [["EMC기초", "전도·방사 노이즈와 ESD 시험의 차이를 설명할 수 있다."], ["노이즈경로", "케이블, 접지, 쉴드, 필터가 노이즈 경로에 미치는 영향을 말할 수 있다."], ["시험계획", "규격, 조건, 판정 기준을 시험 계획으로 정리할 수 있다."], ["부적합대응", "시험 실패 시 원인 후보와 개선 실험을 제안할 수 있다."], ["인증문서", "시험 결과와 변경 이력을 인증 대응 문서로 정리할 수 있다."]],
+  "embedded-linux-engineer": [["부팅흐름", "bootloader, kernel, rootfs가 부팅 과정에서 하는 역할을 설명할 수 있다."], ["Device tree", "하드웨어 인터페이스 설정이 device tree에 어떻게 반영되는지 말할 수 있다."], ["Driver", "I2C/SPI/UART/GPIO 드라이버 문제를 로그와 회로도로 좁힐 수 있다."], ["빌드환경", "Yocto나 Buildroot 같은 이미지 빌드 흐름을 설명할 수 있다."], ["시스템로그", "kernel log와 application log를 분리해 원인 후보를 찾을 수 있다."]],
+  "motor-control-engineer": [["PWM/ADC", "PWM 주기와 ADC 샘플링 타이밍이 제어 성능에 미치는 영향을 설명할 수 있다."], ["센서피드백", "encoder, hall sensor, current sensor 데이터를 제어 입력으로 해석할 수 있다."], ["PID/FOC", "속도·위치 PID와 FOC의 목적 차이를 설명할 수 있다."], ["Fault처리", "과전류, 과열, 센서 오류 발생 시 보호 로직을 설계할 수 있다."], ["성능검증", "응답 그래프와 전류 파형으로 튜닝 결과를 평가할 수 있다."]]
+};
+
+const industryDiagnostics = {
+  mobility: [["차량신뢰성", "온도, 진동, 안전 요구가 설계·검증 조건에 미치는 영향을 설명할 수 있다."], ["양산검증", "시제품 검증과 양산 검증의 차이를 말할 수 있다."]],
+  semiconductor: [["클린룸·공정", "오염, 진공, 계측 조건이 품질과 수율에 미치는 영향을 설명할 수 있다."], ["수율언어", "결함, 수율, 공정 조건을 하나의 개선 가설로 연결할 수 있다."]],
+  manufacturing: [["현장지표", "불량률, takt time, 재작업률 같은 현장 지표를 해석할 수 있다."], ["표준작업", "작업 조건 변경이 품질과 생산성에 미치는 영향을 설명할 수 있다."]],
+  robotics: [["센서통합", "센서, 구동기, 제어 주기를 하나의 동작 흐름으로 설명할 수 있다."], ["안전동작", "비상정지, 오류 상태, 재시작 조건을 고려할 수 있다."]],
+  electronics: [["EMC·노이즈", "전원, 접지, 신호 배선이 노이즈와 신뢰성에 미치는 영향을 설명할 수 있다."], ["검증환경", "측정 장비와 테스트 조건을 제품 요구사항과 연결할 수 있다."]]
+};
+
+const resourceTaskLinks = {
+  "matlab-onramp": ["관리도와 Cpk 계산", "PID 응답 실험", "해석 조건 검증"],
+  "mit-design-manufacturing": ["제품 요구사항 분해", "설계 변경 제안"],
+  "mit-numerical-me": ["해석 조건 검증", "손계산과 CAD 초안"],
+  ncs: ["공정 문제 정의", "공정 흐름 매핑", "제품 요구사항 분해", "MCU 주변장치 설계"],
+  "mit-circuits": ["전원 요구사항 정의", "센서 신호 증폭 회로"],
+  "ti-precision-labs": ["전원 요구사항 정의", "검증 리포트"],
+  "stm32-education": ["MCU 주변장치 설계", "UART 센서 프로토콜"],
+  "ros-tutorials": ["MCU 주변장치 설계", "디버깅 노트와 README"],
+  "mit-microelectronic": ["공정 흐름 매핑", "전원 요구사항 정의"],
+  "analog-dialogue": ["센서 신호 증폭 회로", "검증 리포트"],
+  "nist-spc": ["관리도와 Cpk 계산", "원인 가설과 FMEA", "수율 Pareto 분석"],
+  kmooc: ["제품 요구사항 분해", "공정 문제 정의", "공정 흐름 매핑", "전원 요구사항 정의", "MCU 주변장치 설계"],
+  "kocw-mechanical-design": ["제품 요구사항 분해", "손계산과 CAD 초안", "해석 조건 검증"],
+  "kocw-production-quality": ["공정 문제 정의", "관리도와 Cpk 계산", "원인 가설과 FMEA"],
+  "kocw-semiconductor": ["공정 흐름 매핑", "식각 장비 변수 정리", "수율 Pareto 분석"],
+  "kocw-electronics-circuit": ["전원 요구사항 정의", "센서 신호 증폭 회로", "검증 리포트"],
+  "kocw-embedded-control": ["MCU 주변장치 설계", "UART 센서 프로토콜", "PID 응답 실험"],
+  "step-engineering": ["설계 변경 제안", "8D 개선 보고서", "조건 변경 검토표", "PCB 리뷰 체크리스트", "디버깅 노트와 README"]
+};
+
 const storageKey = "careerCompetencyPilot";
 
 const defaultState = {
   selectedTrackId: "production-quality",
-  profile: { major: "mechanical", year: "3", industry: "all", goal: "foundation" },
+  profile: { major: "mechanical", year: "3", industry: "all", goal: "foundation", durationWeeks: "4" },
+  selectedRoles: {},
   checked: {},
   saved: [],
   completed: [],
@@ -814,6 +1151,7 @@ function bindElements() {
     "yearSelect",
     "industrySelect",
     "goalSelect",
+    "durationSelect",
     "selectedTrackMetric",
     "diagnosticMetric",
     "savedMetric",
@@ -865,6 +1203,12 @@ function bindEvents() {
     render();
   });
 
+  elements.durationSelect.addEventListener("change", (event) => {
+    state.profile.durationWeeks = event.target.value;
+    saveState();
+    render();
+  });
+
   elements.difficultyFilter.addEventListener("change", (event) => {
     state.difficulty = event.target.value;
     saveState();
@@ -906,8 +1250,17 @@ function bindEvents() {
 
 function loadState() {
   try {
-    const saved = JSON.parse(localStorage.getItem(storageKey));
-    return { ...defaultState, ...saved, profile: { ...defaultState.profile, ...(saved?.profile || {}) } };
+    const stored = JSON.parse(localStorage.getItem(storageKey));
+    return {
+      ...defaultState,
+      ...(stored || {}),
+      profile: { ...defaultState.profile, ...(stored?.profile || {}) },
+      selectedRoles: { ...defaultState.selectedRoles, ...(stored?.selectedRoles || {}) },
+      checked: stored?.checked || defaultState.checked,
+      saved: Array.isArray(stored?.saved) ? stored.saved : defaultState.saved,
+      completed: Array.isArray(stored?.completed) ? stored.completed : defaultState.completed,
+      completedRoadmap: Array.isArray(stored?.completedRoadmap) ? stored.completedRoadmap : defaultState.completedRoadmap
+    };
   } catch {
     return { ...defaultState };
   }
@@ -922,6 +1275,7 @@ function render() {
   elements.yearSelect.value = state.profile.year;
   elements.industrySelect.value = state.profile.industry;
   elements.goalSelect.value = state.profile.goal;
+  elements.durationSelect.value = state.profile.durationWeeks;
   elements.difficultyFilter.value = state.difficulty;
   const changedTrack = syncSelectedTrackWithProfile();
   if (changedTrack) saveState();
@@ -960,42 +1314,121 @@ function getFilteredTracks() {
 function syncSelectedTrackWithProfile() {
   const filtered = getFilteredTracks();
   if (!filtered.length) return false;
-  if (filtered.some((track) => track.id === state.selectedTrackId)) return false;
-  state.selectedTrackId = filtered[0].id;
-  return true;
+  let changed = false;
+
+  if (!filtered.some((track) => track.id === state.selectedTrackId)) {
+    state.selectedTrackId = filtered[0].id;
+    changed = true;
+  }
+
+  const selectedRole = getSelectedRole(state.selectedTrackId);
+  if (selectedRole && state.selectedRoles[state.selectedTrackId] !== selectedRole.id) {
+    state.selectedRoles = { ...state.selectedRoles, [state.selectedTrackId]: selectedRole.id };
+    changed = true;
+  }
+
+  return changed;
+}
+
+function getAvailableRoles(track) {
+  const roles = jobRoles[track?.id] || [];
+  if (!roles.length || state.profile.industry === "all") return roles;
+
+  const industryMatched = roles.filter((role) => role.industries.includes(state.profile.industry));
+  if (industryMatched.length) return industryMatched;
+  const genericRoles = roles.filter((role) => role.industries.includes("all"));
+  return genericRoles.length ? genericRoles : roles;
+}
+
+function getSelectedRole(trackId = state.selectedTrackId) {
+  const track = tracks.find((item) => item.id === trackId);
+  const roles = getAvailableRoles(track);
+  if (!roles.length) return null;
+
+  const selectedRoleId = state.selectedRoles?.[trackId];
+  return roles.find((role) => role.id === selectedRoleId) || roles[0];
+}
+
+function getDurationWeeks() {
+  const weeks = Number(state.profile.durationWeeks || defaultState.profile.durationWeeks);
+  return Number.isFinite(weeks) ? weeks : Number(defaultState.profile.durationWeeks);
+}
+
+function getDurationLabel() {
+  return durationLabels[state.profile.durationWeeks] || `${getDurationWeeks()}주`;
+}
+
+function getIndustryLabel(industry = state.profile.industry) {
+  return industryLabels[industry] || industry;
 }
 
 function renderTracks() {
-  const filtered = getFilteredTracks();
-  elements.trackCount.textContent = `${filtered.length}개 트랙`;
-  elements.trackList.innerHTML = filtered.map((track) => `
-    <button class="track-card ${track.id === state.selectedTrackId ? "is-selected" : ""}" type="button" data-track-id="${track.id}">
-      <span class="status-pill">난이도 ${track.difficulty}</span>
-      <h3>${track.title}</h3>
-      <p>${track.summary}</p>
-      <span class="badge-row">${track.skills.slice(0, 4).map((skill) => `<span class="badge">${skill}</span>`).join("")}</span>
+  const roleCatalog = getRoleCatalog();
+  elements.trackCount.textContent = `${roleCatalog.length}개 채용공고 직무`;
+  elements.trackList.innerHTML = roleCatalog.map(({ track, role }) => {
+    const selectedRole = getSelectedRole(track.id);
+    const isSelected = track.id === state.selectedTrackId && selectedRole?.id === role.id;
+    return `
+    <button class="track-card ${isSelected ? "is-selected" : ""}" type="button" data-track-id="${track.id}" data-role-id="${role.id}">
+      <span class="status-pill">${track.title}</span>
+      <h3>${role.title}</h3>
+      <p>${role.focus}</p>
+      <p class="role-preview">${role.responsibilities.slice(0, 2).join(" · ")}</p>
+      <span class="badge-row">
+        ${role.postingKeywords.slice(0, 5).map((keyword) => `<span class="badge">${keyword}</span>`).join("")}
+      </span>
     </button>
-  `).join("");
+  `;
+  }).join("");
 
-  elements.trackList.querySelectorAll("[data-track-id]").forEach((button) => {
+  elements.trackList.querySelectorAll("[data-track-id][data-role-id]").forEach((button) => {
     button.addEventListener("click", () => {
       state.selectedTrackId = button.dataset.trackId;
-      state.view = "tracks";
+      state.selectedRoles = { ...state.selectedRoles, [button.dataset.trackId]: button.dataset.roleId };
+      state.view = "roadmap";
       saveState();
       render();
     });
   });
 }
 
+function getRoleCatalog() {
+  return getFilteredTracks().flatMap((track) => getAvailableRoles(track).map((role) => ({ track, role })));
+}
+
 function renderTrackDetail() {
   const track = getSelectedTrack();
+  const roles = getAvailableRoles(track);
+  const selectedRole = getSelectedRole(track.id);
+  const roleOptions = roles.map((role) => `
+    <button class="role-option ${selectedRole?.id === role.id ? "is-selected" : ""}" type="button" data-role-id="${role.id}">
+      <strong>${role.title}</strong>
+      <span>${role.focus}</span>
+      <span class="badge-row">${role.postingKeywords.map((keyword) => `<span class="badge">${keyword}</span>`).join("")}</span>
+    </button>
+  `).join("");
+
   elements.trackDetail.innerHTML = `
-    <p class="eyebrow">선택 트랙</p>
-    <h3>${track.title}</h3>
-    <p>${track.summary}</p>
+    <p class="eyebrow">선택 직무 상세</p>
+    <h3>${selectedRole ? selectedRole.title : track.title}</h3>
+    <p>${selectedRole ? selectedRole.focus : track.summary}</p>
+    <section class="role-panel" aria-label="채용공고 기준 세부 직무">
+      <div>
+        <p class="eyebrow">채용공고 기준 세부 직무</p>
+        <h4>${selectedRole ? selectedRole.title : "세부 직무 선택"}</h4>
+      </div>
+      <div class="role-list">${roleOptions}</div>
+      ${selectedRole ? `
+        <div class="role-detail-grid">
+          ${detailBlock("채용공고 반복 업무", selectedRole.responsibilities)}
+          ${detailBlock("자격요건 역량", selectedRole.requirements)}
+          ${detailBlock("우대·차별화 역량", selectedRole.preferred)}
+        </div>
+      ` : ""}
+    </section>
     <figure class="word-cloud-panel">
       <img src="/assets/wordcloud-${track.id}.png" alt="${track.title} 핵심 역량 워드 클라우드" loading="lazy">
-      <figcaption>단어 크기는 직무 설명, 진단 문항, 과제, 자료에서 반복 강조되는 정도를 반영합니다.</figcaption>
+      <figcaption>단어 크기는 직무 설명, 진단 문항, 과제, 교육자료에서 반복 강조되는 정도를 반영합니다.</figcaption>
     </figure>
     <div class="detail-grid">
       ${detailBlock("주요 업무", track.tasks)}
@@ -1007,6 +1440,15 @@ function renderTrackDetail() {
       ${detailBlock("흔한 오해", track.misconceptions)}
     </div>
   `;
+
+  elements.trackDetail.querySelectorAll("[data-role-id]").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.selectedRoles = { ...state.selectedRoles, [track.id]: button.dataset.roleId };
+      state.view = "roadmap";
+      saveState();
+      render();
+    });
+  });
 }
 
 function detailBlock(title, items) {
@@ -1020,17 +1462,18 @@ function detailBlock(title, items) {
 
 function renderDiagnostics() {
   const track = getSelectedTrack();
-  const questions = diagnostics[track.id] || [];
-  elements.diagnosisTitle.textContent = track.title;
-  elements.diagnosticList.innerHTML = questions.map(([skill, question], index) => {
-    const id = `${track.id}-${index}`;
-    const checked = Boolean(state.checked[id]);
+  const role = getSelectedRole(track.id);
+  const questions = getDiagnosticItems(track);
+  elements.diagnosisTitle.textContent = role ? `${track.title} · ${role.title}` : track.title;
+  elements.diagnosticList.innerHTML = questions.map((item) => {
+    const checked = Boolean(state.checked[item.id]);
     return `
       <label class="check-item">
-        <input type="checkbox" data-check-id="${id}" ${checked ? "checked" : ""}>
+        <input type="checkbox" data-check-id="${item.id}" ${checked ? "checked" : ""}>
         <span>
-          <strong>${skill}</strong>
-          ${question}
+          <span class="diagnostic-source">${item.source}</span>
+          <strong>${item.skill}</strong>
+          ${item.question}
         </span>
       </label>
     `;
@@ -1064,38 +1507,69 @@ function renderDiagnostics() {
 }
 
 function getDiagnosticScore(trackId) {
-  const questions = diagnostics[trackId] || [];
+  const track = tracks.find((item) => item.id === trackId);
+  const questions = getDiagnosticItems(track);
   if (!questions.length) return 0;
-  const checkedCount = questions.filter((_, index) => state.checked[`${trackId}-${index}`]).length;
+  const checkedCount = questions.filter((item) => state.checked[item.id]).length;
   return Math.round((checkedCount / questions.length) * 100);
 }
 
 function getGapItems(trackId) {
-  return (diagnostics[trackId] || [])
-    .map(([skill, question], index) => ({ skill, question, id: `${trackId}-${index}` }))
-    .filter((item) => !state.checked[item.id]);
+  const track = tracks.find((item) => item.id === trackId);
+  return getDiagnosticItems(track).filter((item) => !state.checked[item.id]);
 }
 
 function getGapSkills(trackId) {
   return getGapItems(trackId).map((item) => item.skill);
 }
 
+function getDiagnosticItems(track) {
+  if (!track) return [];
+
+  const role = getSelectedRole(track.id);
+  const baseItems = (diagnostics[track.id] || []).map(([skill, question], index) => ({
+    id: `${track.id}-base-${index}`,
+    skill,
+    question,
+    source: "트랙 공통"
+  }));
+  const roleItems = role ? (roleDiagnostics[role.id] || []).map(([skill, question], index) => ({
+    id: `${track.id}-${role.id}-role-${index}`,
+    skill,
+    question,
+    source: role.title
+  })) : [];
+  const industryItems = state.profile.industry === "all" ? [] : (industryDiagnostics[state.profile.industry] || []).map(([skill, question], index) => ({
+    id: `${track.id}-${state.profile.industry}-industry-${index}`,
+    skill,
+    question,
+    source: getIndustryLabel()
+  }));
+
+  return [...baseItems, ...roleItems, ...industryItems];
+}
+
 function renderRoadmap() {
   const track = getSelectedTrack();
-  const tasks = getCurriculumTasks(track.id);
-  elements.roadmapTitle.textContent = `${track.title} 4주 로드맵`;
+  const role = getSelectedRole(track.id);
+  const tasks = getVisibleRoadmapTasks(track.id);
+  const context = getRecommendationContext(track, getGapSkills(track.id), tasks);
+  elements.roadmapTitle.textContent = `${track.title}${role ? ` · ${role.title}` : ""} ${getDurationLabel()} 로드맵`;
   elements.roadmapList.innerHTML = tasks.map((task, index) => {
-    const stepId = `${track.id}-week-${index + 1}`;
+    const stepId = getRoadmapStepId(track.id, task);
     const completed = state.completedRoadmap.includes(stepId);
+    const linkedResources = getRoadmapResourcesForTask(track, task, context);
     return `
     <article class="week-card ${completed ? "is-completed" : ""}">
-      <span class="week-number">${index + 1}주차</span>
+      <span class="week-number">${task.weekLabel || `${index + 1}주차`}</span>
       <h3>${task.title}</h3>
       <p>${task.objective}</p>
       <div class="task-meta">
+        ${task.phase ? `<span class="badge">${task.phase}</span>` : ""}
         <span class="badge">예상 ${task.time}</span>
         <span class="badge">${task.deliverable}</span>
       </div>
+      ${task.priorityReason ? `<div class="recommendation-note"><strong>추천 이유:</strong> ${task.priorityReason}</div>` : ""}
       <div>
         <h4>수행 단계</h4>
         <ol class="task-steps">${task.steps.map((step) => `<li>${step}</li>`).join("")}</ol>
@@ -1103,6 +1577,12 @@ function renderRoadmap() {
       <div>
         <h4>통과 기준</h4>
         <ul class="rubric-list">${task.rubric.map((item) => `<li>${item}</li>`).join("")}</ul>
+      </div>
+      <div class="roadmap-resource-block">
+        <h4>연결 교육자료</h4>
+        ${linkedResources.length
+          ? `<div class="roadmap-resource-list">${linkedResources.map((resource) => renderRoadmapResourceItem(resource, task, context)).join("")}</div>`
+          : `<div class="empty-state compact">이 과제에 연결된 교육자료 후보가 아직 없습니다.</div>`}
       </div>
       <button class="resource-action ${completed ? "is-saved" : ""}" type="button" data-roadmap-step-id="${stepId}">
         ${completed ? "주차 완료됨" : "주차 완료 체크"}
@@ -1120,6 +1600,7 @@ function renderRoadmap() {
       renderSummaryPreview();
     });
   });
+  bindResourceActions(elements.roadmapList);
 }
 
 function getCurriculumTasks(trackId) {
@@ -1134,26 +1615,189 @@ function getCurriculumTasks(trackId) {
   }));
 }
 
+function getVisibleRoadmapTasks(trackId) {
+  const coreTasks = getCurriculumTasks(trackId).map((task, index) => ({
+    ...task,
+    baseTitle: task.title,
+    baseIndex: index,
+    planWeek: index + 1,
+    weekLabel: `${index + 1}주차`,
+    phase: "핵심"
+  }));
+  const weeks = getDurationWeeks();
+
+  if (weeks <= 2) {
+    return getPrioritizedCoreTasks(trackId, coreTasks)
+      .slice(0, 2)
+      .map((task, index) => ({
+        ...task,
+        planWeek: index + 1,
+        weekLabel: `${index + 1}주차`,
+        phase: "2주 압축",
+        priorityReason: getTaskPriorityReason(task, trackId)
+      }));
+  }
+
+  if (weeks <= 4) return coreTasks;
+
+  const expanded = [...coreTasks];
+  const phases = weeks >= 12 ? ["심화 반복", "포트폴리오 보강"] : ["심화 반복"];
+  phases.forEach((phase) => {
+    coreTasks.forEach((task) => {
+      expanded.push(createExtendedRoadmapTask(task, phase, expanded.length + 1));
+    });
+  });
+
+  return expanded.slice(0, weeks);
+}
+
+function getPrioritizedCoreTasks(trackId, tasks) {
+  return [...tasks].sort((a, b) => getTaskPriorityScore(b, trackId) - getTaskPriorityScore(a, trackId));
+}
+
+function getTaskPriorityScore(task, trackId) {
+  const text = getTaskSearchText(task);
+  const gapMatches = getGapSkills(trackId).filter((skill) => text.includes(skill)).length;
+  const role = getSelectedRole(trackId);
+  const roleMatches = role ? role.postingKeywords.filter((keyword) => text.includes(keyword)).length : 0;
+  const portfolioSignal = /보고서|리포트|README|검증|제안|개선|체크리스트/.test(text) ? 1 : 0;
+  const foundationSignal = task.baseIndex <= 1 ? 1 : 0;
+  const goal = state.profile.goal;
+
+  return 100 - task.baseIndex * 8
+    + gapMatches * 18
+    + roleMatches * 10
+    + ((goal === "portfolio" || goal === "interview") ? portfolioSignal * 24 : 0)
+    + (goal === "foundation" ? foundationSignal * 14 : 0);
+}
+
+function getTaskPriorityReason(task, trackId) {
+  const text = getTaskSearchText(task);
+  const gapMatch = getGapSkills(trackId).find((skill) => text.includes(skill));
+  const role = getSelectedRole(trackId);
+  const roleKeyword = role?.postingKeywords.find((keyword) => text.includes(keyword));
+
+  if (gapMatch) return `현재 진단에서 비어 있는 ${gapMatch} 역량을 직접 보완합니다.`;
+  if (roleKeyword) return `${role.title} 채용공고 키워드인 ${roleKeyword}와 바로 연결됩니다.`;
+  if (state.profile.goal === "portfolio" || state.profile.goal === "interview") return "짧은 기간 안에 설명 가능한 산출물을 남기는 과제입니다.";
+  return "짧은 기간에서 직무 이해와 기본 산출물을 빠르게 만드는 과제입니다.";
+}
+
+function createExtendedRoadmapTask(task, phase, planWeek) {
+  const isPortfolioPhase = phase === "포트폴리오 보강";
+  return {
+    ...task,
+    title: isPortfolioPhase ? `${task.baseTitle} 산출물 보강` : `${task.baseTitle} 심화 반복`,
+    objective: isPortfolioPhase
+      ? `${task.deliverable}을 면접에서 설명할 수 있도록 문제, 방법, 결과, 배운 점 순서로 다듬습니다.`
+      : `${task.objective} 같은 과제를 다른 예제나 조건으로 반복해 판단 기준을 굳힙니다.`,
+    steps: isPortfolioPhase
+      ? [
+        "이전 산출물에서 근거가 약한 부분 1개를 고릅니다.",
+        "수치, 조건, 비교표, 캡처 중 부족한 증거를 보강합니다.",
+        "면접에서 60초 안에 설명할 문제-방법-결과 문장을 만듭니다."
+      ]
+      : [
+        "첫 수행 산출물에서 부족한 기준 1개를 고릅니다.",
+        "데이터, 조건, 예제를 바꿔 같은 과제를 다시 수행합니다.",
+        "첫 결과와 반복 결과의 차이를 한 문단으로 정리합니다."
+      ],
+    deliverable: isPortfolioPhase ? `${task.deliverable} 보강본` : `${task.deliverable} 반복본`,
+    rubric: isPortfolioPhase
+      ? ["문제와 역할이 명확하다", "근거 자료가 포함된다", "면접 답변으로 설명 가능하다"]
+      : ["반복 전후 차이가 보인다", "같은 기준으로 비교했다", "다음 개선점이 적혀 있다"],
+    planWeek,
+    weekLabel: `${planWeek}주차`,
+    phase,
+    priorityReason: isPortfolioPhase
+      ? "준비 기간이 길어 산출물을 채용 설명형 결과물로 다듬는 주차입니다."
+      : "반복 수행으로 실제 직무 판단 기준을 굳히는 주차입니다."
+  };
+}
+
+function getTaskSearchText(task) {
+  return [
+    task.title,
+    task.baseTitle,
+    task.objective,
+    task.deliverable,
+    ...(task.steps || []),
+    ...(task.rubric || [])
+  ].join(" ");
+}
+
+function getRoadmapStepId(trackId, task) {
+  return `${trackId}-${getDurationWeeks()}w-${task.planWeek}-${task.baseIndex}`;
+}
+
 function getNextCurriculumTask(trackId) {
-  const tasks = getCurriculumTasks(trackId);
-  return tasks.find((_, index) => !state.completedRoadmap.includes(`${trackId}-week-${index + 1}`)) || tasks[tasks.length - 1];
+  const tasks = getVisibleRoadmapTasks(trackId);
+  return tasks.find((task) => !state.completedRoadmap.includes(getRoadmapStepId(trackId, task))) || tasks[tasks.length - 1];
 }
 
 function renderResources() {
   const track = getSelectedTrack();
   const gapSkills = getGapSkills(track.id);
   const context = getRecommendationContext(track, gapSkills);
-  const items = resources.filter((resource) => {
-    const trackMatch = resource.tracks.includes(track.id);
-    const difficultyMatch = state.difficulty === "all" || resource.difficulty === state.difficulty;
-    return trackMatch && difficultyMatch;
-  }).sort((a, b) => sortResourcesForLearning(a, b, context));
+  const items = getRecommendedResources(track, context);
 
   renderResourceGuidance(items, context);
   elements.resourceList.innerHTML = items.length
     ? items.map((resource) => renderResourceCard(resource, context)).join("")
-    : `<div class="empty-state">현재 필터에 맞는 자료가 없습니다.</div>`;
+    : `<div class="empty-state">현재 필터에 맞는 교육자료가 없습니다.</div>`;
   bindResourceActions(elements.resourceList);
+}
+
+function getRecommendedResources(track, context) {
+  const candidates = resources.filter((resource) => {
+    const trackMatch = resource.tracks.includes(track.id);
+    const difficultyMatch = state.difficulty === "all" || resource.difficulty === state.difficulty;
+    return trackMatch && difficultyMatch;
+  });
+  const roadmapLinked = candidates.filter((resource) => getResourceLinkedTasks(resource.id, context.visibleTasks).length);
+  const pool = roadmapLinked.length ? roadmapLinked : candidates;
+  return pool.sort((a, b) => sortResourcesForLearning(a, b, context));
+}
+
+function getRoadmapResourcesForTask(track, task, context) {
+  const directlyLinked = resources
+    .filter((resource) => resource.tracks.includes(track.id))
+    .filter((resource) => getResourceLinkedTasks(resource.id, [task]).length);
+
+  const fallback = resources
+    .filter((resource) => resource.tracks.includes(track.id))
+    .filter((resource) => resource.skills.some((skill) => getTaskSearchText(task).includes(skill)));
+
+  return [...new Map([...directlyLinked, ...fallback].map((resource) => [resource.id, resource])).values()]
+    .sort((a, b) => sortResourcesForLearning(a, b, context))
+    .slice(0, 3);
+}
+
+function renderRoadmapResourceItem(resource, task, context) {
+  const saved = state.saved.includes(resource.id);
+  const completed = state.completed.includes(resource.id);
+  const signals = getResourceSignals(resource, context)
+    .filter((signal) => !signal.startsWith("로드맵 연결"))
+    .slice(0, 2);
+
+  return `
+    <div class="roadmap-resource-item ${completed ? "is-completed" : ""}">
+      <div>
+        <strong>${resource.title}</strong>
+        <p>${resource.provider} · ${resource.difficulty} · ${formatMinutes(resource.totalMinutes)} · 산출물: ${resource.expectedOutput}</p>
+        ${signals.length ? `<span>${signals.join(" · ")}</span>` : `<span>${task.deliverable}에 바로 연결됩니다.</span>`}
+      </div>
+      <div class="roadmap-resource-actions">
+        <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">열기</a>
+        <button class="resource-action ${saved ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
+          ${saved ? "내 계획에 추가됨" : "내 계획에 추가"}
+        </button>
+        <button class="resource-action ${completed ? "is-saved" : ""}" type="button" data-complete-id="${resource.id}">
+          ${completed ? "완료됨" : "완료 체크"}
+        </button>
+      </div>
+    </div>
+  `;
 }
 
 function renderSaved() {
@@ -1162,7 +1806,7 @@ function renderSaved() {
     .sort(sortResourcesForLearning);
   elements.savedList.innerHTML = items.length
     ? items.map((resource) => renderResourceCard(resource)).join("")
-    : `<div class="empty-state">아직 저장한 자료가 없습니다.</div>`;
+    : `<div class="empty-state">아직 내 계획에 추가한 교육자료가 없습니다.</div>`;
   bindResourceActions(elements.savedList);
 }
 
@@ -1172,11 +1816,12 @@ function renderResourceCard(resource, context = null) {
   const prerequisites = resource.prerequisites.length ? resource.prerequisites.join(", ") : "없음";
   const checkedAt = resource.engagement?.checkedAt ? `확인 ${resource.engagement.checkedAt}` : "확인 예정";
   const signals = context ? getResourceSignals(resource, context) : [];
+  const linkedTasks = context ? getResourceLinkedTasks(resource.id, context.visibleTasks) : [];
   const priority = signals.length > 0;
   return `
     <article class="resource-card ${completed ? "is-completed" : ""} ${priority ? "is-priority" : ""}">
       <div class="resource-meta">
-        ${priority ? `<span class="badge">맞춤 추천</span>` : ""}
+        ${priority ? `<span class="badge">로드맵 추천</span>` : ""}
         <span class="badge">추천 ${resource.sequenceLevel}단계</span>
         <span class="badge">${resource.provider}</span>
         <span class="badge">${resource.type}</span>
@@ -1188,6 +1833,7 @@ function renderResourceCard(resource, context = null) {
       </div>
       <h3>${resource.title}</h3>
       <p>${resource.reason}</p>
+      ${linkedTasks.length ? `<p><strong>연결 과제:</strong> ${linkedTasks.join(", ")}</p>` : ""}
       ${signals.length ? `<div class="recommendation-note">${signals.join(" · ")}</div>` : ""}
       <div class="resource-learning-meta" aria-label="학습 정보">
         <span><strong>학습</strong>${formatMinutes(resource.estimatedMinutes)}</span>
@@ -1198,7 +1844,7 @@ function renderResourceCard(resource, context = null) {
       <div class="resource-actions">
         <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">열기</a>
         <button class="resource-action ${saved ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
-          ${saved ? "저장됨" : "저장"}
+          ${saved ? "내 계획에 추가됨" : "내 계획에 추가"}
         </button>
         <button class="resource-action ${completed ? "is-saved" : ""}" type="button" data-complete-id="${resource.id}">
           ${completed ? "완료됨" : "완료 체크"}
@@ -1212,40 +1858,44 @@ function renderResourceGuidance(items, context) {
   if (!elements.resourceGuidance) return;
   if (!items.length) {
     elements.resourceGuidance.innerHTML = `
-      <h3>현재 조건의 추천 자료가 없습니다</h3>
-      <p>난이도 필터를 전체로 바꾸면 선택 트랙의 기본 자료를 다시 볼 수 있습니다.</p>
+      <h3>현재 조건의 추천 교육자료가 없습니다</h3>
+      <p>난이도 필터를 전체로 바꾸면 선택 트랙의 기본 교육자료를 다시 볼 수 있습니다.</p>
     `;
     return;
   }
 
   const first = items[0];
   const task = getNextCurriculumTask(context.track.id);
+  const linkedTasks = getResourceLinkedTasks(first.id, context.visibleTasks);
   const gapText = context.gapSkills.length ? context.gapSkills.slice(0, 3).join(", ") : "큰 공백 없음";
   const guide = getGoalGuide(context.goalKey, first, context.track);
   elements.resourceGuidance.innerHTML = `
-    <p class="eyebrow">${context.goal.label} · ${getSelectLabel(elements.yearSelect)}</p>
-    <h3>먼저 볼 자료: ${first.title}</h3>
+    <p class="eyebrow">${context.goal.label} · ${getDurationLabel()} · ${context.role?.title || context.track.title}</p>
+    <h3>다음 로드맵 과제: ${task.title}</h3>
     <p>${context.goal.summary} ${yearGuidance[state.profile.year] || ""}</p>
     <div class="recommendation-note">
-      <strong>이번 과제:</strong> ${task.title} · ${task.deliverable}
+      <strong>연결 교육자료:</strong> ${first.title} · ${linkedTasks.join(", ") || task.baseTitle || task.title}
     </div>
     <div class="badge-row">
       <span class="badge">보완 역량: ${gapText}</span>
-      <span class="badge">검색어: ${starterKeywords[context.track.id] || context.track.title}</span>
+      <span class="badge">채용공고 키워드: ${context.role?.postingKeywords.join(", ") || starterKeywords[context.track.id] || context.track.title}</span>
       <span class="badge">이번 산출물: ${first.expectedOutput}</span>
     </div>
     <p>${guide}</p>
   `;
 }
 
-function getRecommendationContext(track, gapSkills) {
+function getRecommendationContext(track, gapSkills, visibleTasks = null) {
   const goalKey = state.profile.goal || "foundation";
   return {
     track,
+    role: getSelectedRole(track.id),
     gapSkills,
     goalKey,
     goal: learningGoals[goalKey] || learningGoals.foundation,
-    year: state.profile.year
+    year: state.profile.year,
+    durationWeeks: getDurationWeeks(),
+    visibleTasks: visibleTasks || getVisibleRoadmapTasks(track.id)
   };
 }
 
@@ -1255,29 +1905,63 @@ function getGoalGuide(goalKey, resource, track) {
     explore: `30분 안에 ${track.title}의 업무 3개와 모르는 용어 5개를 적으면 충분합니다.`,
     foundation: `체크하지 못한 역량 중 하나를 골라 ${output}까지 남기는 것을 최소 완료 기준으로 두세요.`,
     portfolio: `${output} 결과물을 면접에서 설명할 수 있도록 문제, 방법, 결과, 배운 점 순서로 정리하세요.`,
-    interview: `${track.title} 직무에서 이 자료가 왜 필요한지 3문장으로 설명할 수 있으면 다음 자료로 넘어가세요.`
-  }[goalKey] || `자료를 본 뒤 ${output}을 남기세요.`;
+    interview: `${track.title} 직무에서 이 교육자료가 왜 필요한지 3문장으로 설명할 수 있으면 다음 교육자료로 넘어가세요.`
+  }[goalKey] || `교육자료를 본 뒤 ${output}을 남기세요.`;
 }
 
 function getResourceSignals(resource, context) {
   const signals = [];
+  const linkedTasks = getResourceLinkedTasks(resource.id, context.visibleTasks);
   const matchedGaps = resource.skills.filter((skill) => context.gapSkills.includes(skill));
   const matchedGoal = resource.skills.filter((skill) => context.goal.prioritySkills.includes(skill));
+  const matchedRoleKeywords = getRoleKeywordMatches(resource, context.role);
+  if (linkedTasks.length) signals.push(`로드맵 연결: ${linkedTasks.slice(0, 2).join(", ")}`);
   if (matchedGaps.length) signals.push(`진단 보완: ${matchedGaps.slice(0, 3).join(", ")}`);
   if (matchedGoal.length) signals.push(`목표 적합: ${matchedGoal.slice(0, 2).join(", ")}`);
+  if (matchedRoleKeywords.length) signals.push(`세부 직무 키워드: ${matchedRoleKeywords.slice(0, 2).join(", ")}`);
   if (isYearMatch(resource, context.year)) signals.push("학년 수준 적합");
   if (context.goalKey === "portfolio" && resource.practiceMinutes >= 60) signals.push("실습 산출물 우선");
   return signals;
 }
 
 function getResourcePriorityScore(resource, context) {
+  const linkedTaskMatches = getResourceLinkedTasks(resource.id, context.visibleTasks).length;
   const gapMatches = resource.skills.filter((skill) => context.gapSkills.includes(skill)).length;
   const goalMatches = resource.skills.filter((skill) => context.goal.prioritySkills.includes(skill)).length;
+  const roleKeywordMatches = getRoleKeywordMatches(resource, context.role).length;
   const difficultyMatch = context.goal.preferredDifficulties.includes(resource.difficulty) ? 1 : 0;
   const yearMatch = isYearMatch(resource, context.year) ? 1 : 0;
   const languageMatch = resource.languageCode === "ko" ? 1 : 0;
   const portfolioPractice = context.goalKey === "portfolio" && resource.practiceMinutes >= 60 ? 1 : 0;
-  return gapMatches * 40 + goalMatches * 20 + difficultyMatch * 12 + yearMatch * 10 + languageMatch * 6 + portfolioPractice * 8;
+  const shortDurationFit = context.durationWeeks <= 2 && resource.totalMinutes <= 180 ? 1 : 0;
+  return linkedTaskMatches * 60
+    + gapMatches * 40
+    + goalMatches * 20
+    + roleKeywordMatches * 14
+    + difficultyMatch * 12
+    + yearMatch * 10
+    + languageMatch * 6
+    + portfolioPractice * 8
+    + shortDurationFit * 10;
+}
+
+function getResourceLinkedTasks(resourceId, visibleTasks = []) {
+  const linkedTaskTitles = resourceTaskLinks[resourceId] || [];
+  if (!visibleTasks.length) return linkedTaskTitles;
+
+  const visibleBaseTitles = new Set(visibleTasks.map((task) => task.baseTitle || task.title));
+  return linkedTaskTitles.filter((taskTitle) => visibleBaseTitles.has(taskTitle));
+}
+
+function getRoleKeywordMatches(resource, role) {
+  if (!role) return [];
+  const text = [
+    resource.title,
+    resource.reason,
+    resource.expectedOutput,
+    ...(resource.skills || [])
+  ].join(" ").toLowerCase();
+  return role.postingKeywords.filter((keyword) => text.includes(keyword.toLowerCase()));
 }
 
 function isYearMatch(resource, year) {
@@ -1319,6 +2003,7 @@ function bindResourceActions(container) {
     button.addEventListener("click", () => {
       toggleListValue("saved", button.dataset.saveId);
       saveState();
+      renderRoadmap();
       renderResources();
       renderSaved();
       renderMetrics();
@@ -1331,6 +2016,7 @@ function bindResourceActions(container) {
       toggleListValue("completed", button.dataset.completeId);
       if (!state.saved.includes(button.dataset.completeId)) state.saved.push(button.dataset.completeId);
       saveState();
+      renderRoadmap();
       renderResources();
       renderSaved();
       renderMetrics();
@@ -1359,6 +2045,7 @@ function renderSummaryPreview() {
 
 function buildPilotSummary() {
   const track = getSelectedTrack();
+  const role = getSelectedRole(track.id);
   const savedTitles = resources
     .filter((resource) => state.saved.includes(resource.id))
     .sort((a, b) => sortResourcesForLearning(a, b))
@@ -1369,29 +2056,31 @@ function buildPilotSummary() {
     .join("\n") || "- 없음";
 
   const gapSkills = getGapSkills(track.id);
-  const nextResources = resources
-    .filter((resource) => resource.tracks.includes(track.id))
-    .sort((a, b) => sortResourcesForLearning(a, b, getRecommendationContext(track, gapSkills)));
+  const context = getRecommendationContext(track, gapSkills);
+  const nextResources = getRecommendedResources(track, context);
   const nextResource = nextResources[0]?.title || "없음";
   const nextTask = getNextCurriculumTask(track.id);
+  const visibleTasks = getVisibleRoadmapTasks(track.id);
 
-  const completedWeeks = getCurriculumTasks(track.id)
-    .map((_, index) => `${track.id}-week-${index + 1}`)
+  const completedWeeks = visibleTasks
+    .map((task) => getRoadmapStepId(track.id, task))
     .filter((stepId) => state.completedRoadmap.includes(stepId)).length;
 
   return [
-    "[직무역량 로드맵 파일럿 결과]",
+    "[직무역량 교육 로드맵 파일럿 결과]",
     `전공: ${getSelectLabel(elements.majorSelect)}`,
     `학년: ${getSelectLabel(elements.yearSelect)}`,
     `관심 산업: ${getSelectLabel(elements.industrySelect)}`,
     `학습 목표: ${learningGoals[state.profile.goal]?.label || state.profile.goal}`,
-    `선택 트랙: ${track.title}`,
+    `준비 기간: ${getDurationLabel()}`,
+    `직무군: ${track.title}`,
+    `선택 직무: ${role?.title || "미선택"}`,
     `진단 점수: ${getDiagnosticScore(track.id)}%`,
     `보완 역량: ${gapSkills.slice(0, 5).join(", ") || "큰 공백 없음"}`,
     `다음 과제: ${nextTask.title} - ${nextTask.deliverable}`,
-    `다음 추천 자료: ${nextResource}`,
-    `완료 주차: ${completedWeeks}/${getCurriculumTasks(track.id).length}`,
-    "저장 자료:",
+    `다음 추천 교육자료: ${nextResource}`,
+    `완료 주차: ${completedWeeks}/${visibleTasks.length}`,
+    "내 계획 교육자료:",
     savedTitles
   ].join("\n");
 }
