@@ -231,7 +231,7 @@ input::placeholder {
 
 .tabs {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 0;
   border-bottom: 1px solid var(--line);
   background: #f8faf7;
@@ -541,7 +541,8 @@ li {
   gap: 10px;
 }
 
-.resource-guidance {
+.resource-guidance,
+.roadmap-guidance {
   display: grid;
   gap: 10px;
   margin-bottom: 12px;
@@ -551,12 +552,14 @@ li {
   border-radius: var(--radius);
 }
 
-.resource-guidance h3 {
+.resource-guidance h3,
+.roadmap-guidance h3 {
   margin: 0;
   font-size: 1rem;
 }
 
-.resource-guidance p {
+.resource-guidance p,
+.roadmap-guidance p {
   margin: 0;
   color: var(--muted);
   line-height: 1.5;
@@ -984,7 +987,7 @@ li {
 
   .tabs {
     overflow-x: auto;
-    grid-template-columns: repeat(4, minmax(72px, 1fr));
+    grid-template-columns: repeat(5, minmax(72px, 1fr));
   }
 
   .tab {

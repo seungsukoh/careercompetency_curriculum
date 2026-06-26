@@ -100,6 +100,7 @@
           <nav class="tabs" aria-label="화면 전환">
             <button class="tab is-active" type="button" data-view="tracks">직무</button>
             <button class="tab" type="button" data-view="diagnosis">진단</button>
+            <button class="tab" type="button" data-view="education">교육 선택</button>
             <button class="tab" type="button" data-view="roadmap">로드맵</button>
             <button class="tab" type="button" data-view="saved">내 계획</button>
           </nav>
@@ -155,9 +156,30 @@
                 <p class="eyebrow">기간 맞춤 계획</p>
                 <h2 id="roadmapTitle">로드맵</h2>
               </div>
-              <span class="status-pill">핵심 과제 우선</span>
+              <span class="status-pill">선택 교육 반영</span>
             </div>
+            <div class="roadmap-guidance" id="roadmapGuidance"></div>
             <div class="roadmap" id="roadmapList"></div>
+          </section>
+
+          <section class="view" id="educationView">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">우선순위 안내</p>
+                <h2>교육자료를 선택하세요</h2>
+              </div>
+              <label class="compact-filter">
+                난이도
+                <select id="difficultyFilter">
+                  <option value="all">전체</option>
+                  <option value="입문">입문</option>
+                  <option value="기초실습">기초실습</option>
+                  <option value="적용">적용</option>
+                </select>
+              </label>
+            </div>
+            <div class="resource-guidance" id="resourceGuidance"></div>
+            <div class="resource-list" id="resourceList"></div>
           </section>
 
           <section class="view" id="savedView">
