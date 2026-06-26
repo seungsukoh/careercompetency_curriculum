@@ -1,7 +1,10 @@
-function generateWordClouds()
+function generateWordClouds(targetPattern)
 %GENERATEWORDCLOUDS Generate static MATLAB word cloud assets for the app.
 % Word size reflects repeated emphasis across job descriptions, diagnostics,
 % curriculum tasks, tools, outputs, and resource tags.
+if nargin < 1
+    targetPattern = "";
+end
 
 projectRoot = fileparts(mfilename("fullpath"));
 outputDir = fullfile(projectRoot, "public", "assets");
@@ -10,6 +13,11 @@ if ~isfolder(outputDir)
 end
 
 clouds = [getCloudData(), getRoleCloudData(projectRoot)];
+targetPattern = lower(string(targetPattern));
+if strlength(targetPattern) > 0
+    cloudText = lower(string({clouds.id}) + " " + string({clouds.fileName}) + " " + string({clouds.title}) + " " + string({clouds.styleId}));
+    clouds = clouds(contains(cloudText, targetPattern));
+end
 
 for idx = 1:numel(clouds)
     style = getCloudStyle(clouds(idx).styleId);
@@ -75,9 +83,7 @@ end
 
 function roleClouds = getRoleCloudData(projectRoot)
 appCode = fileread(fullfile(projectRoot, "app.js"));
-jobRolesStart = strfind(appCode, "const jobRoles = {");
-roleDiagnosticsStart = strfind(appCode, "const roleDiagnostics = {");
-jobRolesCode = appCode(jobRolesStart(1):roleDiagnosticsStart(1)-1);
+jobRolesCode = appCode;
 
 rolePattern = [ ...
     'id:\s*"([^"]+)",\s*' ...
@@ -132,6 +138,9 @@ clouds = [
     makeCloud("semiconductor-equipment", "반도체 공정·장비 핵심 역량", ...
         ["공정흐름","장비조건","수율","계측","플라즈마","진공","식각","증착","노광","CMP","결함","CD","압력","온도","가스유량","RFpower","Pareto","반도체소자","조건변경","리스크","불량분석","장비로그","공정개선","Troubleshooting","수율분석","클린룸","SPC","Python","Defect","균일도"], ...
         [14,13,12,11,11,10,10,9,9,9,9,8,8,8,8,8,8,7,7,7,6,6,6,6,6,5,5,5,5,4]), ...
+    makeCloud("chemical-process", "화학공정·소재 핵심 역량", ...
+        ["물질수지","열역학","반응공학","분리공정","공정안전","수율","순도","전환율","선택도","PFD","HAZOP","PSM","MSDS","공정변수","온도","압력","유량","조성","증류","추출","흡수","막분리","공정모사","Aspen","HYSYS","DOE","SPC","배터리공정","전극공정","GMP"], ...
+        [14,13,12,12,11,11,10,10,10,9,9,9,8,8,8,8,8,8,7,7,7,7,7,6,6,6,6,5,5,5]), ...
     makeCloud("electronics-pcb", "전자회로·PCB·하드웨어 핵심 역량", ...
         ["PCB","전원회로","회로이론","계측","검증","리턴패스","디커플링","부품선정","ADC","리플","발열","오실로스코프","전원무결성","그라운드","SPICE","센서신호","이득","노이즈","데이터시트","측정포인트","회로블록도","멀티미터","EMC","PassFail","하드웨어설계","PCBLayout","검증리포트","Buck","LDO","프로브"], ...
         [14,13,12,11,11,10,10,9,9,9,8,8,8,8,7,7,7,7,7,6,6,6,6,6,5,5,5,5,4,4]), ...
@@ -161,6 +170,7 @@ if isempty(trackIndex)
 else
     trackId = string(trackTokens{trackIndex}{1});
 end
+trackId = regexprep(trackId, "-role-options$", "");
 end
 
 function values = parseJsStringArray(arrayText)
@@ -304,6 +314,15 @@ switch string(id)
             0.173 0.435 0.306
             0.114 0.149 0.196
             0.498 0.357 0.165
+        ];
+    case "chemical-process"
+        style.Colors = [
+            0.173 0.435 0.306
+            0.082 0.369 0.459
+            0.650 0.294 0.165
+            0.365 0.333 0.180
+            0.114 0.149 0.196
+            0.455 0.314 0.533
         ];
     case "electronics-pcb"
         style.Colors = [

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#155e75">
-    <meta name="description" content="기계공학과 전자공학 대학생을 위한 직무역량 교육 로드맵 파일럿">
+    <meta name="description" content="공학 전공 대학생을 위한 직무역량 교육자료 추천과 기간 맞춤 로드맵">
     <title>직무역량 교육 로드맵</title>
     <link rel="manifest" href="/manifest.webmanifest">
     <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
@@ -16,7 +16,7 @@
     <div class="app-shell">
       <header class="app-header">
         <div>
-          <p class="eyebrow">무료 파일럿</p>
+          <p class="eyebrow">무료 교육자료 기반</p>
           <h1>직무역량 교육 로드맵</h1>
         </div>
         <button class="ghost-button" id="installButton" type="button" hidden>홈 화면에 설치</button>
@@ -33,15 +33,8 @@
             <select id="majorSelect">
               <option value="mechanical">기계공학</option>
               <option value="electrical">전자공학</option>
-              <option value="both">기계/전자 융합</option>
-            </select>
-          </label>
-          <label>
-            학년
-            <select id="yearSelect">
-              <option value="2">2학년</option>
-              <option value="3" selected>3학년</option>
-              <option value="4">4학년 이상</option>
+              <option value="chemical">화학공학</option>
+              <option value="both">공학 융합/전체</option>
             </select>
           </label>
           <label>
@@ -53,6 +46,9 @@
               <option value="manufacturing">제조·품질</option>
               <option value="robotics">로봇·자동화</option>
               <option value="electronics">전자·하드웨어</option>
+              <option value="chemical">화학·정유</option>
+              <option value="battery">배터리·소재</option>
+              <option value="bio">바이오·제약</option>
             </select>
           </label>
           <label>
@@ -85,11 +81,11 @@
             </div>
             <div>
               <strong id="savedMetric">0</strong>
-              <span>완료/계획</span>
+              <span>내 계획</span>
             </div>
           </div>
 
-          <button class="primary-button full-width" id="copySummaryButton" type="button">파일럿 결과 복사</button>
+          <button class="primary-button full-width" id="copySummaryButton" type="button">현재 계획 요약 복사</button>
           <div class="summary-preview" aria-live="polite">
             <p class="eyebrow">요약 미리보기</p>
             <pre id="summaryPreview"></pre>
@@ -101,7 +97,7 @@
             <button class="tab is-active" type="button" data-view="tracks">직무</button>
             <button class="tab" type="button" data-view="diagnosis">직무확보</button>
             <button class="tab" type="button" data-view="education">자료 선택</button>
-            <button class="tab" type="button" data-view="roadmap">로드맵</button>
+            <button class="tab" type="button" data-view="roadmap">로드맵 구성</button>
             <button class="tab" type="button" data-view="saved">내 계획</button>
           </nav>
 
@@ -116,7 +112,7 @@
             <div class="role-filter-bar" aria-label="직무 검색과 필터">
               <label class="role-search">
                 직무명·키워드 검색
-                <input id="roleSearchInput" type="search" placeholder="예: 식각, PCB, 펌웨어, 품질">
+                <input id="roleSearchInput" type="search" placeholder="예: 식각, PCB, 펌웨어, 품질, 배터리">
               </label>
               <label class="compact-filter">
                 직무군
@@ -125,6 +121,7 @@
                   <option value="mechanical-cae">기계 설계·CAE</option>
                   <option value="production-quality">생산·공정·품질</option>
                   <option value="semiconductor-equipment">반도체 공정·장비</option>
+                  <option value="chemical-process">화학공정·소재</option>
                   <option value="electronics-pcb">전자회로·PCB·하드웨어</option>
                   <option value="embedded-control">임베디드·제어</option>
                 </select>
@@ -154,9 +151,9 @@
             <div class="section-heading">
               <div>
                 <p class="eyebrow">기간 맞춤 계획</p>
-                <h2 id="roadmapTitle">로드맵</h2>
+                <h2 id="roadmapTitle">로드맵 구성</h2>
               </div>
-              <span class="status-pill">주차별 실행</span>
+              <span class="status-pill">주차별 구성</span>
             </div>
             <div class="roadmap-guidance" id="roadmapGuidance"></div>
             <div class="roadmap" id="roadmapList"></div>
@@ -185,8 +182,8 @@
           <section class="view" id="savedView">
             <div class="section-heading">
               <div>
-                <p class="eyebrow">선택 자료 관리</p>
-                <h2>선택한 교육자료와 완료 상태</h2>
+                <p class="eyebrow">완성된 계획</p>
+                <h2>내 계획</h2>
               </div>
               <div class="section-actions">
                 <button class="primary-button" id="exportPlanButton" type="button">엑셀로 내보내기</button>
