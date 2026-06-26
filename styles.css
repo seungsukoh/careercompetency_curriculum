@@ -659,11 +659,6 @@ li {
 }
 
 .roadmap-resource-item {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
-  align-items: center;
-  padding: 10px;
   background: #f8fcfd;
   border: 1px solid #c8e5ec;
   border-radius: 7px;
@@ -674,18 +669,62 @@ li {
   border-color: #9bc7ad;
 }
 
-.roadmap-resource-item strong {
-  display: block;
-  margin-bottom: 4px;
+.roadmap-resource-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 46px;
+  padding: 10px;
+  cursor: pointer;
+  list-style: none;
 }
 
-.roadmap-resource-item p,
-.roadmap-resource-item span {
-  display: block;
+.roadmap-resource-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.roadmap-resource-item summary::after {
+  content: "보기";
+  flex: 0 0 auto;
+  color: var(--primary);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.roadmap-resource-item[open] summary::after {
+  content: "접기";
+}
+
+.roadmap-resource-item summary strong {
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.roadmap-resource-item summary span {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.roadmap-resource-detail {
+  display: grid;
+  gap: 8px;
+  padding: 0 10px 10px;
+  border-top: 1px solid #d9edf2;
+}
+
+.roadmap-resource-detail p {
   margin: 0;
   color: var(--muted);
   font-size: 0.82rem;
   line-height: 1.45;
+}
+
+.roadmap-resource-detail p:first-child {
+  padding-top: 10px;
 }
 
 .roadmap-resource-actions {
@@ -850,10 +889,6 @@ li {
   .resource-actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
-  }
-
-  .roadmap-resource-item {
-    grid-template-columns: 1fr;
   }
 
   .roadmap-resource-actions {

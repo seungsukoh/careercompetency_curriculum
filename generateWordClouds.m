@@ -9,18 +9,17 @@ if ~isfolder(outputDir)
     mkdir(outputDir);
 end
 
-clouds = getCloudData();
+clouds = [getCloudData(), getRoleCloudData(projectRoot)];
 
 for idx = 1:numel(clouds)
-    style = getCloudStyle(clouds(idx).id);
+    style = getCloudStyle(clouds(idx).styleId);
     fig = figure( ...
         Visible="off", ...
         Color=style.BackgroundColor, ...
-        InvertHardcopy="off", ...
         Position=[100 100 1440 840]);
 
     words = string(clouds(idx).words(:));
-    weights = double(clouds(idx).weights(:));
+    weights = sqrt(double(clouds(idx).weights(:))) * 10;
     cloudTable = table(words, weights, 'VariableNames', {'Word','Weight'});
 
     annotation(fig, "textbox", [0.045 0.91 0.58 0.055], ...
@@ -32,7 +31,7 @@ for idx = 1:numel(clouds)
         Color=style.TitleColor, ...
         Interpreter="none");
     annotation(fig, "textbox", [0.047 0.865 0.62 0.045], ...
-        String="채용공고 키워드 · 진단 문항 · 로드맵 과제 반복 빈도", ...
+        String=clouds(idx).subtitle, ...
         EdgeColor="none", ...
         FontName="Malgun Gothic", ...
         FontSize=12, ...
@@ -51,11 +50,11 @@ for idx = 1:numel(clouds)
         Interpreter="none");
 
     wc = wordcloud(cloudTable, "Word", "Weight");
-    wc.Position = [0.035 0.06 0.93 0.79];
-    wc.MaxDisplayWords = 42;
+    wc.Position = [0.045 0.13 0.91 0.66];
+    wc.MaxDisplayWords = clouds(idx).maxDisplayWords;
     wc.Title = "";
     wc.Shape = "rectangle";
-    wc.SizePower = 0.68;
+    wc.SizePower = clouds(idx).sizePower;
     wc.Color = getWordColors(numel(words), style);
     wc.HighlightColor = style.HighlightColor;
     wc.Box = "off";
@@ -66,11 +65,59 @@ for idx = 1:numel(clouds)
         % Some MATLAB releases do not expose FontName on WordCloudChart.
     end
 
-    outputFile = fullfile(outputDir, "wordcloud-" + clouds(idx).id + ".png");
+    outputFile = fullfile(outputDir, clouds(idx).fileName);
     drawnow;
     exportgraphics(fig, outputFile, Resolution=230);
     close(fig);
     fprintf("Generated %s\n", outputFile);
+end
+end
+
+function roleClouds = getRoleCloudData(projectRoot)
+appCode = fileread(fullfile(projectRoot, "app.js"));
+jobRolesStart = strfind(appCode, "const jobRoles = {");
+roleDiagnosticsStart = strfind(appCode, "const roleDiagnostics = {");
+jobRolesCode = appCode(jobRolesStart(1):roleDiagnosticsStart(1)-1);
+
+rolePattern = [ ...
+    'id:\s*"([^"]+)",\s*' ...
+    'title:\s*"([^"]+)",\s*' ...
+    'postingKeywords:\s*\[([^\]]*)\],\s*' ...
+    'industries:\s*\[[^\]]*\],\s*' ...
+    'focus:\s*"([^"]*)",\s*' ...
+    'responsibilities:\s*\[([^\]]*)\],\s*' ...
+    'requirements:\s*\[([^\]]*)\],\s*' ...
+    'preferred:\s*\[([^\]]*)\]' ...
+];
+
+[roleTokens, roleStarts] = regexp(jobRolesCode, rolePattern, "tokens", "start");
+[trackTokens, trackStarts] = regexp(jobRolesCode, '"([^"]+)":\s*\[\s*\{', "tokens", "start");
+
+roleClouds = struct("id", {}, "title", {}, "words", {}, "weights", {}, ...
+    "styleId", {}, "fileName", {}, "subtitle", {}, "maxDisplayWords", {}, "sizePower", {});
+
+for idx = 1:numel(roleTokens)
+    token = roleTokens{idx};
+    role = struct();
+    role.id = string(token{1});
+    role.title = string(token{2});
+    role.postingKeywords = parseJsStringArray(token{3});
+    role.focus = string(token{4});
+    role.responsibilities = parseJsStringArray(token{5});
+    role.requirements = parseJsStringArray(token{6});
+    role.preferred = parseJsStringArray(token{7});
+    role.trackId = getRoleTrackId(roleStarts(idx), trackTokens, trackStarts);
+
+    diagnosticSkills = getDiagnosticSkills(appCode, role.id);
+    [words, weights] = buildRoleCloudWords(role, diagnosticSkills);
+
+    cloud = makeCloud("role-" + role.id, role.title + " 역량 워드클라우드", words, weights);
+    cloud.styleId = char(role.trackId);
+    cloud.fileName = char("wordcloud-role-" + role.id + ".png");
+    cloud.subtitle = char("세부 직무 채용공고 키워드 · 진단 문항 · 업무·자격요건 반복 빈도");
+    cloud.maxDisplayWords = 32;
+    cloud.sizePower = 0.56;
+    roleClouds(end+1) = cloud; %#ok<AGROW>
 end
 end
 
@@ -100,6 +147,125 @@ cloud.id = char(id);
 cloud.title = char(titleText);
 cloud.words = cellstr(words);
 cloud.weights = weights;
+cloud.styleId = char(id);
+cloud.fileName = char("wordcloud-" + string(id) + ".png");
+cloud.subtitle = char("채용공고 키워드 · 진단 문항 · 로드맵 과제 반복 빈도");
+cloud.maxDisplayWords = 42;
+cloud.sizePower = 0.68;
+end
+
+function trackId = getRoleTrackId(roleStart, trackTokens, trackStarts)
+trackIndex = find(trackStarts <= roleStart, 1, "last");
+if isempty(trackIndex)
+    trackId = "production-quality";
+else
+    trackId = string(trackTokens{trackIndex}{1});
+end
+end
+
+function values = parseJsStringArray(arrayText)
+matches = regexp(arrayText, '"([^"]*)"', "tokens");
+if isempty(matches)
+    values = strings(0, 1);
+    return;
+end
+values = string(cellfun(@(item) item{1}, matches, "UniformOutput", false));
+values = values(:);
+end
+
+function diagnosticSkills = getDiagnosticSkills(appCode, roleId)
+lines = splitlines(string(appCode));
+roleLine = lines(contains(lines, """" + roleId + """: [["));
+if isempty(roleLine)
+    diagnosticSkills = strings(0, 1);
+    return;
+end
+
+matches = regexp(char(roleLine(1)), '"([^"]*)"', "tokens");
+values = string(cellfun(@(item) item{1}, matches, "UniformOutput", false));
+if numel(values) < 2
+    diagnosticSkills = strings(0, 1);
+    return;
+end
+diagnosticSkills = values(2:2:end);
+diagnosticSkills = diagnosticSkills(:);
+end
+
+function [words, weights] = buildRoleCloudWords(role, diagnosticSkills)
+rawWords = strings(0, 1);
+rawWeights = zeros(0, 1);
+
+[rawWords, rawWeights] = addWeightedWords(rawWords, rawWeights, role.postingKeywords, 13);
+[rawWords, rawWeights] = addWeightedWords(rawWords, rawWeights, diagnosticSkills, 10);
+[rawWords, rawWeights] = addWeightedWords(rawWords, rawWeights, extractCandidateWords(role.title), 4);
+[rawWords, rawWeights] = addWeightedWords(rawWords, rawWeights, extractCandidateWords(role.focus), 3);
+[rawWords, rawWeights] = addWeightedWords(rawWords, rawWeights, extractCandidateWords(role.responsibilities), 4);
+[rawWords, rawWeights] = addWeightedWords(rawWords, rawWeights, extractCandidateWords(role.requirements), 5);
+[rawWords, rawWeights] = addWeightedWords(rawWords, rawWeights, extractCandidateWords(role.preferred), 4);
+
+[words, weights] = aggregateCloudWords(rawWords, rawWeights);
+[weights, order] = sort(weights, "descend");
+words = words(order);
+maxWords = min(44, numel(words));
+words = words(1:maxWords);
+weights = weights(1:maxWords);
+end
+
+function [rawWords, rawWeights] = addWeightedWords(rawWords, rawWeights, wordsToAdd, weight)
+wordsToAdd = string(wordsToAdd(:));
+wordsToAdd = wordsToAdd(strlength(strip(wordsToAdd)) > 0);
+rawWords = [rawWords; wordsToAdd];
+rawWeights = [rawWeights; repmat(weight, numel(wordsToAdd), 1)];
+end
+
+function words = extractCandidateWords(values)
+text = join(string(values(:)), " ");
+text = regexprep(text, '[\.,;:()\[\]""'']', " ");
+text = replace(text, ["·", "/", "-"], " ");
+parts = split(text);
+parts = strip(regexprep(parts, "(을|를|이|가|은|는|와|과|의|에|에서|으로|로|도|만)$", ""));
+parts = regexprep(parts, "[^0-9A-Za-z가-힣+#]", "");
+parts = strip(parts);
+
+stopWords = ["직무","엔지니어","담당","기초","이해","활용","작성","정리","검토", ...
+    "관리","기반","경험","역량","조건","결과","문서화","리포트","계획","요구사항", ...
+    "가능성","비교","정의","설명","기준","역할","사용","수립","수행","지원", ...
+    "문제","이슈","기본","신규","또는","같은","등","수","할","있는"];
+
+keep = strlength(parts) >= 2 ...
+    & ~ismember(parts, stopWords) ...
+    & ~contains(parts, "합니다");
+words = unique(parts(keep), "stable");
+words = words(:);
+end
+
+function [words, weights] = aggregateCloudWords(rawWords, rawWeights)
+words = strings(0, 1);
+weights = zeros(0, 1);
+keys = strings(0, 1);
+
+for idx = 1:numel(rawWords)
+    word = cleanCloudWord(rawWords(idx));
+    if strlength(word) < 2
+        continue;
+    end
+
+    key = lower(regexprep(word, "[\s\-/·]+", ""));
+    found = find(keys == key, 1);
+    if isempty(found)
+        keys(end+1, 1) = key; %#ok<AGROW>
+        words(end+1, 1) = word; %#ok<AGROW>
+        weights(end+1, 1) = rawWeights(idx); %#ok<AGROW>
+    else
+        weights(found) = weights(found) + rawWeights(idx);
+    end
+end
+end
+
+function word = cleanCloudWord(word)
+word = string(word);
+word = regexprep(word, "\s+", " ");
+word = strip(word);
 end
 
 function style = getCloudStyle(id)

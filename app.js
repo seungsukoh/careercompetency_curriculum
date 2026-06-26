@@ -1474,6 +1474,7 @@ function renderTrackDetail() {
   const roles = getAvailableRoles(track);
   const selectedRole = getSelectedRole(track.id);
   const evidence = selectedRole ? getHiringEvidence(track, selectedRole) : null;
+  const wordCloud = getWordCloudAsset(track, selectedRole);
   const roleOptions = roles.map((role) => `
     <button class="role-option ${selectedRole?.id === role.id ? "is-selected" : ""}" type="button" data-role-id="${role.id}">
       <strong>${role.title}</strong>
@@ -1512,8 +1513,8 @@ function renderTrackDetail() {
       ` : ""}
     </section>
     <figure class="word-cloud-panel">
-      <img src="/assets/wordcloud-${track.id}.png" alt="${track.title} 핵심 역량 워드 클라우드" loading="lazy">
-      <figcaption>단어 크기는 직무 설명, 진단 문항, 과제, 교육자료에서 반복 강조되는 정도를 반영합니다.</figcaption>
+      <img src="${wordCloud.src}" alt="${wordCloud.alt}" loading="lazy">
+      <figcaption>${wordCloud.caption}</figcaption>
     </figure>
     <div class="detail-grid">
       ${detailBlock("주요 업무", track.tasks)}
@@ -1547,6 +1548,22 @@ function getHiringEvidence(track, role) {
       { label: "사람인 검색", url: `https://www.saramin.co.kr/zf_user/search?searchType=search&searchword=${encodedQuery}` },
       { label: "웹 검색", url: `https://duckduckgo.com/?q=${encodedQuery}` }
     ]
+  };
+}
+
+function getWordCloudAsset(track, role) {
+  if (role) {
+    return {
+      src: `/assets/wordcloud-role-${role.id}.png`,
+      alt: `${role.title} 세부 직무 역량 워드 클라우드`,
+      caption: `${role.title} 채용공고 키워드, 진단 문항, 업무·자격요건에서 반복되는 역량일수록 크게 표시됩니다.`
+    };
+  }
+
+  return {
+    src: `/assets/wordcloud-${track.id}.png`,
+    alt: `${track.title} 핵심 역량 워드 클라우드`,
+    caption: "단어 크기는 직무 설명, 진단 문항, 과제, 교육자료에서 반복 강조되는 정도를 반영합니다."
   };
 }
 
@@ -1678,7 +1695,7 @@ function renderRoadmap() {
         <ul class="rubric-list">${task.rubric.map((item) => `<li>${item}</li>`).join("")}</ul>
       </div>
       <div class="roadmap-resource-block">
-        <h4>연결 교육자료</h4>
+        <h4>연결 교육 확인</h4>
         ${linkedResources.length
           ? `<div class="roadmap-resource-list">${linkedResources.map((resource) => renderRoadmapResourceItem(resource, task, context)).join("")}</div>`
           : `<div class="empty-state compact">이 과제에 연결된 교육자료 후보가 아직 없습니다.</div>`}
@@ -1880,22 +1897,26 @@ function renderRoadmapResourceItem(resource, task, context) {
     .slice(0, 2);
 
   return `
-    <div class="roadmap-resource-item ${completed ? "is-completed" : ""}">
-      <div>
+    <details class="roadmap-resource-item ${completed ? "is-completed" : ""}">
+      <summary>
         <strong>${resource.title}</strong>
-        <p>${resource.provider} · ${resource.difficulty} · ${formatMinutes(resource.totalMinutes)} · 산출물: ${resource.expectedOutput}</p>
-        ${signals.length ? `<span>${signals.join(" · ")}</span>` : `<span>${task.deliverable}에 바로 연결됩니다.</span>`}
+        <span>${completed ? "완료됨" : "교육 상세 확인"}</span>
+      </summary>
+      <div class="roadmap-resource-detail">
+        <p>${resource.provider} · ${resource.difficulty} · ${formatMinutes(resource.totalMinutes)}</p>
+        <p><strong>연결 산출물:</strong> ${resource.expectedOutput}</p>
+        ${signals.length ? `<p>${signals.join(" · ")}</p>` : `<p>${task.deliverable}에 바로 연결됩니다.</p>`}
+        <div class="roadmap-resource-actions">
+          <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">교육 열기</a>
+          <button class="resource-action ${saved ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
+            ${saved ? "내 계획에 추가됨" : "내 계획에 추가"}
+          </button>
+          <button class="resource-action ${completed ? "is-saved" : ""}" type="button" data-complete-id="${resource.id}">
+            ${completed ? "완료됨" : "완료 체크"}
+          </button>
+        </div>
       </div>
-      <div class="roadmap-resource-actions">
-        <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">열기</a>
-        <button class="resource-action ${saved ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
-          ${saved ? "내 계획에 추가됨" : "내 계획에 추가"}
-        </button>
-        <button class="resource-action ${completed ? "is-saved" : ""}" type="button" data-complete-id="${resource.id}">
-          ${completed ? "완료됨" : "완료 체크"}
-        </button>
-      </div>
-    </div>
+    </details>
   `;
 }
 
