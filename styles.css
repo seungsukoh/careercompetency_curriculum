@@ -550,7 +550,8 @@ li {
 }
 
 .resource-guidance,
-.roadmap-guidance {
+.roadmap-guidance,
+.plan-guidance {
   display: grid;
   gap: 10px;
   margin-bottom: 12px;
@@ -561,13 +562,15 @@ li {
 }
 
 .resource-guidance h3,
-.roadmap-guidance h3 {
+.roadmap-guidance h3,
+.plan-guidance h3 {
   margin: 0;
   font-size: 1rem;
 }
 
 .resource-guidance p,
-.roadmap-guidance p {
+.roadmap-guidance p,
+.plan-guidance p {
   margin: 0;
   color: var(--muted);
   line-height: 1.5;

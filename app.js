@@ -1003,7 +1003,7 @@ const learningGoals = {
   },
   foundation: {
     label: "전공 보완",
-    summary: "진단에서 비어 있는 전공·도구 역량을 먼저 메웁니다.",
+    summary: "직무확보에서 비어 있는 전공·도구 역량을 먼저 메웁니다.",
     preferredDifficulties: ["입문", "기초실습"],
     prioritySkills: ["전공지식", "통계", "회로이론", "재료역학", "공정 흐름", "C언어"]
   },
@@ -1025,6 +1025,40 @@ const yearGuidance = {
   "2": "입문 교육자료와 직무 용어 정리를 우선하세요.",
   "3": "전공 보완과 작은 실습 산출물을 함께 가져가세요.",
   "4": "면접에서 설명할 수 있는 결과물과 검증 근거를 남기세요."
+};
+
+const yearProfiles = {
+  "2": {
+    label: "2학년",
+    shortLabel: "입문·직무용어 우선",
+    roadmapLabel: "기초 개념과 직무 용어를 앞쪽 주차에 둡니다.",
+    fitLabel: "입문/용어 정리 자료",
+    preferredDifficulties: ["입문"],
+    evidenceKeywords: ["입문", "기초", "개념", "용어", "요약", "체크리스트", "직무 이해", "onramp"]
+  },
+  "3": {
+    label: "3학년",
+    shortLabel: "전공 보완·작은 실습 우선",
+    roadmapLabel: "직무확보 공백과 작은 산출물 과제를 균형 있게 배치합니다.",
+    fitLabel: "기초실습/전공 보완 자료",
+    preferredDifficulties: ["입문", "기초실습"],
+    evidenceKeywords: ["실습", "그래프", "표", "초안", "모델", "데이터", "분석", "보완"]
+  },
+  "4": {
+    label: "4학년 이상",
+    shortLabel: "적용·포트폴리오 근거 우선",
+    roadmapLabel: "면접에서 설명 가능한 산출물과 검증 근거를 강화합니다.",
+    fitLabel: "적용/검증 산출물 자료",
+    preferredDifficulties: ["기초실습", "적용"],
+    evidenceKeywords: ["보고서", "리포트", "README", "검증", "근거", "비교", "개선", "포트폴리오", "결과"]
+  }
+};
+
+const goalRecommendationLabels = {
+  explore: "직무 이해와 용어 확인 우선",
+  foundation: "직무확보 공백 보완 우선",
+  portfolio: "실습 산출물과 포트폴리오 근거 우선",
+  interview: "면접 설명 근거와 직무 키워드 우선"
 };
 
 const durationLabels = {
@@ -1469,6 +1503,7 @@ function bindElements() {
     "difficultyFilter",
     "resourceGuidance",
     "resourceList",
+    "savedGuidance",
     "savedList",
     "summaryPreview",
     "clearSavedButton",
@@ -1871,14 +1906,14 @@ function getWordCloudAsset(track, role) {
     return {
       src: `/assets/wordcloud-role-${role.id}.png`,
       alt: `${role.title} 세부 직무 역량 워드 클라우드`,
-      caption: `${role.title} 채용공고 키워드, 진단 문항, 업무·자격요건에서 반복되는 역량일수록 크게 표시됩니다.`
+      caption: `${role.title} 채용공고 키워드, 직무확보 문항, 업무·자격요건에서 반복되는 역량일수록 크게 표시됩니다.`
     };
   }
 
   return {
     src: `/assets/wordcloud-${track.id}.png`,
     alt: `${track.title} 핵심 역량 워드 클라우드`,
-    caption: "단어 크기는 직무 설명, 진단 문항, 과제, 교육자료에서 반복 강조되는 정도를 반영합니다."
+    caption: "단어 크기는 직무 설명, 직무확보 문항, 과제, 교육자료에서 반복 강조되는 정도를 반영합니다."
   };
 }
 
@@ -2074,17 +2109,22 @@ function renderRoadmapGuidance(context, tasks) {
   const selectedResources = getSavedResources();
   const roleResourceCount = getRoleLinkedResourceIds(context.role).length;
   const gapText = context.gapSkills.length ? context.gapSkills.slice(0, 4).join(", ") : "큰 공백 없음";
+  const yearProfile = getYearProfile(context.year);
+  const goalLabel = getGoalRecommendationLabel(context.goalKey);
   const selectedText = selectedResources.length
     ? `${selectedResources.length}개 선택 교육자료를 ${getDurationLabel()} 안에 우선 배치합니다.`
     : "아직 선택한 교육자료가 없어 직무별 필수 보완 자료를 기준으로 자동 배치합니다.";
 
   elements.roadmapGuidance.innerHTML = `
     <h3>${selectedText}</h3>
-    <p>${context.role?.title || context.track.title} 기준 추천 교육 ${roleResourceCount}개와 진단 보완 역량(${gapText})을 함께 반영합니다.</p>
+    <p>로드맵은 주차별 실행 순서입니다. ${context.role?.title || context.track.title} 기준 추천 교육 ${roleResourceCount}개, 직무확보 보완 역량(${gapText}), 학년과 학습목표를 함께 반영합니다.</p>
+    <p>내 계획은 선택한 교육자료의 완료 상태와 엑셀 내보내기를 관리하는 화면으로 분리했습니다.</p>
     <div class="badge-row">
       <span class="badge">기간: ${getDurationLabel()}</span>
+      <span class="badge">학년 반영: ${yearProfile.label} · ${yearProfile.shortLabel}</span>
+      <span class="badge">목표 반영: ${context.goal.label} · ${goalLabel}</span>
       <span class="badge">로드맵 주차: ${tasks.length}개</span>
-      <span class="badge">내 계획: ${selectedResources.length}개</span>
+      <span class="badge">선택 자료: ${selectedResources.length}개</span>
     </div>
   `;
 }
@@ -2111,9 +2151,15 @@ function getVisibleRoadmapTasks(trackId) {
     phase: "핵심"
   }));
   const weeks = getDurationWeeks();
+  const prioritizedCoreTasks = getPrioritizedCoreTasks(trackId, coreTasks).map((task, index) => ({
+    ...task,
+    planWeek: index + 1,
+    weekLabel: `${index + 1}주차`,
+    priorityReason: getTaskPriorityReason(task, trackId)
+  }));
 
   if (weeks <= 2) {
-    return getPrioritizedCoreTasks(trackId, coreTasks)
+    return prioritizedCoreTasks
       .slice(0, 2)
       .map((task, index) => ({
         ...task,
@@ -2124,12 +2170,12 @@ function getVisibleRoadmapTasks(trackId) {
       }));
   }
 
-  if (weeks <= 4) return coreTasks;
+  if (weeks <= 4) return prioritizedCoreTasks.slice(0, weeks);
 
-  const expanded = [...coreTasks];
+  const expanded = [...prioritizedCoreTasks];
   const phases = weeks >= 12 ? ["심화 반복", "포트폴리오 보강"] : ["심화 반복"];
   phases.forEach((phase) => {
-    coreTasks.forEach((task) => {
+    prioritizedCoreTasks.forEach((task) => {
       expanded.push(createExtendedRoadmapTask(task, phase, expanded.length + 1));
     });
   });
@@ -2146,15 +2192,23 @@ function getTaskPriorityScore(task, trackId) {
   const gapMatches = getGapSkills(trackId).filter((skill) => text.includes(skill)).length;
   const role = getSelectedRole(trackId);
   const roleMatches = role ? role.postingKeywords.filter((keyword) => text.includes(keyword)).length : 0;
+  const introSignal = /입문|개념|용어|기초|흐름|요구사항|블록도|정리/.test(text) ? 1 : 0;
+  const practiceSignal = /실습|그래프|표|모델|데이터|분석|초안|측정/.test(text) ? 1 : 0;
   const portfolioSignal = /보고서|리포트|README|검증|제안|개선|체크리스트/.test(text) ? 1 : 0;
   const foundationSignal = task.baseIndex <= 1 ? 1 : 0;
   const goal = state.profile.goal;
+  const year = state.profile.year;
 
   return 100 - task.baseIndex * 8
     + gapMatches * 18
     + roleMatches * 10
-    + ((goal === "portfolio" || goal === "interview") ? portfolioSignal * 24 : 0)
-    + (goal === "foundation" ? foundationSignal * 14 : 0);
+    + (goal === "explore" ? introSignal * 26 : 0)
+    + (goal === "foundation" ? foundationSignal * 14 + gapMatches * 8 : 0)
+    + (goal === "portfolio" ? portfolioSignal * 30 + practiceSignal * 10 : 0)
+    + (goal === "interview" ? portfolioSignal * 24 + roleMatches * 8 : 0)
+    + (year === "2" ? introSignal * 22 : 0)
+    + (year === "3" ? practiceSignal * 18 : 0)
+    + (year === "4" ? portfolioSignal * 22 + practiceSignal * 6 : 0);
 }
 
 function getTaskPriorityReason(task, trackId) {
@@ -2163,9 +2217,12 @@ function getTaskPriorityReason(task, trackId) {
   const role = getSelectedRole(trackId);
   const roleKeyword = role?.postingKeywords.find((keyword) => text.includes(keyword));
 
-  if (gapMatch) return `현재 진단에서 비어 있는 ${gapMatch} 역량을 직접 보완합니다.`;
+  if (gapMatch) return `현재 직무확보에서 비어 있는 ${gapMatch} 역량을 직접 보완합니다.`;
   if (roleKeyword) return `${role.title} 채용공고 키워드인 ${roleKeyword}와 바로 연결됩니다.`;
+  if (state.profile.year === "2") return "2학년 기준으로 직무 용어와 기초 개념을 먼저 잡는 과제입니다.";
+  if (state.profile.year === "4") return "4학년 이상 기준으로 면접에서 설명할 수 있는 산출물 근거를 강화합니다.";
   if (state.profile.goal === "portfolio" || state.profile.goal === "interview") return "짧은 기간 안에 설명 가능한 산출물을 남기는 과제입니다.";
+  if (state.profile.goal === "explore") return "직무 탐색 목표에 맞춰 업무 흐름과 핵심 용어를 확인하는 과제입니다.";
   return "짧은 기간에서 직무 이해와 기본 산출물을 빠르게 만드는 과제입니다.";
 }
 
@@ -2297,6 +2354,130 @@ function uniqueResources(resourceList) {
   return [...new Map(resourceList.map((resource) => [resource.id, resource])).values()];
 }
 
+function getYearProfile(year) {
+  return yearProfiles[year] || yearProfiles["3"];
+}
+
+function getGoalRecommendationLabel(goalKey) {
+  return goalRecommendationLabels[goalKey] || goalRecommendationLabels.foundation;
+}
+
+function countKeywordMatches(text, keywords) {
+  return keywords.filter((keyword) => text.includes(String(keyword).toLowerCase())).length;
+}
+
+function clampScore(score, min, max) {
+  return Math.max(min, Math.min(max, score));
+}
+
+function getYearResourceScore(resource, context) {
+  const year = context.year || "3";
+  const profile = getYearProfile(year);
+  const text = getResourceSearchText(resource);
+  const evidenceMatches = countKeywordMatches(text, profile.evidenceKeywords);
+  let score = 0;
+
+  if (profile.preferredDifficulties.includes(resource.difficulty)) score += 26;
+  score += Math.min(evidenceMatches, 3) * 7;
+
+  if (year === "2") {
+    if (resource.languageCode === "ko") score += 10;
+    if (resource.sequenceLevel <= 2) score += 14;
+    if (resource.totalMinutes <= 180) score += 10;
+    if (resource.difficulty === "적용") score -= 18;
+    if (resource.totalMinutes > 420) score -= 10;
+  }
+
+  if (year === "3") {
+    if (resource.practiceMinutes >= 45) score += 14;
+    if (resource.sequenceLevel >= 2 && resource.sequenceLevel <= 3) score += 12;
+    if (resource.totalMinutes <= 360) score += 8;
+  }
+
+  if (year === "4") {
+    if (resource.practiceMinutes >= 60) score += 18;
+    if (resource.sequenceLevel >= 3) score += 14;
+    if (resource.totalMinutes >= 120) score += 6;
+    if (resource.provider === "MathWorks" && isMathWorksRequiredForRole(context)) score += 8;
+    if (resource.difficulty === "입문" && resource.practiceMinutes < 60) score -= 8;
+  }
+
+  return clampScore(score, -20, 72);
+}
+
+function getGoalResourceScore(resource, context) {
+  const text = getResourceSearchText(resource);
+  const goalKey = context.goalKey || "foundation";
+  const preferredDifficulty = context.goal.preferredDifficulties.includes(resource.difficulty) ? 1 : 0;
+  const gapMatches = resource.skills.filter((skill) => context.gapSkills.includes(skill)).length;
+  const goalSkillMatches = resource.skills.filter((skill) => context.goal.prioritySkills.includes(skill)).length;
+  const roleKeywordMatches = getRoleKeywordMatches(resource, context.role).length;
+  const outputEvidenceMatches = countKeywordMatches(text, [
+    "보고서",
+    "리포트",
+    "README",
+    "검증",
+    "그래프",
+    "표",
+    "모델",
+    "비교",
+    "체크리스트",
+    "근거",
+    "메모"
+  ]);
+  const officialSource = /공식|정부|협회|대학|ocw|무료교육|mathworks|ncs|nist|asq/.test(text) ? 1 : 0;
+  let score = 0;
+
+  if (goalKey === "explore") {
+    score += (resource.difficulty === "입문" ? 34 : 0)
+      + goalSkillMatches * 22
+      + (resource.totalMinutes <= 180 ? 12 : 0)
+      + (resource.languageCode === "ko" ? 10 : 0)
+      + countKeywordMatches(text, ["직무 이해", "용어", "개념", "ncs", "요약"]) * 8
+      - (resource.difficulty === "적용" ? 10 : 0);
+  }
+
+  if (goalKey === "foundation") {
+    score += gapMatches * 30
+      + preferredDifficulty * 20
+      + goalSkillMatches * 12
+      + (resource.sequenceLevel <= 3 ? 10 : 0)
+      + countKeywordMatches(text, ["기초", "입문", "보완", "onramp"]) * 6;
+  }
+
+  if (goalKey === "portfolio") {
+    score += (resource.practiceMinutes >= 60 ? 26 : 0)
+      + (resource.difficulty !== "입문" ? 16 : 0)
+      + Math.min(outputEvidenceMatches, 4) * 9
+      + goalSkillMatches * 14
+      + (resource.totalMinutes >= 120 ? 6 : 0);
+  }
+
+  if (goalKey === "interview") {
+    score += Math.min(roleKeywordMatches, 3) * 18
+      + Math.min(outputEvidenceMatches, 4) * 8
+      + preferredDifficulty * 14
+      + (resource.totalMinutes <= 240 ? 10 : 0)
+      + officialSource * 8
+      + goalSkillMatches * 12;
+  }
+
+  return clampScore(score, 0, 84);
+}
+
+function getYearFitSignal(resource, context) {
+  const score = getYearResourceScore(resource, context);
+  if (score < 24) return "";
+  const profile = getYearProfile(context.year);
+  return `학년 반영: ${profile.label} · ${profile.fitLabel}`;
+}
+
+function getGoalFitSignal(resource, context) {
+  const score = getGoalResourceScore(resource, context);
+  if (score < 24) return "";
+  return `목표 반영: ${context.goal.label} · ${getGoalRecommendationLabel(context.goalKey)}`;
+}
+
 function getEducationResourceScore(resource, context) {
   const roleDirectMatch = getRoleLinkedResourceIds(context.role).includes(resource.id) ? 1 : 0;
   const mathWorksRoleNeed = resource.provider === "MathWorks" && isMathWorksRequiredForRole(context) ? 1 : 0;
@@ -2304,6 +2485,8 @@ function getEducationResourceScore(resource, context) {
   const gapMatches = resource.skills.filter((skill) => context.gapSkills.includes(skill)).length;
   const taskMatches = getResourceLinkedTasks(resource.id, context.visibleTasks).length;
   const mathWorksMatches = getMathWorksSkillMatches(resource, context).length;
+  const yearScore = getYearResourceScore(resource, context);
+  const goalScore = getGoalResourceScore(resource, context);
   const selectedMatch = state.saved.includes(resource.id) ? 1 : 0;
   const completedPenalty = state.completed.includes(resource.id) ? 18 : 0;
 
@@ -2313,6 +2496,8 @@ function getEducationResourceScore(resource, context) {
     + mathWorksMatches * 36
     + roleKeywordMatches * 22
     + taskMatches * 18
+    + yearScore
+    + goalScore
     + getResourcePriorityScore(resource, context)
     + selectedMatch * 24
     - completedPenalty;
@@ -2326,10 +2511,14 @@ function getEducationResourceSignals(resource, context) {
   const mathWorksRoleNeed = resource.provider === "MathWorks" && isMathWorksRequiredForRole(context);
   const roleKeywordMatches = getRoleKeywordMatches(resource, context.role);
   const linkedTasks = getResourceLinkedTasks(resource.id, context.visibleTasks);
+  const yearFitSignal = getYearFitSignal(resource, context);
+  const goalFitSignal = getGoalFitSignal(resource, context);
 
   if (roleDirectMatch) signals.push("선택 직무 직접 추천");
+  if (yearFitSignal) signals.push(yearFitSignal);
+  if (goalFitSignal) signals.push(goalFitSignal);
   if (mathWorksRoleNeed) signals.push("MathWorks 요구 직무");
-  if (matchedGaps.length) signals.push(`진단 보완: ${matchedGaps.slice(0, 2).join(", ")}`);
+  if (matchedGaps.length) signals.push(`직무확보 보완: ${matchedGaps.slice(0, 2).join(", ")}`);
   if (mathWorksMatches.length) signals.push(`MathWorks 역량: ${mathWorksMatches.slice(0, 2).join(", ")}`);
   if (roleKeywordMatches.length) signals.push(`채용 키워드: ${roleKeywordMatches.slice(0, 2).join(", ")}`);
   if (linkedTasks.length) signals.push(`로드맵 연결: ${linkedTasks.slice(0, 2).join(", ")}`);
@@ -2384,6 +2573,8 @@ function getTaskResourceScore(resource, task, context, resourceUseCounts = new M
   const gapMatches = getTaskGapMatches(resource, task, context.gapSkills).length;
   const outputMatches = getTaskOutputMatches(resource, task).length;
   const otherLinkedTaskMatches = getOtherLinkedTaskMatches(resource, task, context).length;
+  const yearScore = getYearResourceScore(resource, context);
+  const goalScore = getGoalResourceScore(resource, context);
   const selectedMatch = state.saved.includes(resource.id) ? 1 : 0;
   const alreadyUsedPenalty = getRoadmapResourceUseCount(resourceUseCounts, resource.id) * 220;
 
@@ -2396,6 +2587,8 @@ function getTaskResourceScore(resource, task, context, resourceUseCounts = new M
     + gapMatches * 35
     + roleKeywordMatches * 18
     + outputMatches * 14
+    + yearScore * 0.45
+    + goalScore * 0.45
     + getResourcePriorityScore(resource, context) * 0.15
     - (directTaskMatches ? 0 : otherLinkedTaskMatches * 180)
     - alreadyUsedPenalty;
@@ -2413,10 +2606,14 @@ function getTaskResourceSignals(resource, task, context) {
   const matchedSkills = getTaskMatchedSkills(resource, task);
   const gapMatches = getTaskGapMatches(resource, task, context.gapSkills);
   const roleKeywordMatches = getTaskRoleKeywordMatches(resource, task, context.role);
+  const yearFitSignal = getYearFitSignal(resource, context);
+  const goalFitSignal = getGoalFitSignal(resource, context);
 
   if (directTaskMatches.length) signals.push("이번 주 과제 직접 연결");
+  if (yearFitSignal) signals.push(yearFitSignal);
+  if (goalFitSignal) signals.push(goalFitSignal);
   if (matchedSkills.length) signals.push(`과제 역량: ${matchedSkills.slice(0, 2).join(", ")}`);
-  if (gapMatches.length) signals.push(`진단 보완: ${gapMatches.slice(0, 2).join(", ")}`);
+  if (gapMatches.length) signals.push(`직무확보 보완: ${gapMatches.slice(0, 2).join(", ")}`);
   if (roleKeywordMatches.length) signals.push(`세부 직무 키워드: ${roleKeywordMatches.slice(0, 2).join(", ")}`);
   if (!signals.length) signals.push(`이번 주 산출물: ${task.deliverable}`);
 
@@ -2470,6 +2667,8 @@ function getResourceSearchText(resource) {
     resource.title,
     resource.provider,
     resource.type,
+    resource.language,
+    resource.difficulty,
     resource.reason,
     resource.expectedOutput,
     resource.output,
@@ -2511,7 +2710,7 @@ function renderRoadmapResourceItem(resource, task, context) {
   const saved = state.saved.includes(resource.id);
   const completed = state.completed.includes(resource.id);
   const taskSignals = getTaskResourceSignals(resource, task, context);
-  const signals = [...taskSignals, ...getResourceSignals(resource, context)]
+  const signals = [...new Set([...taskSignals, ...getResourceSignals(resource, context)])]
     .filter((signal) => !signal.startsWith("로드맵 연결"))
     .slice(0, 3);
 
@@ -2546,10 +2745,29 @@ function renderSaved() {
   const items = resources
     .filter((resource) => state.saved.includes(resource.id))
     .sort(sortResourcesForLearning);
+  renderSavedGuidance(items);
   elements.savedList.innerHTML = items.length
     ? items.map((resource) => renderResourceCard(resource)).join("")
-    : `<div class="empty-state">아직 내 계획에 추가한 교육자료가 없습니다.</div>`;
+    : `<div class="empty-state">아직 내 계획에 추가한 교육자료가 없습니다. 자료 선택 또는 로드맵에서 필요한 교육을 추가하세요.</div>`;
   bindResourceActions(elements.savedList);
+}
+
+function renderSavedGuidance(items) {
+  if (!elements.savedGuidance) return;
+  const completedCount = items.filter((resource) => state.completed.includes(resource.id)).length;
+  const totalMinutes = items.reduce((sum, resource) => sum + resource.totalMinutes, 0);
+  const pendingCount = Math.max(items.length - completedCount, 0);
+
+  elements.savedGuidance.innerHTML = `
+    <h3>내 계획은 선택 자료 관리 화면입니다</h3>
+    <p>로드맵은 주차별 실행 순서를 보여주고, 이 화면은 내가 고른 교육자료의 완료 상태와 엑셀 내보내기를 관리합니다.</p>
+    <div class="badge-row">
+      <span class="badge">선택 자료: ${items.length}개</span>
+      <span class="badge">완료: ${completedCount}개</span>
+      <span class="badge">진행: ${pendingCount}개</span>
+      <span class="badge">총 학습량: ${formatMinutes(totalMinutes)}</span>
+    </div>
+  `;
 }
 
 function renderResourceCard(resource, context = null, priorityIndex = null) {
@@ -2612,19 +2830,23 @@ function renderResourceGuidance(items, context) {
   const roleLinkedCount = getRoleLinkedResourceIds(context.role).length;
   const gapText = context.gapSkills.length ? context.gapSkills.slice(0, 3).join(", ") : "큰 공백 없음";
   const selectedCount = state.saved.length;
+  const yearProfile = getYearProfile(context.year);
+  const goalLabel = getGoalRecommendationLabel(context.goalKey);
   const signals = getEducationResourceSignals(first, context);
   const actionText = selectedCount ? "선택한 자료로 기간 맞춤 로드맵 보기" : "자료를 선택한 뒤 로드맵 보기";
   elements.resourceGuidance.innerHTML = `
     <p class="eyebrow">${context.goal.label} · ${getDurationLabel()} · ${context.role?.title || context.track.title}</p>
     <h3>1순위 교육자료: ${first.title}</h3>
-    <p>추천 순위는 선택 직무, 진단에서 비어 있는 역량, 채용공고 키워드, MathWorks 도구역량, 로드맵 연결도를 함께 계산합니다.</p>
+    <p>추천 순위는 선택 직무, 직무확보에서 비어 있는 역량, 채용공고 키워드, MathWorks 도구역량, 학년 수준, 학습목표, 로드맵 연결도를 함께 계산합니다.</p>
     <div class="recommendation-note">
       <strong>1순위 근거:</strong> ${signals.slice(0, 4).join(" · ") || first.reason}
     </div>
     <div class="badge-row">
       <span class="badge">직무 매핑 교육: ${roleLinkedCount}개</span>
       <span class="badge">보완 역량: ${gapText}</span>
-      <span class="badge">내 계획 선택: ${selectedCount}개</span>
+      <span class="badge">학년 반영: ${yearProfile.label} · ${yearProfile.shortLabel}</span>
+      <span class="badge">목표 반영: ${context.goal.label} · ${goalLabel}</span>
+      <span class="badge">선택 자료: ${selectedCount}개</span>
     </div>
     <p>필요한 교육을 선택하면 로드맵 탭에서 준비 기간에 맞춰 주차별 과제와 함께 재배치됩니다.</p>
     <div class="flow-actions">
@@ -2663,8 +2885,12 @@ function getResourceSignals(resource, context) {
   const matchedGaps = resource.skills.filter((skill) => context.gapSkills.includes(skill));
   const matchedGoal = resource.skills.filter((skill) => context.goal.prioritySkills.includes(skill));
   const matchedRoleKeywords = getRoleKeywordMatches(resource, context.role);
+  const yearFitSignal = getYearFitSignal(resource, context);
+  const goalFitSignal = getGoalFitSignal(resource, context);
   if (linkedTasks.length) signals.push(`로드맵 연결: ${linkedTasks.slice(0, 2).join(", ")}`);
-  if (matchedGaps.length) signals.push(`진단 보완: ${matchedGaps.slice(0, 3).join(", ")}`);
+  if (yearFitSignal) signals.push(yearFitSignal);
+  if (goalFitSignal) signals.push(goalFitSignal);
+  if (matchedGaps.length) signals.push(`직무확보 보완: ${matchedGaps.slice(0, 3).join(", ")}`);
   if (matchedGoal.length) signals.push(`목표 적합: ${matchedGoal.slice(0, 2).join(", ")}`);
   if (matchedRoleKeywords.length) signals.push(`세부 직무 키워드: ${matchedRoleKeywords.slice(0, 2).join(", ")}`);
   if (isYearMatch(resource, context.year)) signals.push("학년 수준 적합");
@@ -2682,6 +2908,8 @@ function getResourcePriorityScore(resource, context) {
   const languageMatch = resource.languageCode === "ko" ? 1 : 0;
   const portfolioPractice = context.goalKey === "portfolio" && resource.practiceMinutes >= 60 ? 1 : 0;
   const shortDurationFit = context.durationWeeks <= 2 && resource.totalMinutes <= 180 ? 1 : 0;
+  const yearScore = getYearResourceScore(resource, context);
+  const goalScore = getGoalResourceScore(resource, context);
   return linkedTaskMatches * 60
     + gapMatches * 40
     + goalMatches * 20
@@ -2690,7 +2918,9 @@ function getResourcePriorityScore(resource, context) {
     + yearMatch * 10
     + languageMatch * 6
     + portfolioPractice * 8
-    + shortDurationFit * 10;
+    + shortDurationFit * 10
+    + yearScore * 0.35
+    + goalScore * 0.35;
 }
 
 function getResourceLinkedTasks(resourceId, visibleTasks = []) {
@@ -2818,17 +3048,19 @@ function buildPilotSummary() {
     "[직무역량 교육 로드맵 파일럿 결과]",
     `전공: ${getSelectLabel(elements.majorSelect)}`,
     `학년: ${getSelectLabel(elements.yearSelect)}`,
+    `학년 추천 기준: ${getYearProfile(state.profile.year).shortLabel}`,
     `관심 산업: ${getSelectLabel(elements.industrySelect)}`,
     `학습 목표: ${learningGoals[state.profile.goal]?.label || state.profile.goal}`,
+    `목표 추천 기준: ${getGoalRecommendationLabel(state.profile.goal)}`,
     `준비 기간: ${getDurationLabel()}`,
     `직무군: ${track.title}`,
     `선택 직무: ${role?.title || "미선택"}`,
-    `진단 점수: ${getDiagnosticScore(track.id)}%`,
+    `직무확보율: ${getDiagnosticScore(track.id)}%`,
     `보완 역량: ${gapSkills.slice(0, 5).join(", ") || "큰 공백 없음"}`,
     `다음 과제: ${nextTask.title} - ${nextTask.deliverable}`,
     `다음 추천 교육자료: ${nextResource}`,
     `완료 주차: ${completedWeeks}/${visibleTasks.length}`,
-    "내 계획 교육자료:",
+    "선택 교육자료:",
     savedTitles
   ].join("\n");
 }
@@ -2853,9 +3085,9 @@ function exportPlanAsExcel() {
 function buildPlanExportWorkbook() {
   return [
     { name: "요약", rows: buildSummaryExportRows() },
-    { name: "내 계획", rows: buildSavedResourceExportRows() },
+    { name: "선택 자료", rows: buildSavedResourceExportRows() },
     { name: "로드맵", rows: buildRoadmapExportRows() },
-    { name: "진단", rows: buildDiagnosisExportRows() }
+    { name: "직무확보", rows: buildDiagnosisExportRows() }
   ];
 }
 
@@ -2876,17 +3108,19 @@ function buildSummaryExportRows() {
     ["내보낸 날짜", formatExportDate()],
     ["전공", getSelectLabel(elements.majorSelect)],
     ["학년", getSelectLabel(elements.yearSelect)],
+    ["학년 추천 기준", getYearProfile(state.profile.year).shortLabel],
     ["관심 산업", getSelectLabel(elements.industrySelect)],
     ["학습 목표", learningGoals[state.profile.goal]?.label || state.profile.goal],
+    ["목표 추천 기준", getGoalRecommendationLabel(state.profile.goal)],
     ["준비 기간", getDurationLabel()],
     ["직무군", track.title],
     ["선택 직무", role?.title || "미선택"],
-    ["진단 점수", `${getDiagnosticScore(track.id)}%`],
+    ["직무확보율", `${getDiagnosticScore(track.id)}%`],
     ["보완 역량", gapSkills.slice(0, 8).join(", ") || "큰 공백 없음"],
     ["다음 과제", `${nextTask.title} - ${nextTask.deliverable}`],
     ["다음 추천 교육자료", nextResource],
     ["완료 주차", `${completedWeeks}/${visibleTasks.length}`],
-    ["내 계획 교육자료", `${state.saved.length}개`],
+    ["선택 교육자료", `${state.saved.length}개`],
     ["완료 교육자료", `${state.completed.length}개`]
   ];
 }
@@ -2912,7 +3146,7 @@ function buildSavedResourceExportRows() {
   ]];
 
   if (!savedResources.length) {
-    rows.push(["내 계획에 추가된 교육자료가 없습니다.", "", "", "", "", "", "", "", "", "", "", "", ""]);
+    rows.push(["선택한 교육자료가 없습니다.", "", "", "", "", "", "", "", "", "", "", "", ""]);
     return rows;
   }
 
@@ -2966,7 +3200,7 @@ function buildRoadmapExportRows() {
 
 function buildDiagnosisExportRows() {
   const track = getSelectedTrack();
-  const rows = [["출처", "역량", "진단 문항", "체크 여부"]];
+  const rows = [["출처", "역량", "직무확보 문항", "체크 여부"]];
   getDiagnosticItems(track).forEach((item) => {
     rows.push([
       item.source,
