@@ -113,6 +113,23 @@
               </div>
               <span class="status-pill" id="trackCount">0개 직무</span>
             </div>
+            <div class="role-filter-bar" aria-label="직무 검색과 필터">
+              <label class="role-search">
+                직무명·키워드 검색
+                <input id="roleSearchInput" type="search" placeholder="예: 식각, PCB, 펌웨어, 품질">
+              </label>
+              <label class="compact-filter">
+                직무군
+                <select id="roleGroupFilter">
+                  <option value="all">전체</option>
+                  <option value="mechanical-cae">기계 설계·CAE</option>
+                  <option value="production-quality">생산·공정·품질</option>
+                  <option value="semiconductor-equipment">반도체 공정·장비</option>
+                  <option value="electronics-pcb">전자회로·PCB·하드웨어</option>
+                  <option value="embedded-control">임베디드·제어</option>
+                </select>
+              </label>
+            </div>
             <div class="track-grid" id="trackList"></div>
             <article class="detail-panel" id="trackDetail"></article>
           </section>

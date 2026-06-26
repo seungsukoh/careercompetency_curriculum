@@ -33,6 +33,7 @@ body {
 }
 
 button,
+input,
 select {
   font: inherit;
 }
@@ -112,6 +113,7 @@ label {
   font-weight: 700;
 }
 
+input,
 select {
   width: 100%;
   min-height: 42px;
@@ -120,6 +122,10 @@ select {
   background: var(--surface-muted);
   border: 1px solid var(--line);
   border-radius: 7px;
+}
+
+input::placeholder {
+  color: #83909b;
 }
 
 .metric-strip {
@@ -269,6 +275,26 @@ select {
   gap: 12px;
 }
 
+.role-filter-bar {
+  display: grid;
+  grid-template-columns: 1fr minmax(160px, 220px);
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 14px;
+  padding: 12px;
+  background: #fbfcfa;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.role-search {
+  min-width: 0;
+}
+
+.role-filter-bar .compact-filter {
+  width: 100%;
+}
+
 .track-card,
 .detail-panel,
 .resource-card,
@@ -386,6 +412,33 @@ select {
   color: var(--muted);
   font-size: 0.82rem;
   line-height: 1.45;
+}
+
+.evidence-panel {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 11px;
+  background: #f5faf8;
+  border: 1px solid #cfe3d8;
+  border-radius: 7px;
+}
+
+.evidence-panel p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.evidence-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.evidence-links .resource-action {
+  min-width: 108px;
 }
 
 .role-detail-grid {
@@ -722,6 +775,10 @@ li {
   text-align: center;
 }
 
+.track-grid .empty-state {
+  grid-column: 1 / -1;
+}
+
 .empty-state.compact {
   padding: 12px;
   font-size: 0.84rem;
@@ -745,6 +802,7 @@ li {
   }
 
   .track-grid,
+  .role-filter-bar,
   .role-list,
   .role-detail-grid,
   .detail-grid,

@@ -1124,6 +1124,8 @@ const storageKey = "careerCompetencyPilot";
 const defaultState = {
   selectedTrackId: "production-quality",
   profile: { major: "mechanical", year: "3", industry: "all", goal: "foundation", durationWeeks: "4" },
+  roleSearch: "",
+  roleGroupFilter: "all",
   selectedRoles: {},
   checked: {},
   saved: [],
@@ -1156,6 +1158,8 @@ function bindElements() {
     "diagnosticMetric",
     "savedMetric",
     "trackCount",
+    "roleSearchInput",
+    "roleGroupFilter",
     "trackList",
     "trackDetail",
     "diagnosisTitle",
@@ -1209,6 +1213,18 @@ function bindEvents() {
     render();
   });
 
+  elements.roleSearchInput.addEventListener("input", (event) => {
+    state.roleSearch = event.target.value;
+    saveState();
+    render();
+  });
+
+  elements.roleGroupFilter.addEventListener("change", (event) => {
+    state.roleGroupFilter = event.target.value;
+    saveState();
+    render();
+  });
+
   elements.difficultyFilter.addEventListener("change", (event) => {
     state.difficulty = event.target.value;
     saveState();
@@ -1255,6 +1271,8 @@ function loadState() {
       ...defaultState,
       ...(stored || {}),
       profile: { ...defaultState.profile, ...(stored?.profile || {}) },
+      roleSearch: typeof stored?.roleSearch === "string" ? stored.roleSearch : defaultState.roleSearch,
+      roleGroupFilter: stored?.roleGroupFilter || defaultState.roleGroupFilter,
       selectedRoles: { ...defaultState.selectedRoles, ...(stored?.selectedRoles || {}) },
       checked: stored?.checked || defaultState.checked,
       saved: Array.isArray(stored?.saved) ? stored.saved : defaultState.saved,
@@ -1277,6 +1295,8 @@ function render() {
   elements.goalSelect.value = state.profile.goal;
   elements.durationSelect.value = state.profile.durationWeeks;
   elements.difficultyFilter.value = state.difficulty;
+  elements.roleSearchInput.value = state.roleSearch || "";
+  elements.roleGroupFilter.value = state.roleGroupFilter || "all";
   const changedTrack = syncSelectedTrackWithProfile();
   if (changedTrack) saveState();
   renderViews();
@@ -1316,12 +1336,26 @@ function syncSelectedTrackWithProfile() {
   if (!filtered.length) return false;
   let changed = false;
 
+  const roleCatalog = getRoleCatalog();
+  let selectedRole = getSelectedRole(state.selectedTrackId);
+  const selectedRoleId = selectedRole?.id;
+  const currentSelectionVisible = roleCatalog.some(({ track, role }) => (
+    track.id === state.selectedTrackId && role.id === selectedRoleId
+  ));
+
+  if (roleCatalog.length && !currentSelectionVisible) {
+    const firstMatch = roleCatalog[0];
+    state.selectedTrackId = firstMatch.track.id;
+    state.selectedRoles = { ...state.selectedRoles, [firstMatch.track.id]: firstMatch.role.id };
+    return true;
+  }
+
   if (!filtered.some((track) => track.id === state.selectedTrackId)) {
     state.selectedTrackId = filtered[0].id;
+    selectedRole = getSelectedRole(state.selectedTrackId);
     changed = true;
   }
 
-  const selectedRole = getSelectedRole(state.selectedTrackId);
   if (selectedRole && state.selectedRoles[state.selectedTrackId] !== selectedRole.id) {
     state.selectedRoles = { ...state.selectedRoles, [state.selectedTrackId]: selectedRole.id };
     changed = true;
@@ -1365,6 +1399,16 @@ function getIndustryLabel(industry = state.profile.industry) {
 function renderTracks() {
   const roleCatalog = getRoleCatalog();
   elements.trackCount.textContent = `${roleCatalog.length}개 채용공고 직무`;
+
+  if (!roleCatalog.length) {
+    elements.trackList.innerHTML = `
+      <div class="empty-state">
+        검색 조건과 맞는 채용공고 직무가 없습니다. 직무군을 전체로 바꾸거나 검색어를 줄여보세요.
+      </div>
+    `;
+    return;
+  }
+
   elements.trackList.innerHTML = roleCatalog.map(({ track, role }) => {
     const selectedRole = getSelectedRole(track.id);
     const isSelected = track.id === state.selectedTrackId && selectedRole?.id === role.id;
@@ -1392,14 +1436,44 @@ function renderTracks() {
   });
 }
 
-function getRoleCatalog() {
-  return getFilteredTracks().flatMap((track) => getAvailableRoles(track).map((role) => ({ track, role })));
+function getRoleCatalog({ applyRoleFilters = true } = {}) {
+  const groupFilter = state.roleGroupFilter || "all";
+  const searchTerm = normalizeRoleSearch(state.roleSearch);
+
+  return getFilteredTracks()
+    .filter((track) => !applyRoleFilters || groupFilter === "all" || track.id === groupFilter)
+    .flatMap((track) => getAvailableRoles(track)
+      .filter((role) => !applyRoleFilters || matchesRoleFilters(track, role, searchTerm))
+      .map((role) => ({ track, role })));
+}
+
+function matchesRoleFilters(track, role, searchTerm) {
+  if (!searchTerm) return true;
+  return getRoleSearchText(track, role).includes(searchTerm);
+}
+
+function getRoleSearchText(track, role) {
+  return normalizeRoleSearch([
+    track.title,
+    track.summary,
+    role.title,
+    role.focus,
+    ...(role.postingKeywords || []),
+    ...(role.responsibilities || []),
+    ...(role.requirements || []),
+    ...(role.preferred || [])
+  ].join(" "));
+}
+
+function normalizeRoleSearch(value) {
+  return String(value || "").toLowerCase().replace(/\s+/g, " ").trim();
 }
 
 function renderTrackDetail() {
   const track = getSelectedTrack();
   const roles = getAvailableRoles(track);
   const selectedRole = getSelectedRole(track.id);
+  const evidence = selectedRole ? getHiringEvidence(track, selectedRole) : null;
   const roleOptions = roles.map((role) => `
     <button class="role-option ${selectedRole?.id === role.id ? "is-selected" : ""}" type="button" data-role-id="${role.id}">
       <strong>${role.title}</strong>
@@ -1423,6 +1497,17 @@ function renderTrackDetail() {
           ${detailBlock("채용공고 반복 업무", selectedRole.responsibilities)}
           ${detailBlock("자격요건 역량", selectedRole.requirements)}
           ${detailBlock("우대·차별화 역량", selectedRole.preferred)}
+        </div>
+        <div class="evidence-panel">
+          <div>
+            <p class="eyebrow">채용공고 근거</p>
+            <h4>반복 키워드와 확인 검색</h4>
+          </div>
+          <p><strong>반복 키워드:</strong> ${selectedRole.postingKeywords.join(", ")}</p>
+          <p><strong>확인 검색어:</strong> ${evidence.query}</p>
+          <div class="evidence-links">
+            ${evidence.links.map((link) => `<a class="resource-action" href="${link.url}" target="_blank" rel="noreferrer">${link.label}</a>`).join("")}
+          </div>
         </div>
       ` : ""}
     </section>
@@ -1449,6 +1534,20 @@ function renderTrackDetail() {
       render();
     });
   });
+}
+
+function getHiringEvidence(track, role) {
+  const keywordText = role.postingKeywords.slice(0, 4).join(" ");
+  const query = `${role.title} ${keywordText} 채용공고`;
+  const encodedQuery = encodeURIComponent(query);
+  return {
+    query,
+    links: [
+      { label: "잡코리아 검색", url: `https://www.jobkorea.co.kr/Search/?stext=${encodedQuery}` },
+      { label: "사람인 검색", url: `https://www.saramin.co.kr/zf_user/search?searchType=search&searchword=${encodedQuery}` },
+      { label: "웹 검색", url: `https://duckduckgo.com/?q=${encodedQuery}` }
+    ]
+  };
 }
 
 function detailBlock(title, items) {
