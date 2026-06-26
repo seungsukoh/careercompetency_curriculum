@@ -55,6 +55,15 @@
               <option value="electronics">전자·하드웨어</option>
             </select>
           </label>
+          <label>
+            학습 목표
+            <select id="goalSelect">
+              <option value="explore">직무 탐색</option>
+              <option value="foundation" selected>전공 보완</option>
+              <option value="portfolio">포트폴리오</option>
+              <option value="interview">면접 준비</option>
+            </select>
+          </label>
 
           <div class="metric-strip" aria-label="진행 요약">
             <div>
@@ -72,6 +81,10 @@
           </div>
 
           <button class="primary-button full-width" id="copySummaryButton" type="button">파일럿 결과 복사</button>
+          <div class="summary-preview" aria-live="polite">
+            <p class="eyebrow">요약 미리보기</p>
+            <pre id="summaryPreview"></pre>
+          </div>
         </aside>
 
         <section class="workspace">
@@ -137,6 +150,7 @@
                 </select>
               </label>
             </div>
+            <div class="resource-guidance" id="resourceGuidance"></div>
             <div class="resource-list" id="resourceList"></div>
           </section>
 

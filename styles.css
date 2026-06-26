@@ -168,6 +168,24 @@ select {
   background: var(--primary-dark);
 }
 
+.summary-preview {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  background: #fbfcfa;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.summary-preview pre {
+  max-height: 180px;
+  margin: 0;
+  overflow: auto;
+  color: var(--muted);
+  font: 0.78rem/1.45 "Malgun Gothic", "Segoe UI", sans-serif;
+  white-space: pre-wrap;
+}
+
 .ghost-button,
 .resource-action {
   color: var(--primary);
@@ -316,6 +334,29 @@ select {
   background: #fbfcfa;
 }
 
+.word-cloud-panel {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.word-cloud-panel img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 12 / 7;
+  object-fit: contain;
+}
+
+.word-cloud-panel figcaption {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
 .detail-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -362,6 +403,27 @@ li {
   gap: 10px;
 }
 
+.resource-guidance {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 14px;
+  background: #f5faf8;
+  border: 1px solid #cfe3d8;
+  border-radius: var(--radius);
+}
+
+.resource-guidance h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.resource-guidance p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 .check-item {
   display: grid;
   grid-template-columns: 26px 1fr;
@@ -389,18 +451,30 @@ li {
 }
 
 .roadmap {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .week-card {
+  display: grid;
+  gap: 10px;
   padding: 14px;
   background: #ffffff;
+}
+
+.week-card h4 {
+  margin: 0 0 6px;
+  font-size: 0.86rem;
 }
 
 .week-card.is-completed,
 .resource-card.is-completed {
   border-color: #9bc7ad;
   background: #f5fbf7;
+}
+
+.resource-card.is-priority {
+  border-color: #84bfd0;
+  background: #f8fcfd;
 }
 
 .week-number {
@@ -414,6 +488,24 @@ li {
   border-radius: 999px;
   font-size: 0.78rem;
   font-weight: 900;
+}
+
+.task-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.task-steps,
+.rubric-list {
+  padding-left: 20px;
+}
+
+.task-steps li,
+.rubric-list li {
+  margin: 5px 0;
+  color: var(--muted);
+  line-height: 1.45;
 }
 
 .resource-card {
@@ -450,6 +542,16 @@ li {
   margin-bottom: 3px;
   color: var(--ink);
   font-size: 0.76rem;
+}
+
+.recommendation-note {
+  padding: 10px;
+  color: var(--primary-dark);
+  background: #eaf5f8;
+  border: 1px solid #c8e5ec;
+  border-radius: 7px;
+  font-size: 0.86rem;
+  line-height: 1.45;
 }
 
 .resource-actions {
