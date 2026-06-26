@@ -215,8 +215,16 @@ input::placeholder {
   gap: 8px;
 }
 
+.flow-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .section-actions .primary-button,
-.section-actions .ghost-button {
+.section-actions .ghost-button,
+.flow-actions .primary-button,
+.flow-actions .ghost-button {
   padding: 0 12px;
 }
 

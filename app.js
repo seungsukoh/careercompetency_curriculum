@@ -1538,6 +1538,14 @@ function bindEvents() {
     });
   });
 
+  document.addEventListener("click", (event) => {
+    const target = event.target.closest("[data-view-target]");
+    if (!target) return;
+    state.view = normalizeView(target.dataset.viewTarget);
+    saveState();
+    renderViews();
+  });
+
   elements.clearSavedButton.addEventListener("click", () => {
     state.saved = [];
     state.completed = [];
@@ -1896,7 +1904,7 @@ function renderDiagnostics() {
         <input type="checkbox" data-check-id="${item.id}" aria-label="${item.skill} 역량 보유 여부" ${checked ? "checked" : ""}>
         <span>
           <span class="diagnostic-source">${item.source}</span>
-          <span class="diagnostic-state">${checked ? "할 수 있음" : "보완 필요로 둠"}</span>
+          <span class="diagnostic-state">${checked ? "확보함" : "보완 필요"}</span>
           <strong>${item.skill}</strong>
           <span class="diagnostic-question">${item.question}</span>
           <span class="diagnostic-choice-rule">체크 기준: 도움 없이 설명하거나 간단한 산출물로 증명할 수 있을 때만 체크하세요.</span>
@@ -1944,13 +1952,16 @@ function renderDiagnosisGuide(track, role, questions) {
   return `
     <div>
       <p class="eyebrow">선택 기준</p>
-      <h3>채용공고에서 요구하는 역량을 이미 증명할 수 있으면 체크</h3>
-      <p>${diagnosisScope} 기준으로 진단합니다.</p>
+      <h3>채용공고에서 요구하는 역량 중 내가 확보한 내용만 체크</h3>
+      <p>${diagnosisScope} 기준으로 확보 여부를 확인합니다. 체크하지 않은 항목은 다음 자료 선택 탭의 추천 우선순위에 바로 반영됩니다.</p>
     </div>
     <div class="diagnosis-guide-grid">
-      <span><strong>체크</strong>혼자 설명, 실습, 산출물 중 하나로 증명 가능</span>
-      <span><strong>미체크</strong>개념만 들어봤거나 예제를 보고도 막히는 상태</span>
-      <span><strong>헷갈림</strong>미체크로 두면 로드맵에서 우선 보완</span>
+      <span><strong>확보함</strong>혼자 설명, 실습, 산출물 중 하나로 증명 가능</span>
+      <span><strong>보완 필요</strong>개념만 들어봤거나 예제를 보고도 막히는 상태</span>
+      <span><strong>헷갈림</strong>보완 필요로 두면 추천 자료에서 우선 보완</span>
+    </div>
+    <div class="flow-actions">
+      <button class="primary-button" type="button" data-view-target="education">확보 내용 기준 자료 추천 보기</button>
     </div>
   `;
 }
@@ -2602,6 +2613,7 @@ function renderResourceGuidance(items, context) {
   const gapText = context.gapSkills.length ? context.gapSkills.slice(0, 3).join(", ") : "큰 공백 없음";
   const selectedCount = state.saved.length;
   const signals = getEducationResourceSignals(first, context);
+  const actionText = selectedCount ? "선택한 자료로 기간 맞춤 로드맵 보기" : "자료를 선택한 뒤 로드맵 보기";
   elements.resourceGuidance.innerHTML = `
     <p class="eyebrow">${context.goal.label} · ${getDurationLabel()} · ${context.role?.title || context.track.title}</p>
     <h3>1순위 교육자료: ${first.title}</h3>
@@ -2615,6 +2627,9 @@ function renderResourceGuidance(items, context) {
       <span class="badge">내 계획 선택: ${selectedCount}개</span>
     </div>
     <p>필요한 교육을 선택하면 로드맵 탭에서 준비 기간에 맞춰 주차별 과제와 함께 재배치됩니다.</p>
+    <div class="flow-actions">
+      <button class="primary-button" type="button" data-view-target="roadmap">${actionText}</button>
+    </div>
   `;
 }
 
