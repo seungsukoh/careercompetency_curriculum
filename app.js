@@ -279,6 +279,42 @@ const resources = [
     url: "https://matlabacademy.mathworks.com/details/machine-learning-onramp/machinelearning"
   },
   {
+    id: "statistics-onramp",
+    title: "Statistics Onramp",
+    provider: "MathWorks",
+    type: "무료교육",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 120,
+    practiceMinutes: 90,
+    sequenceLevel: 2,
+    tracks: ["production-quality", "semiconductor-equipment", "chemical-process", "mechanical-cae"],
+    skills: ["통계", "SPC", "DOE", "데이터 분석", "수율분석"],
+    prerequisites: ["MATLAB 기초"],
+    reason: "관리도, 공정능력, DOE, 수율 분석처럼 채용공고에 반복되는 통계 역량을 MATLAB 실습으로 보완합니다.",
+    expectedOutput: "공정 데이터 기초 통계와 관리도 해석 메모",
+    qualityStatus: "verified",
+    url: "https://matlabacademy.mathworks.com/details/statistics-onramp/statistics"
+  },
+  {
+    id: "mathworks-predictive-maintenance",
+    title: "Predictive Maintenance Toolbox 예제",
+    provider: "MathWorks",
+    type: "공식문서/예제",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 120,
+    practiceMinutes: 90,
+    sequenceLevel: 4,
+    tracks: ["production-quality", "semiconductor-equipment", "mechanical-cae", "embedded-control"],
+    skills: ["이상탐지", "설비개선", "신호처리", "데이터 분석", "검증"],
+    prerequisites: ["MATLAB 기초", "데이터 분석 기초"],
+    reason: "설비 로그, 센서 신호, 이상 징후를 분석해야 하는 생산기술·장비·시험 직무에서 포트폴리오형 산출물로 연결하기 좋습니다.",
+    expectedOutput: "설비 이상 징후 분석 시나리오와 개선 가설",
+    qualityStatus: "candidate",
+    url: "https://www.mathworks.com/help/predmaint/"
+  },
+  {
     id: "simscape-onramp",
     title: "Simscape Onramp",
     provider: "MathWorks",
@@ -295,6 +331,24 @@ const resources = [
     expectedOutput: "물리 시스템 모델과 주요 변수 변화 결과",
     qualityStatus: "verified",
     url: "https://matlabacademy.mathworks.com/details/simscape-onramp/simscape"
+  },
+  {
+    id: "mathworks-simscape-electrical",
+    title: "Simscape Electrical 예제",
+    provider: "MathWorks",
+    type: "공식문서/예제",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 120,
+    practiceMinutes: 90,
+    sequenceLevel: 4,
+    tracks: ["electronics-pcb", "embedded-control", "mechanical-cae"],
+    skills: ["전원회로", "전력전자", "모터", "물리 모델링", "검증"],
+    prerequisites: ["Simulink 기초", "Simscape 기초"],
+    reason: "전원, 모터, 전력 변환 회로를 모델 기반으로 설명해야 하는 하드웨어·제어 직무에 연결됩니다.",
+    expectedOutput: "전원 또는 모터 모델과 주요 변수 변화 결과",
+    qualityStatus: "candidate",
+    url: "https://www.mathworks.com/help/sps/"
   },
   {
     id: "sensor-fusion-onramp",
@@ -919,6 +973,28 @@ const resources = [
       nextReviewAt: "2026-07-26"
     },
     url: "https://www.gseek.kr/"
+  },
+  {
+    id: "coursera-six-sigma-quality",
+    title: "Coursera Six Sigma·품질관리 무료청강 후보",
+    provider: "Coursera",
+    type: "글로벌 무료청강",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 120,
+    practiceMinutes: 90,
+    sequenceLevel: 3,
+    tracks: ["production-quality", "semiconductor-equipment", "chemical-process"],
+    skills: ["품질", "SPC", "FMEA", "DOE", "문제해결"],
+    prerequisites: ["기초 통계"],
+    reason: "품질·공정개선 직무에서 Six Sigma, SPC, FMEA, DOE를 채용공고 언어로 설명할 수 있게 보완합니다.",
+    expectedOutput: "품질 개선 과제에 적용할 Six Sigma 도구 1개와 적용 메모",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-26",
+      nextReviewAt: "2026-07-26"
+    },
+    url: "https://www.coursera.org/search?query=six%20sigma%20quality%20management"
   },
   {
     id: "coursera-engineering-data",
@@ -1551,6 +1627,33 @@ const durationLabels = {
   "12": "12주 포트폴리오"
 };
 
+const durationStrategies = {
+  "2": {
+    label: "2주 집중",
+    summary: "핵심 결핍 역량 1~2개와 짧은 공식·입문 자료만 압축 배치합니다.",
+    resourceRule: "주차당 1~2개 자료, 총 학습량이 긴 자료는 후순위",
+    taskRule: "업무 흐름, 직무 키워드, 바로 설명 가능한 산출물 우선"
+  },
+  "4": {
+    label: "4주 기본",
+    summary: "직무 필수역량과 작은 산출물을 균형 있게 배치합니다.",
+    resourceRule: "주차당 2개 내외 자료, 직무 직접 매핑과 보완 역량 우선",
+    taskRule: "기초 보완 후 데이터·검증 산출물로 연결"
+  },
+  "8": {
+    label: "8주 심화",
+    summary: "전공 보완, 실습 반복, 포트폴리오 초안을 함께 만듭니다.",
+    resourceRule: "주차당 최대 3개 자료, 심화·실습 자료와 반복 과제 포함",
+    taskRule: "핵심 과제를 반복해 판단 기준과 개선 근거 강화"
+  },
+  "12": {
+    label: "12주 포트폴리오",
+    summary: "심화자료와 산출물 보강, 면접 설명 근거까지 포함합니다.",
+    resourceRule: "주차당 최대 3개 자료, 공식·심화·프로젝트형 자료 조합",
+    taskRule: "반복 수행 후 포트폴리오 보강과 면접 답변 문장화"
+  }
+};
+
 const industryLabels = {
   all: "전체",
   mobility: "자동차·모빌리티",
@@ -1887,7 +1990,10 @@ const resourceTaskLinks = {
   "control-design-onramp": ["PID 응답 실험", "검증 리포트", "디버깅 노트와 README"],
   "signal-processing-onramp": ["검증 리포트", "PID 응답 실험", "수율 Pareto 분석", "해석 조건 검증"],
   "machine-learning-onramp": ["수율 Pareto 분석", "관리도와 Cpk 계산", "원인 가설과 FMEA", "물질수지와 수율 계산"],
+  "statistics-onramp": ["관리도와 Cpk 계산", "수율 Pareto 분석", "원인 가설과 FMEA", "조건 변경 검토표", "물질수지와 수율 계산"],
+  "mathworks-predictive-maintenance": ["수율 Pareto 분석", "조건 변경 검토표", "검증 리포트", "디버깅 노트와 README"],
   "simscape-onramp": ["전원 요구사항 정의", "PID 응답 실험", "손계산과 CAD 초안", "식각 장비 변수 정리"],
+  "mathworks-simscape-electrical": ["전원 요구사항 정의", "PID 응답 실험", "검증 리포트"],
   "sensor-fusion-onramp": ["PID 응답 실험", "디버깅 노트와 README"],
   "optimization-onramp": ["설계 변경 제안", "조건 변경 검토표", "PID 응답 실험", "반응·분리 조건 비교"],
   "mit-design-manufacturing": ["제품 요구사항 분해", "설계 변경 제안"],
@@ -1922,6 +2028,7 @@ const resourceTaskLinks = {
   "hrd-net-job-training": ["제품 요구사항 분해", "8D 개선 보고서", "조건 변경 검토표", "HAZOP 안전 체크", "PCB 리뷰 체크리스트", "디버깅 노트와 README"],
   "digital-learning-ai-it-basics": ["공정 문제 정의", "수율 Pareto 분석", "MCU 주변장치 설계", "검증 리포트"],
   "gseek-career-certificate": ["제품 요구사항 분해", "공정 문제 정의", "전원 요구사항 정의", "MCU 주변장치 설계"],
+  "coursera-six-sigma-quality": ["공정 문제 정의", "관리도와 Cpk 계산", "원인 가설과 FMEA", "8D 개선 보고서", "조건 변경 검토표"],
   "coursera-engineering-data": ["관리도와 Cpk 계산", "수율 Pareto 분석", "해석 조건 검증", "조건 변경 검토표", "물질수지와 수율 계산"],
   "coursera-embedded-control": ["PID 응답 실험", "UART 센서 프로토콜", "디버깅 노트와 README", "검증 리포트"],
   "edx-engineering-systems": ["해석 조건 검증", "공정 흐름 매핑", "화학공정 흐름도", "전원 요구사항 정의", "PID 응답 실험"],
@@ -1937,36 +2044,36 @@ const roleResourceLinks = {
   "cae-analysis-engineer": ["matlab-onramp", "simscape-onramp", "mit-numerical-me", "kocw-mechanical-design", "signal-processing-onramp", "coursera-engineering-data", "edx-engineering-systems"],
   "manufacturing-design-engineer": ["mit-design-manufacturing", "kocw-mechanical-design", "step-engineering", "optimization-onramp", "hrd-net-job-training", "udemy-free-practical-tools"],
   "thermal-cfd-engineer": ["matlab-onramp", "simscape-onramp", "mit-numerical-me", "signal-processing-onramp", "edx-engineering-systems", "coursera-engineering-data"],
-  "mechanical-test-engineer": ["matlab-onramp", "signal-processing-onramp", "step-engineering", "kocw-mechanical-design", "hrd-net-job-training", "youtube-official-engineering"],
-  "process-engineer": ["nist-spc", "moresteam-doe", "matlab-onramp", "optimization-onramp", "kocw-production-quality", "coursera-engineering-data", "hrd-net-job-training"],
-  "quality-engineer": ["kocw-production-quality", "nist-spc", "asq-fmea", "asq-eight-d", "quality-one-fmea", "hrd-net-job-training", "gseek-career-certificate"],
-  "production-data-engineer": ["matlab-onramp", "machine-learning-onramp", "nist-spc", "kocw-production-quality", "coursera-engineering-data", "freecodecamp-python-data", "digital-learning-ai-it-basics"],
-  "production-technology-engineer": ["step-engineering", "moresteam-doe", "simulink-onramp", "optimization-onramp", "hrd-net-job-training", "udemy-free-practical-tools"],
-  "supplier-quality-engineer": ["asq-eight-d", "quality-one-fmea", "lean-a3-problem-solving", "ncs", "hrd-net-job-training", "gseek-career-certificate"],
-  "semiconductor-process-engineer": ["kocw-semiconductor", "nist-spc", "moresteam-doe", "matlab-onramp", "optimization-onramp", "edx-engineering-systems", "coursera-engineering-data"],
-  "semiconductor-equipment-engineer": ["kocw-semiconductor", "simulink-onramp", "simscape-onramp", "matlab-onramp", "signal-processing-onramp", "edx-engineering-systems", "hrd-net-job-training"],
-  "semiconductor-yield-engineer": ["matlab-onramp", "machine-learning-onramp", "nist-spc", "kocw-semiconductor", "coursera-engineering-data", "freecodecamp-python-data", "digital-learning-ai-it-basics"],
-  "etch-process-engineer": ["kocw-semiconductor", "moresteam-doe", "nist-spc", "matlab-onramp", "edx-engineering-systems", "coursera-engineering-data"],
-  "metrology-engineer": ["signal-processing-onramp", "matlab-onramp", "nist-spc", "kocw-semiconductor", "coursera-engineering-data", "freecodecamp-python-data"],
-  "chemical-process-engineer": ["learncheme-chemical-process", "kocw-chemical-process", "matlab-onramp", "optimization-onramp", "coursera-chemical-engineering", "nptel-chemical-engineering"],
-  "battery-process-engineer": ["learncheme-chemical-process", "moresteam-doe", "matlab-onramp", "machine-learning-onramp", "coursera-chemical-engineering", "kosha-psm"],
-  "materials-rnd-engineer": ["learncheme-chemical-process", "mit-chemical-engineering", "coursera-chemical-engineering", "nptel-chemical-engineering", "khan-math-physics-basics", "coursera-engineering-data"],
+  "mechanical-test-engineer": ["matlab-onramp", "signal-processing-onramp", "mathworks-predictive-maintenance", "step-engineering", "kocw-mechanical-design", "hrd-net-job-training", "youtube-official-engineering"],
+  "process-engineer": ["nist-spc", "statistics-onramp", "moresteam-doe", "matlab-onramp", "optimization-onramp", "coursera-six-sigma-quality", "kocw-production-quality", "coursera-engineering-data", "hrd-net-job-training"],
+  "quality-engineer": ["kocw-production-quality", "statistics-onramp", "nist-spc", "coursera-six-sigma-quality", "asq-fmea", "asq-eight-d", "quality-one-fmea", "hrd-net-job-training", "gseek-career-certificate"],
+  "production-data-engineer": ["matlab-onramp", "statistics-onramp", "machine-learning-onramp", "mathworks-predictive-maintenance", "nist-spc", "kocw-production-quality", "coursera-engineering-data", "freecodecamp-python-data", "digital-learning-ai-it-basics"],
+  "production-technology-engineer": ["step-engineering", "mathworks-predictive-maintenance", "moresteam-doe", "simulink-onramp", "optimization-onramp", "hrd-net-job-training", "udemy-free-practical-tools"],
+  "supplier-quality-engineer": ["asq-eight-d", "quality-one-fmea", "coursera-six-sigma-quality", "lean-a3-problem-solving", "ncs", "hrd-net-job-training", "gseek-career-certificate"],
+  "semiconductor-process-engineer": ["kocw-semiconductor", "statistics-onramp", "nist-spc", "moresteam-doe", "matlab-onramp", "optimization-onramp", "edx-engineering-systems", "coursera-engineering-data"],
+  "semiconductor-equipment-engineer": ["kocw-semiconductor", "mathworks-predictive-maintenance", "simulink-onramp", "simscape-onramp", "matlab-onramp", "signal-processing-onramp", "edx-engineering-systems", "hrd-net-job-training"],
+  "semiconductor-yield-engineer": ["matlab-onramp", "statistics-onramp", "machine-learning-onramp", "nist-spc", "kocw-semiconductor", "coursera-engineering-data", "freecodecamp-python-data", "digital-learning-ai-it-basics"],
+  "etch-process-engineer": ["kocw-semiconductor", "statistics-onramp", "moresteam-doe", "nist-spc", "matlab-onramp", "optimization-onramp", "edx-engineering-systems", "coursera-engineering-data"],
+  "metrology-engineer": ["signal-processing-onramp", "matlab-onramp", "statistics-onramp", "nist-spc", "kocw-semiconductor", "coursera-engineering-data", "freecodecamp-python-data"],
+  "chemical-process-engineer": ["learncheme-chemical-process", "kocw-chemical-process", "matlab-onramp", "statistics-onramp", "optimization-onramp", "coursera-chemical-engineering", "nptel-chemical-engineering"],
+  "battery-process-engineer": ["learncheme-chemical-process", "statistics-onramp", "moresteam-doe", "matlab-onramp", "machine-learning-onramp", "coursera-chemical-engineering", "kosha-psm"],
+  "materials-rnd-engineer": ["learncheme-chemical-process", "statistics-onramp", "mit-chemical-engineering", "coursera-chemical-engineering", "nptel-chemical-engineering", "khan-math-physics-basics", "coursera-engineering-data"],
   "process-safety-engineer": ["kosha-psm", "kocw-chemical-process", "hrd-net-job-training", "ncs", "youtube-official-engineering"],
   "bioprocess-engineer": ["kocw-chemical-process", "coursera-chemical-engineering", "hrd-net-job-training", "moresteam-doe", "youtube-official-engineering"],
-  "hardware-design-engineer": ["mit-circuits", "ti-precision-labs", "simscape-onramp", "analog-dialogue", "matlab-onramp", "edx-engineering-systems", "khan-math-physics-basics"],
+  "hardware-design-engineer": ["mit-circuits", "ti-precision-labs", "mathworks-simscape-electrical", "simscape-onramp", "analog-dialogue", "matlab-onramp", "edx-engineering-systems", "khan-math-physics-basics"],
   "pcb-design-engineer": ["kocw-electronics-circuit", "ti-precision-labs", "analog-dialogue", "step-engineering", "inflearn-free-it-practice", "udemy-free-practical-tools"],
   "validation-engineer": ["signal-processing-onramp", "matlab-onramp", "ti-precision-labs", "analog-dialogue", "simulink-onramp", "freecodecamp-python-data", "youtube-official-engineering"],
-  "power-hardware-engineer": ["simscape-onramp", "ti-precision-labs", "kocw-electronics-circuit", "simulink-onramp", "edx-engineering-systems", "khan-math-physics-basics"],
+  "power-hardware-engineer": ["mathworks-simscape-electrical", "simscape-onramp", "ti-precision-labs", "kocw-electronics-circuit", "simulink-onramp", "edx-engineering-systems", "khan-math-physics-basics"],
   "emc-test-engineer": ["signal-processing-onramp", "analog-dialogue", "ti-precision-labs", "kocw-electronics-circuit", "udemy-free-practical-tools", "youtube-official-engineering"],
   "embedded-firmware-engineer": ["stm32-education", "kocw-embedded-control", "stateflow-onramp", "simulink-onramp", "freecodecamp-python-data", "inflearn-free-it-practice"],
-  "control-engineer": ["control-design-onramp", "simulink-onramp", "matlab-onramp", "signal-processing-onramp", "sensor-fusion-onramp", "coursera-embedded-control", "edx-engineering-systems"],
+  "control-engineer": ["control-design-onramp", "simulink-onramp", "matlab-onramp", "signal-processing-onramp", "mathworks-simscape-electrical", "sensor-fusion-onramp", "coursera-embedded-control", "edx-engineering-systems"],
   "robotics-software-engineer": ["ros-tutorials", "sensor-fusion-onramp", "simulink-onramp", "matlab-onramp", "coursera-embedded-control", "freecodecamp-python-data"],
   "embedded-linux-engineer": ["kocw-embedded-control", "stm32-education", "ros-tutorials", "step-engineering", "freecodecamp-python-data", "inflearn-free-it-practice"],
-  "motor-control-engineer": ["control-design-onramp", "simulink-onramp", "simscape-onramp", "stateflow-onramp", "matlab-onramp", "coursera-embedded-control", "edx-engineering-systems"]
+  "motor-control-engineer": ["control-design-onramp", "simulink-onramp", "mathworks-simscape-electrical", "simscape-onramp", "stateflow-onramp", "matlab-onramp", "coursera-embedded-control", "edx-engineering-systems"]
 };
 
 const storageKey = "careerCompetencyPilot";
-const primaryViews = ["tracks", "diagnosis", "education", "roadmap", "saved"];
+const primaryViews = ["tracks", "diagnosis", "roadmap", "saved"];
 
 const defaultState = {
   selectedTrackId: "production-quality",
@@ -2017,15 +2124,10 @@ function bindElements() {
     "roadmapTitle",
     "roadmapGuidance",
     "roadmapList",
-    "difficultyFilter",
-    "resourceGuidance",
-    "resourceList",
     "savedGuidance",
     "savedList",
-    "summaryPreview",
     "clearSavedButton",
     "exportPlanButton",
-    "copySummaryButton",
     "installButton"
   ].forEach((id) => {
     elements[id] = document.getElementById(id);
@@ -2069,13 +2171,6 @@ function bindEvents() {
     render();
   });
 
-  elements.difficultyFilter.addEventListener("change", (event) => {
-    state.difficulty = event.target.value;
-    saveState();
-    renderResources();
-    renderSummaryPreview();
-  });
-
   document.querySelectorAll(".tab").forEach((button) => {
     button.addEventListener("click", () => {
       state.view = button.dataset.view;
@@ -2099,7 +2194,6 @@ function bindEvents() {
     render();
   });
 
-  elements.copySummaryButton.addEventListener("click", copyPilotSummary);
   elements.exportPlanButton.addEventListener("click", exportPlanAsExcel);
 
   window.addEventListener("beforeinstallprompt", (event) => {
@@ -2144,7 +2238,7 @@ function saveState() {
 }
 
 function normalizeView(view, fallback = "roadmap") {
-  if (view === "library") return "education";
+  if (view === "library" || view === "education") return "roadmap";
   if (primaryViews.includes(view)) return view;
   return fallback;
 }
@@ -2154,7 +2248,6 @@ function render() {
   elements.industrySelect.value = state.profile.industry;
   elements.goalSelect.value = state.profile.goal;
   elements.durationSelect.value = state.profile.durationWeeks;
-  elements.difficultyFilter.value = state.difficulty;
   elements.roleSearchInput.value = state.roleSearch || "";
   elements.roleGroupFilter.value = state.roleGroupFilter || "all";
   const changedTrack = syncSelectedTrackWithProfile();
@@ -2164,10 +2257,8 @@ function render() {
   renderTrackDetail();
   renderDiagnostics();
   renderRoadmap();
-  renderResources();
   renderSaved();
   renderMetrics();
-  renderSummaryPreview();
 }
 
 function renderViews() {
@@ -2253,6 +2344,10 @@ function getDurationLabel() {
   return durationLabels[state.profile.durationWeeks] || `${getDurationWeeks()}주`;
 }
 
+function getDurationStrategy() {
+  return durationStrategies[state.profile.durationWeeks] || durationStrategies["4"];
+}
+
 function getIndustryLabel(industry = state.profile.industry) {
   return industryLabels[industry] || industry;
 }
@@ -2270,12 +2365,13 @@ function renderTracks() {
     return;
   }
 
-  elements.trackList.innerHTML = roleCatalog.map(({ track, role }) => {
+  elements.trackList.innerHTML = roleCatalog.map(({ track, role, score }, index) => {
     const selectedRole = getSelectedRole(track.id);
     const isSelected = track.id === state.selectedTrackId && selectedRole?.id === role.id;
+    const recommendationLabel = index < 3 && score > 0 ? `추천 ${index + 1} · ${track.title}` : track.title;
     return `
     <button class="track-card ${isSelected ? "is-selected" : ""}" type="button" data-track-id="${track.id}" data-role-id="${role.id}">
-      <span class="status-pill">${track.title}</span>
+      <span class="status-pill">${recommendationLabel}</span>
       <h3>${role.title}</h3>
       <p>${role.focus}</p>
       <p class="role-preview">${role.responsibilities.slice(0, 2).join(" · ")}</p>
@@ -2283,6 +2379,7 @@ function renderTracks() {
         ${role.postingKeywords.slice(0, 5).map((keyword) => `<span class="badge">${keyword}</span>`).join("")}
       </span>
     </button>
+    ${isSelected ? renderInlineRoleWordCloud(track, role) : ""}
   `;
   }).join("");
 
@@ -2290,11 +2387,35 @@ function renderTracks() {
     button.addEventListener("click", () => {
       state.selectedTrackId = button.dataset.trackId;
       state.selectedRoles = { ...state.selectedRoles, [button.dataset.trackId]: button.dataset.roleId };
-      state.view = "diagnosis";
+      state.view = "tracks";
       saveState();
       render();
     });
   });
+}
+
+function renderInlineRoleWordCloud(track, role) {
+  const wordCloud = getWordCloudAsset(track, role);
+  return `
+    <article class="inline-wordcloud-panel" aria-label="${role.title} 역량 워드클라우드">
+      <figure class="word-cloud-panel is-inline">
+        <img src="${wordCloud.src}" alt="${wordCloud.alt}" loading="lazy">
+        <figcaption>${wordCloud.caption}</figcaption>
+      </figure>
+      <div class="inline-wordcloud-summary">
+        <p class="eyebrow">선택 직무 역량</p>
+        <h3>${role.title}</h3>
+        <p>${role.focus}</p>
+        <div class="badge-row">
+          ${role.postingKeywords.map((keyword) => `<span class="badge">${keyword}</span>`).join("")}
+        </div>
+        <div class="flow-actions">
+          <button class="primary-button" type="button" data-view-target="roadmap">${getDurationLabel()} 자동 로드맵 보기</button>
+          <button class="ghost-button" type="button" data-view-target="diagnosis">직무확보 확인</button>
+        </div>
+      </div>
+    </article>
+  `;
 }
 
 function getRoleCatalog({ applyRoleFilters = true } = {}) {
@@ -2305,7 +2426,20 @@ function getRoleCatalog({ applyRoleFilters = true } = {}) {
     .filter((track) => !applyRoleFilters || groupFilter === "all" || track.id === groupFilter)
     .flatMap((track) => getAvailableRoles(track)
       .filter((role) => !applyRoleFilters || matchesRoleFilters(track, role, searchTerm))
-      .map((role) => ({ track, role })));
+      .map((role) => ({ track, role, score: getRoleCatalogScore(track, role) })))
+    .sort((a, b) => b.score - a.score);
+}
+
+function getRoleCatalogScore(track, role) {
+  let score = 0;
+
+  if (track.majors.includes(state.profile.major)) score += 20;
+  if (state.profile.industry !== "all" && role.industries.includes(state.profile.industry)) score += 60;
+  if (state.profile.industry !== "all" && track.industries.includes(state.profile.industry)) score += 20;
+  score += Math.min(getRoleLinkedResourceIds(role).length, 8) * 3;
+  score += Math.min(role.postingKeywords.length, 6) * 2;
+
+  return score;
 }
 
 function matchesRoleFilters(track, role, searchTerm) {
@@ -2335,7 +2469,6 @@ function renderTrackDetail() {
   const roles = getAvailableRoles(track);
   const selectedRole = getSelectedRole(track.id);
   const evidence = selectedRole ? getHiringEvidence(track, selectedRole) : null;
-  const wordCloud = getWordCloudAsset(track, selectedRole);
   const roleOptions = roles.map((role) => `
     <button class="role-option ${selectedRole?.id === role.id ? "is-selected" : ""}" type="button" data-role-id="${role.id}">
       <strong>${role.title}</strong>
@@ -2350,22 +2483,9 @@ function renderTrackDetail() {
       <h3>${selectedRole ? selectedRole.title : track.title}</h3>
       <p>${selectedRole ? selectedRole.focus : track.summary}</p>
     </div>
-    <section class="selected-role-overview" aria-label="선택 직무 워드클라우드">
-      <figure class="word-cloud-panel is-featured">
-        <img src="${wordCloud.src}" alt="${wordCloud.alt}" loading="lazy">
-        <figcaption>${wordCloud.caption}</figcaption>
-      </figure>
-      <div class="selected-role-summary">
-        <p class="eyebrow">${selectedRole ? "직무 선택 결과" : "직무군 워드클라우드"}</p>
-        <h4>${selectedRole ? selectedRole.title : track.title}</h4>
-        <p>직무명과 세부 직무를 누르면 필요한 역량 워드클라우드가 바로 갱신됩니다. 채용공고, 직무확보 문항, 추천 교육자료에서 반복되는 역량일수록 더 크게 보입니다.</p>
-        ${selectedRole ? `<div class="badge-row">${selectedRole.postingKeywords.map((keyword) => `<span class="badge">${keyword}</span>`).join("")}</div>` : ""}
-        <div class="flow-actions">
-          <button class="primary-button" type="button" data-view-target="diagnosis">이 직무확보 확인</button>
-          <button class="ghost-button" type="button" data-view-target="education">추천 자료 보기</button>
-        </div>
-      </div>
-    </section>
+    <div class="recommendation-note">
+      자료를 먼저 고를 필요 없이 선택 직무, 직무확보 공백, 준비 기간을 기준으로 로드맵에서 교육자료를 자동 배치합니다.
+    </div>
     <section class="role-panel" aria-label="채용공고 기준 세부 직무">
       <div>
         <p class="eyebrow">채용공고 기준 세부 직무</p>
@@ -2391,6 +2511,10 @@ function renderTrackDetail() {
         </div>
       ` : ""}
     </section>
+    <div class="flow-actions detail-actions">
+      <button class="primary-button" type="button" data-view-target="roadmap">${getDurationLabel()} 자동 로드맵 보기</button>
+      <button class="ghost-button" type="button" data-view-target="diagnosis">직무확보 확인</button>
+    </div>
     <div class="detail-grid">
       ${detailBlock("주요 업무", track.tasks)}
       ${detailBlock("핵심 역량", track.skills)}
@@ -2477,9 +2601,10 @@ function renderDiagnostics() {
       state.checked[input.dataset.checkId] = input.checked;
       saveState();
       renderDiagnostics();
+      renderRoadmap();
       renderResources();
+      renderSaved();
       renderMetrics();
-      renderSummaryPreview();
     });
   });
 
@@ -2512,7 +2637,7 @@ function renderDiagnosisGuide(track, role, questions) {
     <div>
       <p class="eyebrow">선택 기준</p>
       <h3>채용공고에서 요구하는 역량 중 내가 확보한 내용만 체크</h3>
-      <p>${diagnosisScope} 기준으로 확보 여부를 확인합니다. 체크하지 않은 항목은 다음 자료 선택 탭의 추천 우선순위에 바로 반영됩니다.</p>
+      <p>${diagnosisScope} 기준으로 확보 여부를 확인합니다. 체크하지 않은 항목은 자동 로드맵의 주차별 과제와 교육자료 배치에 바로 반영됩니다.</p>
     </div>
     <div class="diagnosis-guide-grid">
       <span><strong>확보함</strong>혼자 설명, 실습, 산출물 중 하나로 증명 가능</span>
@@ -2520,7 +2645,7 @@ function renderDiagnosisGuide(track, role, questions) {
       <span><strong>헷갈림</strong>보완 필요로 두면 추천 자료에서 우선 보완</span>
     </div>
     <div class="flow-actions">
-      <button class="primary-button" type="button" data-view-target="education">확보 내용 기준 자료 추천 보기</button>
+      <button class="primary-button" type="button" data-view-target="roadmap">확보 내용 기준 자동 로드맵 보기</button>
     </div>
   `;
 }
@@ -2620,19 +2745,25 @@ function renderRoadmapGuidance(context, tasks) {
   const roleResourceCount = getRoleLinkedResourceIds(context.role).length;
   const gapText = context.gapSkills.length ? context.gapSkills.slice(0, 4).join(", ") : "큰 공백 없음";
   const goalLabel = getGoalRecommendationLabel(context.goalKey);
+  const durationStrategy = getDurationStrategy();
   const selectedText = selectedResources.length
-    ? `${selectedResources.length}개 선택 교육자료를 ${getDurationLabel()} 안에 우선 배치합니다.`
-    : "아직 선택한 교육자료가 없어 직무별 필수 보완 자료를 기준으로 자동 배치합니다.";
+    ? `${selectedResources.length}개 추가 자료를 우선 반영해 ${getDurationLabel()} 로드맵을 자동 구성했습니다.`
+    : `교육자료를 직접 고르지 않아도 ${getDurationLabel()} 기준으로 자동 로드맵을 구성했습니다.`;
 
   elements.roadmapGuidance.innerHTML = `
     <h3>${selectedText}</h3>
-    <p>로드맵 구성은 주차별 실행 순서입니다. ${context.role?.title || context.track.title} 기준 추천 교육 ${roleResourceCount}개, 직무확보 보완 역량(${gapText}), 학습목표를 함께 반영합니다.</p>
+    <p>${durationStrategy.summary} ${context.role?.title || context.track.title} 기준 추천 교육 ${roleResourceCount}개, 직무확보 보완 역량(${gapText}), 학습목표를 함께 반영합니다.</p>
     <p>내 계획은 이 구성 결과를 완성된 로드맵 형태로 모아 보고 엑셀로 내보내는 화면입니다.</p>
     <div class="badge-row">
       <span class="badge">기간: ${getDurationLabel()}</span>
       <span class="badge">목표 반영: ${context.goal.label} · ${goalLabel}</span>
       <span class="badge">로드맵 주차: ${tasks.length}개</span>
-      <span class="badge">선택 자료: ${selectedResources.length}개</span>
+      <span class="badge">자료 배치: ${durationStrategy.resourceRule}</span>
+      <span class="badge">추가 자료: ${selectedResources.length}개</span>
+    </div>
+    <div class="duration-strategy-grid">
+      <span><strong>자료 기준</strong>${durationStrategy.resourceRule}</span>
+      <span><strong>과제 기준</strong>${durationStrategy.taskRule}</span>
     </div>
   `;
 }
@@ -2799,8 +2930,7 @@ function renderResources() {
 function getRecommendedResources(track, context) {
   const candidates = resources.filter((resource) => {
     const trackMatch = resource.tracks.includes(track.id);
-    const difficultyMatch = state.difficulty === "all" || resource.difficulty === state.difficulty;
-    return trackMatch && difficultyMatch;
+    return trackMatch;
   });
   const roleLinked = candidates.filter((resource) => getRoleLinkedResourceIds(context.role).includes(resource.id));
   const roadmapLinked = candidates.filter((resource) => getResourceLinkedTasks(resource.id, context.visibleTasks).length);
@@ -2821,13 +2951,14 @@ function getRecommendedResources(track, context) {
 function getRoadmapResourcesForTask(track, task, context, resourceUseCounts = new Map()) {
   const trackResources = resources.filter((resource) => resource.tracks.includes(track.id));
   const selectedResources = trackResources.filter((resource) => state.saved.includes(resource.id));
+  const roleLinked = trackResources.filter((resource) => getRoleLinkedResourceIds(context.role).includes(resource.id));
   const directlyLinked = trackResources.filter((resource) => getResourceLinkedTasks(resource.id, [task]).length);
   const taskMatched = trackResources.filter((resource) => (
     getTaskMatchedSkills(resource, task).length
     || getTaskResourceKeywordMatches(resource, task).length
     || getTaskRoleKeywordMatches(resource, task, context.role).length
   ));
-  const preferredPool = uniqueResources([...selectedResources, ...directlyLinked, ...taskMatched]);
+  const preferredPool = uniqueResources([...selectedResources, ...directlyLinked, ...roleLinked, ...taskMatched]);
   const pool = preferredPool.length >= 3
     ? preferredPool
     : uniqueResources([...preferredPool, ...trackResources]);
@@ -2843,15 +2974,22 @@ function getRoadmapResourcesForTask(track, task, context, resourceUseCounts = ne
       return sortResourcesForLearning(a.resource, b.resource, context);
     });
   const unusedRelevant = ranked.filter((item) => getRoadmapResourceUseCount(resourceUseCounts, item.resource.id) === 0 && item.score >= 8);
-  const selected = unusedRelevant.slice(0, 3);
+  const resourceLimit = getRoadmapResourceLimit(context);
+  const selected = unusedRelevant.slice(0, resourceLimit);
 
-  if (selected.length < 3) {
+  if (selected.length < resourceLimit) {
     selected.push(...ranked
       .filter((item) => !selected.some((selectedItem) => selectedItem.resource.id === item.resource.id))
-      .slice(0, 3 - selected.length));
+      .slice(0, resourceLimit - selected.length));
   }
 
   return selected.map((item) => item.resource);
+}
+
+function getRoadmapResourceLimit(context) {
+  if (context.durationWeeks <= 2) return 2;
+  if (context.durationWeeks <= 4) return 2;
+  return 3;
 }
 
 function uniqueResources(resourceList) {
@@ -3074,6 +3212,7 @@ function getTaskResourceScore(resource, task, context, resourceUseCounts = new M
   const goalScore = getGoalResourceScore(resource, context);
   const selectedMatch = state.saved.includes(resource.id) ? 1 : 0;
   const alreadyUsedPenalty = getRoadmapResourceUseCount(resourceUseCounts, resource.id) * 220;
+  const durationPenalty = getDurationResourcePenalty(resource, context);
 
   return directTaskMatches * 160
     + selectedMatch * 90
@@ -3088,7 +3227,25 @@ function getTaskResourceScore(resource, task, context, resourceUseCounts = new M
     + goalScore * 0.45
     + getResourcePriorityScore(resource, context) * 0.15
     - (directTaskMatches ? 0 : otherLinkedTaskMatches * 180)
-    - alreadyUsedPenalty;
+    - alreadyUsedPenalty
+    - durationPenalty;
+}
+
+function getDurationResourcePenalty(resource, context) {
+  if (context.durationWeeks <= 2) {
+    return (resource.totalMinutes > 240 ? 90 : 0)
+      + (resource.difficulty === "적용" && resource.practiceMinutes < 60 ? 35 : 0);
+  }
+
+  if (context.durationWeeks <= 4) {
+    return resource.totalMinutes > 420 ? 45 : 0;
+  }
+
+  if (context.durationWeeks >= 8 && resource.practiceMinutes >= 60) {
+    return -20;
+  }
+
+  return 0;
 }
 
 function getRoadmapResourceUseCount(resourceUseCounts, resourceId) {
@@ -3100,6 +3257,7 @@ function getRoadmapResourceUseCount(resourceUseCounts, resourceId) {
 function getTaskResourceSignals(resource, task, context) {
   const signals = [];
   const directTaskMatches = getResourceLinkedTasks(resource.id, [task]);
+  const roleDirectMatch = getRoleLinkedResourceIds(context.role).includes(resource.id);
   const matchedSkills = getTaskMatchedSkills(resource, task);
   const gapMatches = getTaskGapMatches(resource, task, context.gapSkills);
   const roleKeywordMatches = getTaskRoleKeywordMatches(resource, task, context.role);
@@ -3107,6 +3265,7 @@ function getTaskResourceSignals(resource, task, context) {
   const goalFitSignal = getGoalFitSignal(resource, context);
 
   if (directTaskMatches.length) signals.push("이번 주 과제 직접 연결");
+  if (roleDirectMatch) signals.push("선택 직무 직접 추천");
   if (competencyFitSignal) signals.push(competencyFitSignal);
   if (goalFitSignal) signals.push(goalFitSignal);
   if (matchedSkills.length) signals.push(`과제 역량: ${matchedSkills.slice(0, 2).join(", ")}`);
@@ -3209,18 +3368,21 @@ function renderRoadmapResourceItem(resource, task, context) {
   const signals = [...new Set([...taskSignals, ...getResourceSignals(resource, context)])]
     .filter((signal) => !signal.startsWith("로드맵 연결"))
     .slice(0, 3);
+  const score = Math.round(getTaskResourceScore(resource, task, context));
+  const connectionReason = getTaskResourceConnectionReason(resource, task, context);
 
   return `
     <details class="roadmap-resource-item">
       <summary>
         <span class="roadmap-resource-title">
           <strong>${resource.title}</strong>
-          <em>${resource.provider} · ${formatMinutes(resource.totalMinutes)}</em>
+          <em>${resource.provider} · ${resource.type} · ${formatMinutes(resource.totalMinutes)}</em>
         </span>
-        <span class="roadmap-resource-status">교육 확인</span>
+        <span class="roadmap-resource-status">자동추천 ${score}점</span>
       </summary>
       <div class="roadmap-resource-detail">
         <p>${resource.provider} · ${resource.difficulty} · ${formatMinutes(resource.totalMinutes)}</p>
+        <p><strong>자동 배치 근거:</strong> ${connectionReason}</p>
         <p><strong>연결 산출물:</strong> ${resource.expectedOutput}</p>
         ${signals.length ? `<p>${signals.join(" · ")}</p>` : `<p>${task.deliverable}에 바로 연결됩니다.</p>`}
         <div class="roadmap-resource-actions">
@@ -3232,6 +3394,26 @@ function renderRoadmapResourceItem(resource, task, context) {
       </div>
     </details>
   `;
+}
+
+function getTaskResourceConnectionReason(resource, task, context) {
+  const reasons = [];
+  const directTaskMatches = getResourceLinkedTasks(resource.id, [task]);
+  const gapMatches = getTaskGapMatches(resource, task, context.gapSkills);
+  const roleKeywordMatches = getTaskRoleKeywordMatches(resource, task, context.role);
+  const matchedSkills = getTaskMatchedSkills(resource, task);
+  const outputMatches = getTaskOutputMatches(resource, task);
+
+  if (directTaskMatches.length) reasons.push("이번 주 과제에 직접 연결");
+  if (gapMatches.length) reasons.push(`부족 역량 보완: ${gapMatches.slice(0, 2).join(", ")}`);
+  if (roleKeywordMatches.length) reasons.push(`채용 키워드 연결: ${roleKeywordMatches.slice(0, 2).join(", ")}`);
+  if (matchedSkills.length) reasons.push(`과제 역량 연결: ${matchedSkills.slice(0, 2).join(", ")}`);
+  if (outputMatches.length) reasons.push(`산출물 키워드 연결: ${outputMatches.slice(0, 2).join(", ")}`);
+  if (resource.provider === "MathWorks" && isMathWorksRequiredForRole(context)) reasons.push("MathWorks 활용 직무 보강");
+  if (context.durationWeeks <= 2 && resource.totalMinutes <= 240) reasons.push("짧은 기간에 소화 가능");
+  if (context.durationWeeks >= 8 && resource.practiceMinutes >= 60) reasons.push("심화 실습 반복에 적합");
+
+  return reasons.slice(0, 4).join(" · ") || `${task.deliverable} 산출물 작성에 필요한 배경 자료`;
 }
 
 function renderSaved() {
@@ -3277,12 +3459,12 @@ function renderSaved() {
         <div class="section-heading compact">
           <div>
             <p class="eyebrow">내 계획에 추가한 자료</p>
-            <h3>선택 교육자료</h3>
+            <h3>추가 교육자료</h3>
           </div>
         </div>
-        ${items.map((resource) => renderResourceCard(resource)).join("")}
+        ${items.map((resource) => renderResourceCard(resource, null, null, false)).join("")}
       </section>
-    ` : `<div class="empty-state">아직 내 계획에 추가한 교육자료가 없습니다. 위 완성 로드맵의 교육자료 또는 자료 선택에서 필요한 교육을 추가하세요.</div>`}
+    ` : `<div class="empty-state">추가한 교육자료가 없어도 위 자동 로드맵으로 바로 시작할 수 있습니다. 필요한 자료만 주차 안에서 내 계획에 추가하세요.</div>`}
   `;
   elements.savedList.querySelectorAll("[data-roadmap-step-id]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -3290,7 +3472,6 @@ function renderSaved() {
       saveState();
       renderSaved();
       renderRoadmap();
-      renderSummaryPreview();
     });
   });
   bindResourceActions(elements.savedList);
@@ -3299,6 +3480,7 @@ function renderSaved() {
 function renderPlanResourceItem(resource, task, context) {
   const saved = state.saved.includes(resource.id);
   const signals = getTaskResourceSignals(resource, task, context).slice(0, 2);
+  const connectionReason = getTaskResourceConnectionReason(resource, task, context);
   return `
     <details class="plan-resource-item">
       <summary>
@@ -3308,6 +3490,7 @@ function renderPlanResourceItem(resource, task, context) {
         </span>
       </summary>
       <div class="plan-resource-detail">
+        <p><strong>자동 배치 근거:</strong> ${connectionReason}</p>
         <p>${signals.join(" · ") || `${task.deliverable}에 연결되는 자료입니다.`}</p>
         <p><strong>산출물:</strong> ${resource.expectedOutput}</p>
         <div class="roadmap-resource-actions">
@@ -3329,14 +3512,16 @@ function renderSavedGuidance(items, tasks) {
   const completedWeeks = tasks
     .map((task) => getRoadmapStepId(getSelectedTrack().id, task))
     .filter((stepId) => state.completedRoadmap.includes(stepId)).length;
+  const durationStrategy = getDurationStrategy();
 
   elements.savedGuidance.innerHTML = `
     <h3>내 계획은 완성된 로드맵입니다</h3>
-    <p>로드맵 구성에서 계산된 주차별 과제와 연결 교육자료를 한 화면에 모았습니다. 자료 선택에서 고른 교육은 각 주차 추천에 우선 반영되고, 이 화면에서 엑셀로 내보낼 수 있습니다.</p>
+    <p>로드맵 구성에서 계산된 주차별 과제와 자동 배치 교육자료를 한 화면에 모았습니다. 자료를 직접 고르지 않아도 ${durationStrategy.label} 기준으로 시작할 수 있고, 추가한 자료는 각 주차 추천에 우선 반영됩니다.</p>
     <div class="badge-row">
       <span class="badge">로드맵 주차: ${tasks.length}개</span>
       <span class="badge">완료 주차: ${completedWeeks}/${tasks.length}</span>
-      <span class="badge">선택 자료: ${items.length}개</span>
+      <span class="badge">추가 자료: ${items.length}개</span>
+      <span class="badge">${durationStrategy.resourceRule}</span>
       <span class="badge">완료: ${completedCount}개</span>
       <span class="badge">진행: ${pendingCount}개</span>
       <span class="badge">총 학습량: ${formatMinutes(totalMinutes)}</span>
@@ -3344,7 +3529,7 @@ function renderSavedGuidance(items, tasks) {
   `;
 }
 
-function renderResourceCard(resource, context = null, priorityIndex = null) {
+function renderResourceCard(resource, context = null, priorityIndex = null, showCompletionAction = !context) {
   const saved = state.saved.includes(resource.id);
   const completed = state.completed.includes(resource.id);
   const prerequisites = resource.prerequisites.length ? resource.prerequisites.join(", ") : "없음";
@@ -3353,7 +3538,6 @@ function renderResourceCard(resource, context = null, priorityIndex = null) {
   const linkedTasks = context ? getResourceLinkedTasks(resource.id, context.visibleTasks) : [];
   const priority = signals.length > 0 || priorityIndex !== null;
   const recommendationScore = context ? Math.round(getEducationResourceScore(resource, context)) : null;
-  const showCompletionAction = !context;
   return `
     <article class="resource-card ${completed ? "is-completed" : ""} ${priority ? "is-priority" : ""}">
       ${priorityIndex !== null ? `
@@ -3403,7 +3587,7 @@ function renderResourceGuidance(items, context) {
   if (!items.length) {
     elements.resourceGuidance.innerHTML = `
       <h3>현재 조건의 추천 교육자료가 없습니다</h3>
-      <p>난이도 필터를 전체로 바꾸면 선택 직무의 기본 교육자료를 다시 볼 수 있습니다.</p>
+      <p>선택 직무나 관심 산업을 바꾸면 연결 가능한 교육자료 후보를 다시 계산합니다.</p>
     `;
     return;
   }
@@ -3414,7 +3598,7 @@ function renderResourceGuidance(items, context) {
   const selectedCount = state.saved.length;
   const goalLabel = getGoalRecommendationLabel(context.goalKey);
   const signals = getEducationResourceSignals(first, context);
-  const actionText = selectedCount ? "선택한 자료로 로드맵 구성 보기" : "자료를 선택한 뒤 로드맵 구성 보기";
+  const actionText = selectedCount ? "추가한 자료까지 반영한 로드맵 보기" : "기간 맞춤 자동 로드맵 보기";
   elements.resourceGuidance.innerHTML = `
     <p class="eyebrow">${context.goal.label} · ${getDurationLabel()} · ${context.role?.title || context.track.title}</p>
     <h3>1순위 교육자료: ${first.title}</h3>
@@ -3427,7 +3611,7 @@ function renderResourceGuidance(items, context) {
       <span class="badge">직무 매핑 교육: ${roleLinkedCount}개</span>
       <span class="badge">보완 역량: ${gapText}</span>
       <span class="badge">목표 반영: ${context.goal.label} · ${goalLabel}</span>
-      <span class="badge">선택 자료: ${selectedCount}개</span>
+      <span class="badge">추가 자료: ${selectedCount}개</span>
     </div>
     <p>필요한 교육을 선택하면 로드맵 구성 탭에서 준비 기간에 맞춰 주차별 과제와 함께 재배치됩니다.</p>
     <div class="flow-actions">
@@ -3556,7 +3740,6 @@ function bindResourceActions(container) {
       renderResources();
       renderSaved();
       renderMetrics();
-      renderSummaryPreview();
     });
   });
 
@@ -3569,7 +3752,6 @@ function bindResourceActions(container) {
       renderResources();
       renderSaved();
       renderMetrics();
-      renderSummaryPreview();
     });
   });
 }
@@ -3585,53 +3767,6 @@ function renderMetrics() {
   elements.selectedTrackMetric.textContent = track ? "1" : "0";
   elements.diagnosticMetric.textContent = `${getDiagnosticScore(track.id)}%`;
   elements.savedMetric.textContent = `${getVisibleRoadmapTasks(track.id).length}주`;
-}
-
-function renderSummaryPreview() {
-  if (!elements.summaryPreview) return;
-  elements.summaryPreview.textContent = buildPilotSummary();
-}
-
-function buildPilotSummary() {
-  const track = getSelectedTrack();
-  const role = getSelectedRole(track.id);
-  const savedTitles = resources
-    .filter((resource) => state.saved.includes(resource.id))
-    .sort((a, b) => sortResourcesForLearning(a, b))
-    .map((resource) => {
-      const status = state.completed.includes(resource.id) ? "완료" : "진행";
-      return `- ${resource.title} (${formatMinutes(resource.totalMinutes)}, ${status})`;
-    })
-    .join("\n") || "- 없음";
-
-  const gapSkills = getGapSkills(track.id);
-  const context = getRecommendationContext(track, gapSkills);
-  const nextResources = getRecommendedResources(track, context);
-  const nextResource = nextResources[0]?.title || "없음";
-  const nextTask = getNextCurriculumTask(track.id);
-  const visibleTasks = getVisibleRoadmapTasks(track.id);
-
-  const completedWeeks = visibleTasks
-    .map((task) => getRoadmapStepId(track.id, task))
-    .filter((stepId) => state.completedRoadmap.includes(stepId)).length;
-
-  return [
-    "[직무역량 교육 로드맵 요약]",
-    `전공: ${getSelectLabel(elements.majorSelect)}`,
-    `관심 산업: ${getSelectLabel(elements.industrySelect)}`,
-    `학습 목표: ${learningGoals[state.profile.goal]?.label || state.profile.goal}`,
-    `목표 추천 기준: ${getGoalRecommendationLabel(state.profile.goal)}`,
-    `준비 기간: ${getDurationLabel()}`,
-    `직무군: ${track.title}`,
-    `선택 직무: ${role?.title || "미선택"}`,
-    `직무확보율: ${getDiagnosticScore(track.id)}%`,
-    `보완 역량: ${gapSkills.slice(0, 5).join(", ") || "큰 공백 없음"}`,
-    `다음 과제: ${nextTask.title} - ${nextTask.deliverable}`,
-    `다음 추천 교육자료: ${nextResource}`,
-    `완료 주차: ${completedWeeks}/${visibleTasks.length}`,
-    "선택 교육자료:",
-    savedTitles
-  ].join("\n");
 }
 
 function exportPlanAsExcel() {
@@ -3654,7 +3789,7 @@ function exportPlanAsExcel() {
 function buildPlanExportWorkbook() {
   return [
     { name: "요약", rows: buildSummaryExportRows() },
-    { name: "선택 자료", rows: buildSavedResourceExportRows() },
+    { name: "추가 교육자료", rows: buildSavedResourceExportRows() },
     { name: "로드맵", rows: buildRoadmapExportRows() },
     { name: "직무확보", rows: buildDiagnosisExportRows() }
   ];
@@ -3687,7 +3822,7 @@ function buildSummaryExportRows() {
     ["다음 과제", `${nextTask.title} - ${nextTask.deliverable}`],
     ["다음 추천 교육자료", nextResource],
     ["완료 주차", `${completedWeeks}/${visibleTasks.length}`],
-    ["선택 교육자료", `${state.saved.length}개`],
+    ["추가 교육자료", `${state.saved.length}개`],
     ["완료 교육자료", `${state.completed.length}개`]
   ];
 }
@@ -3859,20 +3994,6 @@ function formatExportDate() {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
-}
-
-async function copyPilotSummary() {
-  const summary = buildPilotSummary();
-  try {
-    await navigator.clipboard.writeText(summary);
-    elements.copySummaryButton.textContent = "복사 완료";
-  } catch {
-    elements.copySummaryButton.textContent = "복사 실패";
-  }
-
-  setTimeout(() => {
-    elements.copySummaryButton.textContent = "현재 계획 요약 복사";
-  }, 1800);
 }
 
 function getSelectLabel(select) {

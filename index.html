@@ -84,19 +84,12 @@
               <span>내 계획</span>
             </div>
           </div>
-
-          <button class="primary-button full-width" id="copySummaryButton" type="button">현재 계획 요약 복사</button>
-          <div class="summary-preview" aria-live="polite">
-            <p class="eyebrow">요약 미리보기</p>
-            <pre id="summaryPreview"></pre>
-          </div>
         </aside>
 
         <section class="workspace">
           <nav class="tabs" aria-label="화면 전환">
             <button class="tab is-active" type="button" data-view="tracks">직무</button>
             <button class="tab" type="button" data-view="diagnosis">직무확보</button>
-            <button class="tab" type="button" data-view="education">자료 선택</button>
             <button class="tab" type="button" data-view="roadmap">로드맵 구성</button>
             <button class="tab" type="button" data-view="saved">내 계획</button>
           </nav>
@@ -157,26 +150,6 @@
             </div>
             <div class="roadmap-guidance" id="roadmapGuidance"></div>
             <div class="roadmap" id="roadmapList"></div>
-          </section>
-
-          <section class="view" id="educationView">
-            <div class="section-heading">
-              <div>
-                <p class="eyebrow">우선순위 안내</p>
-                <h2>추천 자료를 선택하세요</h2>
-              </div>
-              <label class="compact-filter">
-                난이도
-                <select id="difficultyFilter">
-                  <option value="all">전체</option>
-                  <option value="입문">입문</option>
-                  <option value="기초실습">기초실습</option>
-                  <option value="적용">적용</option>
-                </select>
-              </label>
-            </div>
-            <div class="resource-guidance" id="resourceGuidance"></div>
-            <div class="resource-list" id="resourceList"></div>
           </section>
 
           <section class="view" id="savedView">

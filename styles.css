@@ -239,7 +239,7 @@ input::placeholder {
 
 .tabs {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0;
   border-bottom: 1px solid var(--line);
   background: #f8faf7;
@@ -337,6 +337,40 @@ input::placeholder {
 .track-card.is-selected {
   outline: 3px solid rgba(21, 94, 117, 0.18);
   border-color: var(--primary);
+}
+
+.inline-wordcloud-panel {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
+  gap: 14px;
+  align-items: stretch;
+  padding: 16px;
+  background: linear-gradient(135deg, #f4fbfd 0%, #ffffff 56%, #f7faf2 100%);
+  border: 1px solid #b8dce6;
+  border-radius: var(--radius);
+  box-shadow: 0 16px 36px rgba(15, 81, 97, 0.11);
+}
+
+.inline-wordcloud-summary {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 14px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.inline-wordcloud-summary h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.inline-wordcloud-summary p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
 }
 
 .track-card h3,
@@ -524,11 +558,23 @@ input::placeholder {
   border-color: #b8dce6;
 }
 
+.word-cloud-panel.is-inline {
+  margin: 0;
+  padding: 12px;
+  border-color: #b8dce6;
+  box-shadow: inset 0 0 0 1px rgba(184, 220, 230, 0.45);
+}
+
 .word-cloud-panel img {
   display: block;
   width: 100%;
   aspect-ratio: 12 / 7;
   object-fit: contain;
+}
+
+.word-cloud-panel.is-inline img {
+  aspect-ratio: 16 / 9;
+  filter: saturate(1.06) contrast(1.03);
 }
 
 .word-cloud-panel figcaption {
@@ -608,6 +654,29 @@ li {
   margin: 0;
   color: var(--muted);
   line-height: 1.5;
+}
+
+.duration-strategy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.duration-strategy-grid span {
+  min-width: 0;
+  padding: 10px;
+  color: var(--muted);
+  background: #ffffff;
+  border: 1px solid #cfe3d8;
+  border-radius: 7px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.duration-strategy-grid strong {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--ink);
 }
 
 .diagnosis-guide {
@@ -1170,11 +1239,13 @@ li {
 
   .track-grid,
   .role-filter-bar,
+  .inline-wordcloud-panel,
   .selected-role-overview,
   .role-list,
   .role-detail-grid,
   .detail-grid,
   .diagnosis-guide-grid,
+  .duration-strategy-grid,
   .goal-rule-grid,
   .resource-learning-meta,
   .roadmap {
@@ -1189,7 +1260,7 @@ li {
 
   .tabs {
     overflow-x: auto;
-    grid-template-columns: repeat(5, minmax(72px, 1fr));
+    grid-template-columns: repeat(4, minmax(72px, 1fr));
   }
 
   .tab {
