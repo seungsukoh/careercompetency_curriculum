@@ -234,6 +234,7 @@ const resources = [
     estimatedMinutes: 120,
     practiceMinutes: 90,
     sequenceLevel: 2,
+    core: true,
     tracks: ["embedded-control", "mechanical-cae", "electronics-pcb"],
     skills: ["제어", "PID", "Simulink", "검증"],
     prerequisites: ["Simulink 기초", "제어공학 기초"],
@@ -351,6 +352,25 @@ const resources = [
     url: "https://www.mathworks.com/help/sps/"
   },
   {
+    id: "mathworks-motor-control-blockset",
+    title: "Motor Control Blockset 핵심 예제",
+    provider: "MathWorks",
+    type: "공식문서/예제",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 120,
+    practiceMinutes: 120,
+    sequenceLevel: 4,
+    core: true,
+    tracks: ["embedded-control", "electronics-pcb", "mechanical-cae"],
+    skills: ["모터", "PWM", "ADC", "FOC", "Simulink", "검증"],
+    prerequisites: ["Simulink 기초", "제어공학 기초", "전력전자 기초"],
+    reason: "모터제어 채용공고에서 자주 나오는 PWM, ADC 샘플링, FOC, 보호 로직을 모델 기반 실습과 검증 산출물로 연결합니다.",
+    expectedOutput: "PWM/ADC 타이밍과 제어 응답 비교 그래프",
+    qualityStatus: "verified",
+    url: "https://www.mathworks.com/help/mcb/"
+  },
+  {
     id: "sensor-fusion-onramp",
     title: "Sensor Fusion Onramp",
     provider: "MathWorks",
@@ -360,6 +380,7 @@ const resources = [
     estimatedMinutes: 120,
     practiceMinutes: 90,
     sequenceLevel: 3,
+    core: true,
     tracks: ["embedded-control"],
     skills: ["센서융합", "Kalman filter", "로봇", "제어"],
     prerequisites: ["MATLAB 기초", "신호처리 기초"],
@@ -399,6 +420,44 @@ const resources = [
     reason: "설계와 제조를 함께 보는 관점을 잡는 데 유용합니다.",
     output: "제품 설계 검토 메모",
     url: "https://ocw.mit.edu/courses/2-007-design-and-manufacturing-i-spring-2009/"
+  },
+  {
+    id: "mit-mechanics-materials",
+    title: "Mechanics and Materials I 핵심 단원",
+    provider: "MIT OpenCourseWare",
+    type: "대학 OCW 핵심단원",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 150,
+    practiceMinutes: 90,
+    sequenceLevel: 2,
+    core: true,
+    tracks: ["mechanical-cae"],
+    skills: ["재료역학", "응력", "변형률", "안전율", "기계요소설계"],
+    prerequisites: ["정역학", "미적분 기초"],
+    reason: "기구설계와 CAE에서 가장 자주 묻는 하중, 응력, 변형률, 안전율 판단을 손계산으로 설명하게 만드는 핵심 전공 자료입니다.",
+    expectedOutput: "브래킷 단면 응력 계산과 안전율 판단 노트",
+    qualityStatus: "reviewed",
+    url: "https://ocw.mit.edu/courses/2-001-mechanics-and-materials-i-fall-2006/"
+  },
+  {
+    id: "mit-fea-solids",
+    title: "Finite Element Analysis of Solids and Fluids 핵심 단원",
+    provider: "MIT OpenCourseWare",
+    type: "대학 OCW 핵심단원",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 150,
+    practiceMinutes: 90,
+    sequenceLevel: 3,
+    core: true,
+    tracks: ["mechanical-cae"],
+    skills: ["FEA", "경계조건", "메시", "검증", "수치해석"],
+    prerequisites: ["재료역학", "선형대수 기초"],
+    reason: "해석 툴 사용법보다 경계조건, 요소, 메시 수렴, 결과 검증 논리를 배워 CAE 면접 답변의 핵심을 잡습니다.",
+    expectedOutput: "경계조건과 메시 민감도 비교표",
+    qualityStatus: "reviewed",
+    url: "https://ocw.mit.edu/courses/2-092-finite-element-analysis-of-solids-and-fluids-i-fall-2009/"
   },
   {
     id: "mit-numerical-me",
@@ -443,6 +502,44 @@ const resources = [
     url: "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/"
   },
   {
+    id: "allaboutcircuits-textbook",
+    title: "All About Circuits 회로 기본 핵심 단원",
+    provider: "All About Circuits",
+    type: "공개 교재 핵심단원",
+    language: "영어",
+    difficulty: "입문",
+    estimatedMinutes: 120,
+    practiceMinutes: 90,
+    sequenceLevel: 1,
+    core: true,
+    tracks: ["electronics-pcb"],
+    skills: ["회로이론", "전자회로", "전원회로", "임피던스", "검증"],
+    prerequisites: ["기초 물리"],
+    reason: "전압, 전류, 저항, 커패시터, 주파수 응답을 회로 블록도와 측정 기준으로 연결하는 하드웨어 직무 핵심 기본기입니다.",
+    expectedOutput: "전원/센서 회로의 전압·전류·임피던스 계산 노트",
+    qualityStatus: "reviewed",
+    url: "https://www.allaboutcircuits.com/textbook/"
+  },
+  {
+    id: "kicad-pcb-docs",
+    title: "KiCad PCB 설계 공식 문서 핵심 단원",
+    provider: "KiCad",
+    type: "공식문서 핵심단원",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 90,
+    practiceMinutes: 120,
+    sequenceLevel: 2,
+    core: true,
+    tracks: ["electronics-pcb"],
+    skills: ["PCB", "리턴패스", "디커플링", "DFM/DFT", "검증"],
+    prerequisites: ["회로 블록도", "부품 데이터시트"],
+    reason: "PCB가 왜 동작 안정성, 리턴패스, 제조성, 측정 포인트와 연결되는지 실제 레이아웃 검토 항목으로 바꿉니다.",
+    expectedOutput: "PCB 리뷰 체크리스트와 측정 포인트 표시",
+    qualityStatus: "reviewed",
+    url: "https://docs.kicad.org/"
+  },
+  {
     id: "ti-precision-labs",
     title: "Precision Labs",
     provider: "Texas Instruments",
@@ -455,6 +552,25 @@ const resources = [
     reason: "오피앰프, 데이터컨버터, 전원 등 실무형 회로 주제를 다룹니다.",
     output: "회로 주제별 설계 체크리스트",
     url: "https://www.ti.com/video/series/precision-labs.html"
+  },
+  {
+    id: "ti-power-management-training",
+    title: "TI Power Management 핵심 교육",
+    provider: "Texas Instruments",
+    type: "기업 공식교육",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 120,
+    practiceMinutes: 90,
+    sequenceLevel: 2,
+    core: true,
+    tracks: ["electronics-pcb", "embedded-control"],
+    skills: ["전원회로", "전력전자", "발열", "리플", "검증"],
+    prerequisites: ["회로이론", "부품 데이터시트"],
+    reason: "전원 Tree, LDO/Buck 선택, 리플·발열·부하 transient처럼 전원 하드웨어 직무에서 바로 묻는 판단 기준을 학습합니다.",
+    expectedOutput: "전원 Tree와 리플·발열 검증 체크리스트",
+    qualityStatus: "reviewed",
+    url: "https://www.ti.com/power-management/training.html"
   },
   {
     id: "stm32-education",
@@ -471,6 +587,82 @@ const resources = [
     url: "https://www.st.com/content/st_com/en/support/learning/stm32-education.html"
   },
   {
+    id: "stm32-mooc-gpio-timer-uart",
+    title: "STM32 MOOC GPIO·Timer·UART 핵심 단원",
+    provider: "STMicroelectronics",
+    type: "공식 무료교육 핵심단원",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 120,
+    practiceMinutes: 120,
+    sequenceLevel: 2,
+    core: true,
+    tracks: ["embedded-control", "electronics-pcb"],
+    skills: ["MCU", "GPIO", "Timer", "UART", "인터럽트", "디버깅"],
+    prerequisites: ["C언어 기초"],
+    reason: "펌웨어 직무의 핵심인 주변장치, 인터럽트, UART 로그를 공식 실습 흐름으로 연결합니다.",
+    expectedOutput: "GPIO/Timer/UART 주변장치 매핑표와 샘플 로그",
+    qualityStatus: "reviewed",
+    url: "https://www.st.com/content/st_com/en/support/learning/stm32-education/stm32-moocs.html"
+  },
+  {
+    id: "arm-embedded-systems",
+    title: "Arm Embedded Systems Education Kit 핵심 자료",
+    provider: "Arm Education",
+    type: "공식 교육자료",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 120,
+    practiceMinutes: 90,
+    sequenceLevel: 2,
+    core: true,
+    tracks: ["embedded-control"],
+    skills: ["MCU", "인터럽트", "C언어", "시스템로그", "디버깅"],
+    prerequisites: ["C언어 기초", "디지털논리 기초"],
+    reason: "MCU 구조, 메모리, 인터럽트, 입출력 흐름을 펌웨어 디버깅 관점에서 설명하는 데 필요한 핵심 배경입니다.",
+    expectedOutput: "MCU 메모리·인터럽트·입출력 구조 요약",
+    qualityStatus: "candidate",
+    url: "https://www.arm.com/resources/education/education-kits"
+  },
+  {
+    id: "linux-kernel-device-tree",
+    title: "Linux Kernel Device Tree 핵심 문서",
+    provider: "Linux Kernel Documentation",
+    type: "공식문서 핵심단원",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 90,
+    practiceMinutes: 90,
+    sequenceLevel: 3,
+    core: true,
+    tracks: ["embedded-control"],
+    skills: ["Device tree", "Driver", "GPIO", "I2C/SPI/UART", "시스템로그"],
+    prerequisites: ["C언어 기초", "리눅스 명령어 기초"],
+    reason: "임베디드 리눅스 채용공고의 핵심인 하드웨어 인터페이스, device tree, 드라이버 문제 추적을 공식 문서 기준으로 연결합니다.",
+    expectedOutput: "Device tree 노드와 드라이버 로그 분석 메모",
+    qualityStatus: "reviewed",
+    url: "https://docs.kernel.org/devicetree/usage-model.html"
+  },
+  {
+    id: "yocto-project-docs",
+    title: "Yocto Project 이미지 빌드 핵심 문서",
+    provider: "Yocto Project",
+    type: "공식문서 핵심단원",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 120,
+    practiceMinutes: 120,
+    sequenceLevel: 4,
+    core: true,
+    tracks: ["embedded-control"],
+    skills: ["Yocto", "Buildroot", "부팅흐름", "시스템로그", "디버깅"],
+    prerequisites: ["리눅스 명령어 기초", "Git"],
+    reason: "부트로더, kernel, rootfs, 이미지 빌드 흐름을 설명해야 하는 임베디드 리눅스 직무의 핵심 배경을 잡습니다.",
+    expectedOutput: "부팅 구성요소와 이미지 빌드 흐름도",
+    qualityStatus: "reviewed",
+    url: "https://docs.yoctoproject.org/"
+  },
+  {
     id: "ros-tutorials",
     title: "ROS 2 Tutorials",
     provider: "ROS Documentation",
@@ -478,6 +670,7 @@ const resources = [
     language: "영어",
     difficulty: "기초실습",
     hours: 5,
+    core: true,
     tracks: ["embedded-control"],
     skills: ["제어", "로봇", "Git"],
     reason: "로봇 소프트웨어 구조와 메시지 기반 통신을 실습할 수 있습니다.",
@@ -497,6 +690,44 @@ const resources = [
     reason: "소자와 회로 관점을 함께 확인할 수 있어 반도체 직무 이해에 도움이 됩니다.",
     output: "소자 동작 원리 요약",
     url: "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2009/"
+  },
+  {
+    id: "mit-semiconductor-devices",
+    title: "Semiconductor Devices 핵심 단원",
+    provider: "MIT OpenCourseWare",
+    type: "대학 OCW 핵심단원",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 150,
+    practiceMinutes: 60,
+    sequenceLevel: 2,
+    core: true,
+    tracks: ["semiconductor-equipment", "electronics-pcb"],
+    skills: ["반도체 소자", "공정 흐름", "계측", "전공지식"],
+    prerequisites: ["전자회로 기초", "물리 기초"],
+    reason: "산화, 접합, MOS 구조 같은 공정·소자 기본을 연결해 공정 흐름을 암기가 아니라 원리로 설명하게 합니다.",
+    expectedOutput: "MOS 구조와 공정 단계 연결 메모",
+    qualityStatus: "reviewed",
+    url: "https://ocw.mit.edu/courses/6-012-microelectronic-devices-and-circuits-fall-2009/"
+  },
+  {
+    id: "plasma-etch-core",
+    title: "Plasma Etch Process 핵심 개념 후보",
+    provider: "Semiconductor Engineering",
+    type: "산업 기술교육자료",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 75,
+    practiceMinutes: 60,
+    sequenceLevel: 2,
+    core: true,
+    tracks: ["semiconductor-equipment"],
+    skills: ["식각", "플라즈마", "장비조건", "공정 흐름", "Troubleshooting"],
+    prerequisites: ["반도체 공정 흐름"],
+    reason: "식각률, 선택비, 균일도, 잔류물 같은 식각 결과 지표를 압력, RF power, 가스 조건과 연결하는 핵심 자료 후보입니다.",
+    expectedOutput: "식각 변수와 결과 지표 연결표",
+    qualityStatus: "candidate",
+    url: "https://semiengineering.com/knowledge_centers/manufacturing/process/etch/"
   },
   {
     id: "analog-dialogue",
@@ -527,6 +758,44 @@ const resources = [
     url: "https://www.itl.nist.gov/div898/handbook/"
   },
   {
+    id: "nist-control-charts",
+    title: "NIST Control Charts 핵심 단원",
+    provider: "NIST/SEMATECH",
+    type: "정부/협회 핵심단원",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 90,
+    practiceMinutes: 90,
+    sequenceLevel: 2,
+    core: true,
+    tracks: ["production-quality", "semiconductor-equipment", "chemical-process"],
+    skills: ["SPC", "관리도", "공정능력", "통계", "이상탐지"],
+    prerequisites: ["평균과 표준편차"],
+    reason: "품질·공정 직무에서 핵심인 관리도 해석과 관리 이탈 판단을 실제 데이터 판정 기준으로 배웁니다.",
+    expectedOutput: "Xbar/R 또는 I-MR 관리도와 이상 신호 판정표",
+    qualityStatus: "verified",
+    url: "https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc3.htm"
+  },
+  {
+    id: "nist-process-capability",
+    title: "NIST Process Capability 핵심 단원",
+    provider: "NIST/SEMATECH",
+    type: "정부/협회 핵심단원",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 75,
+    practiceMinutes: 90,
+    sequenceLevel: 2,
+    core: true,
+    tracks: ["production-quality", "semiconductor-equipment", "chemical-process"],
+    skills: ["공정능력", "Cp/Cpk", "SPC", "품질", "통계"],
+    prerequisites: ["기초 통계", "규격 상하한 이해"],
+    reason: "Cp/Cpk를 단순 계산이 아니라 규격, 산포, 평균 이동과 연결해 품질관리 면접에서 설명할 수 있게 합니다.",
+    expectedOutput: "Cp/Cpk 계산표와 공정 판정 문장",
+    qualityStatus: "verified",
+    url: "https://www.itl.nist.gov/div898/handbook/pmc/section1/pmc16.htm"
+  },
+  {
     id: "asq-quality-tools",
     title: "ASQ Quality Tools",
     provider: "ASQ",
@@ -554,6 +823,7 @@ const resources = [
     estimatedMinutes: 75,
     practiceMinutes: 60,
     sequenceLevel: 2,
+    core: true,
     tracks: ["production-quality"],
     skills: ["FMEA", "문제해결", "품질"],
     prerequisites: ["공정 문제 정의"],
@@ -572,6 +842,7 @@ const resources = [
     estimatedMinutes: 60,
     practiceMinutes: 60,
     sequenceLevel: 2,
+    core: true,
     tracks: ["production-quality"],
     skills: ["FMEA", "품질", "문제해결"],
     prerequisites: ["공정 문제 정의"],
@@ -590,6 +861,7 @@ const resources = [
     estimatedMinutes: 60,
     practiceMinutes: 60,
     sequenceLevel: 2,
+    core: true,
     tracks: ["production-quality"],
     skills: ["8D 문제해결", "문제해결", "품질"],
     prerequisites: ["원인 가설"],
@@ -608,6 +880,7 @@ const resources = [
     estimatedMinutes: 60,
     practiceMinutes: 60,
     sequenceLevel: 2,
+    core: true,
     tracks: ["production-quality"],
     skills: ["문제해결", "8D 문제해결", "개선"],
     prerequisites: ["원인 가설"],
@@ -651,6 +924,44 @@ const resources = [
     expectedOutput: "물질수지 또는 분리공정 예제 2개 풀이 노트",
     qualityStatus: "verified",
     url: "https://learncheme.com/"
+  },
+  {
+    id: "learncheme-material-balances",
+    title: "LearnChemE Material Balances 핵심 문제풀이",
+    provider: "LearnChemE",
+    type: "대학 공개교육 핵심단원",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 120,
+    practiceMinutes: 120,
+    sequenceLevel: 2,
+    core: true,
+    tracks: ["chemical-process"],
+    skills: ["물질수지", "수율", "전환율", "선택도", "공정 흐름"],
+    prerequisites: ["일반화학", "단위 환산"],
+    reason: "화학공정 엔지니어가 반드시 설명해야 하는 물질수지, 전환율, 선택도, 수율을 문제풀이로 바로 익히게 합니다.",
+    expectedOutput: "물질수지 계산표와 수율 저하 원인 가설",
+    qualityStatus: "verified",
+    url: "https://learncheme.com/screencasts/mass-energy-balances/"
+  },
+  {
+    id: "learncheme-separations",
+    title: "LearnChemE Separations 핵심 단원",
+    provider: "LearnChemE",
+    type: "대학 공개교육 핵심단원",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 120,
+    practiceMinutes: 90,
+    sequenceLevel: 2,
+    core: true,
+    tracks: ["chemical-process"],
+    skills: ["분리공정", "증류", "상평형", "순도", "공정변수"],
+    prerequisites: ["물질수지", "열역학 기초"],
+    reason: "반응 후 제품 품질을 결정하는 증류·분리 조건을 수율, 순도, 에너지 사용량과 연결합니다.",
+    expectedOutput: "분리 조건 변경에 따른 순도·수율 비교표",
+    qualityStatus: "verified",
+    url: "https://learncheme.com/screencasts/separations/"
   },
   {
     id: "mit-chemical-engineering",
@@ -706,6 +1017,7 @@ const resources = [
     estimatedMinutes: 75,
     practiceMinutes: 60,
     sequenceLevel: 2,
+    core: true,
     tracks: ["chemical-process", "semiconductor-equipment"],
     skills: ["공정안전", "PSM", "HAZOP", "MSDS"],
     prerequisites: ["공정 흐름 이해"],
@@ -717,6 +1029,25 @@ const resources = [
       nextReviewAt: "2026-07-26"
     },
     url: "https://www.kosha.or.kr/"
+  },
+  {
+    id: "fda-process-validation",
+    title: "FDA Process Validation 핵심 가이던스",
+    provider: "FDA",
+    type: "정부 가이던스 핵심자료",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 90,
+    practiceMinutes: 90,
+    sequenceLevel: 3,
+    core: true,
+    tracks: ["chemical-process"],
+    skills: ["GMP", "Validation", "SOP", "Batch record", "변경관리"],
+    prerequisites: ["공정 흐름 이해", "품질 문서 기초"],
+    reason: "바이오·제약 공정 직무에서 SOP, batch record, deviation, validation을 공정 조건과 품질 리스크로 연결하는 핵심 자료입니다.",
+    expectedOutput: "공정 validation 단계와 기록 항목 매핑표",
+    qualityStatus: "reviewed",
+    url: "https://www.fda.gov/regulatory-information/search-fda-guidance-documents/process-validation-general-principles-and-practices"
   },
   {
     id: "coursera-chemical-engineering",
@@ -1666,6 +1997,19 @@ const industryLabels = {
   bio: "바이오·제약"
 };
 
+const majorLabels = {
+  mechanical: "기계공학",
+  electrical: "전자공학",
+  chemical: "화학공학",
+  both: "공학 융합/전체"
+};
+
+const majorBridgeTracks = {
+  mechanical: ["electronics-pcb", "chemical-process"],
+  electrical: ["mechanical-cae", "chemical-process"],
+  chemical: ["electronics-pcb", "embedded-control", "mechanical-cae"]
+};
+
 const starterKeywords = {
   "mechanical-cae": "재료역학 기계요소설계 구조해석 CAD",
   "production-quality": "품질관리 SPC 관리도 FMEA 공정능력",
@@ -1997,15 +2341,25 @@ const resourceTaskLinks = {
   "sensor-fusion-onramp": ["PID 응답 실험", "디버깅 노트와 README"],
   "optimization-onramp": ["설계 변경 제안", "조건 변경 검토표", "PID 응답 실험", "반응·분리 조건 비교"],
   "mit-design-manufacturing": ["제품 요구사항 분해", "설계 변경 제안"],
+  "mit-mechanics-materials": ["제품 요구사항 분해", "손계산과 CAD 초안", "설계 변경 제안"],
+  "mit-fea-solids": ["해석 조건 검증", "설계 변경 제안"],
   "mit-numerical-me": ["해석 조건 검증", "손계산과 CAD 초안"],
   ncs: ["공정 문제 정의", "공정 흐름 매핑", "제품 요구사항 분해", "MCU 주변장치 설계"],
   "mit-circuits": ["전원 요구사항 정의", "센서 신호 증폭 회로"],
+  "allaboutcircuits-textbook": ["전원 요구사항 정의", "센서 신호 증폭 회로"],
+  "kicad-pcb-docs": ["PCB 리뷰 체크리스트", "검증 리포트"],
   "ti-precision-labs": ["전원 요구사항 정의", "검증 리포트"],
   "stm32-education": ["MCU 주변장치 설계", "UART 센서 프로토콜"],
+  "stm32-mooc-gpio-timer-uart": ["MCU 주변장치 설계", "UART 센서 프로토콜", "디버깅 노트와 README"],
+  "arm-embedded-systems": ["MCU 주변장치 설계", "UART 센서 프로토콜", "디버깅 노트와 README"],
   "ros-tutorials": ["MCU 주변장치 설계", "디버깅 노트와 README"],
   "mit-microelectronic": ["공정 흐름 매핑", "전원 요구사항 정의"],
+  "mit-semiconductor-devices": ["공정 흐름 매핑", "식각 장비 변수 정리"],
+  "plasma-etch-core": ["식각 장비 변수 정리", "조건 변경 검토표"],
   "analog-dialogue": ["센서 신호 증폭 회로", "검증 리포트"],
   "nist-spc": ["관리도와 Cpk 계산", "원인 가설과 FMEA", "수율 Pareto 분석"],
+  "nist-control-charts": ["관리도와 Cpk 계산", "수율 Pareto 분석"],
+  "nist-process-capability": ["관리도와 Cpk 계산", "수율 Pareto 분석"],
   "asq-quality-tools": ["공정 문제 정의", "원인 가설과 FMEA"],
   "quality-one-fmea": ["원인 가설과 FMEA"],
   "asq-fmea": ["원인 가설과 FMEA"],
@@ -2013,6 +2367,8 @@ const resourceTaskLinks = {
   "lean-a3-problem-solving": ["8D 개선 보고서"],
   "moresteam-doe": ["조건 변경 검토표", "관리도와 Cpk 계산", "반응·분리 조건 비교"],
   "learncheme-chemical-process": ["화학공정 흐름도", "물질수지와 수율 계산", "반응·분리 조건 비교"],
+  "learncheme-material-balances": ["화학공정 흐름도", "물질수지와 수율 계산"],
+  "learncheme-separations": ["반응·분리 조건 비교", "조건 변경 검토표"],
   "mit-chemical-engineering": ["물질수지와 수율 계산", "반응·분리 조건 비교"],
   "kocw-chemical-process": ["화학공정 흐름도", "물질수지와 수율 계산", "반응·분리 조건 비교"],
   "kosha-psm": ["HAZOP 안전 체크", "조건 변경 검토표"],
@@ -2040,32 +2396,32 @@ const resourceTaskLinks = {
 };
 
 const roleResourceLinks = {
-  "mechanical-design-engineer": ["kocw-mechanical-design", "mit-design-manufacturing", "step-engineering", "optimization-onramp", "khan-math-physics-basics", "udemy-free-practical-tools"],
-  "cae-analysis-engineer": ["matlab-onramp", "simscape-onramp", "mit-numerical-me", "kocw-mechanical-design", "signal-processing-onramp", "coursera-engineering-data", "edx-engineering-systems"],
-  "manufacturing-design-engineer": ["mit-design-manufacturing", "kocw-mechanical-design", "step-engineering", "optimization-onramp", "hrd-net-job-training", "udemy-free-practical-tools"],
-  "thermal-cfd-engineer": ["matlab-onramp", "simscape-onramp", "mit-numerical-me", "signal-processing-onramp", "edx-engineering-systems", "coursera-engineering-data"],
+  "mechanical-design-engineer": ["mit-mechanics-materials", "kocw-mechanical-design", "mit-design-manufacturing", "step-engineering", "optimization-onramp", "khan-math-physics-basics", "udemy-free-practical-tools"],
+  "cae-analysis-engineer": ["mit-fea-solids", "matlab-onramp", "simscape-onramp", "mit-numerical-me", "kocw-mechanical-design", "signal-processing-onramp", "coursera-engineering-data", "edx-engineering-systems"],
+  "manufacturing-design-engineer": ["mit-mechanics-materials", "mit-design-manufacturing", "kocw-mechanical-design", "step-engineering", "optimization-onramp", "hrd-net-job-training", "udemy-free-practical-tools"],
+  "thermal-cfd-engineer": ["mit-fea-solids", "matlab-onramp", "simscape-onramp", "mit-numerical-me", "signal-processing-onramp", "edx-engineering-systems", "coursera-engineering-data"],
   "mechanical-test-engineer": ["matlab-onramp", "signal-processing-onramp", "mathworks-predictive-maintenance", "step-engineering", "kocw-mechanical-design", "hrd-net-job-training", "youtube-official-engineering"],
-  "process-engineer": ["nist-spc", "statistics-onramp", "moresteam-doe", "matlab-onramp", "optimization-onramp", "coursera-six-sigma-quality", "kocw-production-quality", "coursera-engineering-data", "hrd-net-job-training"],
-  "quality-engineer": ["kocw-production-quality", "statistics-onramp", "nist-spc", "coursera-six-sigma-quality", "asq-fmea", "asq-eight-d", "quality-one-fmea", "hrd-net-job-training", "gseek-career-certificate"],
-  "production-data-engineer": ["matlab-onramp", "statistics-onramp", "machine-learning-onramp", "mathworks-predictive-maintenance", "nist-spc", "kocw-production-quality", "coursera-engineering-data", "freecodecamp-python-data", "digital-learning-ai-it-basics"],
+  "process-engineer": ["nist-control-charts", "nist-process-capability", "statistics-onramp", "moresteam-doe", "matlab-onramp", "optimization-onramp", "coursera-six-sigma-quality", "kocw-production-quality", "coursera-engineering-data", "hrd-net-job-training"],
+  "quality-engineer": ["nist-control-charts", "nist-process-capability", "kocw-production-quality", "statistics-onramp", "coursera-six-sigma-quality", "asq-fmea", "asq-eight-d", "quality-one-fmea", "hrd-net-job-training", "gseek-career-certificate"],
+  "production-data-engineer": ["nist-control-charts", "matlab-onramp", "statistics-onramp", "machine-learning-onramp", "mathworks-predictive-maintenance", "kocw-production-quality", "coursera-engineering-data", "freecodecamp-python-data", "digital-learning-ai-it-basics"],
   "production-technology-engineer": ["step-engineering", "mathworks-predictive-maintenance", "moresteam-doe", "simulink-onramp", "optimization-onramp", "hrd-net-job-training", "udemy-free-practical-tools"],
   "supplier-quality-engineer": ["asq-eight-d", "quality-one-fmea", "coursera-six-sigma-quality", "lean-a3-problem-solving", "ncs", "hrd-net-job-training", "gseek-career-certificate"],
-  "semiconductor-process-engineer": ["kocw-semiconductor", "statistics-onramp", "nist-spc", "moresteam-doe", "matlab-onramp", "optimization-onramp", "edx-engineering-systems", "coursera-engineering-data"],
-  "semiconductor-equipment-engineer": ["kocw-semiconductor", "mathworks-predictive-maintenance", "simulink-onramp", "simscape-onramp", "matlab-onramp", "signal-processing-onramp", "edx-engineering-systems", "hrd-net-job-training"],
-  "semiconductor-yield-engineer": ["matlab-onramp", "statistics-onramp", "machine-learning-onramp", "nist-spc", "kocw-semiconductor", "coursera-engineering-data", "freecodecamp-python-data", "digital-learning-ai-it-basics"],
-  "etch-process-engineer": ["kocw-semiconductor", "statistics-onramp", "moresteam-doe", "nist-spc", "matlab-onramp", "optimization-onramp", "edx-engineering-systems", "coursera-engineering-data"],
+  "semiconductor-process-engineer": ["mit-semiconductor-devices", "plasma-etch-core", "kocw-semiconductor", "statistics-onramp", "nist-control-charts", "moresteam-doe", "matlab-onramp", "optimization-onramp", "edx-engineering-systems", "coursera-engineering-data"],
+  "semiconductor-equipment-engineer": ["plasma-etch-core", "mathworks-predictive-maintenance", "kocw-semiconductor", "simulink-onramp", "simscape-onramp", "matlab-onramp", "signal-processing-onramp", "edx-engineering-systems", "hrd-net-job-training"],
+  "semiconductor-yield-engineer": ["nist-control-charts", "nist-process-capability", "matlab-onramp", "statistics-onramp", "machine-learning-onramp", "kocw-semiconductor", "coursera-engineering-data", "freecodecamp-python-data", "digital-learning-ai-it-basics"],
+  "etch-process-engineer": ["plasma-etch-core", "mit-semiconductor-devices", "kocw-semiconductor", "statistics-onramp", "moresteam-doe", "nist-control-charts", "matlab-onramp", "optimization-onramp", "edx-engineering-systems", "coursera-engineering-data"],
   "metrology-engineer": ["signal-processing-onramp", "matlab-onramp", "statistics-onramp", "nist-spc", "kocw-semiconductor", "coursera-engineering-data", "freecodecamp-python-data"],
-  "chemical-process-engineer": ["learncheme-chemical-process", "kocw-chemical-process", "matlab-onramp", "statistics-onramp", "optimization-onramp", "coursera-chemical-engineering", "nptel-chemical-engineering"],
-  "battery-process-engineer": ["learncheme-chemical-process", "statistics-onramp", "moresteam-doe", "matlab-onramp", "machine-learning-onramp", "coursera-chemical-engineering", "kosha-psm"],
-  "materials-rnd-engineer": ["learncheme-chemical-process", "statistics-onramp", "mit-chemical-engineering", "coursera-chemical-engineering", "nptel-chemical-engineering", "khan-math-physics-basics", "coursera-engineering-data"],
+  "chemical-process-engineer": ["learncheme-material-balances", "learncheme-separations", "learncheme-chemical-process", "kocw-chemical-process", "matlab-onramp", "statistics-onramp", "optimization-onramp", "coursera-chemical-engineering", "nptel-chemical-engineering"],
+  "battery-process-engineer": ["learncheme-material-balances", "learncheme-separations", "statistics-onramp", "moresteam-doe", "matlab-onramp", "machine-learning-onramp", "coursera-chemical-engineering", "kosha-psm"],
+  "materials-rnd-engineer": ["learncheme-material-balances", "learncheme-separations", "statistics-onramp", "mit-chemical-engineering", "coursera-chemical-engineering", "nptel-chemical-engineering", "khan-math-physics-basics", "coursera-engineering-data"],
   "process-safety-engineer": ["kosha-psm", "kocw-chemical-process", "hrd-net-job-training", "ncs", "youtube-official-engineering"],
   "bioprocess-engineer": ["kocw-chemical-process", "coursera-chemical-engineering", "hrd-net-job-training", "moresteam-doe", "youtube-official-engineering"],
-  "hardware-design-engineer": ["mit-circuits", "ti-precision-labs", "mathworks-simscape-electrical", "simscape-onramp", "analog-dialogue", "matlab-onramp", "edx-engineering-systems", "khan-math-physics-basics"],
-  "pcb-design-engineer": ["kocw-electronics-circuit", "ti-precision-labs", "analog-dialogue", "step-engineering", "inflearn-free-it-practice", "udemy-free-practical-tools"],
+  "hardware-design-engineer": ["allaboutcircuits-textbook", "mit-circuits", "ti-precision-labs", "mathworks-simscape-electrical", "simscape-onramp", "analog-dialogue", "matlab-onramp", "edx-engineering-systems", "khan-math-physics-basics"],
+  "pcb-design-engineer": ["kicad-pcb-docs", "allaboutcircuits-textbook", "kocw-electronics-circuit", "ti-precision-labs", "analog-dialogue", "step-engineering", "inflearn-free-it-practice", "udemy-free-practical-tools"],
   "validation-engineer": ["signal-processing-onramp", "matlab-onramp", "ti-precision-labs", "analog-dialogue", "simulink-onramp", "freecodecamp-python-data", "youtube-official-engineering"],
   "power-hardware-engineer": ["mathworks-simscape-electrical", "simscape-onramp", "ti-precision-labs", "kocw-electronics-circuit", "simulink-onramp", "edx-engineering-systems", "khan-math-physics-basics"],
   "emc-test-engineer": ["signal-processing-onramp", "analog-dialogue", "ti-precision-labs", "kocw-electronics-circuit", "udemy-free-practical-tools", "youtube-official-engineering"],
-  "embedded-firmware-engineer": ["stm32-education", "kocw-embedded-control", "stateflow-onramp", "simulink-onramp", "freecodecamp-python-data", "inflearn-free-it-practice"],
+  "embedded-firmware-engineer": ["stm32-mooc-gpio-timer-uart", "arm-embedded-systems", "stm32-education", "kocw-embedded-control", "stateflow-onramp", "simulink-onramp", "freecodecamp-python-data", "inflearn-free-it-practice"],
   "control-engineer": ["control-design-onramp", "simulink-onramp", "matlab-onramp", "signal-processing-onramp", "mathworks-simscape-electrical", "sensor-fusion-onramp", "coursera-embedded-control", "edx-engineering-systems"],
   "robotics-software-engineer": ["ros-tutorials", "sensor-fusion-onramp", "simulink-onramp", "matlab-onramp", "coursera-embedded-control", "freecodecamp-python-data"],
   "embedded-linux-engineer": ["kocw-embedded-control", "stm32-education", "ros-tutorials", "step-engineering", "freecodecamp-python-data", "inflearn-free-it-practice"],
@@ -2085,7 +2441,6 @@ const defaultState = {
   saved: [],
   completed: [],
   completedRoadmap: [],
-  difficulty: "all",
   view: "tracks"
 };
 
@@ -2277,9 +2632,8 @@ function getSelectedTrack() {
 
 function getFilteredTracks() {
   return tracks.filter((track) => {
-    const majorMatch = track.majors.includes(state.profile.major) || state.profile.major === "both";
     const industryMatch = state.profile.industry === "all" || track.industries.includes(state.profile.industry);
-    return majorMatch && industryMatch;
+    return industryMatch;
   });
 }
 
@@ -2352,9 +2706,36 @@ function getIndustryLabel(industry = state.profile.industry) {
   return industryLabels[industry] || industry;
 }
 
+function getMajorLabel(major = state.profile.major) {
+  return majorLabels[major] || major;
+}
+
+function getMajorPathway(track, major = state.profile.major) {
+  if (!track || major === "both") return "direct";
+  if (track.majors.includes(major)) return "direct";
+  if ((majorBridgeTracks[major] || []).includes(track.id)) return "bridge";
+  return "explore";
+}
+
+function getMajorPathwayLabel(track, major = state.profile.major) {
+  return {
+    direct: "전공 직결",
+    bridge: "확장 가능",
+    explore: "탐색 가능"
+  }[getMajorPathway(track, major)];
+}
+
+function getMajorPathwayReason(track, major = state.profile.major) {
+  const majorLabel = getMajorLabel(major);
+  const pathway = getMajorPathway(track, major);
+  if (pathway === "direct") return `${majorLabel} 전공자가 공고에서 자주 진입하는 직무군입니다.`;
+  if (pathway === "bridge") return `${majorLabel} 전공자가 프로젝트와 보완 학습으로 확장 진입할 수 있는 직무군입니다.`;
+  return `${majorLabel} 전공자는 공통 공학역량과 별도 기초 보완 여부를 먼저 확인해야 하는 탐색 직무군입니다.`;
+}
+
 function renderTracks() {
   const roleCatalog = getRoleCatalog();
-  elements.trackCount.textContent = `${roleCatalog.length}개 채용공고 직무`;
+  elements.trackCount.textContent = `${roleCatalog.length}개 채용공고 직무 · 전공은 추천순위 기준`;
 
   if (!roleCatalog.length) {
     elements.trackList.innerHTML = `
@@ -2369,6 +2750,7 @@ function renderTracks() {
     const selectedRole = getSelectedRole(track.id);
     const isSelected = track.id === state.selectedTrackId && selectedRole?.id === role.id;
     const recommendationLabel = index < 3 && score > 0 ? `추천 ${index + 1} · ${track.title}` : track.title;
+    const majorPathwayLabel = getMajorPathwayLabel(track);
     return `
     <button class="track-card ${isSelected ? "is-selected" : ""}" type="button" data-track-id="${track.id}" data-role-id="${role.id}">
       <span class="status-pill">${recommendationLabel}</span>
@@ -2376,6 +2758,7 @@ function renderTracks() {
       <p>${role.focus}</p>
       <p class="role-preview">${role.responsibilities.slice(0, 2).join(" · ")}</p>
       <span class="badge-row">
+        <span class="badge major-pathway-badge">${majorPathwayLabel}</span>
         ${role.postingKeywords.slice(0, 5).map((keyword) => `<span class="badge">${keyword}</span>`).join("")}
       </span>
     </button>
@@ -2395,19 +2778,21 @@ function renderTracks() {
 }
 
 function renderInlineRoleWordCloud(track, role) {
-  const wordCloud = getWordCloudAsset(track, role);
   return `
     <article class="inline-wordcloud-panel" aria-label="${role.title} 역량 워드클라우드">
-      <figure class="word-cloud-panel is-inline">
-        <img src="${wordCloud.src}" alt="${wordCloud.alt}" loading="lazy">
-        <figcaption>${wordCloud.caption}</figcaption>
-      </figure>
+      ${renderRoleWordCloud(track, role, "is-inline")}
       <div class="inline-wordcloud-summary">
         <p class="eyebrow">선택 직무 역량</p>
         <h3>${role.title}</h3>
         <p>${role.focus}</p>
         <div class="badge-row">
           ${role.postingKeywords.map((keyword) => `<span class="badge">${keyword}</span>`).join("")}
+        </div>
+        <div class="role-decision-mini">
+          <strong>직무 판단 포인트</strong>
+          <ul>
+            ${getRoleDecisionQuestions(track, role).slice(0, 2).map((item) => `<li>${item}</li>`).join("")}
+          </ul>
         </div>
         <div class="flow-actions">
           <button class="primary-button" type="button" data-view-target="roadmap">${getDurationLabel()} 자동 로드맵 보기</button>
@@ -2433,7 +2818,10 @@ function getRoleCatalog({ applyRoleFilters = true } = {}) {
 function getRoleCatalogScore(track, role) {
   let score = 0;
 
-  if (track.majors.includes(state.profile.major)) score += 20;
+  const majorPathway = getMajorPathway(track);
+  if (majorPathway === "direct") score += 32;
+  if (majorPathway === "bridge") score += 18;
+  if (majorPathway === "explore") score += 4;
   if (state.profile.industry !== "all" && role.industries.includes(state.profile.industry)) score += 60;
   if (state.profile.industry !== "all" && track.industries.includes(state.profile.industry)) score += 20;
   score += Math.min(getRoleLinkedResourceIds(role).length, 8) * 3;
@@ -2469,6 +2857,8 @@ function renderTrackDetail() {
   const roles = getAvailableRoles(track);
   const selectedRole = getSelectedRole(track.id);
   const evidence = selectedRole ? getHiringEvidence(track, selectedRole) : null;
+  const majorPathwayLabel = getMajorPathwayLabel(track);
+  const majorPathwayReason = getMajorPathwayReason(track);
   const roleOptions = roles.map((role) => `
     <button class="role-option ${selectedRole?.id === role.id ? "is-selected" : ""}" type="button" data-role-id="${role.id}">
       <strong>${role.title}</strong>
@@ -2484,7 +2874,7 @@ function renderTrackDetail() {
       <p>${selectedRole ? selectedRole.focus : track.summary}</p>
     </div>
     <div class="recommendation-note">
-      자료를 먼저 고를 필요 없이 선택 직무, 직무확보 공백, 준비 기간을 기준으로 로드맵에서 교육자료를 자동 배치합니다.
+      <strong>${majorPathwayLabel}:</strong> ${majorPathwayReason} 자료를 먼저 고를 필요 없이 선택 직무, 직무확보 공백, 준비 기간을 기준으로 로드맵에서 교육자료를 자동 배치합니다.
     </div>
     <section class="role-panel" aria-label="채용공고 기준 세부 직무">
       <div>
@@ -2498,6 +2888,8 @@ function renderTrackDetail() {
           ${detailBlock("자격요건 역량", selectedRole.requirements)}
           ${detailBlock("우대·차별화 역량", selectedRole.preferred)}
         </div>
+        ${renderRoleFitPanel(track, selectedRole)}
+        ${renderRoleEducationPanel(track, selectedRole)}
         <div class="evidence-panel">
           <div>
             <p class="eyebrow">채용공고 근거</p>
@@ -2547,6 +2939,257 @@ function getHiringEvidence(track, role) {
       { label: "웹 검색", url: `https://duckduckgo.com/?q=${encodedQuery}` }
     ]
   };
+}
+
+function renderRoleWordCloud(track, role, modifier = "") {
+  const terms = getRoleWordCloudTerms(track, role).slice(0, 28);
+  return `
+    <figure class="word-cloud-panel ${modifier}" aria-label="${role.title} 직무 키워드 워드클라우드">
+      <div class="word-cloud-terms">
+        ${terms.map((term) => `<span class="word-cloud-term weight-${term.level}">${term.word}</span>`).join("")}
+      </div>
+      <figcaption>${role.title} 채용공고 키워드, 직무확보 문항, 업무·자격요건에서 반복되는 구체 단어를 즉시 계산해 표시합니다.</figcaption>
+    </figure>
+  `;
+}
+
+function renderRoleFitPanel(track, role) {
+  return `
+    <div class="role-fit-panel" aria-label="${role.title} 직무 적합성 판단">
+      ${roleFitBlock("맞는 신호", getRoleFitSignals(track, role))}
+      ${roleFitBlock("주의 신호", getRoleCautionSignals(track, role))}
+      ${roleFitBlock("지원 전 확인 질문", getRoleDecisionQuestions(track, role))}
+      ${roleFitBlock("산출물 예시", getRoleArtifactExamples(track, role))}
+    </div>
+  `;
+}
+
+function roleFitBlock(title, items) {
+  return `
+    <div class="role-fit-block">
+      <h4>${title}</h4>
+      <ul>${items.map((item) => `<li>${item}</li>`).join("")}</ul>
+    </div>
+  `;
+}
+
+function renderRoleEducationPanel(track, role) {
+  const roleResources = getRoleEducationResources(role);
+  const featuredResources = roleResources.slice(0, 6);
+  const educationTypes = getRoleEducationTypes(roleResources);
+  const competencyTags = getRoleEducationCompetencyTags(roleResources, role);
+
+  return `
+    <div class="role-education-panel" aria-label="${role.title} 연결 교육자료">
+      <div class="role-education-head">
+        <div>
+          <p class="eyebrow">역량 습득 자료</p>
+          <h4>동영상 외 자료·교육 연결</h4>
+        </div>
+        <span class="status-pill">${roleResources.length}개 연결</span>
+      </div>
+      <div class="badge-row">
+        ${educationTypes.map((type) => `<span class="badge">${type}</span>`).join("")}
+      </div>
+      <div class="role-education-competencies">
+        ${competencyTags.slice(0, 10).map((skill) => `<span>${skill}</span>`).join("")}
+      </div>
+      <div class="role-education-list">
+        ${featuredResources.map((resource) => renderRoleEducationItem(resource)).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function renderRoleEducationItem(resource) {
+  const skillText = (resource.skills || []).slice(0, 4).join(", ");
+  return `
+    <a class="role-education-item" href="${resource.url}" target="_blank" rel="noreferrer">
+      <span>
+        <strong>${resource.title}</strong>
+        <em>${resource.provider} · ${resource.type} · ${formatMinutes(resource.totalMinutes)}</em>
+      </span>
+      <small>${skillText}</small>
+    </a>
+  `;
+}
+
+function getRoleEducationResources(role) {
+  const linkedIds = getRoleLinkedResourceIds(role);
+  return linkedIds
+    .map((resourceId) => resources.find((resource) => resource.id === resourceId))
+    .filter(Boolean)
+    .sort((a, b) => {
+      if (!!a.core !== !!b.core) return a.core ? -1 : 1;
+      if (a.languageCode !== b.languageCode) return a.languageCode === "ko" ? -1 : 1;
+      return a.sequenceLevel - b.sequenceLevel;
+    });
+}
+
+function getRoleEducationTypes(roleResources) {
+  const typeGroups = roleResources.map((resource) => getEducationTypeGroup(resource));
+  return [...new Set(typeGroups)].slice(0, 6);
+}
+
+function getEducationTypeGroup(resource) {
+  const text = `${resource.type} ${resource.provider}`;
+  if (/직업훈련|HRD/i.test(text)) return "직업훈련";
+  if (/공식문서|가이던스|앱노트|문서/i.test(text)) return "공식문서·예제";
+  if (/OCW|대학|공개교육/i.test(text)) return "대학 공개강의";
+  if (/협회|정부|NIST|ASQ|KOSHA|FDA/i.test(text)) return "정부·협회자료";
+  if (/기업|MathWorks|Texas Instruments|STMicroelectronics|Arm|Yocto|Linux|KiCad/i.test(text)) return "기업·기술교육";
+  if (/청강|Coursera|edX|K-MOOC/i.test(text)) return "무료청강";
+  return resource.type;
+}
+
+function getRoleEducationCompetencyTags(roleResources, role) {
+  const tags = [
+    ...(role.postingKeywords || []),
+    ...roleResources.flatMap((resource) => resource.skills || [])
+  ];
+  return [...new Set(tags)].filter(Boolean);
+}
+
+function getRoleWordCloudTerms(track, role) {
+  const weightedTerms = [];
+  addWeightedRoleTerms(weightedTerms, role.postingKeywords, 28);
+  addWeightedRoleTerms(weightedTerms, (roleDiagnostics[role.id] || []).map(([skill]) => skill), 22);
+  addWeightedRoleTerms(weightedTerms, track.skills, 10);
+  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.responsibilities), 9);
+  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.requirements), 8);
+  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.preferred), 6);
+  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.focus), 5);
+
+  const scoreMap = new Map();
+  weightedTerms.forEach(({ word, weight }) => {
+    const cleanWord = cleanRoleTerm(word);
+    const key = getRoleTermKey(cleanWord);
+    if (!key || cleanWord.length < 2) return;
+    const current = scoreMap.get(key) || { word: cleanWord, score: 0 };
+    current.score += weight;
+    scoreMap.set(key, current);
+  });
+
+  const terms = [...scoreMap.values()].sort((a, b) => b.score - a.score);
+  const maxScore = terms[0]?.score || 1;
+  return terms.map((term) => ({
+    ...term,
+    level: Math.max(1, Math.min(6, Math.ceil((term.score / maxScore) * 6)))
+  }));
+}
+
+function addWeightedRoleTerms(target, words, weight) {
+  (words || []).forEach((word) => {
+    if (String(word || "").trim()) target.push({ word, weight });
+  });
+}
+
+function extractRoleTerms(values) {
+  const text = (Array.isArray(values) ? values : [values]).join(" ");
+  const normalized = text
+    .replace(/[.,;:()[\]{}"'`]/g, " ")
+    .replace(/[·\/]/g, " ")
+    .replace(/\s+/g, " ");
+
+  return normalized.split(" ")
+    .map((part) => cleanRoleTerm(part).replace(/(에서|으로|부터|까지|처럼|에게|와|과|을|를|이|가|은|는|의|에|로|도|만)$/g, ""))
+    .filter((part) => part.length >= 2)
+    .filter((part) => !roleTermStopWords.has(part))
+    .filter((part) => !part.includes("합니다"));
+}
+
+function cleanRoleTerm(word) {
+  return String(word || "")
+    .replace(/[^0-9A-Za-z가-힣+#\s-]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function getRoleTermKey(word) {
+  return word.toLowerCase().replace(/[\s\/-]+/g, "");
+}
+
+const roleTermStopWords = new Set([
+  "직무", "엔지니어", "담당", "기초", "이해", "활용", "작성", "정리", "관리", "기반",
+  "경험", "역량", "조건", "결과", "문서화", "리포트", "계획", "요구사항", "가능성",
+  "비교", "정의", "설명", "기준", "역할", "사용", "수행", "지원", "문제", "이슈",
+  "기본", "신규", "또는", "같은", "위한", "통한", "등", "수", "할", "있는", "검토",
+  "개선", "확인", "연결", "제안", "수립", "운영", "대응", "필요"
+]);
+
+function getRoleFitSignals(track, role) {
+  const keywordText = role.postingKeywords.slice(0, 3).join(", ");
+  return [
+    `${keywordText} 같은 공고 키워드가 내가 찾는 업무와 맞습니다.`,
+    `${role.responsibilities[0]} 업무를 실제 사례로 설명해 보고 싶습니다.`,
+    `${role.requirements[0]}을 수업, 프로젝트, 실습 산출물로 증명할 수 있습니다.`
+  ].filter(Boolean);
+}
+
+function getRoleCautionSignals(track, role) {
+  const text = getRoleCombinedText(track, role);
+  const cautions = [];
+  if (/(데이터|SQL|Python|통계|SPC|Cpk|Pareto|수율|불량)/i.test(text)) {
+    cautions.push("데이터 정리, 이상치 확인, 표·그래프 해석을 반복하는 비중이 있습니다.");
+  }
+  if (/(현장|설비|라인|장비|양산|협력사|클린룸|공정)/.test(text)) {
+    cautions.push("현장 조건, 설비 상태, 타 부서 피드백을 함께 보며 판단해야 합니다.");
+  }
+  if (/(문서|보고|표준|SOP|batch|Validation|검토표|리포트|기록|변경관리)/i.test(text)) {
+    cautions.push("변경 근거와 검증 결과를 문서로 남기는 일이 직무의 일부입니다.");
+  }
+  if (/(시험|검증|계측|측정|오실로스코프|로그|Test|Pass|Fail)/i.test(text)) {
+    cautions.push("측정 계획, 재현성, Pass/Fail 기준을 세우는 일이 중요합니다.");
+  }
+  if (/(코드|C\+\+|Linux|ROS|MCU|UART|Driver|Kernel|Yocto|펌웨어|디버깅)/i.test(text)) {
+    cautions.push("코드, 로그, 하드웨어 인터페이스를 끝까지 추적하는 디버깅 비중이 있습니다.");
+  }
+
+  return (cautions.length ? cautions : [
+    `${role.title}은 단일 툴 사용보다 ${role.postingKeywords.slice(0, 2).join("·")} 판단을 산출물로 설명하는 일이 중요합니다.`,
+    "업무가 맞는지 보려면 공고 키워드보다 반복 업무와 요구 산출물을 함께 확인해야 합니다."
+  ]).slice(0, 3);
+}
+
+function getRoleDecisionQuestions(track, role) {
+  return [
+    `공고에서 ${role.postingKeywords.slice(0, 3).join(", ")}가 반복될 때 실제로 어떤 업무를 하는지 말할 수 있습니까?`,
+    `${role.responsibilities[0]}에 필요한 입력 데이터, 도면, 장비, 기준 중 무엇을 확인해야 하는지 떠올릴 수 있습니까?`,
+    `${role.requirements[0]}을 내 프로젝트나 수업 산출물로 증명할 수 있습니까?`
+  ].filter(Boolean);
+}
+
+function getRoleArtifactExamples(track, role) {
+  const text = getRoleCombinedText(track, role);
+  const examples = [];
+  if (/(CAD|도면|공차|기구|DFM|DFA|제조성)/i.test(text)) examples.push("2D 도면·공차 검토표와 설계 변경 근거");
+  if (/(해석|FEA|CFD|열|유동|메시|경계조건)/i.test(text)) examples.push("해석 조건표, 메시 민감도, 시험 대비 검증 리포트");
+  if (/(SPC|Cpk|FMEA|8D|품질|불량|검사)/i.test(text)) examples.push("관리도·Cpk 분석표, 불량 Pareto, 8D 개선 보고서");
+  if (/(공정|Recipe|수율|조건변경|DOE|Pareto|CTQ)/i.test(text)) examples.push("공정 변수-품질 지표 연결표와 조건 변경 검토표");
+  if (/(반도체|웨이퍼|Defect|CD|식각|플라즈마|계측|장비)/i.test(text)) examples.push("Recipe 변경 이력, 계측 지표, 장비 로그 기반 원인 가설");
+  if (/(PCB|회로|전원|리플|EMC|오실로스코프|부품선정)/i.test(text)) examples.push("회로 블록도, 부품 선정표, 측정 포인트와 검증 결과");
+  if (/(MCU|펌웨어|UART|SPI|I2C|CAN|PWM|ADC)/i.test(text)) examples.push("주변장치 매핑표, 통신 로그, 디버깅 재현 절차");
+  if (/(Linux|Device Driver|Kernel|Yocto|BSP|부팅)/i.test(text)) examples.push("device tree·드라이버 로그 분석 메모와 이미지 빌드 흐름도");
+  if (/(ROS|Navigation|SLAM|로봇|센서)/i.test(text)) examples.push("ROS 노드·토픽 구성도와 센서 데이터 흐름 로그");
+  if (/(HAZOP|PSM|MSDS|안전|환경|위험)/i.test(text)) examples.push("HAZOP 체크리스트와 변경관리 위험 검토표");
+  if (/(GMP|Validation|SOP|batch|바이오|제약)/i.test(text)) examples.push("SOP·batch record 항목 매핑과 validation 체크리스트");
+  if (/(배터리|전극|슬러리|코팅|조립|활성화)/i.test(text)) examples.push("전극 공정 조건표와 수율·불량 데이터 분석");
+  if (/(소재|합성|분석|물성|Scale-up)/i.test(text)) examples.push("조성·합성 조건과 물성 평가 결과 비교표");
+
+  return [...new Set(examples.length ? examples : track.outputs)].slice(0, 4);
+}
+
+function getRoleCombinedText(track, role) {
+  return [
+    track.title,
+    track.summary,
+    role.title,
+    role.focus,
+    ...(role.postingKeywords || []),
+    ...(role.responsibilities || []),
+    ...(role.requirements || []),
+    ...(role.preferred || [])
+  ].join(" ");
 }
 
 function getWordCloudAsset(track, role) {
@@ -2602,7 +3245,6 @@ function renderDiagnostics() {
       saveState();
       renderDiagnostics();
       renderRoadmap();
-      renderResources();
       renderSaved();
       renderMetrics();
     });
@@ -2765,6 +3407,7 @@ function renderRoadmapGuidance(context, tasks) {
       <span><strong>자료 기준</strong>${durationStrategy.resourceRule}</span>
       <span><strong>과제 기준</strong>${durationStrategy.taskRule}</span>
     </div>
+    ${renderGoalRuleGrid(context.goalKey)}
   `;
 }
 
@@ -2913,20 +3556,6 @@ function getNextCurriculumTask(trackId) {
   return tasks.find((task) => !state.completedRoadmap.includes(getRoadmapStepId(trackId, task))) || tasks[tasks.length - 1];
 }
 
-function renderResources() {
-  if (!elements.resourceList) return;
-  const track = getSelectedTrack();
-  const gapSkills = getGapSkills(track.id);
-  const context = getRecommendationContext(track, gapSkills);
-  const items = getRecommendedResources(track, context);
-
-  renderResourceGuidance(items, context);
-  elements.resourceList.innerHTML = items.length
-    ? items.map((resource, index) => renderResourceCard(resource, context, index)).join("")
-    : `<div class="empty-state">현재 필터에 맞는 교육자료가 없습니다.</div>`;
-  bindResourceActions(elements.resourceList);
-}
-
 function getRecommendedResources(track, context) {
   const candidates = resources.filter((resource) => {
     const trackMatch = resource.tracks.includes(track.id);
@@ -3024,6 +3653,7 @@ function clampScore(score, min, max) {
 
 function getCompetencyFitScore(resource, context) {
   const text = getResourceSearchText(resource);
+  const coreResource = resource.core ? 1 : 0;
   const gapMatches = resource.skills.filter((skill) => context.gapSkills.includes(skill)).length;
   const roleKeywordMatches = getRoleKeywordMatches(resource, context.role).length;
   const linkedTaskMatches = getResourceLinkedTasks(resource.id, context.visibleTasks).length;
@@ -3036,9 +3666,10 @@ function getCompetencyFitScore(resource, context) {
   score += linkedTaskMatches * 14;
   score += Math.min(practiceEvidence, 4) * 6;
   score += shortDurationFit * 10;
+  score += coreResource * 16;
   if (resource.provider === "MathWorks" && isMathWorksRequiredForRole(context)) score += 16;
 
-  return clampScore(score, 0, 78);
+  return clampScore(score, 0, 92);
 }
 
 function getGoalResourceScore(resource, context) {
@@ -3114,6 +3745,7 @@ function getGoalFitSignal(resource, context) {
 }
 
 function getEducationResourceScore(resource, context) {
+  const coreResource = resource.core ? 1 : 0;
   const roleDirectMatch = getRoleLinkedResourceIds(context.role).includes(resource.id) ? 1 : 0;
   const mathWorksRoleNeed = resource.provider === "MathWorks" && isMathWorksRequiredForRole(context) ? 1 : 0;
   const roleKeywordMatches = getRoleKeywordMatches(resource, context.role).length;
@@ -3126,6 +3758,7 @@ function getEducationResourceScore(resource, context) {
   const completedPenalty = state.completed.includes(resource.id) ? 18 : 0;
 
   return roleDirectMatch * 140
+    + coreResource * 90
     + gapMatches * 48
     + mathWorksRoleNeed * 80
     + mathWorksMatches * 36
@@ -3150,6 +3783,7 @@ function getEducationResourceSignals(resource, context) {
   const goalFitSignal = getGoalFitSignal(resource, context);
 
   if (roleDirectMatch) signals.push("선택 직무 직접 추천");
+  if (resource.core) signals.push("핵심 직무역량 교육");
   if (competencyFitSignal) signals.push(competencyFitSignal);
   if (goalFitSignal) signals.push(goalFitSignal);
   if (mathWorksRoleNeed) signals.push("MathWorks 요구 직무");
@@ -3199,6 +3833,7 @@ function isMathWorksRequiredForRole(context) {
 }
 
 function getTaskResourceScore(resource, task, context, resourceUseCounts = new Map()) {
+  const coreResource = resource.core ? 1 : 0;
   const directTaskMatches = getResourceLinkedTasks(resource.id, [task]).length;
   const roleDirectMatch = getRoleLinkedResourceIds(context.role).includes(resource.id) ? 1 : 0;
   const mathWorksRoleNeed = resource.provider === "MathWorks" && isMathWorksRequiredForRole(context) ? 1 : 0;
@@ -3215,6 +3850,8 @@ function getTaskResourceScore(resource, task, context, resourceUseCounts = new M
   const durationPenalty = getDurationResourcePenalty(resource, context);
 
   return directTaskMatches * 160
+    + coreResource * 95
+    + (coreResource && directTaskMatches ? 75 : 0)
     + selectedMatch * 90
     + roleDirectMatch * 45
     + mathWorksRoleNeed * 35
@@ -3265,6 +3902,7 @@ function getTaskResourceSignals(resource, task, context) {
   const goalFitSignal = getGoalFitSignal(resource, context);
 
   if (directTaskMatches.length) signals.push("이번 주 과제 직접 연결");
+  if (resource.core) signals.push("핵심 직무역량 교육");
   if (roleDirectMatch) signals.push("선택 직무 직접 추천");
   if (competencyFitSignal) signals.push(competencyFitSignal);
   if (goalFitSignal) signals.push(goalFitSignal);
@@ -3369,6 +4007,7 @@ function renderRoadmapResourceItem(resource, task, context) {
     .filter((signal) => !signal.startsWith("로드맵 연결"))
     .slice(0, 3);
   const score = Math.round(getTaskResourceScore(resource, task, context));
+  const coreLabel = resource.core ? "핵심 교육 · " : "";
   const connectionReason = getTaskResourceConnectionReason(resource, task, context);
 
   return `
@@ -3378,7 +4017,7 @@ function renderRoadmapResourceItem(resource, task, context) {
           <strong>${resource.title}</strong>
           <em>${resource.provider} · ${resource.type} · ${formatMinutes(resource.totalMinutes)}</em>
         </span>
-        <span class="roadmap-resource-status">자동추천 ${score}점</span>
+        <span class="roadmap-resource-status">${coreLabel}자동추천 ${score}점</span>
       </summary>
       <div class="roadmap-resource-detail">
         <p>${resource.provider} · ${resource.difficulty} · ${formatMinutes(resource.totalMinutes)}</p>
@@ -3405,6 +4044,7 @@ function getTaskResourceConnectionReason(resource, task, context) {
   const outputMatches = getTaskOutputMatches(resource, task);
 
   if (directTaskMatches.length) reasons.push("이번 주 과제에 직접 연결");
+  if (resource.core) reasons.push("핵심 직무역량 교육");
   if (gapMatches.length) reasons.push(`부족 역량 보완: ${gapMatches.slice(0, 2).join(", ")}`);
   if (roleKeywordMatches.length) reasons.push(`채용 키워드 연결: ${roleKeywordMatches.slice(0, 2).join(", ")}`);
   if (matchedSkills.length) reasons.push(`과제 역량 연결: ${matchedSkills.slice(0, 2).join(", ")}`);
@@ -3481,12 +4121,13 @@ function renderPlanResourceItem(resource, task, context) {
   const saved = state.saved.includes(resource.id);
   const signals = getTaskResourceSignals(resource, task, context).slice(0, 2);
   const connectionReason = getTaskResourceConnectionReason(resource, task, context);
+  const coreLabel = resource.core ? "핵심 교육 · " : "";
   return `
     <details class="plan-resource-item">
       <summary>
         <span>
           <strong>${resource.title}</strong>
-          <em>${resource.provider} · ${resource.type} · ${formatMinutes(resource.totalMinutes)}</em>
+          <em>${coreLabel}${resource.provider} · ${resource.type} · ${formatMinutes(resource.totalMinutes)}</em>
         </span>
       </summary>
       <div class="plan-resource-detail">
@@ -3582,44 +4223,6 @@ function renderResourceCard(resource, context = null, priorityIndex = null, show
   `;
 }
 
-function renderResourceGuidance(items, context) {
-  if (!elements.resourceGuidance) return;
-  if (!items.length) {
-    elements.resourceGuidance.innerHTML = `
-      <h3>현재 조건의 추천 교육자료가 없습니다</h3>
-      <p>선택 직무나 관심 산업을 바꾸면 연결 가능한 교육자료 후보를 다시 계산합니다.</p>
-    `;
-    return;
-  }
-
-  const first = items[0];
-  const roleLinkedCount = getRoleLinkedResourceIds(context.role).length;
-  const gapText = context.gapSkills.length ? context.gapSkills.slice(0, 3).join(", ") : "큰 공백 없음";
-  const selectedCount = state.saved.length;
-  const goalLabel = getGoalRecommendationLabel(context.goalKey);
-  const signals = getEducationResourceSignals(first, context);
-  const actionText = selectedCount ? "추가한 자료까지 반영한 로드맵 보기" : "기간 맞춤 자동 로드맵 보기";
-  elements.resourceGuidance.innerHTML = `
-    <p class="eyebrow">${context.goal.label} · ${getDurationLabel()} · ${context.role?.title || context.track.title}</p>
-    <h3>1순위 교육자료: ${first.title}</h3>
-    <p>추천 순위는 선택 직무, 직무확보에서 비어 있는 역량, 채용공고 키워드, MathWorks 도구역량, 학습목표, 로드맵 연결도를 함께 계산합니다. 학습목표는 자료 점수와 로드맵 과제 순서를 모두 바꾸는 핵심 기준입니다.</p>
-    <div class="recommendation-note">
-      <strong>1순위 근거:</strong> ${signals.slice(0, 4).join(" · ") || first.reason}
-    </div>
-    ${renderGoalRuleGrid(context.goalKey)}
-    <div class="badge-row">
-      <span class="badge">직무 매핑 교육: ${roleLinkedCount}개</span>
-      <span class="badge">보완 역량: ${gapText}</span>
-      <span class="badge">목표 반영: ${context.goal.label} · ${goalLabel}</span>
-      <span class="badge">추가 자료: ${selectedCount}개</span>
-    </div>
-    <p>필요한 교육을 선택하면 로드맵 구성 탭에서 준비 기간에 맞춰 주차별 과제와 함께 재배치됩니다.</p>
-    <div class="flow-actions">
-      <button class="primary-button" type="button" data-view-target="roadmap">${actionText}</button>
-    </div>
-  `;
-}
-
 function getRecommendationContext(track, gapSkills, visibleTasks = null) {
   const goalKey = state.profile.goal || "foundation";
   return {
@@ -3652,6 +4255,7 @@ function getResourceSignals(resource, context) {
   const competencyFitSignal = getCompetencyFitSignal(resource, context);
   const goalFitSignal = getGoalFitSignal(resource, context);
   if (linkedTasks.length) signals.push(`로드맵 연결: ${linkedTasks.slice(0, 2).join(", ")}`);
+  if (resource.core) signals.push("핵심 직무역량 교육");
   if (competencyFitSignal) signals.push(competencyFitSignal);
   if (goalFitSignal) signals.push(goalFitSignal);
   if (matchedGaps.length) signals.push(`직무확보 보완: ${matchedGaps.slice(0, 3).join(", ")}`);
@@ -3662,6 +4266,7 @@ function getResourceSignals(resource, context) {
 }
 
 function getResourcePriorityScore(resource, context) {
+  const coreResource = resource.core ? 1 : 0;
   const linkedTaskMatches = getResourceLinkedTasks(resource.id, context.visibleTasks).length;
   const gapMatches = resource.skills.filter((skill) => context.gapSkills.includes(skill)).length;
   const goalMatches = resource.skills.filter((skill) => context.goal.prioritySkills.includes(skill)).length;
@@ -3672,7 +4277,8 @@ function getResourcePriorityScore(resource, context) {
   const shortDurationFit = context.durationWeeks <= 2 && resource.totalMinutes <= 180 ? 1 : 0;
   const competencyScore = getCompetencyFitScore(resource, context);
   const goalScore = getGoalResourceScore(resource, context);
-  return linkedTaskMatches * 60
+  return coreResource * 80
+    + linkedTaskMatches * 60
     + gapMatches * 40
     + goalMatches * 20
     + roleKeywordMatches * 14
@@ -3708,6 +4314,7 @@ function sortResourcesForLearning(a, b, context = null) {
     const priorityDiff = getResourcePriorityScore(b, context) - getResourcePriorityScore(a, context);
     if (priorityDiff !== 0) return priorityDiff;
   }
+  if (!!a.core !== !!b.core) return a.core ? -1 : 1;
   if (a.languageCode !== b.languageCode) return a.languageCode === "ko" ? -1 : 1;
   const sequenceDiff = a.sequenceLevel - b.sequenceLevel;
   if (sequenceDiff !== 0) return sequenceDiff;
@@ -3737,7 +4344,6 @@ function bindResourceActions(container) {
       toggleListValue("saved", button.dataset.saveId);
       saveState();
       renderRoadmap();
-      renderResources();
       renderSaved();
       renderMetrics();
     });
@@ -3749,7 +4355,6 @@ function bindResourceActions(container) {
       if (!state.saved.includes(button.dataset.completeId)) state.saved.push(button.dataset.completeId);
       saveState();
       renderRoadmap();
-      renderResources();
       renderSaved();
       renderMetrics();
     });

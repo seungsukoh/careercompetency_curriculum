@@ -373,6 +373,28 @@ input::placeholder {
   line-height: 1.5;
 }
 
+.role-decision-mini {
+  display: grid;
+  gap: 6px;
+  padding: 10px 0 0;
+  border-top: 1px solid var(--line);
+}
+
+.role-decision-mini strong {
+  font-size: 0.86rem;
+}
+
+.role-decision-mini ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.role-decision-mini li {
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
 .track-card h3,
 .resource-card h3,
 .week-card h3 {
@@ -412,6 +434,12 @@ input::placeholder {
   border-radius: 999px;
   font-size: 0.76rem;
   font-weight: 800;
+}
+
+.major-pathway-badge {
+  color: #164e63;
+  background: #e8f4f7;
+  border-color: #b8dce6;
 }
 
 .detail-panel {
@@ -542,6 +570,118 @@ input::placeholder {
   font-size: 0.88rem;
 }
 
+.role-fit-panel {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.role-fit-block {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 10px;
+  background: #fbfcfa;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
+
+.role-fit-block h4 {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.role-fit-block ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.role-fit-block li {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.role-education-panel {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
+
+.role-education-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: start;
+}
+
+.role-education-head h4 {
+  margin: 0;
+}
+
+.role-education-competencies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.role-education-competencies span {
+  padding: 5px 8px;
+  color: #164e63;
+  background: #f0f8fa;
+  border: 1px solid #c8e0e7;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.role-education-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.role-education-item {
+  display: grid;
+  gap: 7px;
+  padding: 10px;
+  color: var(--ink);
+  text-decoration: none;
+  background: var(--surface-muted);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
+
+.role-education-item:hover {
+  border-color: var(--primary);
+}
+
+.role-education-item strong,
+.role-education-item em,
+.role-education-item small {
+  display: block;
+}
+
+.role-education-item strong {
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.role-education-item em,
+.role-education-item small {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-style: normal;
+  line-height: 1.35;
+}
+
 .word-cloud-panel {
   display: grid;
   gap: 8px;
@@ -563,6 +703,66 @@ input::placeholder {
   padding: 12px;
   border-color: #b8dce6;
   box-shadow: inset 0 0 0 1px rgba(184, 220, 230, 0.45);
+}
+
+.word-cloud-terms {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+  min-height: 300px;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #dbe7e5;
+  border-radius: 7px;
+}
+
+.word-cloud-panel.is-inline .word-cloud-terms {
+  min-height: 320px;
+}
+
+.word-cloud-term {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  color: #26343f;
+  font-weight: 800;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+  text-align: center;
+  white-space: normal;
+}
+
+.word-cloud-term.weight-1 {
+  color: #687684;
+  font-size: 0.9rem;
+}
+
+.word-cloud-term.weight-2 {
+  color: #546475;
+  font-size: 1.05rem;
+}
+
+.word-cloud-term.weight-3 {
+  color: #1d5f72;
+  font-size: 1.28rem;
+}
+
+.word-cloud-term.weight-4 {
+  color: #2f6f4e;
+  font-size: 1.55rem;
+}
+
+.word-cloud-term.weight-5 {
+  color: #96502e;
+  font-size: 1.95rem;
+}
+
+.word-cloud-term.weight-6 {
+  color: #22303a;
+  font-size: 2.45rem;
 }
 
 .word-cloud-panel img {
@@ -1243,6 +1443,8 @@ li {
   .selected-role-overview,
   .role-list,
   .role-detail-grid,
+  .role-fit-panel,
+  .role-education-list,
   .detail-grid,
   .diagnosis-guide-grid,
   .duration-strategy-grid,
