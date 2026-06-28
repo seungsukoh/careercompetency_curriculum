@@ -101,7 +101,7 @@
             <div class="section-heading">
               <div>
                 <p class="eyebrow">채용공고 직무</p>
-                <h2>지원하려는 직무를 선택하면 바로 아래에서 판단합니다</h2>
+                <h2>왼쪽에서 직무를 고르고 오른쪽에서 결과를 확인합니다</h2>
               </div>
               <span class="status-pill" id="trackCount">0개 직무</span>
             </div>
@@ -127,28 +127,34 @@
               <strong>회사별 직무상세 확인 필요</strong>
               이 커리큘럼 제안은 일반적인 직무내용을 기반으로 하므로 지원하려는 회사의 실제 직무상세와 다를 수 있습니다. 반드시 해당 회사의 직무상세 내용을 확인하고, 공고에 나온 업무·자격요건·우대사항에 맞춰 준비하세요.
             </div>
-            <div class="role-filter-bar" aria-label="직무 검색과 필터">
-              <label class="role-search">
-                직무명·키워드 검색
-                <input id="roleSearchInput" type="search" placeholder="예: 식각, PCB, 펌웨어, 품질, 배터리">
-              </label>
-              <label class="compact-filter">
-                직무군
-                <select id="roleGroupFilter">
-                  <option value="all">전체</option>
-                  <option value="automotive-mobility">자동차·모빌리티</option>
-                  <option value="mechanical-cae">기계 설계·CAE</option>
-                  <option value="production-quality">생산·공정·품질</option>
-                  <option value="semiconductor-equipment">반도체 공정·장비</option>
-                  <option value="chemical-process">화학공정·소재</option>
-                  <option value="electronics-pcb">전자회로·PCB·하드웨어</option>
-                  <option value="embedded-control">임베디드·제어</option>
-                </select>
-              </label>
+            <div class="role-workbench">
+              <section class="role-picker-panel" aria-label="직무 선택 목록">
+                <div class="role-filter-bar" aria-label="직무 검색과 필터">
+                  <label class="role-search">
+                    직무명·키워드 검색
+                    <input id="roleSearchInput" type="search" placeholder="예: 식각, PCB, 펌웨어, 품질, 배터리">
+                  </label>
+                  <label class="compact-filter">
+                    직무군
+                    <select id="roleGroupFilter">
+                      <option value="all">전체</option>
+                      <option value="automotive-mobility">자동차·모빌리티</option>
+                      <option value="mechanical-cae">기계 설계·CAE</option>
+                      <option value="production-quality">생산·공정·품질</option>
+                      <option value="semiconductor-equipment">반도체 공정·장비</option>
+                      <option value="chemical-process">화학공정·소재</option>
+                      <option value="electronics-pcb">전자회로·PCB·하드웨어</option>
+                      <option value="embedded-control">임베디드·제어</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="track-grid" id="trackList"></div>
+              </section>
+              <aside class="role-result-panel" aria-label="선택 직무 결과">
+                <div class="selected-role-overview-slot" id="selectedRoleOverview"></div>
+                <article class="detail-panel" id="trackDetail"></article>
+              </aside>
             </div>
-            <div class="selected-role-overview-slot" id="selectedRoleOverview"></div>
-            <div class="track-grid" id="trackList"></div>
-            <article class="detail-panel" id="trackDetail"></article>
           </section>
 
           <section class="view" id="diagnosisView">

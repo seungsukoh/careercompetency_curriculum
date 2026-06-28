@@ -4400,7 +4400,12 @@ function renderRoleSelectionPrompt(roleCatalog) {
 
 function focusSelectedRoleOverview() {
   requestAnimationFrame(() => {
-    elements.selectedRoleOverview?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const resultPanel = elements.selectedRoleOverview?.closest(".role-result-panel");
+    if (window.matchMedia("(max-width: 900px)").matches) {
+      elements.selectedRoleOverview?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    resultPanel?.scrollTo({ top: 0, behavior: "smooth" });
   });
 }
 

@@ -571,6 +571,44 @@ input::placeholder {
   line-height: 1.4;
 }
 
+.role-workbench {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.82fr) minmax(420px, 1.18fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.role-picker-panel,
+.role-result-panel {
+  min-width: 0;
+}
+
+.role-picker-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.role-picker-panel .role-filter-bar {
+  grid-template-columns: 1fr;
+  margin-bottom: 0;
+}
+
+.role-picker-panel .track-grid {
+  grid-template-columns: 1fr;
+  max-height: calc(100vh - 180px);
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.role-result-panel {
+  position: sticky;
+  top: 12px;
+  max-height: calc(100vh - 24px);
+  overflow: auto;
+  padding-left: 16px;
+  border-left: 1px solid var(--line);
+}
+
 .selected-role-overview-slot:empty {
   display: none;
 }
@@ -658,6 +696,10 @@ input::placeholder {
 
 .track-grid .track-card.is-selected {
   min-height: auto;
+}
+
+.role-picker-panel .track-card {
+  min-height: 146px;
 }
 
 .inline-wordcloud-panel {
@@ -901,6 +943,23 @@ input::placeholder {
   grid-template-columns: minmax(280px, 0.92fr) minmax(0, 1.08fr);
   gap: 14px;
   align-items: stretch;
+}
+
+.role-result-panel .role-decision-dashboard {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.role-result-panel .selected-role-top,
+.role-result-panel .selected-role-detail-head,
+.role-result-panel .role-detail-grid,
+.role-result-panel .role-ai-grid,
+.role-result-panel .expert-review-grid,
+.role-result-panel .role-fit-panel {
+  grid-template-columns: 1fr;
+}
+
+.role-result-panel .selected-role-overview-slot .selected-role-overview {
+  margin-bottom: 12px;
 }
 
 .selection-prompt-panel {
@@ -2771,6 +2830,7 @@ li {
 
   .track-grid,
   .flow-overview,
+  .role-workbench,
   .role-filter-bar,
   .inline-wordcloud-panel,
   .selected-role-overview,
@@ -2800,6 +2860,20 @@ li {
   .workflow-status,
   .roadmap {
     grid-template-columns: 1fr;
+  }
+
+  .role-result-panel {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .role-picker-panel .track-grid {
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
   }
 }
 
