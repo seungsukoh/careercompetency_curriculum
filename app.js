@@ -5777,6 +5777,684 @@ function applyAutonomousVehicleSoftwareExpansion() {
 
 applyAutonomousVehicleSoftwareExpansion();
 
+function applyPriorityRoleExpansion() {
+  const mergeValues = (base = [], additions = []) => [...new Set([...(base || []), ...(additions || [])])];
+  const mergeRolesById = (base = [], additions = []) => {
+    const seen = new Set();
+    return [...base, ...additions].filter((role) => {
+      if (!role?.id || seen.has(role.id)) return false;
+      seen.add(role.id);
+      return true;
+    });
+  };
+  const addMajorFits = (major, { direct = [], bridge = [], bridgeFocus } = {}) => {
+    if (!majorRoleFitProfiles[major]) {
+      majorRoleFitProfiles[major] = { direct: [], bridge: [], bridgeFocus: bridgeFocus || "" };
+    }
+    majorRoleFitProfiles[major].direct = mergeValues(majorRoleFitProfiles[major].direct, direct);
+    majorRoleFitProfiles[major].bridge = mergeValues(majorRoleFitProfiles[major].bridge, bridge);
+    if (bridgeFocus) majorRoleFitProfiles[major].bridgeFocus = bridgeFocus;
+  };
+  const addTrackTags = (trackId, field, values) => {
+    const track = tracks.find((item) => item.id === trackId);
+    if (track) track[field] = mergeValues(track[field], values);
+  };
+
+  Object.assign(industryLabels, {
+    infrastructure: "데이터센터·인프라",
+    environment: "환경·수처리"
+  });
+
+  [
+    ["semiconductor-equipment", "industries", ["ai"]],
+    ["production-quality", "industries", ["infrastructure"]],
+    ["chemical-process", "industries", ["energy", "environment", "ai"]]
+  ].forEach(([trackId, field, values]) => addTrackTags(trackId, field, values));
+
+  const priorityTracks = [
+    {
+      id: "data-center-infra",
+      title: "데이터센터 전력·열관리",
+      majors: ["electrical_power", "electrical", "mechanical", "both"],
+      industries: ["infrastructure", "energy", "electronics", "manufacturing"],
+      difficulty: "중",
+      summary: "UPS, 수배전, 발전기, 냉각, BMS/DCIM, 장애 대응을 연결해 데이터센터 가용성과 에너지 효율을 관리하는 직무군입니다.",
+      tasks: ["전력 부하·이중화 요구사항 정의", "냉각·공조 용량 검토", "BMS/DCIM 알람 분석", "장애 대응·예방정비 계획"],
+      skills: ["수배전", "UPS", "발전기", "HVAC", "냉각수", "BMS/DCIM", "PUE"],
+      tools: ["전력분석기", "BMS", "DCIM", "SCADA", "Excel", "Power BI", "Simscape"],
+      outputs: ["전력 단선도 검토표", "냉각 용량 계산표", "BMS 알람 원인분석표", "장애 대응 체크리스트"],
+      misconceptions: ["데이터센터 직무는 IT 장비만 보는 일이 아니라 전력, 냉각, 이중화, 장애 대응을 함께 보는 설비 엔지니어링입니다.", "전기·기계 전공자는 설비 원리와 운영 데이터를 함께 설명해야 경쟁력이 생깁니다."]
+    },
+    {
+      id: "semiconductor-packaging-test",
+      title: "반도체 후공정·패키징·테스트",
+      majors: ["electrical", "electrical_power", "mechanical", "chemical", "both"],
+      industries: ["semiconductor", "electronics", "manufacturing", "ai"],
+      difficulty: "상",
+      summary: "HBM, advanced packaging, probe/final test, 신뢰성, 불량분석 데이터를 연결해 제품 수율과 품질을 확보하는 직무군입니다.",
+      tasks: ["패키지 구조·공정 조건 검토", "Probe·Final Test 항목 정의", "불량 모드·수율 데이터 분석", "신뢰성 시험 결과 해석"],
+      skills: ["Advanced Packaging", "HBM", "Probe Test", "Final Test", "ATE", "Reliability", "FA"],
+      tools: ["ATE", "JMP", "Python", "SEM/EDS", "X-ray", "C-SAM", "Thermal cycling"],
+      outputs: ["패키지 공정 조건표", "Test bin Pareto", "신뢰성 시험 리포트", "불량 분석 원인 가설표"],
+      misconceptions: ["후공정은 단순 조립이 아니라 전기적 test, 열·기계 신뢰성, 소재·공정 조건, 데이터 분석이 함께 필요한 직무입니다.", "HBM과 advanced packaging은 구조 용어와 test yield를 함께 이해해야 직무 판단이 됩니다."]
+    },
+    {
+      id: "manufacturing-dx",
+      title: "스마트팩토리·제조 DX",
+      majors: ["mechanical", "electrical", "electrical_power", "chemical", "both"],
+      industries: ["manufacturing", "robotics", "ai", "semiconductor", "battery"],
+      difficulty: "중",
+      summary: "MES, SCADA, PLC, OPC UA, 설비 로그, 품질 데이터를 연결해 제조 현장의 자동화와 데이터 기반 개선을 수행하는 직무군입니다.",
+      tasks: ["설비·공정 데이터 구조 정의", "PLC/SCADA/MES 인터페이스 확인", "OEE·불량·정지 원인 분석", "대시보드·알람 개선"],
+      skills: ["MES", "SCADA", "OPC UA", "PLC", "SQL", "Python", "OEE"],
+      tools: ["MES", "SCADA", "PLC", "OPC UA", "Python", "SQL", "Power BI"],
+      outputs: ["설비 데이터 정의서", "OEE 손실 Pareto", "알람 개선 리포트", "제조 대시보드 초안"],
+      misconceptions: ["스마트팩토리는 화려한 AI보다 설비 데이터가 어떤 시간·공정·품질 기준으로 연결되는지 정의하는 일이 먼저입니다.", "전공자는 현장 공정 언어와 데이터 구조를 같이 설명해야 합니다."]
+    },
+    {
+      id: "chemical-sustainability",
+      title: "화학·소재·환경 고도화",
+      majors: ["chemical", "mechanical", "electrical_power", "both"],
+      industries: ["chemical", "battery", "environment", "energy", "manufacturing"],
+      difficulty: "중",
+      summary: "수소, CCUS, 수처리, 배터리 리사이클, 고분자·필름 소재, scale-up을 공정 조건과 안전·환경 규제로 연결하는 화학공학 직무군입니다.",
+      tasks: ["반응·분리 공정 조건 검토", "환경·안전 규제 기준 확인", "실험 결과 scale-up 검토", "공정 데이터와 품질 지표 분석"],
+      skills: ["반응공학", "분리공정", "수처리", "CCUS", "수소", "고분자", "Scale-up"],
+      tools: ["Aspen/HYSYS", "MATLAB/Python", "LIMS", "GC/MS", "HPLC", "FTIR", "HAZOP"],
+      outputs: ["공정 흐름도와 물질수지", "Scale-up 리스크표", "환경·안전 체크리스트", "품질·분석 결과 요약"],
+      misconceptions: ["화학공학 직무는 연구실 합성만이 아니라 공정 안정화, 안전, 환경, scale-up, 데이터 해석으로 넓어집니다.", "지원 회사가 소재·정유·배터리·수소·환경 중 어디에 가까운지 먼저 확인해야 합니다."]
+    }
+  ];
+
+  const existingTrackIds = new Set(tracks.map((track) => track.id));
+  priorityTracks.forEach((track) => {
+    if (!existingTrackIds.has(track.id)) tracks.push(track);
+  });
+
+  Object.assign(diagnostics, {
+    "data-center-infra": [
+      ["전력 이중화", "UPS, 발전기, ATS, 배전반이 가용성에 어떤 역할을 하는지 설명할 수 있다."],
+      ["냉각 용량", "IT 부하, 냉각 방식, 공조 용량, airflow가 온도 안정성에 미치는 영향을 말할 수 있다."],
+      ["운영 데이터", "BMS/DCIM 알람과 전력·온도 로그를 장애 원인 후보로 정리할 수 있다."],
+      ["에너지 효율", "PUE와 에너지 절감 개선안을 설비 조건과 연결할 수 있다."],
+      ["장애 대응", "정전, 과열, 누수, 장비 고장 상황의 대응 순서를 체크리스트로 만들 수 있다."]
+    ],
+    "semiconductor-packaging-test": [
+      ["패키지 구조", "die, substrate, bump, TSV, interposer, molding 구조를 설명할 수 있다."],
+      ["테스트 흐름", "wafer probe, final test, burn-in, binning의 목적 차이를 말할 수 있다."],
+      ["수율 데이터", "test bin, fail item, lot, wafer map을 기준으로 불량 원인을 좁힐 수 있다."],
+      ["신뢰성", "thermal cycling, HAST, HTOL 같은 시험 목적과 판정 기준을 설명할 수 있다."],
+      ["FA", "X-ray, C-SAM, SEM/EDS 결과를 공정·소재 원인 가설로 연결할 수 있다."]
+    ],
+    "manufacturing-dx": [
+      ["데이터 구조", "lot, 설비, recipe, 시간, 품질 결과를 하나의 데이터 키로 묶을 수 있다."],
+      ["인터페이스", "PLC, SCADA, MES, OPC UA의 역할과 연결 흐름을 설명할 수 있다."],
+      ["OEE", "가동률, 성능, 품질 손실을 개선 우선순위로 바꿀 수 있다."],
+      ["알람 분석", "설비 정지·알람 로그를 재현 조건과 원인 후보로 정리할 수 있다."],
+      ["대시보드", "현장 담당자가 볼 지표와 판단 문장을 함께 설계할 수 있다."]
+    ],
+    "chemical-sustainability": [
+      ["공정 흐름", "원료, 반응, 분리, 정제, 배출 흐름을 PFD 수준으로 설명할 수 있다."],
+      ["Scale-up", "실험실 조건과 파일럿·양산 조건의 차이를 열·물질전달 관점으로 말할 수 있다."],
+      ["환경·안전", "배출, 폐수, 위험물, HAZOP, PSM 기준을 공정 조건과 연결할 수 있다."],
+      ["분석 데이터", "GC/MS, HPLC, FTIR, 물성 데이터를 품질 지표와 연결할 수 있다."],
+      ["신사업 공정", "수소, CCUS, 리사이클, 수처리 공정의 핵심 변수를 구분할 수 있다."]
+    ]
+  });
+
+  const expansionRoles = {
+    "data-center-infra": [
+      {
+        id: "data-center-electrical-infra-engineer",
+        title: "데이터센터 전력설비 엔지니어",
+        postingKeywords: ["데이터센터", "UPS", "수배전", "발전기", "전력품질"],
+        industries: ["infrastructure", "energy", "all"],
+        focus: "UPS, 수배전, 발전기, ATS, 접지, 전력품질을 관리해 데이터센터 전력 가용성을 확보하는 직무",
+        coreWork: "IT 부하와 전력 이중화 구조를 단선도, 알람 로그, 예방정비 기준으로 연결해 전력 장애 리스크를 줄입니다.",
+        coreTerms: ["data center", "UPS", "switchgear", "generator", "ATS", "STS", "power quality", "grounding", "single line diagram", "redundancy"],
+        tools: ["전력분석기", "BMS", "DCIM", "SCADA", "Excel", "Power BI"],
+        aiCompetency: { level: "보조 역량", summary: "전력설비 직무에서는 AI보다 전력 계통, 이중화, 알람 재현과 예방정비 기준이 우선입니다.", keywords: ["알람 분석", "예방정비"], diagnostics: [["단선도", "전력 흐름과 이중화 경로를 단선도로 설명할 수 있다."], ["장애 대응", "전력 알람을 원인 후보와 조치 순서로 정리할 수 있다."]] },
+        coreCompetencies: ["전력 단선도와 이중화 경로를 해석하는 역량", "UPS·발전기·차단기 알람을 장애 대응 기준으로 바꾸는 역량", "전력품질과 예방정비 결과를 리포트로 정리하는 역량"],
+        responsibilities: ["수배전·UPS·발전기 설비 운영", "전력품질과 알람 로그 분석", "정전·절체 시나리오 점검", "예방정비와 장애 대응 문서화"],
+        requirements: ["전력공학, 수배전, 접지, 차단기 기초", "BMS/DCIM 알람과 설비 점검표 이해", "전기안전과 장애 대응 문서 작성"],
+        preferred: ["전기기사 수준의 설비 이해", "UPS, 발전기, ATS/STS, 전력품질 분석 경험", "데이터센터 또는 플랜트 전력설비 운영 경험"]
+      },
+      {
+        id: "data-center-cooling-engineer",
+        title: "데이터센터 냉각·열관리 엔지니어",
+        postingKeywords: ["데이터센터", "HVAC", "냉각", "PUE", "CFD"],
+        industries: ["infrastructure", "energy", "all"],
+        focus: "IT 부하, 공조기, 냉수, airflow, hot aisle/cold aisle을 연결해 서버룸 온도와 에너지 효율을 관리하는 직무",
+        coreWork: "열부하와 냉각 경로를 계산하고 온도 로그·알람으로 과열, 냉각 불균형, 에너지 손실 원인을 찾습니다.",
+        coreTerms: ["HVAC", "CRAC", "CRAH", "chiller", "airflow", "hot aisle", "cold aisle", "PUE", "thermal load", "CFD"],
+        tools: ["BMS", "DCIM", "ANSYS Fluent", "Excel", "Power BI", "데이터로거"],
+        aiCompetency: { level: "보조 역량", summary: "냉각 직무는 예측보다 열부하, airflow, 온도 로그를 근거로 개선안을 만드는 역량이 중요합니다.", keywords: ["온도 로그", "열부하"], diagnostics: [["열부하", "IT 부하를 냉각 용량과 연결해 계산할 수 있다."], ["PUE", "에너지 효율 개선 지표를 설명할 수 있다."]] },
+        coreCompetencies: ["열부하와 냉각 용량을 계산하는 역량", "온도·유량·압력 로그로 냉각 불균형을 찾는 역량", "PUE 개선안을 설비 변경 리스크와 함께 정리하는 역량"],
+        responsibilities: ["서버룸 온도와 냉각 설비 운영", "공조 알람과 온도 로그 분석", "냉각 용량·airflow 개선 검토", "에너지 효율 개선안 문서화"],
+        requirements: ["열전달, 유체, 공조 기초", "온도·유량·압력 데이터 해석", "설비 점검표와 개선 리포트 작성"],
+        preferred: ["HVAC, chiller, CFD, BMS/DCIM 경험", "데이터센터 또는 클린룸 열관리 경험"]
+      },
+      {
+        id: "dcim-bms-operations-engineer",
+        title: "DCIM·BMS 운영 데이터 엔지니어",
+        postingKeywords: ["DCIM", "BMS", "알람", "설비데이터", "대시보드"],
+        industries: ["infrastructure", "manufacturing", "ai", "all"],
+        focus: "BMS/DCIM에서 수집되는 전력, 온도, 습도, 알람 데이터를 정리해 장애 예방과 운영 개선 대시보드를 만드는 직무",
+        coreWork: "운영 로그를 시간·설비·알람 등급으로 정리하고 반복 장애와 에너지 손실을 개선 우선순위로 바꿉니다.",
+        coreTerms: ["DCIM", "BMS", "alarm", "trend", "dashboard", "PUE", "CMMS", "root cause", "preventive maintenance"],
+        tools: ["DCIM", "BMS", "Power BI", "SQL", "Python", "Excel"],
+        aiCompetency: { level: "중요", summary: "반복 알람과 이상 징후를 분류하는 데이터 분석 역량이 운영 개선에 직접 쓰입니다.", keywords: ["이상탐지", "대시보드"], diagnostics: [["데이터 정리", "알람 로그를 설비·시간·원인 후보로 정리할 수 있다."], ["개선 우선순위", "반복 장애와 영향도를 기준으로 개선 순서를 제안할 수 있다."]] },
+        coreCompetencies: ["설비 로그를 분석 가능한 데이터 구조로 만드는 역량", "반복 알람과 장애 영향도를 우선순위화하는 역량", "운영자가 바로 쓰는 대시보드와 조치 기준을 만드는 역량"],
+        responsibilities: ["BMS/DCIM 데이터 정리", "알람 trend와 반복 장애 분석", "운영 대시보드 구성", "예방정비·장애 대응 개선안 도출"],
+        requirements: ["Excel/SQL/Python 중 하나 이상의 데이터 처리", "설비 알람과 운영 지표 이해", "대시보드와 개선 리포트 작성"],
+        preferred: ["Power BI, CMMS, BMS/DCIM 운영 데이터 경험", "예지보전 또는 설비 운영 개선 프로젝트 경험"]
+      }
+    ],
+    "semiconductor-packaging-test": [
+      {
+        id: "advanced-packaging-engineer",
+        title: "반도체 패키징 공정 엔지니어",
+        postingKeywords: ["Advanced Packaging", "HBM", "Bump", "TSV", "Substrate"],
+        industries: ["semiconductor", "electronics", "all"],
+        focus: "die attach, bump, TSV, substrate, molding, warpage 조건을 관리해 패키지 수율과 신뢰성을 확보하는 직무",
+        coreWork: "패키지 구조와 공정 조건을 수율, warpage, 열·기계 신뢰성 결과와 연결해 개선 실험을 설계합니다.",
+        coreTerms: ["advanced packaging", "HBM", "bump", "TSV", "interposer", "substrate", "molding", "warpage", "underfill", "thermal resistance"],
+        tools: ["JMP", "Python", "SEM", "X-ray", "C-SAM", "thermal cycling"],
+        aiCompetency: { level: "보조 역량", summary: "패키징은 AI보다 구조·소재·공정 조건과 신뢰성 데이터를 연결하는 역량이 우선입니다.", keywords: ["수율 데이터", "공정 조건"], diagnostics: [["구조", "패키지 구조와 공정 순서를 설명할 수 있다."], ["불량", "warpage, delamination, crack을 공정 조건과 연결할 수 있다."]] },
+        coreCompetencies: ["패키지 구조와 공정 조건을 설명하는 역량", "불량 모드를 소재·공정·열응력 원인으로 나누는 역량", "수율·신뢰성 결과를 개선 실험으로 바꾸는 역량"],
+        responsibilities: ["패키지 공정 조건 관리", "불량·수율 데이터 분석", "신뢰성 시험 결과 해석", "공정 조건 변경 리스크 검토"],
+        requirements: ["반도체 공정, 소재, 열·기계 기초", "통계와 수율 데이터 해석", "공정 조건표와 개선 리포트 작성"],
+        preferred: ["HBM, TSV, bump, underfill, substrate 이해", "SEM/X-ray/C-SAM 분석 경험", "DOE/JMP/Python 활용 경험"]
+      },
+      {
+        id: "semiconductor-test-engineer",
+        title: "반도체 테스트 엔지니어",
+        postingKeywords: ["Probe Test", "Final Test", "ATE", "Test Program", "Yield"],
+        industries: ["semiconductor", "electronics", "all"],
+        focus: "wafer probe, final test, ATE, test program, binning 데이터를 관리해 전기적 불량과 수율을 분석하는 직무",
+        coreWork: "전기적 test item과 fail bin 데이터를 분석해 제품 특성, 공정 편차, test coverage 문제를 구분합니다.",
+        coreTerms: ["wafer probe", "final test", "ATE", "test program", "binning", "parametric test", "coverage", "guardband", "yield"],
+        tools: ["ATE", "JMP", "Python", "SQL", "Spotfire", "Excel"],
+        aiCompetency: { level: "중요", summary: "테스트 데이터가 많아 Python/SQL 기반 fail pattern 분석과 자동 리포트 역량이 도움이 됩니다.", keywords: ["fail bin", "yield analysis"], diagnostics: [["테스트 흐름", "Probe와 final test의 목적 차이를 설명할 수 있다."], ["수율 분석", "fail bin과 test item을 기준으로 원인 후보를 좁힐 수 있다."]] },
+        coreCompetencies: ["전기적 test item과 제품 특성을 연결하는 역량", "fail bin·lot·wafer map 데이터를 분석하는 역량", "test coverage와 guardband 리스크를 설명하는 역량"],
+        responsibilities: ["테스트 항목과 bin 결과 분석", "ATE test program 이슈 대응", "수율·불량 trend 리포트 작성", "공정·설계·품질 부서와 원인 분류"],
+        requirements: ["전자회로 또는 반도체 소자 기초", "Python/SQL/JMP 기반 데이터 분석", "테스트 결과와 제품 spec 해석"],
+        preferred: ["ATE, probe/final test, wafer map 분석 경험", "test program, guardband, DFT 이해"]
+      },
+      {
+        id: "packaging-reliability-fa-engineer",
+        title: "패키지 신뢰성·불량분석 엔지니어",
+        postingKeywords: ["Reliability", "FA", "HAST", "Thermal Cycling", "C-SAM"],
+        industries: ["semiconductor", "electronics", "all"],
+        focus: "패키지 신뢰성 시험과 불량분석 결과를 소재·공정·설계 원인 가설로 연결하는 직무",
+        coreWork: "열·습도·전기 스트레스 시험 결과와 분석 이미지를 종합해 fail mechanism과 개선 항목을 정리합니다.",
+        coreTerms: ["reliability", "HAST", "HTOL", "thermal cycling", "C-SAM", "X-ray", "cross section", "delamination", "crack", "fail mechanism"],
+        tools: ["C-SAM", "X-ray", "SEM/EDS", "JMP", "Excel", "8D"],
+        aiCompetency: { level: "보조 역량", summary: "이미지 분류보다 시험 조건, fail mechanism, 재발 방지 논리를 정확히 쓰는 역량이 우선입니다.", keywords: ["FA", "신뢰성"], diagnostics: [["시험 조건", "HAST, HTOL, TC 목적 차이를 설명할 수 있다."], ["원인 가설", "분석 이미지와 공정 조건을 연결할 수 있다."]] },
+        coreCompetencies: ["신뢰성 시험 조건과 fail mode를 연결하는 역량", "분석 장비 결과를 원인 가설로 정리하는 역량", "재발 방지 개선안을 공정·소재·설계로 나누는 역량"],
+        responsibilities: ["신뢰성 시험 결과 분석", "FA 분석 결과 해석", "불량 원인 가설과 개선안 작성", "고객 품질 이슈 대응 자료 정리"],
+        requirements: ["반도체 패키지·소재 기초", "신뢰성 시험과 분석 장비 용어 이해", "8D/FA 리포트 작성 역량"],
+        preferred: ["C-SAM, X-ray, SEM/EDS, cross-section 경험", "고객 품질 대응 또는 신뢰성 평가 경험"]
+      }
+    ],
+    "manufacturing-dx": [
+      {
+        id: "mes-scada-integration-engineer",
+        title: "MES·SCADA 연동 엔지니어",
+        postingKeywords: ["MES", "SCADA", "OPC UA", "PLC", "인터페이스"],
+        industries: ["manufacturing", "semiconductor", "battery", "all"],
+        focus: "설비 PLC, SCADA, MES 간 데이터 흐름과 인터페이스를 정의해 생산 이력과 설비 상태를 연결하는 직무",
+        coreWork: "설비 신호와 생산 정보를 lot, recipe, time, alarm 기준으로 연결해 추적성과 자동화를 높입니다.",
+        coreTerms: ["MES", "SCADA", "PLC", "OPC UA", "tag", "recipe", "lot traceability", "alarm", "interface", "ISA-95"],
+        tools: ["MES", "SCADA", "PLC", "OPC UA", "SQL", "Excel"],
+        aiCompetency: { level: "보조 역량", summary: "연동 직무는 AI보다 데이터 정의, 인터페이스, 추적성, 알람 기준이 우선입니다.", keywords: ["데이터 정의", "인터페이스"], diagnostics: [["데이터 흐름", "PLC tag와 MES lot 정보를 연결할 수 있다."], ["추적성", "생산 이력과 품질 결과를 한 흐름으로 설명할 수 있다."]] },
+        coreCompetencies: ["설비 신호와 생산 데이터를 연결하는 역량", "인터페이스 오류를 데이터·통신·운영 조건으로 나누는 역량", "추적성과 알람 기준을 문서화하는 역량"],
+        responsibilities: ["MES·SCADA 인터페이스 정의", "PLC tag와 생산 데이터 매핑", "알람·상태 전환 기준 정리", "연동 오류 원인 분석"],
+        requirements: ["제조 공정 흐름, PLC/SCADA/MES 기초", "SQL 또는 데이터 구조 이해", "인터페이스 정의서 작성"],
+        preferred: ["OPC UA, ISA-95, MES 구축 또는 설비 자동화 경험", "반도체·배터리·제조 현장 데이터 경험"]
+      },
+      {
+        id: "industrial-data-engineer",
+        title: "제조 데이터 엔지니어",
+        postingKeywords: ["제조데이터", "SQL", "Python", "OEE", "대시보드"],
+        industries: ["manufacturing", "ai", "semiconductor", "battery", "all"],
+        focus: "공정·설비·검사 데이터를 정리해 OEE, 수율, 불량, 정지 원인을 분석 가능한 데이터셋과 대시보드로 만드는 직무",
+        coreWork: "현장 데이터를 수집·정제·시각화해 개선 우선순위와 재현 가능한 원인 가설을 제시합니다.",
+        coreTerms: ["industrial data", "SQL", "Python", "pandas", "OEE", "yield", "downtime", "dashboard", "data pipeline"],
+        tools: ["SQL", "Python", "Power BI", "Tableau", "MES", "SCADA"],
+        aiCompetency: { level: "핵심 역량", summary: "제조 데이터 엔지니어는 전처리, 지표 정의, 이상 탐지, 대시보드가 직무 중심입니다.", keywords: ["SQL", "Python", "대시보드"], diagnostics: [["전처리", "결측·이상치·시간 동기화를 처리할 수 있다."], ["지표", "OEE와 수율 지표를 데이터 컬럼으로 정의할 수 있다."]] },
+        coreCompetencies: ["현장 데이터를 분석 가능한 테이블로 만드는 역량", "OEE·수율·불량 지표를 정의하는 역량", "대시보드 결과를 개선 행동으로 연결하는 역량"],
+        responsibilities: ["공정·설비 데이터 수집과 정제", "OEE·불량·정지 원인 분석", "대시보드 구성", "개선 과제 우선순위 제안"],
+        requirements: ["SQL/Python 데이터 처리", "제조 공정과 품질 지표 이해", "시각화와 해석 리포트 작성"],
+        preferred: ["MES/SCADA 데이터, Power BI, 이상탐지, 데이터 파이프라인 경험", "제조 AI 또는 스마트팩토리 프로젝트 경험"]
+      },
+      {
+        id: "smart-factory-vision-engineer",
+        title: "스마트팩토리 비전검사 엔지니어",
+        postingKeywords: ["비전검사", "OpenCV", "YOLO", "불량검출", "검사자동화"],
+        industries: ["manufacturing", "robotics", "ai", "semiconductor", "battery", "all"],
+        focus: "카메라, 조명, 라벨 기준, AI 모델, 검사 지그를 연결해 자동 검사 정확도와 현장 적용성을 높이는 직무",
+        coreWork: "불량 정의와 이미지 조건을 관리하고 오탐·미탐을 줄이는 검사 자동화 기준을 만듭니다.",
+        coreTerms: ["machine vision", "lighting", "camera", "OpenCV", "YOLO", "false positive", "false negative", "annotation", "inspection jig"],
+        tools: ["OpenCV", "Python", "YOLO", "NVIDIA Jetson", "Power BI", "카메라/조명"],
+        aiCompetency: { level: "핵심 역량", summary: "비전검사는 AI 모델뿐 아니라 조명, 라벨 기준, 오탐·미탐 판정 기준이 핵심입니다.", keywords: ["비전검사", "오탐·미탐"], diagnostics: [["라벨 기준", "불량 판정 기준을 이미지 라벨로 정의할 수 있다."], ["현장 적용", "조명·카메라 조건이 검사 결과에 미치는 영향을 설명할 수 있다."]] },
+        coreCompetencies: ["불량 정의를 라벨 기준으로 바꾸는 역량", "오탐·미탐을 데이터와 현장 조건으로 분석하는 역량", "검사 자동화 결과를 품질 개선 기준으로 연결하는 역량"],
+        responsibilities: ["비전검사 조건과 라벨 기준 정의", "이미지 데이터 수집·전처리", "모델 평가와 오탐·미탐 분석", "검사 자동화 현장 적용 리스크 검토"],
+        requirements: ["Python/OpenCV 또는 비전 기초", "품질 불량 유형과 검사 조건 이해", "모델 평가 지표와 현장 검증 문서화"],
+        preferred: ["YOLO, Jetson, 카메라·조명 셋업, 자동화 설비 경험", "제조·반도체·배터리 검사 데이터 경험"]
+      }
+    ],
+    "chemical-sustainability": [
+      {
+        id: "hydrogen-process-engineer",
+        title: "수소 공정 엔지니어",
+        postingKeywords: ["수소", "전해조", "개질", "압축", "안전"],
+        industries: ["energy", "chemical", "environment", "all"],
+        focus: "수전해, 개질, 정제, 압축, 저장 공정을 물질수지와 안전 조건으로 검토하는 직무",
+        coreWork: "수소 생산·정제·저장 조건을 효율, 순도, 안전, 설비 제약 기준으로 비교하고 공정 리스크를 줄입니다.",
+        coreTerms: ["hydrogen", "electrolysis", "reformer", "purification", "compression", "storage", "explosion limit", "PSA", "safety"],
+        tools: ["Aspen/HYSYS", "Excel", "MATLAB/Python", "PFD", "HAZOP"],
+        aiCompetency: { level: "보조 역량", summary: "수소 공정은 AI보다 공정 흐름, 효율, 순도, 안전 조건을 계산하고 설명하는 역량이 우선입니다.", keywords: ["물질수지", "안전"], diagnostics: [["공정 흐름", "생산·정제·압축·저장 흐름을 설명할 수 있다."], ["안전", "폭발한계와 누출 대응 조건을 체크리스트로 만들 수 있다."]] },
+        coreCompetencies: ["수소 공정 물질수지와 효율을 계산하는 역량", "정제·압축·저장 리스크를 안전 기준으로 정리하는 역량", "공정 조건 변경이 순도와 에너지 사용에 미치는 영향을 설명하는 역량"],
+        responsibilities: ["수소 생산·정제 공정 검토", "효율·순도·압력 조건 분석", "안전·위험성 평가", "공정 개선 리포트 작성"],
+        requirements: ["물질수지, 열역학, 반응·분리 기초", "PFD와 HAZOP 이해", "Excel/MATLAB/Python 계산 역량"],
+        preferred: ["수전해, PSA, 개질, 고압가스 안전 이해", "Aspen/HYSYS 공정모사 경험"]
+      },
+      {
+        id: "ccus-process-engineer",
+        title: "CCUS 공정 엔지니어",
+        postingKeywords: ["CCUS", "CO2 포집", "흡수", "분리막", "공정모사"],
+        industries: ["chemical", "energy", "environment", "all"],
+        focus: "CO2 포집, 흡수·재생, 압축, 저장·활용 공정을 에너지 사용량과 분리 성능 기준으로 검토하는 직무",
+        coreWork: "배가스 조성, 흡수제, 재생 에너지, 압축 조건을 연결해 CO2 포집 공정의 성능과 비용 리스크를 평가합니다.",
+        coreTerms: ["CCUS", "carbon capture", "amine absorption", "regeneration", "membrane", "CO2 purity", "energy penalty", "compression"],
+        tools: ["Aspen Plus", "HYSYS", "Excel", "MATLAB/Python", "PFD"],
+        aiCompetency: { level: "보조 역량", summary: "CCUS는 공정모사와 에너지·분리 성능 비교가 우선이고, 데이터 분석은 조건 비교에 보조적으로 쓰입니다.", keywords: ["공정모사", "조건 비교"], diagnostics: [["분리 성능", "CO2 회수율과 순도를 지표로 설명할 수 있다."], ["에너지", "재생 에너지와 압축 조건이 비용에 미치는 영향을 말할 수 있다."]] },
+        coreCompetencies: ["CO2 포집 공정 흐름을 PFD로 정리하는 역량", "분리 성능과 에너지 사용량을 비교하는 역량", "공정 조건 변경 리스크를 문서화하는 역량"],
+        responsibilities: ["CO2 포집 공정 조건 검토", "흡수·재생·압축 조건 비교", "공정모사 결과 정리", "경제성·환경성 리스크 메모 작성"],
+        requirements: ["분리공정, 열역학, 물질수지 기초", "Aspen/HYSYS 또는 계산 도구 활용", "공정 성능 지표 해석"],
+        preferred: ["CCUS, 흡수제, 분리막, 공정모사 경험", "에너지·환경 프로젝트 이해"]
+      },
+      {
+        id: "water-treatment-process-engineer",
+        title: "수처리·환경공정 엔지니어",
+        postingKeywords: ["수처리", "폐수", "막분리", "TOC", "환경규제"],
+        industries: ["environment", "chemical", "semiconductor", "battery", "all"],
+        focus: "폐수·초순수·막분리·처리 약품·환경 규제 기준을 연결해 수질 안정성과 설비 운영을 관리하는 직무",
+        coreWork: "수질 지표와 처리 공정 조건을 분석해 배출 기준, 설비 이상, 약품 사용량, 재이용 가능성을 판단합니다.",
+        coreTerms: ["wastewater", "UPW", "membrane", "RO", "TOC", "COD", "BOD", "T-N", "T-P", "sludge", "discharge limit"],
+        tools: ["Excel", "LIMS", "SCADA", "수질분석", "P&ID", "HAZOP"],
+        aiCompetency: { level: "보조 역량", summary: "수처리는 규제 기준, 수질 지표, 설비 조건 해석이 중심이고 데이터 분석은 이상 추세 확인에 도움이 됩니다.", keywords: ["수질 데이터", "이상 추세"], diagnostics: [["수질 지표", "COD, TOC, pH, T-N, T-P 의미를 설명할 수 있다."], ["공정 조건", "막오염과 약품 조건을 운영 리스크로 정리할 수 있다."]] },
+        coreCompetencies: ["수질 지표를 처리 공정과 연결하는 역량", "막분리·약품·슬러지 조건을 운영 리스크로 보는 역량", "규제 기준과 현장 데이터를 비교하는 역량"],
+        responsibilities: ["폐수·초순수 공정 운영 조건 검토", "수질 분석 결과와 알람 데이터 해석", "환경 규제 대응 자료 정리", "설비 이상과 개선안 문서화"],
+        requirements: ["환경공학 또는 화학공정 기초", "수질 지표와 처리 공정 이해", "운영 데이터와 규제 기준 비교"],
+        preferred: ["반도체 UPW/폐수, 막분리, LIMS/SCADA 경험", "환경기사·수질 분석 이해"]
+      },
+      {
+        id: "polymer-film-materials-engineer",
+        title: "고분자·필름 소재 엔지니어",
+        postingKeywords: ["고분자", "필름", "코팅", "물성", "Scale-up"],
+        industries: ["chemical", "battery", "electronics", "all"],
+        focus: "고분자 조성, 코팅·건조 조건, 필름 물성, 분석 데이터를 연결해 소재 성능과 양산성을 검토하는 직무",
+        coreWork: "조성·공정 조건과 인장, 열, 광학, 접착, 투습 같은 물성 지표를 연결해 제품 요구사항을 만족시키는 조건을 찾습니다.",
+        coreTerms: ["polymer", "film", "coating", "drying", "rheology", "tensile strength", "adhesion", "WVTR", "DSC", "TGA", "FTIR"],
+        tools: ["DSC", "TGA", "FTIR", "Rheometer", "Excel", "JMP", "Python"],
+        aiCompetency: { level: "중요", summary: "소재 실험 데이터가 많아 DOE, 물성 예측, 조성-성능 상관 분석 역량이 도움이 됩니다.", keywords: ["DOE", "물성 데이터"], diagnostics: [["물성", "조성·공정 조건과 물성 지표를 연결할 수 있다."], ["Scale-up", "lab 조건과 양산 코팅 조건 차이를 설명할 수 있다."]] },
+        coreCompetencies: ["고분자 조성과 공정 조건을 물성 지표로 연결하는 역량", "분석 장비 결과를 소재 성능으로 해석하는 역량", "lab-to-pilot scale-up 리스크를 정리하는 역량"],
+        responsibilities: ["고분자·필름 조성 및 공정 조건 검토", "물성·분석 결과 정리", "코팅·건조·scale-up 이슈 분석", "후보 소재 성능 비교표 작성"],
+        requirements: ["고분자, 물성, 열분석 기초", "실험 조건과 분석 데이터 정리", "DOE와 통계 기초"],
+        preferred: ["필름·코팅·접착 소재, DSC/TGA/FTIR/rheology 경험", "배터리·디스플레이·전자소재 이해"]
+      },
+      {
+        id: "battery-recycling-process-engineer",
+        title: "배터리 리사이클 공정 엔지니어",
+        postingKeywords: ["배터리 리사이클", "습식제련", "침출", "용매추출", "회수율"],
+        industries: ["battery", "chemical", "environment", "all"],
+        focus: "폐배터리 전처리, 침출, 용매추출, 정제, 금속 회수율을 관리해 리사이클 공정성과 안전성을 검토하는 직무",
+        coreWork: "원료 변동성과 공정 조건을 회수율, 순도, 폐수·안전 리스크와 연결해 재활용 공정 개선안을 만듭니다.",
+        coreTerms: ["battery recycling", "black mass", "leaching", "solvent extraction", "precipitation", "recovery rate", "purity", "wastewater"],
+        tools: ["Excel", "MATLAB/Python", "ICP", "pH meter", "LIMS", "HAZOP"],
+        aiCompetency: { level: "보조 역량", summary: "리사이클은 원료 변동, 회수율, 순도, 안전 조건을 공정 데이터로 설명하는 역량이 핵심입니다.", keywords: ["회수율", "공정 데이터"], diagnostics: [["회수율", "금속 회수율과 순도를 계산할 수 있다."], ["원료 변동", "black mass 조성 변화가 공정 조건에 미치는 영향을 말할 수 있다."]] },
+        coreCompetencies: ["침출·분리·정제 흐름을 물질수지로 설명하는 역량", "회수율·순도·폐수 리스크를 동시에 비교하는 역량", "원료 변동성을 조건 변경 검토표로 정리하는 역량"],
+        responsibilities: ["배터리 리사이클 공정 조건 관리", "회수율·순도 데이터 분석", "폐수·안전 리스크 검토", "조건 변경과 개선 실험 문서화"],
+        requirements: ["분리공정, 전기화학, 물질수지 기초", "실험 데이터와 수율 계산", "공정안전·환경 기준 이해"],
+        preferred: ["습식제련, 용매추출, ICP 분석, 폐배터리 재활용 경험", "DOE/Python 데이터 처리 경험"]
+      }
+    ]
+  };
+
+  Object.entries(expansionRoles).forEach(([trackId, roles]) => {
+    jobRoles[trackId] = mergeRolesById(jobRoles[trackId] || [], roles);
+  });
+
+  Object.assign(roleDiagnostics, {
+    "data-center-electrical-infra-engineer": [["단선도", "전력 계통과 이중화 경로를 읽을 수 있다."], ["UPS", "UPS와 발전기 절체 시나리오를 설명할 수 있다."], ["전력품질", "전압강하, 고조파, 접지 리스크를 말할 수 있다."], ["알람", "전력 알람을 원인 후보와 조치 순서로 나눌 수 있다."], ["정비", "예방정비 항목과 장애 대응 체크리스트를 만들 수 있다."]],
+    "data-center-cooling-engineer": [["열부하", "IT 부하를 냉각 용량으로 환산할 수 있다."], ["Airflow", "hot aisle/cold aisle과 냉각 불균형을 설명할 수 있다."], ["PUE", "PUE 의미와 개선 방향을 말할 수 있다."], ["온도로그", "온도 trend로 과열 원인을 좁힐 수 있다."], ["공조", "CRAC/CRAH/chiller 역할을 구분할 수 있다."]],
+    "dcim-bms-operations-engineer": [["데이터 구조", "BMS/DCIM 로그를 설비·시간·알람 등급으로 정리할 수 있다."], ["반복 알람", "반복 알람과 장애 영향도를 우선순위화할 수 있다."], ["대시보드", "운영자가 바로 볼 지표를 설계할 수 있다."], ["예방정비", "알람 trend를 예방정비 후보로 바꿀 수 있다."], ["조치 기준", "알람별 확인 항목과 담당 부서를 정리할 수 있다."]],
+    "advanced-packaging-engineer": [["패키지 구조", "die, bump, substrate, interposer, molding 역할을 설명할 수 있다."], ["공정조건", "온도, 압력, 접합, underfill 조건을 품질 지표와 연결할 수 있다."], ["불량모드", "warpage, delamination, crack 원인을 분류할 수 있다."], ["신뢰성", "열·습도 스트레스가 패키지에 미치는 영향을 말할 수 있다."], ["수율", "수율 데이터를 공정 조건 변경 후보로 바꿀 수 있다."]],
+    "semiconductor-test-engineer": [["Test Flow", "Probe, final test, burn-in 목적을 구분할 수 있다."], ["ATE", "ATE와 test program의 역할을 설명할 수 있다."], ["Bin 분석", "fail bin Pareto로 원인 후보를 좁힐 수 있다."], ["Coverage", "test coverage와 guardband 의미를 말할 수 있다."], ["데이터", "lot, wafer, test item 기준으로 데이터를 묶을 수 있다."]],
+    "packaging-reliability-fa-engineer": [["시험", "HAST, HTOL, thermal cycling 목적 차이를 설명할 수 있다."], ["분석", "C-SAM, X-ray, SEM 결과를 fail mode와 연결할 수 있다."], ["원인 가설", "분석 결과를 공정·소재·설계 원인으로 나눌 수 있다."], ["8D", "고객 품질 이슈를 재발 방지까지 정리할 수 있다."], ["판정", "시험 조건과 판정 기준을 문서화할 수 있다."]],
+    "mes-scada-integration-engineer": [["PLC Tag", "설비 tag와 MES 데이터를 매핑할 수 있다."], ["OPC UA", "OPC UA와 SCADA/MES 연동 목적을 설명할 수 있다."], ["추적성", "lot 이력과 품질 결과를 연결할 수 있다."], ["알람", "상태 전환과 알람 기준을 정의할 수 있다."], ["인터페이스", "연동 오류를 데이터·통신·운영 원인으로 나눌 수 있다."]],
+    "industrial-data-engineer": [["SQL", "공정 데이터를 join 가능한 키로 정리할 수 있다."], ["전처리", "결측·이상치·시간 동기화를 처리할 수 있다."], ["OEE", "OEE 손실을 가동률·성능·품질로 분해할 수 있다."], ["대시보드", "지표와 해석 문장을 함께 구성할 수 있다."], ["개선", "분석 결과를 개선 과제 우선순위로 바꿀 수 있다."]],
+    "smart-factory-vision-engineer": [["라벨", "불량 판정 기준을 라벨 규칙으로 만들 수 있다."], ["조명", "조명·카메라 조건이 검사 결과에 미치는 영향을 설명할 수 있다."], ["모델평가", "오탐·미탐을 precision/recall과 현장 리스크로 해석할 수 있다."], ["현장검증", "검사 속도와 설비 연동 조건을 고려할 수 있다."], ["개선", "불량 유형별 데이터 보강 계획을 만들 수 있다."]],
+    "hydrogen-process-engineer": [["물질수지", "수소 생산·정제 흐름의 물질수지를 세울 수 있다."], ["안전", "폭발한계와 누출 대응 조건을 설명할 수 있다."], ["정제", "PSA, 압축, 저장 조건을 구분할 수 있다."], ["효율", "에너지 사용량과 순도를 비교할 수 있다."], ["공정도", "PFD와 주요 계측 지점을 표시할 수 있다."]],
+    "ccus-process-engineer": [["포집", "CO2 포집률과 순도를 지표로 설명할 수 있다."], ["흡수·재생", "흡수제와 재생 에너지 조건을 말할 수 있다."], ["압축", "압축 조건이 비용과 안전에 미치는 영향을 설명할 수 있다."], ["공정모사", "공정모사 결과를 조건 비교표로 정리할 수 있다."], ["환경성", "포집 공정의 환경·경제성 trade-off를 말할 수 있다."]],
+    "water-treatment-process-engineer": [["수질", "COD, TOC, pH, T-N, T-P 의미를 설명할 수 있다."], ["막분리", "RO와 막오염 리스크를 설명할 수 있다."], ["규제", "배출 기준과 운영 데이터를 비교할 수 있다."], ["설비", "펌프, 탱크, 약품 주입, 슬러지 흐름을 말할 수 있다."], ["이상 대응", "수질 이상 trend와 확인 항목을 정리할 수 있다."]],
+    "polymer-film-materials-engineer": [["조성", "조성과 공정 조건을 물성 지표와 연결할 수 있다."], ["분석", "DSC, TGA, FTIR 결과 의미를 설명할 수 있다."], ["코팅", "점도, 건조, 두께 균일도 영향을 말할 수 있다."], ["Scale-up", "lab 조건과 양산 조건 차이를 정리할 수 있다."], ["DOE", "조성·조건 DOE 결과를 비교표로 만들 수 있다."]],
+    "battery-recycling-process-engineer": [["침출", "침출 조건과 금속 회수율을 연결할 수 있다."], ["분리", "용매추출·침전 목적을 설명할 수 있다."], ["원료 변동", "black mass 조성 변화가 공정 조건에 미치는 영향을 말할 수 있다."], ["환경", "폐수와 안전 리스크를 검토할 수 있다."], ["수율", "회수율과 순도 계산표를 만들 수 있다."]]
+  });
+
+  const priorityResources = [
+    {
+      id: "schneider-data-center-university",
+      title: "Data Center University",
+      provider: "Schneider Electric",
+      type: "무료교육/전문 러닝",
+      language: "영어",
+      difficulty: "기초실습",
+      estimatedMinutes: 180,
+      practiceMinutes: 120,
+      sequenceLevel: 3,
+      tracks: ["data-center-infra", "energy-ess"],
+      skills: ["데이터센터", "전력", "냉각", "운영", "가용성"],
+      prerequisites: ["전기·기계 설비 기초"],
+      reason: "데이터센터 전력, 냉각, 가용성, 운영 기준을 직무 언어로 빠르게 정리할 수 있는 산업 교육 자료입니다.",
+      expectedOutput: "데이터센터 전력·냉각 구성도와 장애 대응 체크리스트",
+      qualityStatus: "reviewed",
+      url: "https://www.se.com/ww/en/work/solutions/for-business/data-centers-and-networks/training/data-center-university/"
+    },
+    {
+      id: "mathworks-simscape-fluids-examples",
+      title: "Simscape Fluids 예제",
+      provider: "MathWorks",
+      type: "공식문서/예제",
+      language: "영어",
+      difficulty: "적용",
+      estimatedMinutes: 150,
+      practiceMinutes: 180,
+      sequenceLevel: 4,
+      tracks: ["data-center-infra", "mechanical-cae", "chemical-sustainability"],
+      skills: ["유체", "냉각", "펌프", "열관리", "물리 모델링"],
+      prerequisites: ["Simulink/Simscape 기초"],
+      reason: "냉각수, 펌프, 유량, 압력 조건을 모델로 확인해 데이터센터 냉각과 화학공정 유체 시스템 산출물에 연결할 수 있습니다.",
+      expectedOutput: "냉각 또는 유체 회로 모델과 조건 변화 비교표",
+      qualityStatus: "reviewed",
+      url: "https://www.mathworks.com/help/fluids/examples.html"
+    },
+    {
+      id: "semiengineering-advanced-packaging",
+      title: "Semiconductor Engineering Advanced Packaging",
+      provider: "Semiconductor Engineering",
+      type: "전문 기사/직무 읽기",
+      language: "영어",
+      difficulty: "적용",
+      estimatedMinutes: 120,
+      practiceMinutes: 90,
+      sequenceLevel: 3,
+      tracks: ["semiconductor-packaging-test", "semiconductor-equipment"],
+      skills: ["Advanced Packaging", "HBM", "패키징", "신뢰성"],
+      prerequisites: ["반도체 공정 기초"],
+      reason: "HBM, chiplet, substrate, bonding 등 후공정 공고에 반복되는 용어를 직무 맥락으로 정리하기 좋습니다.",
+      expectedOutput: "패키지 구조 용어표와 공정·불량 연결표",
+      qualityStatus: "reviewed",
+      url: "https://semiengineering.com/knowledge_centers/packaging/advanced-packaging/"
+    },
+    {
+      id: "semiengineering-semiconductor-test",
+      title: "Semiconductor Engineering Test",
+      provider: "Semiconductor Engineering",
+      type: "전문 기사/직무 읽기",
+      language: "영어",
+      difficulty: "적용",
+      estimatedMinutes: 120,
+      practiceMinutes: 90,
+      sequenceLevel: 3,
+      tracks: ["semiconductor-packaging-test", "semiconductor-equipment"],
+      skills: ["ATE", "Probe Test", "Final Test", "Yield", "Reliability"],
+      prerequisites: ["반도체 소자·공정 기초"],
+      reason: "테스트, binning, coverage, yield, 신뢰성 이슈를 직무 상세와 연결해 test 엔지니어 판단 기준을 잡는 데 적합합니다.",
+      expectedOutput: "Probe/Final Test 흐름도와 fail bin Pareto 예시",
+      qualityStatus: "reviewed",
+      url: "https://semiengineering.com/knowledge_centers/test/"
+    },
+    {
+      id: "opc-foundation-opcua-overview",
+      title: "OPC UA 개요와 산업 데이터 연결",
+      provider: "OPC Foundation",
+      type: "공식문서/개념",
+      language: "영어",
+      difficulty: "기초실습",
+      estimatedMinutes: 90,
+      practiceMinutes: 90,
+      sequenceLevel: 3,
+      tracks: ["manufacturing-dx", "robotics-automation", "energy-ess"],
+      skills: ["OPC UA", "SCADA", "MES", "설비데이터", "인터페이스"],
+      prerequisites: ["제조 공정과 PLC 기초"],
+      reason: "스마트팩토리 공고에서 반복되는 OPC UA, 설비 데이터, MES/SCADA 연동을 개념과 산출물로 연결할 수 있습니다.",
+      expectedOutput: "PLC-SCADA-MES 데이터 흐름도와 tag 정의 예시",
+      qualityStatus: "reviewed",
+      url: "https://opcfoundation.org/about/opc-technologies/opc-ua/"
+    },
+    {
+      id: "aiche-ccps-process-safety-beacon",
+      title: "CCPS Process Safety Beacon",
+      provider: "AIChE CCPS",
+      type: "전문 안전 사례",
+      language: "영어",
+      difficulty: "기초실습",
+      estimatedMinutes: 90,
+      practiceMinutes: 90,
+      sequenceLevel: 3,
+      tracks: ["chemical-process", "chemical-sustainability"],
+      skills: ["공정안전", "사고사례", "HAZOP", "PSM"],
+      prerequisites: ["공정안전 기초"],
+      reason: "화학공정·환경안전 직무에서 중요한 사고 시나리오, 예방 대책, HAZOP 관점을 짧은 사례로 익힐 수 있습니다.",
+      expectedOutput: "사고 사례 기반 HAZOP 체크리스트",
+      qualityStatus: "reviewed",
+      url: "https://www.aiche.org/ccps/resources/process-safety-beacon"
+    },
+    {
+      id: "doe-hydrogen-production-delivery",
+      title: "Hydrogen Production and Delivery",
+      provider: "U.S. Department of Energy",
+      type: "공식 자료/개념",
+      language: "영어",
+      difficulty: "입문",
+      estimatedMinutes: 90,
+      practiceMinutes: 90,
+      sequenceLevel: 2,
+      tracks: ["chemical-sustainability", "energy-ess"],
+      skills: ["수소", "생산", "정제", "저장", "안전"],
+      prerequisites: ["물질수지와 열역학 기초"],
+      reason: "수소 공정 직무의 생산·저장·운송 흐름과 안전 이슈를 공고 키워드와 연결해 정리하기 좋습니다.",
+      expectedOutput: "수소 생산·정제·저장 공정 흐름도",
+      qualityStatus: "reviewed",
+      url: "https://www.energy.gov/eere/fuelcells/hydrogen-production"
+    },
+    {
+      id: "doe-carbon-capture-overview",
+      title: "Carbon Capture 개요",
+      provider: "U.S. Department of Energy",
+      type: "공식 자료/개념",
+      language: "영어",
+      difficulty: "입문",
+      estimatedMinutes: 90,
+      practiceMinutes: 90,
+      sequenceLevel: 2,
+      tracks: ["chemical-sustainability", "energy-ess"],
+      skills: ["CCUS", "CO2 포집", "흡수", "분리", "공정성능"],
+      prerequisites: ["분리공정 기초"],
+      reason: "CCUS 공고에서 반복되는 포집, 압축, 저장, 활용 개념을 공정 흐름과 성능 지표로 정리할 수 있습니다.",
+      expectedOutput: "CCUS 공정 흐름도와 성능 지표 표",
+      qualityStatus: "reviewed",
+      url: "https://www.energy.gov/fecm/office-carbon-management"
+    },
+    {
+      id: "learncheme-reactor-design",
+      title: "LearnChemE Kinetics and Reactor Design",
+      provider: "LearnChemE",
+      type: "공개강의/개념 실습",
+      language: "영어",
+      difficulty: "기초실습",
+      estimatedMinutes: 150,
+      practiceMinutes: 120,
+      sequenceLevel: 3,
+      tracks: ["chemical-process", "chemical-sustainability"],
+      skills: ["반응공학", "반응기", "전환율", "선택도", "Scale-up"],
+      prerequisites: ["물질수지와 미분방정식 기초"],
+      reason: "수소, 소재, 리사이클, 일반 화학공정에서 반복되는 반응기 조건과 전환율 계산을 작은 산출물로 만들기 좋습니다.",
+      expectedOutput: "반응 조건별 전환율·수율 계산표",
+      qualityStatus: "reviewed",
+      url: "https://learncheme.com/screencasts/kinetics-reactor-design/"
+    }
+  ];
+
+  const existingResourceIds = new Set(resources.map((resource) => resource.id));
+  resources.push(...priorityResources.filter((resource) => !existingResourceIds.has(resource.id)).map(normalizeResource));
+
+  [
+    "mathworks-simscape-electrical",
+    "mathworks-simscape-examples",
+    "mathworks-predictive-maintenance",
+    "ni-learn-test-measurement"
+  ].forEach((resourceId) => {
+    const resource = resources.find((item) => item.id === resourceId);
+    if (resource) resource.tracks = mergeValues(resource.tracks, ["data-center-infra"]);
+  });
+  [
+    "letuin-spotfire-defect-analysis",
+    "letuin-semiconductor-process-data-kdt",
+    "semiengineering-failure-analysis",
+    "statistics-onramp",
+    "machine-learning-onramp"
+  ].forEach((resourceId) => {
+    const resource = resources.find((item) => item.id === resourceId);
+    if (resource) resource.tracks = mergeValues(resource.tracks, ["semiconductor-packaging-test"]);
+  });
+  [
+    "mathworks-predictive-maintenance",
+    "boostcourse-data-ai-basic",
+    "freecodecamp-python-data",
+    "google-ml-crash-course",
+    "nvidia-jetson-ai-course",
+    "comento-plc-control-practice"
+  ].forEach((resourceId) => {
+    const resource = resources.find((item) => item.id === resourceId);
+    if (resource) resource.tracks = mergeValues(resource.tracks, ["manufacturing-dx"]);
+  });
+  [
+    "learncheme-chemical-process",
+    "learncheme-material-balances",
+    "learncheme-separations",
+    "mit-chemical-engineering",
+    "nptel-chemical-engineering",
+    "kosha-psm",
+    "youtube-nptel-hazop",
+    "coursera-chemical-engineering"
+  ].forEach((resourceId) => {
+    const resource = resources.find((item) => item.id === resourceId);
+    if (resource) resource.tracks = mergeValues(resource.tracks, ["chemical-sustainability"]);
+  });
+
+  Object.assign(curriculumTasks, {
+    "data-center-infra": [
+      { title: "전력·냉각 구성도 정리", objective: "데이터센터를 UPS·수배전·발전기·냉각·BMS/DCIM으로 나눠 직무 범위를 판단합니다.", time: "2시간", deliverable: "전력·냉각 구성도", keywords: ["데이터센터", "UPS", "HVAC"], finalCheck: "전력 경로와 냉각 경로가 분리돼 있는지" },
+      { title: "운영 로그와 알람 분석", objective: "전력, 온도, 습도, 알람 로그를 시간 기준으로 정리해 반복 장애 후보를 찾습니다.", time: "3시간", deliverable: "BMS/DCIM 알람 원인분석표", keywords: ["BMS", "DCIM", "알람"], finalCheck: "알람별 확인 항목과 조치 순서가 있는지" },
+      { title: "PUE·장애 대응 리포트", objective: "에너지 효율과 장애 대응 기준을 지원 회사 공고 키워드와 연결합니다.", time: "3시간", deliverable: "PUE 개선·장애 대응 리포트", keywords: ["PUE", "예방정비", "장애대응"], finalCheck: "가용성, 안전, 에너지 기준이 함께 적혔는지" }
+    ],
+    "semiconductor-packaging-test": [
+      { title: "패키지 구조·공정 흐름 정리", objective: "HBM, bump, TSV, substrate, molding 흐름을 구조와 불량 모드로 연결합니다.", time: "2시간", deliverable: "패키지 구조·불량 연결표", keywords: ["HBM", "Advanced Packaging", "Bump"], finalCheck: "구조 용어와 불량 모드가 연결됐는지" },
+      { title: "Test bin·수율 분석", objective: "Probe/Final Test 결과를 bin, lot, wafer map 기준으로 정리합니다.", time: "3시간", deliverable: "Test bin Pareto와 원인 가설", keywords: ["ATE", "Probe", "Yield"], finalCheck: "상위 fail item과 확인 실험이 있는지" },
+      { title: "신뢰성·FA 리포트", objective: "HAST, HTOL, thermal cycling, C-SAM/X-ray 결과를 원인 가설과 개선안으로 정리합니다.", time: "3시간", deliverable: "신뢰성·FA 리포트", keywords: ["Reliability", "FA", "C-SAM"], finalCheck: "시험 조건, 판정 기준, 재발 방지가 포함됐는지" }
+    ],
+    "manufacturing-dx": [
+      { title: "설비 데이터 구조 정의", objective: "lot, recipe, 설비, alarm, 품질 결과를 하나의 데이터 구조로 정리합니다.", time: "2시간", deliverable: "설비 데이터 정의서", keywords: ["MES", "SCADA", "OPC UA"], finalCheck: "join 가능한 키와 시간 기준이 있는지" },
+      { title: "OEE·정지 손실 분석", objective: "가동률, 성능, 품질 손실을 분리하고 개선 우선순위를 정합니다.", time: "3시간", deliverable: "OEE 손실 Pareto", keywords: ["OEE", "downtime", "Python"], finalCheck: "손실 유형별 개선 행동이 있는지" },
+      { title: "대시보드·비전검사 적용", objective: "대시보드 또는 비전검사 기준을 만들어 현장 의사결정에 연결합니다.", time: "3시간", deliverable: "제조 DX 대시보드 또는 검사 기준표", keywords: ["Power BI", "OpenCV", "비전검사"], finalCheck: "사용자가 볼 지표와 판정 문장이 있는지" }
+    ],
+    "chemical-sustainability": [
+      { title: "신사업 화학공정 흐름도", objective: "수소, CCUS, 수처리, 리사이클, 고분자 중 하나를 골라 원료-반응-분리-품질 흐름을 정리합니다.", time: "2시간", deliverable: "공정 흐름도와 물질수지 초안", keywords: ["수소", "CCUS", "수처리"], finalCheck: "원료, 제품, 부산물, 배출 흐름이 보이는지" },
+      { title: "분석·품질 데이터 연결", objective: "GC/MS, HPLC, FTIR, DSC/TGA 또는 수질 지표를 품질 판단 기준으로 바꿉니다.", time: "3시간", deliverable: "분석 결과-품질 지표 연결표", keywords: ["HPLC", "FTIR", "TOC", "DSC"], finalCheck: "분석값이 합격/불합격 판단으로 이어지는지" },
+      { title: "Scale-up·환경안전 검토", objective: "lab 조건을 파일럿·양산 조건으로 옮길 때 생기는 열·물질전달, 안전, 환경 리스크를 정리합니다.", time: "3시간", deliverable: "Scale-up 리스크와 HAZOP 체크리스트", keywords: ["Scale-up", "HAZOP", "PSM"], finalCheck: "리스크, 감지 방법, 예방 대책이 같이 있는지" }
+    ]
+  });
+
+  Object.assign(starterKeywords, {
+    "data-center-infra": "데이터센터 UPS 수배전 발전기 냉각 HVAC BMS DCIM PUE 장애대응 예방정비",
+    "semiconductor-packaging-test": "반도체 후공정 Advanced Packaging HBM Probe Test Final Test ATE Reliability FA",
+    "manufacturing-dx": "스마트팩토리 MES SCADA OPC UA PLC SQL Python OEE 대시보드 비전검사",
+    "chemical-sustainability": "화학공학 수소 CCUS 수처리 배터리리사이클 고분자 필름 Scale-up HAZOP PSM"
+  });
+
+  addMajorFits("electrical_power", {
+    direct: ["data-center-electrical-infra-engineer", "dcim-bms-operations-engineer"],
+    bridge: ["data-center-cooling-engineer", "industrial-data-engineer", "mes-scada-integration-engineer"],
+    bridgeFocus: "전력·설비 강점을 데이터센터 전력, ESS, 제조 설비 데이터, 안전 기준으로 연결하면 최근 인프라·에너지 직무와 맞닿습니다."
+  });
+  addMajorFits("electrical", {
+    direct: ["semiconductor-test-engineer", "mes-scada-integration-engineer", "industrial-data-engineer", "smart-factory-vision-engineer"],
+    bridge: ["advanced-packaging-engineer", "packaging-reliability-fa-engineer", "dcim-bms-operations-engineer"]
+  });
+  addMajorFits("mechanical", {
+    direct: ["data-center-cooling-engineer"],
+    bridge: ["data-center-electrical-infra-engineer", "advanced-packaging-engineer", "packaging-reliability-fa-engineer", "mes-scada-integration-engineer", "industrial-data-engineer", "smart-factory-vision-engineer", "polymer-film-materials-engineer"]
+  });
+  addMajorFits("chemical", {
+    direct: ["advanced-packaging-engineer", "packaging-reliability-fa-engineer", "hydrogen-process-engineer", "ccus-process-engineer", "water-treatment-process-engineer", "polymer-film-materials-engineer", "battery-recycling-process-engineer"],
+    bridge: ["semiconductor-test-engineer", "industrial-data-engineer", "smart-factory-vision-engineer", "data-center-cooling-engineer"],
+    bridgeFocus: "화학공학 강점은 배터리·소재·수소·CCUS·수처리뿐 아니라 후공정 패키징, 공정 데이터, 환경안전으로 확장할 수 있습니다."
+  });
+
+  Object.entries({
+    "data-center-electrical-infra-engineer": ["schneider-data-center-university", "mathworks-simscape-electrical", "ti-power-management-training", "ni-learn-test-measurement"],
+    "data-center-cooling-engineer": ["schneider-data-center-university", "mathworks-simscape-fluids-examples", "mathworks-simscape-examples", "ansys-innovation-courses"],
+    "dcim-bms-operations-engineer": ["schneider-data-center-university", "mathworks-predictive-maintenance", "freecodecamp-python-data", "boostcourse-data-ai-basic"],
+    "advanced-packaging-engineer": ["semiengineering-advanced-packaging", "semiengineering-failure-analysis", "statistics-onramp", "letuin-semiconductor-field-practice"],
+    "semiconductor-test-engineer": ["semiengineering-semiconductor-test", "letuin-spotfire-defect-analysis", "statistics-onramp", "freecodecamp-python-data"],
+    "packaging-reliability-fa-engineer": ["semiengineering-advanced-packaging", "semiengineering-failure-analysis", "asq-eight-d", "statistics-onramp"],
+    "mes-scada-integration-engineer": ["opc-foundation-opcua-overview", "comento-plc-control-practice", "ncs", "freecodecamp-python-data"],
+    "industrial-data-engineer": ["freecodecamp-python-data", "boostcourse-data-ai-basic", "mathworks-predictive-maintenance", "google-ml-crash-course"],
+    "smart-factory-vision-engineer": ["nvidia-jetson-ai-course", "mathworks-deep-learning-onramp", "google-ml-crash-course", "boostcourse-data-ai-basic"],
+    "hydrogen-process-engineer": ["doe-hydrogen-production-delivery", "learncheme-reactor-design", "learncheme-material-balances", "aiche-ccps-process-safety-beacon"],
+    "ccus-process-engineer": ["doe-carbon-capture-overview", "learncheme-separations", "learncheme-reactor-design", "mit-chemical-engineering"],
+    "water-treatment-process-engineer": ["aiche-ccps-process-safety-beacon", "learncheme-separations", "kosha-psm", "youtube-nptel-hazop"],
+    "polymer-film-materials-engineer": ["learncheme-reactor-design", "statistics-onramp", "coursera-engineering-data", "nptel-chemical-engineering"],
+    "battery-recycling-process-engineer": ["learncheme-material-balances", "learncheme-separations", "aiche-ccps-process-safety-beacon", "statistics-onramp"]
+  }).forEach(([roleId, resourceIds]) => {
+    roleResourceLinks[roleId] = mergeValues(resourceIds, roleResourceLinks[roleId] || []);
+  });
+
+  Object.entries({
+    "schneider-data-center-university": ["전력·냉각 구성도 정리", "운영 로그와 알람 분석", "PUE·장애 대응 리포트"],
+    "mathworks-simscape-fluids-examples": ["전력·냉각 구성도 정리", "PUE·장애 대응 리포트"],
+    "semiengineering-advanced-packaging": ["패키지 구조·공정 흐름 정리", "신뢰성·FA 리포트"],
+    "semiengineering-semiconductor-test": ["Test bin·수율 분석", "신뢰성·FA 리포트"],
+    "opc-foundation-opcua-overview": ["설비 데이터 구조 정의", "OEE·정지 손실 분석"],
+    "aiche-ccps-process-safety-beacon": ["Scale-up·환경안전 검토"],
+    "doe-hydrogen-production-delivery": ["신사업 화학공정 흐름도", "Scale-up·환경안전 검토"],
+    "doe-carbon-capture-overview": ["신사업 화학공정 흐름도", "Scale-up·환경안전 검토"],
+    "learncheme-reactor-design": ["신사업 화학공정 흐름도", "분석·품질 데이터 연결"],
+    "learncheme-separations": ["신사업 화학공정 흐름도", "Scale-up·환경안전 검토"]
+  }).forEach(([resourceId, taskTitles]) => {
+    resourceTaskLinks[resourceId] = mergeValues(resourceTaskLinks[resourceId], taskTitles);
+  });
+
+  industryDiagnostics.infrastructure = [
+    ["가용성", "전력·냉각 이중화와 장애 대응 기준을 설명할 수 있다."],
+    ["운영 데이터", "BMS/DCIM 알람을 원인 후보와 예방정비 항목으로 바꿀 수 있다."]
+  ];
+  industryDiagnostics.environment = [
+    ["환경 규제", "배출·폐수·폐기물 기준을 공정 조건과 연결할 수 있다."],
+    ["처리 공정", "수처리·리사이클·CCUS 공정의 입력, 출력, 품질 지표를 설명할 수 있다."]
+  ];
+  industryDiagnostics.chemical = mergeValues(industryDiagnostics.chemical, [
+    ["Scale-up", "lab 조건과 양산 조건의 차이를 열·물질전달, 안전, 품질 기준으로 설명할 수 있다."],
+    ["친환경 공정", "수소, CCUS, 리사이클, 수처리 중 하나의 공정 흐름과 핵심 변수를 말할 수 있다."]
+  ]);
+}
+
+applyPriorityRoleExpansion();
+
 const storageKey = "careerCompetencyPilot";
 const primaryViews = ["tracks", "diagnosis", "roadmap", "saved", "references"];
 
@@ -7228,7 +7906,21 @@ function getRoleCurriculumOutput(track, role) {
     "autonomous-simulation-validation-engineer": "자율주행 시나리오 검증표와 corner case 리포트",
     "vehicle-sw-platform-engineer": "AUTOSAR SWC 인터페이스 정의서와 통합 테스트 케이스",
     "vehicle-diagnostics-ota-engineer": "UDS·OTA 테스트 케이스와 실패 로그 분석 리포트",
-    "vehicle-cybersecurity-engineer": "TARA 위협분석표와 차량 보안 요구사항 검증표"
+    "vehicle-cybersecurity-engineer": "TARA 위협분석표와 차량 보안 요구사항 검증표",
+    "data-center-electrical-infra-engineer": "전력 단선도 검토표와 장애 대응 체크리스트",
+    "data-center-cooling-engineer": "냉각 용량 계산표와 온도 로그 개선 리포트",
+    "dcim-bms-operations-engineer": "BMS/DCIM 알람 분석 대시보드 초안",
+    "advanced-packaging-engineer": "패키지 구조·공정 조건표와 불량 모드 연결표",
+    "semiconductor-test-engineer": "Test bin Pareto와 수율 원인 가설 리포트",
+    "packaging-reliability-fa-engineer": "패키지 신뢰성 시험·FA 원인분석 리포트",
+    "mes-scada-integration-engineer": "PLC-SCADA-MES 인터페이스 정의서",
+    "industrial-data-engineer": "OEE·불량·정지 손실 대시보드와 개선 우선순위표",
+    "smart-factory-vision-engineer": "비전검사 라벨 기준표와 오탐·미탐 개선 리포트",
+    "hydrogen-process-engineer": "수소 공정 흐름도와 안전 리스크 체크리스트",
+    "ccus-process-engineer": "CCUS 공정 성능 비교표와 에너지 리스크 메모",
+    "water-treatment-process-engineer": "수질 지표-처리 공정 운영 리포트",
+    "polymer-film-materials-engineer": "고분자·필름 조성-물성 비교표와 scale-up 리스크표",
+    "battery-recycling-process-engineer": "배터리 리사이클 회수율·순도 계산표와 환경안전 체크리스트"
   };
   if (roleOutputById[role.id]) return roleOutputById[role.id];
   if (role.title.includes("필드이슈") || role.title.includes("Warranty")) return "필드이슈 8D 원인분석표와 보증 데이터 기반 품질 개선 리포트";
@@ -7352,8 +8044,10 @@ function getRoleExplicitToolTerms(track, role) {
     "OpenCV", "PCL", "YOLO", "NVIDIA Jetson", "CUDA", "TensorRT", "TensorFlow", "PyTorch",
     "MLflow", "DVC", "Docker", "Kubernetes", "Yocto",
     "Buildroot", "BSP", "Kernel", "Linux", "Device tree", "PLC", "EtherCAT", "Profinet", "OPC UA",
-    "PCS", "ESS", "EMS", "BMS", "PMSM", "FOC", "VFD", "CD-SEM", "SEM", "SEM/EDS", "FIB", "KLA", "OES", "RGA", "ellipsometry", "scatterometry", "WAT", "PCM", "SCADA", "BMS/FMS", "XRD",
-    "FTIR", "DSC", "TGA", "GC/MS", "HPLC", "HAZOP", "PSM", "MSDS", "GMP", "SOP"
+    "PCS", "ESS", "EMS", "BMS", "PMSM", "FOC", "VFD", "UPS", "DCIM", "PUE", "CRAC", "CRAH", "chiller",
+    "Advanced Packaging", "HBM", "TSV", "interposer", "ATE", "Probe Test", "Final Test", "C-SAM", "HTOL", "HAST",
+    "CD-SEM", "SEM", "SEM/EDS", "FIB", "KLA", "OES", "RGA", "ellipsometry", "scatterometry", "WAT", "PCM", "SCADA", "BMS/FMS", "XRD",
+    "FTIR", "DSC", "TGA", "GC/MS", "HPLC", "ICP", "TOC", "RO", "CCUS", "CO2", "수소", "Scale-up", "HAZOP", "PSM", "MSDS", "GMP", "SOP"
   ];
 
   return uniqueRoleTerms([
@@ -7510,6 +8204,10 @@ function getRoleArtifactExamples(track, role) {
   if (/(PCB|회로|전원|리플|EMC|오실로스코프|부품선정)/i.test(text)) examples.push("회로 블록도, 부품 선정표, 측정 포인트와 검증 결과");
   if (/(MCU|펌웨어|UART|SPI|I2C|CAN|PWM|ADC)/i.test(text)) examples.push("주변장치 매핑표, 통신 로그, 디버깅 재현 절차");
   if (/(자율주행|Perception|Sensor Fusion|Localization|Planning|RoadRunner|SDV|UDS|OTA|ISO 21434|SOME\/IP)/i.test(text)) examples.push("자율주행 시나리오 검증표, 센서/CAN 로그 동기화표, 차량 SW 인터페이스 정의서");
+  if (/(데이터센터|UPS|DCIM|BMS|PUE|HVAC|냉각|CRAC|CRAH)/i.test(text)) examples.push("전력 단선도, 냉각 용량 계산표, BMS/DCIM 알람 분석표");
+  if (/(Advanced Packaging|HBM|패키징|Probe|Final Test|ATE|C-SAM|HTOL|HAST|신뢰성)/i.test(text)) examples.push("패키지 구조표, test bin Pareto, 신뢰성·FA 원인분석 리포트");
+  if (/(MES|SCADA|OPC UA|OEE|스마트팩토리|비전검사|OpenCV|YOLO)/i.test(text)) examples.push("설비 데이터 정의서, OEE 손실 Pareto, 비전검사 오탐·미탐 분석표");
+  if (/(수소|CCUS|수처리|폐수|고분자|필름|리사이클|Scale-up|HAZOP|PSM)/i.test(text)) examples.push("공정 흐름도, 물질수지 계산표, scale-up·환경안전 리스크표");
   if (/(차량|차체|BIW|섀시|현가|조향|제동|파워트레인|구동계|배터리팩|BMS|E\/E|ECU|ADAS|HIL|SIL|DVP&R|실차|CANoe|AUTOSAR)/i.test(text)) examples.push("차량 요구사항표, 인터페이스 정의서, 시험계획서와 검증 리포트");
   if (/(Linux|Device Driver|Kernel|Yocto|BSP|부팅)/i.test(text)) examples.push("device tree·드라이버 로그 분석 메모와 이미지 빌드 흐름도");
   if (/(ROS|Navigation|SLAM|로봇|센서)/i.test(text)) examples.push("ROS 노드·토픽 구성도와 센서 데이터 흐름 로그");
