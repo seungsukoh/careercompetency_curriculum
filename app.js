@@ -4110,6 +4110,7 @@ function bindElements() {
     "savedGuidance",
     "savedList",
     "clearSavedButton",
+    "resetPlanButton",
     "exportPlanButton"
   ].forEach((id) => {
     elements[id] = document.getElementById(id);
@@ -4171,6 +4172,13 @@ function bindEvents() {
     render();
   });
 
+  elements.resetPlanButton.addEventListener("click", () => {
+    const confirmed = window.confirm("전공, 관심 산업, 직무 선택, 역량 체크, 선택 교육을 모두 초기화할까요?");
+    if (!confirmed) return;
+    resetState();
+    render();
+  });
+
   elements.exportPlanButton.addEventListener("click", exportPlanAsExcel);
 
   window.addEventListener("resize", scheduleWordCloudLayout);
@@ -4207,6 +4215,20 @@ function loadState() {
 
 function saveState() {
   localStorage.setItem(storageKey, JSON.stringify(state));
+}
+
+function resetState() {
+  state = {
+    ...defaultState,
+    profile: { ...defaultState.profile },
+    selectedRoles: {},
+    checked: {},
+    saved: [],
+    completed: [],
+    completedRoadmap: []
+  };
+  localStorage.removeItem(storageKey);
+  saveState();
 }
 
 function normalizeView(view, fallback = "roadmap") {
@@ -4322,14 +4344,14 @@ function getWorkflowSteps({ track, role, checkedCount, score, gapCount, savedCou
     {
       view: "roadmap",
       title: "교육 선택",
-      status: gapCount ? `보완 ${gapCount}개 기준` : "추천 교육 확인",
-      complete: hasActiveRoleSelection() && checkedCount > 0
+      status: savedCount ? `선택 ${savedCount}개` : (gapCount ? `보완 ${gapCount}개 기준` : "추천 교육 확인"),
+      complete: savedCount > 0
     },
     {
       view: "saved",
       title: "내 커리큘럼",
-      status: hasActiveRoleSelection() ? `${taskCount || 0}주 구성 · 선택 ${savedCount}개` : "직무 선택 후",
-      complete: hasActiveRoleSelection()
+      status: savedCount ? `${taskCount || 0}주 구성 · 선택 ${savedCount}개` : "교육 선택 후",
+      complete: savedCount > 0
     }
   ];
 }
@@ -4356,7 +4378,19 @@ function getNextWorkflowStep(steps, activeIndex) {
     };
   }
 
-  if (state.view !== "roadmap" && state.view !== "references" && state.view !== "saved") {
+  const savedStep = steps.find((step) => step.view === "saved");
+
+  if (!savedStep.complete && state.view === "roadmap") {
+    return {
+      view: "roadmap",
+      title: "필요한 교육을 고르세요",
+      body: "교육 카드에서 실제로 볼 자료만 내 커리큘럼에 추가해야 마지막 결과가 완성됩니다.",
+      action: "교육 선택",
+      primary: true
+    };
+  }
+
+  if (!savedStep.complete && state.view !== "roadmap" && state.view !== "references" && state.view !== "saved") {
     return {
       view: "roadmap",
       title: "추천 교육을 확인하고 고르세요",
@@ -4366,12 +4400,22 @@ function getNextWorkflowStep(steps, activeIndex) {
     };
   }
 
-  if (state.view === "roadmap" || state.view === "references") {
+  if (savedStep.complete && (state.view === "roadmap" || state.view === "references")) {
     return {
       view: "saved",
       title: "내 커리큘럼을 확인하세요",
       body: "고른 교육과 추천된 주차별 과제를 한 화면에서 확인하고, 엑셀 커리큘럼으로 내보낼 수 있습니다.",
       action: "내 커리큘럼 확인",
+      primary: true
+    };
+  }
+
+  if (!savedStep.complete && (state.view === "saved" || state.view === "references")) {
+    return {
+      view: "roadmap",
+      title: "교육을 먼저 선택하세요",
+      body: "내 커리큘럼은 선택한 교육자료를 기준으로 정리됩니다. 필요한 자료를 먼저 추가하세요.",
+      action: "교육 선택",
       primary: true
     };
   }
@@ -4932,7 +4976,7 @@ function renderRoleDecisionDashboard(track, role, checkedCount, totalCount, gapI
       <div class="role-decision-card">
         <span>준비 결과물</span>
         <strong>${output}</strong>
-        <em>교육자료보다 산출물이 최종 판단 기준입니다.</em>
+        <em>선택한 교육자료는 이 결과물을 만들기 위한 참고자료입니다.</em>
       </div>
     </section>
   `;
@@ -5388,7 +5432,7 @@ function getRoleCurriculumOutput(track, role) {
   if (role.title.includes("검증") || role.title.includes("시험")) return "시험계획서와 Pass/Fail 검증 리포트";
   if (role.title.includes("품질") || role.title.includes("공정")) return "조건 변경 검토표와 개선 보고서";
   if (role.title.includes("설계") || role.title.includes("하드웨어")) return "요구사항표, 설계 검토표, 측정 리포트";
-  if (role.title.includes("데이터") || role.title.includes("수율")) return "분석 노트북과 원인 가설 리포트";
+  if (role.title.includes("데이터") || role.title.includes("수율")) return "데이터 분석 노트와 원인 가설 리포트";
   if (role.title.includes("펌웨어") || role.title.includes("소프트웨어") || role.title.includes("제어")) return "동작 로그, 테스트 케이스, README";
   return track.outputs[0] || "직무 산출물";
 }
