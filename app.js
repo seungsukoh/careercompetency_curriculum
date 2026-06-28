@@ -4867,6 +4867,7 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
         <span>선택 직무</span>
         <strong>${role.title}</strong>
       </div>
+      ${renderRoleWordCloud(track, role, "is-featured is-compact")}
       <div class="selected-role-top is-summary-only">
         <div class="selected-role-summary">
           <p class="eyebrow">이 직무가 맞나요?</p>
@@ -4891,15 +4892,6 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
           <button class="primary-button" type="button" data-view-target="diagnosis">역량 체크하기</button>
         </div>
       </div>
-      <details class="role-detail-disclosure role-keyword-disclosure" open>
-        <summary>
-          <span>
-            <strong>직무 키워드 보기</strong>
-            <small>직무상세, 주요 툴, 시뮬레이션 키워드 포함</small>
-          </span>
-        </summary>
-        ${renderRoleWordCloud(track, role, "is-featured is-compact")}
-      </details>
       <details class="role-detail-disclosure">
         <summary>
           <span>
