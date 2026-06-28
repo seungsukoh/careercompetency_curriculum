@@ -2965,6 +2965,7 @@ const defaultState = {
 
 let state = loadState();
 let deferredInstallPrompt = null;
+let serviceWorkerRefreshing = false;
 
 const elements = {};
 
@@ -3626,19 +3627,58 @@ function getHiringEvidence(track, role) {
 }
 
 function renderRoleWordCloud(track, role, modifier = "") {
-  const terms = arrangeWordCloudTerms(getRoleWordCloudTerms(track, role).slice(0, 32));
+  const terms = getRoleWordCloudTerms(track, role).slice(0, 32);
+  const primaryTerm = terms[0];
+  const { topTerms, bottomTerms } = splitWordCloudBands(terms.slice(1));
   return `
     <figure class="word-cloud-panel ${modifier}" aria-label="${role.title} 직무 키워드 워드클라우드">
       <div class="word-cloud-terms">
-        ${terms.map((term, index) => `<span class="word-cloud-term weight-${term.level}" style="${getWordCloudTermStyle(term, index)}">${term.word}</span>`).join("")}
+        <div class="word-cloud-band">
+          ${topTerms.map((term, index) => renderWordCloudTerm(term, index)).join("")}
+        </div>
+        ${primaryTerm ? `
+          <div class="word-cloud-center">
+            ${renderWordCloudTerm(primaryTerm, 0, true)}
+          </div>
+        ` : ""}
+        <div class="word-cloud-band">
+          ${bottomTerms.map((term, index) => renderWordCloudTerm(term, index + topTerms.length)).join("")}
+        </div>
       </div>
       <figcaption>${role.title} 직무상세의 주요 업무, 자격요건, 우대역량, 직무확보 문항에서 반복되는 단어일수록 크게 표시합니다.</figcaption>
     </figure>
   `;
 }
 
+function renderWordCloudTerm(term, index, isPrimary = false) {
+  return `<span class="word-cloud-term ${isPrimary ? "is-primary" : ""} weight-${term.level}" style="${getWordCloudTermStyle(term, index)}">${term.word}</span>`;
+}
+
+function splitWordCloudBands(terms) {
+  const topTerms = [];
+  const bottomTerms = [];
+  let topScore = 0;
+  let bottomScore = 0;
+
+  terms.forEach((term) => {
+    const footprint = term.level * Math.max(2, cleanRoleTerm(term.word).length * 0.8);
+    if (topScore <= bottomScore) {
+      topTerms.push(term);
+      topScore += footprint;
+    } else {
+      bottomTerms.push(term);
+      bottomScore += footprint;
+    }
+  });
+
+  return {
+    topTerms: arrangeWordCloudTerms(topTerms),
+    bottomTerms: arrangeWordCloudTerms(bottomTerms)
+  };
+}
+
 function arrangeWordCloudTerms(terms) {
-  const pattern = [0, 7, 2, 11, 4, 1, 14, 6, 3, 17, 8, 5, 20, 10, 13, 9, 22, 12, 15, 16, 24, 18, 21, 19, 26, 23, 25, 27, 28, 29, 30, 31];
+  const pattern = [6, 1, 10, 3, 14, 0, 8, 5, 18, 2, 12, 7, 22, 4, 16, 9, 20, 11, 24, 13, 15, 17, 26, 19, 21, 23, 25, 27, 28, 29, 30];
   const used = new Set();
   const arranged = [];
 
@@ -5347,12 +5387,26 @@ function getSelectLabel(select) {
 
 function registerServiceWorker() {
   if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (serviceWorkerRefreshing) return;
+      serviceWorkerRefreshing = true;
+      window.location.reload();
+    });
+
     navigator.serviceWorker.register("/sw.js", { updateViaCache: "none" })
       .then((registration) => {
         registration.update();
         if (registration.waiting) {
           registration.waiting.postMessage({ type: "SKIP_WAITING" });
         }
+        registration.addEventListener("updatefound", () => {
+          const nextWorker = registration.installing;
+          nextWorker?.addEventListener("statechange", () => {
+            if (nextWorker.state === "installed" && navigator.serviceWorker.controller) {
+              nextWorker.postMessage({ type: "SKIP_WAITING" });
+            }
+          });
+        });
       })
       .catch(() => {});
   }

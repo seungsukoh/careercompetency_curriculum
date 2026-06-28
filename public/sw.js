@@ -1,4 +1,4 @@
-const cacheName = "career-competency-pilot-v4";
+const cacheName = "career-competency-pilot-v5";
 const staticAssets = [
   "/manifest.webmanifest",
   "/assets/icon.svg"
@@ -34,7 +34,7 @@ self.addEventListener("fetch", (event) => {
   const requestUrl = new URL(event.request.url);
   if (requestUrl.origin !== self.location.origin) return;
 
-  if (event.request.mode === "navigate" || isFreshAppAsset(requestUrl, event.request)) {
+  if (event.request.mode === "navigate" || isFreshAppAsset(requestUrl, event.request) || isFreshWordCloudAsset(requestUrl)) {
     event.respondWith(networkFirst(event.request));
     return;
   }
@@ -47,6 +47,10 @@ function isFreshAppAsset(requestUrl, request) {
     || request.destination === "style"
     || request.destination === "document"
     || ["/", "/index.html", "/app.js", "/styles.css", "/sw.js"].includes(requestUrl.pathname);
+}
+
+function isFreshWordCloudAsset(requestUrl) {
+  return requestUrl.pathname.startsWith("/assets/wordcloud-");
 }
 
 async function networkFirst(request) {
