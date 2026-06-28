@@ -99,6 +99,67 @@ a:focus-visible {
   box-shadow: var(--shadow-soft);
 }
 
+.app-header > div {
+  min-width: 0;
+}
+
+.app-header-status {
+  flex: 1 1 560px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  min-width: 260px;
+}
+
+.app-header-status span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding: 9px 10px;
+  background: var(--surface-muted);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.app-header-status span:first-child {
+  background: var(--primary-soft);
+  border-color: #c9d9e8;
+}
+
+.app-header-status span:last-child {
+  background: var(--green-soft);
+  border-color: #b6d9c4;
+}
+
+.app-header-status em,
+.app-header-status small {
+  color: var(--muted);
+  font-style: normal;
+  line-height: 1.25;
+}
+
+.app-header-status em {
+  font-size: 0.7rem;
+  font-weight: 900;
+}
+
+.app-header-status strong {
+  color: var(--ink);
+  font-size: 0.88rem;
+  line-height: 1.25;
+}
+
+.app-header-status small {
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.app-reset-button {
+  flex: 0 1 160px;
+  min-width: 130px;
+  min-height: 38px;
+}
+
 .app-header h1,
 .panel-heading h2,
 .section-heading h2 {
@@ -109,6 +170,8 @@ a:focus-visible {
 .app-header h1 {
   font-size: clamp(1.35rem, 2.5vw, 1.85rem);
   line-height: 1.15;
+  overflow-wrap: anywhere;
+  word-break: keep-all;
 }
 
 .eyebrow {
@@ -330,10 +393,6 @@ input::placeholder {
   color: #8f1d14;
   background: var(--danger-soft);
   border-color: #e38b84;
-}
-
-.reset-start-button {
-  min-height: 38px;
 }
 
 .section-actions {
@@ -3441,7 +3500,14 @@ li {
   }
 
   .app-header {
-    align-items: start;
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+
+  .app-header-status {
+    order: 3;
+    flex-basis: 100%;
+    min-width: 0;
   }
 
   .layout {
@@ -3513,6 +3579,16 @@ li {
 @media (max-width: 620px) {
   .app-header {
     flex-direction: column;
+  }
+
+  .app-reset-button {
+    flex: none;
+    width: 100%;
+  }
+
+  .app-header-status {
+    grid-template-columns: 1fr;
+    width: 100%;
   }
 
   .tabs {

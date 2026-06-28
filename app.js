@@ -4085,6 +4085,7 @@ function bindElements() {
     "selectedTrackMetric",
     "diagnosticMetric",
     "savedMetric",
+    "headerStatus",
     "nextActionPanel",
     "profileImpactPanel",
     "workflowStatus",
@@ -4286,6 +4287,7 @@ function renderWorkflowStatus() {
 
   if (!hasActiveRoleSelection()) {
     const steps = getWorkflowSteps({ track: null, role: null, checkedCount: 0, score: 0, gapCount: 0, savedCount: 0, taskCount: 0 });
+    const nextStep = getNextWorkflowStep(steps, 0);
     elements.workflowStatus.innerHTML = steps.map((step, index) => `
       <button class="workflow-step ${index === 0 ? "is-active" : ""} ${step.optional ? "is-optional" : ""}" type="button" data-view-target="${step.view}">
         <span class="workflow-step-number">${index + 1}</span>
@@ -4295,11 +4297,12 @@ function renderWorkflowStatus() {
         </span>
       </button>
     `).join("");
+    renderHeaderStatus(steps[0], nextStep, 0, steps.length);
     elements.nextActionPanel.innerHTML = `
       <p class="eyebrow">다음 행동</p>
-      <h3>지원하려는 직무를 먼저 선택하세요</h3>
-      <p>직무를 선택하면 워드클라우드, 반복 업무, 자격조건, 우대역량, 전공 연결성이 바로 아래에 열립니다.</p>
-      <button class="primary-button full-width" type="button" data-view-target="tracks">직무 선택</button>
+      <h3>${nextStep.title}</h3>
+      <p>${nextStep.body}</p>
+      <button class="primary-button full-width" type="button" data-view-target="${nextStep.view}">${nextStep.action}</button>
     `;
     return;
   }
@@ -4327,11 +4330,29 @@ function renderWorkflowStatus() {
   `).join("");
 
   const nextStep = getNextWorkflowStep(steps, activeIndex);
+  renderHeaderStatus(steps[activeIndex], nextStep, activeIndex, steps.length);
   elements.nextActionPanel.innerHTML = `
     <p class="eyebrow">다음 행동</p>
     <h3>${nextStep.title}</h3>
     <p>${nextStep.body}</p>
     <button class="${nextStep.primary ? "primary-button" : "ghost-button"} full-width" type="button" data-view-target="${nextStep.view}">${nextStep.action}</button>
+  `;
+}
+
+function renderHeaderStatus(activeStep, nextStep, activeIndex, totalSteps) {
+  if (!elements.headerStatus) return;
+  const stepNumber = Math.min(activeIndex + 1, totalSteps);
+  elements.headerStatus.innerHTML = `
+    <span>
+      <em>현재 단계</em>
+      <strong>${stepNumber}/${totalSteps} · ${activeStep.title}</strong>
+      <small>${activeStep.status}</small>
+    </span>
+    <span>
+      <em>다음 행동</em>
+      <strong>${nextStep.action}</strong>
+      <small>${nextStep.title}</small>
+    </span>
   `;
 }
 
