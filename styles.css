@@ -41,9 +41,10 @@
   --shadow-soft: 0 8px 20px rgba(14, 39, 80, 0.07);
   --focus-ring: 0 0 0 3px rgba(184, 135, 45, 0.24);
   --radius: 8px;
-  --font-sans: Pretendard, sans-serif;
-  --font-serif: "Noto Serif KR", serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-sans: Pretendard, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-serif: "Noto Serif KR", "Noto Serif CJK KR", serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+  --font-caption: Pretendard, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   --type-display: 1.42rem;
   --type-title: 1.22rem;
   --type-card-title: 1rem;
@@ -67,6 +68,7 @@ body {
   background: var(--bg);
   font-size: var(--type-body);
   line-height: 1.5;
+  font-synthesis: none;
   overflow-x: hidden;
 }
 
@@ -219,9 +221,10 @@ a:focus-visible {
 .diagnostic-state,
 .diagnostic-source,
 .resource-trust-badges span {
-  font-family: var(--font-mono);
+  font-family: var(--font-caption);
   font-size: 1rem;
   letter-spacing: 1.8px;
+  font-variant-numeric: tabular-nums;
 }
 
 .company-detail-notice,
@@ -232,7 +235,7 @@ a:focus-visible {
 .roadmap-resource-detail p,
 .plan-resource-detail p,
 .recommendation-note {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 1rem;
 }
 
