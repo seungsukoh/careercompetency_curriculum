@@ -408,11 +408,81 @@ const resources = [
     reason: "블록 기반 모델을 직접 열어보고 입출력, 파라미터, 결과 그래프를 확인하는 공식 예제 모음입니다. 직무 산출물을 만들 때 예제 구조를 참고하기 좋습니다.",
     expectedOutput: "직무 문제에 맞춘 Simulink 모델 구조와 시뮬레이션 결과 캡처",
     qualityStatus: "candidate",
+    broad: true,
     engagement: {
       checkedAt: "2026-06-28",
       nextReviewAt: "2026-07-28"
     },
     url: "https://www.mathworks.com/help/simulink/examples.html"
+  },
+  {
+    id: "mathworks-fault-tolerant-fuel-control",
+    title: "Simulink 연료 제어 Fault-Tolerant 예제",
+    provider: "MathWorks",
+    type: "세부 공식 예제/상태·고장 검증",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 120,
+    practiceMinutes: 120,
+    sequenceLevel: 4,
+    core: true,
+    tracks: ["embedded-control", "automotive-mobility"],
+    skills: ["Simulink", "Stateflow", "Fault처리", "테스트케이스", "검증"],
+    prerequisites: ["Simulink 기초", "상태기계 기초"],
+    reason: "센서 오류, 상태 전이, fault handling을 모델로 확인하는 세부 예제입니다. ECU 소프트웨어, HIL/SIL, 검증 직무에서 요구사항-테스트케이스-로그를 연결할 때 범용 예제보다 바로 쓰기 좋습니다.",
+    expectedOutput: "고장 조건, 상태 전이, Pass/Fail 기준이 포함된 테스트 케이스 초안",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.mathworks.com/help/simulink/slref/modeling-a-fault-tolerant-fuel-control-system.html"
+  },
+  {
+    id: "mathworks-simulink-test-manager",
+    title: "Simulink Test 테스트 하네스·Test Manager 예제",
+    provider: "MathWorks",
+    type: "세부 공식 예제/테스트 자동화",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 120,
+    practiceMinutes: 120,
+    sequenceLevel: 4,
+    core: true,
+    tracks: ["embedded-control", "automotive-mobility", "electronics-pcb"],
+    skills: ["Simulink Test", "HIL", "SIL", "테스트케이스", "요구사항검증"],
+    prerequisites: ["Simulink 기초", "검증 절차 이해"],
+    reason: "모델을 보는 것에서 끝나지 않고 테스트 하네스, 테스트 케이스, 결과 리포트 흐름까지 확인하는 세부 자료입니다. 검증 직무의 산출물과 직접 맞닿습니다.",
+    expectedOutput: "요구사항별 테스트 케이스, 입력 조건, 기대 결과, 결과 리포트 구조",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.mathworks.com/help/sltest/examples.html"
+  },
+  {
+    id: "mathworks-lane-following-sensor-fusion",
+    title: "Automated Driving 차선 추종·센서융합 예제",
+    provider: "MathWorks",
+    type: "세부 공식 예제/ADAS 시나리오",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 150,
+    practiceMinutes: 150,
+    sequenceLevel: 4,
+    core: true,
+    tracks: ["automotive-mobility", "embedded-control"],
+    skills: ["ADAS", "센서융합", "시나리오", "Simulink", "검증"],
+    prerequisites: ["MATLAB 기초", "센서·제어 기초"],
+    reason: "카메라·레이더 등 센서 입력, 차선 추종 제어, 시나리오 기반 평가를 한 예제로 볼 수 있습니다. ADAS 검증 직무의 테스트 조건과 평가 지표를 잡는 데 적합합니다.",
+    expectedOutput: "ADAS 시나리오, 센서 입력, 평가 지표, Pass/Fail 기준 초안",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.mathworks.com/help/driving/ug/lane-following-control-with-sensor-fusion-and-lane-detection.html"
   },
   {
     id: "mathworks-simscape-examples",
@@ -430,6 +500,7 @@ const resources = [
     reason: "기계, 전기, 열 시스템을 물리 모델로 만들어 변수 변화가 결과에 미치는 영향을 확인하는 공식 예제 후보입니다.",
     expectedOutput: "물리 시스템 모델, 변수 변화 결과, 직무 요구사항 연결 메모",
     qualityStatus: "candidate",
+    broad: true,
     engagement: {
       checkedAt: "2026-06-28",
       nextReviewAt: "2026-07-28"
@@ -452,6 +523,7 @@ const resources = [
     reason: "조향, 제동, 현가, 차량 거동을 예제 모델로 확인하는 공식 예제 후보입니다. 자동차 섀시·시험·검증 직무의 판단 기준을 만들 때 참고할 수 있습니다.",
     expectedOutput: "차량 거동 시뮬레이션 조건표와 응답 결과 비교",
     qualityStatus: "candidate",
+    broad: true,
     engagement: {
       checkedAt: "2026-06-28",
       nextReviewAt: "2026-07-28"
@@ -474,6 +546,7 @@ const resources = [
     reason: "주행 시나리오, 센서, 인지·검증 흐름을 예제 기반으로 확인할 수 있는 공식 후보입니다. ADAS 검증 직무에서 테스트 조건을 잡는 데 도움이 됩니다.",
     expectedOutput: "주행 시나리오, 센서 입력, Pass/Fail 검증 기준 초안",
     qualityStatus: "candidate",
+    broad: true,
     engagement: {
       checkedAt: "2026-06-28",
       nextReviewAt: "2026-07-28"
@@ -496,6 +569,7 @@ const resources = [
     reason: "직무 키워드로 공식 비디오와 예제를 찾아보는 진입점입니다. 바로 매핑하기 어려운 세부 직무는 먼저 필요한 행동을 정하고 관련 영상을 예시로 고르는 데 사용합니다.",
     expectedOutput: "지원 직무 키워드로 찾은 영상 1개와 적용할 산출물 메모",
     qualityStatus: "candidate",
+    broad: true,
     engagement: {
       checkedAt: "2026-06-28",
       nextReviewAt: "2026-07-28"
@@ -3276,6 +3350,9 @@ const resourceTaskLinks = {
   "youtube-nptel-hazop": ["HAZOP 안전 체크", "화학공정 흐름도", "조건 변경 검토표"],
   "youtube-cqe-quality-tools": ["공정 문제 정의", "관리도와 Cpk 계산", "원인 가설과 FMEA", "8D 개선 보고서"],
   "mathworks-simulink-examples": ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트", "PID 응답 실험", "검증 리포트"],
+  "mathworks-fault-tolerant-fuel-control": ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트", "PID 응답 실험", "검증 리포트"],
+  "mathworks-simulink-test-manager": ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트", "검증 리포트", "디버깅 노트와 README"],
+  "mathworks-lane-following-sensor-fusion": ["자동차 세부 직무 비교표", "인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"],
   "mathworks-simscape-examples": ["차량 시스템 요구사항표", "인터페이스·시험 조건 노트", "전원 요구사항 정의", "해석 조건 검증"],
   "mathworks-vehicle-dynamics-examples": ["자동차 세부 직무 비교표", "차량 시스템 요구사항표", "자동차 직무 검증 리포트"],
   "mathworks-automated-driving-examples": ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"],
@@ -3298,6 +3375,9 @@ const resourceTaskLinks = {
   ["control-design-onramp", ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
   ["sensor-fusion-onramp", ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
   ["mathworks-simulink-examples", ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
+  ["mathworks-fault-tolerant-fuel-control", ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
+  ["mathworks-simulink-test-manager", ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
+  ["mathworks-lane-following-sensor-fusion", ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
   ["mathworks-simscape-examples", ["차량 시스템 요구사항표", "인터페이스·시험 조건 노트"]],
   ["mathworks-vehicle-dynamics-examples", ["자동차 세부 직무 비교표", "차량 시스템 요구사항표", "자동차 직무 검증 리포트"]],
   ["mathworks-automated-driving-examples", ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
@@ -3413,10 +3493,12 @@ Object.entries({
   "metrology-engineer": ["ni-learn-test-measurement", "google-ml-crash-course"],
   "validation-engineer": ["ni-learn-test-measurement"],
   "emc-test-engineer": ["ni-learn-test-measurement"],
-  "embedded-firmware-engineer": ["ni-learn-test-measurement", "boostcourse-data-ai-basic"],
-  "hil-sil-validation-engineer": ["ni-learn-test-measurement"],
-  "adas-validation-engineer": ["google-ml-crash-course", "ni-learn-test-measurement"],
-  "vehicle-test-validation-engineer": ["ni-learn-test-measurement", "ansys-innovation-courses"],
+  "embedded-firmware-engineer": ["ni-learn-test-measurement", "boostcourse-data-ai-basic", "mathworks-fault-tolerant-fuel-control"],
+  "automotive-embedded-sw-engineer": ["mathworks-fault-tolerant-fuel-control", "mathworks-simulink-test-manager"],
+  "control-engineer": ["mathworks-fault-tolerant-fuel-control"],
+  "hil-sil-validation-engineer": ["ni-learn-test-measurement", "mathworks-simulink-test-manager", "mathworks-fault-tolerant-fuel-control"],
+  "adas-validation-engineer": ["google-ml-crash-course", "ni-learn-test-measurement", "mathworks-lane-following-sensor-fusion"],
+  "vehicle-test-validation-engineer": ["ni-learn-test-measurement", "ansys-innovation-courses", "mathworks-simulink-test-manager"],
   "vehicle-thermal-management-engineer": ["ansys-innovation-courses"],
   "chassis-suspension-engineer": ["ansys-innovation-courses", "ni-learn-test-measurement"]
 }).forEach(([roleId, resourceIds]) => {
@@ -3463,6 +3545,7 @@ function bindElements() {
     "diagnosticMetric",
     "savedMetric",
     "nextActionPanel",
+    "profileImpactPanel",
     "workflowStatus",
     "trackCount",
     "roleSearchInput",
@@ -3619,6 +3702,7 @@ function render() {
   const changedTrack = syncSelectedTrackWithProfile();
   if (changedTrack) saveState();
   renderViews();
+  renderProfileImpact();
   renderTracks();
   renderTrackDetail();
   renderDiagnostics();
@@ -3749,6 +3833,31 @@ function getNextWorkflowStep(steps, activeIndex) {
     action: "로드맵 재확인",
     primary: false
   };
+}
+
+function renderProfileImpact() {
+  if (!elements.profileImpactPanel) return;
+  const track = getSelectedTrack();
+  const role = getSelectedRole(track.id);
+  const catalog = getRoleCatalog({ applyRoleFilters: false });
+  const directCount = catalog.filter(({ track: itemTrack, role: itemRole }) => getMajorPathway(itemTrack, itemRole) === "direct").length;
+  const bridgeCount = catalog.filter(({ track: itemTrack, role: itemRole }) => getMajorPathway(itemTrack, itemRole) === "bridge").length;
+  const topRoles = catalog.slice(0, 3).map(({ role: itemRole }) => itemRole.title);
+  const goalRule = goalScoringRules[state.profile.goal] || goalScoringRules.foundation;
+  const majorLabel = getMajorPathwayLabel(track, role);
+
+  elements.profileImpactPanel.innerHTML = `
+    <div>
+      <strong>${getMajorLabel()} 기준: ${majorLabel}</strong>
+      <span>직결 ${directCount}개 · 확장 ${bridgeCount}개를 먼저 올립니다.</span>
+      <em>${topRoles.join(" / ")}</em>
+    </div>
+    <div>
+      <strong>${goalRule.label} 완료 기준</strong>
+      <span>${goalRule.roadmap}</span>
+      <em>${goalRule.resource}</em>
+    </div>
+  `;
 }
 
 function getSelectedTrack() {
@@ -3976,51 +4085,63 @@ function renderSelectedRoleOverview() {
 
   elements.selectedRoleOverview.innerHTML = `
     <article class="selected-role-overview" aria-live="polite" aria-label="${role.title} 선택 직무 요약">
-      ${renderRoleWordCloud(track, role, "is-featured")}
-      <div class="selected-role-summary">
-        <p class="eyebrow">선택한 직무를 먼저 판단하세요</p>
-        <h3>${role.title}</h3>
-        <p>${role.focus}</p>
-        <div class="selected-role-keypoints">
-          <div>
-            <strong>주요 업무</strong>
-            <ul>${role.responsibilities.slice(0, 3).map((item) => `<li>${item}</li>`).join("")}</ul>
+      <div class="selected-role-top">
+        ${renderRoleWordCloud(track, role, "is-featured")}
+        <div class="selected-role-summary">
+          <p class="eyebrow">선택한 직무를 먼저 판단하세요</p>
+          <h3>${role.title}</h3>
+          <p>${role.focus}</p>
+          <div class="role-decision-mini">
+            <strong>지원 전 확인 질문</strong>
+            <ul>
+              ${getRoleDecisionQuestions(track, role).slice(0, 2).map((item) => `<li>${item}</li>`).join("")}
+            </ul>
           </div>
-          <div>
-            <strong>필요 역량</strong>
-            <ul>${role.requirements.slice(0, 3).map((item) => `<li>${item}</li>`).join("")}</ul>
+          <div class="selected-role-search">
+            <strong>채용 사이트에서는 직접 검색</strong>
+            <span>검색어 예시: ${evidence.query}</span>
+            <div class="evidence-links">
+              ${evidence.links.map((link) => `<a class="resource-action" href="${link.url}" target="_blank" rel="noreferrer">${link.label}</a>`).join("")}
+            </div>
           </div>
-        </div>
-        <div class="role-decision-mini">
-          <strong>지원 전 확인 질문</strong>
-          <ul>
-            ${getRoleDecisionQuestions(track, role).slice(0, 2).map((item) => `<li>${item}</li>`).join("")}
-          </ul>
-        </div>
-        <div class="selected-role-search">
-          <strong>채용 사이트에서는 직접 검색</strong>
-          <span>검색어 예시: ${evidence.query}</span>
-          <div class="evidence-links">
-            ${evidence.links.map((link) => `<a class="resource-action" href="${link.url}" target="_blank" rel="noreferrer">${link.label}</a>`).join("")}
+          ${quickResources.length ? `
+            <div class="selected-role-resources">
+              <strong>바로 참고할 자료</strong>
+              ${quickResources.map((resource) => `
+                <span>
+                  <em>${resource.title}</em>
+                  <small>${resource.provider} · ${resource.type}</small>
+                </span>
+              `).join("")}
+            </div>
+          ` : ""}
+          <div class="flow-actions">
+            <button class="primary-button" type="button" data-view-target="diagnosis">보유 역량 체크하기</button>
+            <button class="ghost-button" type="button" data-view-target="roadmap">로드맵 보기</button>
+            <button class="ghost-button" type="button" data-view-target="references">참고자료 보기</button>
           </div>
-        </div>
-        ${quickResources.length ? `
-          <div class="selected-role-resources">
-            <strong>바로 참고할 자료</strong>
-            ${quickResources.map((resource) => `
-              <span>
-                <em>${resource.title}</em>
-                <small>${resource.provider} · ${resource.type}</small>
-              </span>
-            `).join("")}
-          </div>
-        ` : ""}
-        <div class="flow-actions">
-          <button class="primary-button" type="button" data-view-target="diagnosis">보유 역량 체크하기</button>
-          <button class="ghost-button" type="button" data-view-target="roadmap">로드맵 보기</button>
-          <button class="ghost-button" type="button" data-view-target="references">참고자료 보기</button>
         </div>
       </div>
+      <section class="selected-role-detail-panel" aria-label="${role.title} 선택직무 상세">
+        <div class="selected-role-detail-head">
+          <div>
+            <p class="eyebrow">선택직무 상세</p>
+            <h3>${role.title}에서 실제로 확인할 내용</h3>
+          </div>
+          <div class="badge-row">
+            ${role.postingKeywords.map((keyword) => `<span class="badge">${keyword}</span>`).join("")}
+          </div>
+        </div>
+        <div class="role-detail-grid is-prominent">
+          ${detailBlock("채용공고 반복 업무", role.responsibilities)}
+          ${detailBlock("자격조건·필수 역량", role.requirements)}
+          ${detailBlock("우대·차별화 역량", role.preferred)}
+        </div>
+        <div class="company-detail-inline">
+          <strong>지원 회사 공고와 대조</strong>
+          위 반복업무·자격조건·우대역량 중 지원 회사 공고에 실제로 적힌 문장을 표시한 뒤, 없는 내용은 로드맵 우선순위에서 낮추세요.
+        </div>
+      </section>
     </article>
   `;
 }
@@ -4067,9 +4188,9 @@ function getRoleCatalogScore(track, role) {
   let score = 0;
 
   const majorPathway = getMajorPathway(track, role);
-  if (majorPathway === "direct") score += 32;
-  if (majorPathway === "bridge") score += 18;
-  if (majorPathway === "explore") score += 4;
+  if (majorPathway === "direct") score += 95;
+  if (majorPathway === "bridge") score += 24;
+  if (majorPathway === "explore") score -= 80;
   if (state.profile.industry !== "all" && role.industries.includes(state.profile.industry)) score += 60;
   if (state.profile.industry !== "all" && track.industries.includes(state.profile.industry)) score += 20;
   score += Math.min(getRoleLinkedResourceIds(role).length, 8) * 3;
@@ -5028,9 +5149,7 @@ function renderReferenceResourceItem(resource, context) {
         <p><strong>남길 산출물:</strong> ${resource.expectedOutput}</p>
         <div class="roadmap-resource-actions">
           <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
-          <button class="resource-action ${saved ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
-            ${saved ? "내 계획에 추가됨" : "내 계획에 추가"}
-          </button>
+          ${renderSaveActionButton(resource)}
         </div>
       </div>
     </details>
@@ -5376,9 +5495,7 @@ function renderCompetencyActionPlan(context, tasks) {
                       <strong>${resource.title}</strong>
                       <div>
                         <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
-                        <button class="resource-action ${state.saved.includes(resource.id) ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
-                          ${state.saved.includes(resource.id) ? "추가됨" : "내 계획 추가"}
-                        </button>
+                        ${renderSaveActionButton(resource, "내 계획 추가")}
                       </div>
                     </div>
                   `).join("")}
@@ -5451,9 +5568,7 @@ function renderHandsOnResourcePanel(context) {
             </span>
             <span>
               <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
-              <button class="resource-action ${state.saved.includes(resource.id) ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
-                ${state.saved.includes(resource.id) ? "추가됨" : "내 계획 추가"}
-              </button>
+              ${renderSaveActionButton(resource, "내 계획 추가")}
             </span>
           </div>
         `).join("")}
@@ -5515,7 +5630,7 @@ function getGoalResourceScore(resource, context) {
   const goalKey = context.goalKey || "foundation";
   const preferredDifficulty = context.goal.preferredDifficulties.includes(resource.difficulty) ? 1 : 0;
   const gapMatches = getResourceGapMatches(resource, context).length;
-  const goalSkillMatches = resource.skills.filter((skill) => context.goal.prioritySkills.includes(skill)).length;
+  const goalSkillMatches = (resource.skills || []).filter((skill) => context.goal.prioritySkills.includes(skill)).length;
   const roleKeywordMatches = getRoleKeywordMatches(resource, context.role).length;
   const outputEvidenceMatches = countKeywordMatches(text, [
     "보고서",
@@ -5594,6 +5709,7 @@ function getEducationResourceScore(resource, context) {
   const competencyScore = getCompetencyFitScore(resource, context);
   const goalScore = getGoalResourceScore(resource, context);
   const selectedMatch = state.saved.includes(resource.id) ? 1 : 0;
+  const broadPenalty = resource.broad && !selectedMatch ? 90 : 0;
   const completedPenalty = state.completed.includes(resource.id) ? 18 : 0;
   const acquiredOnlyPenalty = context.gapSkills.length && acquiredMatches && !gapMatches ? 80 : 0;
   const noGapPenalty = context.gapSkills.length && !gapMatches ? 28 : 0;
@@ -5609,6 +5725,7 @@ function getEducationResourceScore(resource, context) {
     + goalScore
     + getResourcePriorityScore(resource, context)
     + selectedMatch * 24
+    - broadPenalty
     - completedPenalty
     - acquiredOnlyPenalty
     - noGapPenalty;
@@ -5694,6 +5811,7 @@ function getTaskResourceScore(resource, task, context, resourceUseCounts = new M
   const handsOnMatch = isHandsOnResource(resource) ? 1 : 0;
   const alreadyUsedPenalty = getRoadmapResourceUseCount(resourceUseCounts, resource.id) * 220;
   const durationPenalty = getDurationResourcePenalty(resource, context);
+  const broadPenalty = resource.broad && !selectedMatch ? 180 : 0;
   const acquiredOnlyPenalty = context.gapSkills.length && acquiredMatches && !resourceGapMatches ? 160 : 0;
   const noGapPenalty = context.gapSkills.length && !resourceGapMatches && !gapMatches ? 70 : 0;
 
@@ -5716,6 +5834,7 @@ function getTaskResourceScore(resource, task, context, resourceUseCounts = new M
     - (directTaskMatches ? 0 : otherLinkedTaskMatches * 180)
     - alreadyUsedPenalty
     - durationPenalty
+    - broadPenalty
     - acquiredOnlyPenalty
     - noGapPenalty;
 }
@@ -5898,9 +6017,7 @@ function renderRoadmapResourceItem(resource, task, context) {
         ${signals.length ? `<p>${signals.join(" · ")}</p>` : `<p>${task.deliverable}에 바로 연결됩니다.</p>`}
         <div class="roadmap-resource-actions">
           <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
-          <button class="resource-action ${saved ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
-            ${saved ? "내 계획에 추가됨" : "내 계획에 추가"}
-          </button>
+          ${renderSaveActionButton(resource)}
         </div>
       </div>
     </details>
@@ -5948,6 +6065,24 @@ function getResourceOpenLabel(resource) {
     : "교육 열기";
 }
 
+function renderSaveActionButton(resource, label = "내 계획에 추가") {
+  const saved = state.saved.includes(resource.id);
+  return `
+    <button class="resource-action ${saved ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
+      ${saved ? "계획에서 제거" : label}
+    </button>
+  `;
+}
+
+function renderCompleteActionButton(resource) {
+  const completed = state.completed.includes(resource.id);
+  return `
+    <button class="resource-action ${completed ? "is-saved" : ""}" type="button" data-complete-id="${resource.id}">
+      ${completed ? "완료됨" : "완료 체크"}
+    </button>
+  `;
+}
+
 function getTaskResourceConnectionReason(resource, task, context) {
   const reasons = [];
   const directTaskMatches = getResourceLinkedTasks(resource.id, [task]);
@@ -5991,7 +6126,7 @@ function renderSaved() {
             <div class="plan-week-head">
               <span class="week-number">${task.weekLabel}</span>
               <button class="resource-action ${completed ? "is-saved" : ""}" type="button" data-roadmap-step-id="${stepId}">
-                ${completed ? "주차 완료됨" : "주차 완료 체크"}
+                ${completed ? "완료됨" : "완료 체크"}
               </button>
             </div>
             <h3>${task.title}</h3>
@@ -6015,7 +6150,7 @@ function renderSaved() {
             <h3>추가 교육자료</h3>
           </div>
         </div>
-        ${items.map((resource) => renderResourceCard(resource, null, null, false)).join("")}
+        ${items.map((resource) => renderResourceCard(resource, null, null, true)).join("")}
       </section>
     ` : `<div class="empty-state">추가한 교육자료가 없어도 위 자동 로드맵으로 바로 시작할 수 있습니다. 필요한 자료만 주차 안에서 내 계획에 추가하세요.</div>`}
   `;
@@ -6049,9 +6184,7 @@ function renderPlanResourceItem(resource, task, context) {
         <p><strong>산출물:</strong> ${resource.expectedOutput}</p>
         <div class="roadmap-resource-actions">
           <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
-          <button class="resource-action ${saved ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
-            ${saved ? "내 계획에 추가됨" : "내 계획에 추가"}
-          </button>
+          ${renderCompleteActionButton(resource)}
         </div>
       </div>
     </details>
@@ -6123,12 +6256,7 @@ function renderResourceCard(resource, context = null, priorityIndex = null, show
       <p><strong>산출물:</strong> ${resource.expectedOutput}</p>
       <div class="resource-actions">
         <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
-        <button class="resource-action ${saved ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
-          ${saved ? "내 계획에 추가됨" : "내 계획에 추가"}
-        </button>
-        ${showCompletionAction ? `<button class="resource-action ${completed ? "is-saved" : ""}" type="button" data-complete-id="${resource.id}">
-          ${completed ? "완료됨" : "완료 체크"}
-        </button>` : ""}
+        ${showCompletionAction ? renderCompleteActionButton(resource) : renderSaveActionButton(resource)}
       </div>
     </article>
   `;
@@ -6301,15 +6429,16 @@ function exportPlanAsExcel() {
   }
 
   setTimeout(() => {
-    elements.exportPlanButton.textContent = "엑셀로 내보내기";
+    elements.exportPlanButton.textContent = "엑셀 계획서 다운로드";
   }, 1800);
 }
 
 function buildPlanExportWorkbook() {
   return [
     { name: "요약", rows: buildSummaryExportRows() },
-    { name: "추가 교육자료", rows: buildSavedResourceExportRows() },
-    { name: "로드맵", rows: buildRoadmapExportRows() },
+    { name: "실행계획", rows: buildRoadmapExportRows() },
+    { name: "선택직무상세", rows: buildRoleDetailExportRows() },
+    { name: "교육자료", rows: buildSavedResourceExportRows() },
     { name: "직무확보", rows: buildDiagnosisExportRows() }
   ];
 }
@@ -6328,14 +6457,16 @@ function buildSummaryExportRows() {
 
   return [
     ["항목", "내용"],
+    ["문서명", `${role?.title || track.title} 직무역량 준비 계획서`],
     ["내보낸 날짜", formatExportDate()],
     ["전공", getSelectLabel(elements.majorSelect)],
     ["관심 산업", getSelectLabel(elements.industrySelect)],
-    ["학습 목표", learningGoals[state.profile.goal]?.label || state.profile.goal],
+    ["준비 목적", learningGoals[state.profile.goal]?.label || state.profile.goal],
     ["목표 추천 기준", getGoalRecommendationLabel(state.profile.goal)],
     ["준비 기간", getDurationLabel()],
     ["직무군", track.title],
     ["선택 직무", role?.title || "미선택"],
+    ["직무 설명", role?.focus || track.summary],
     ["직무확보율", `${getDiagnosticScore(track.id)}%`],
     ["보완 역량", gapSkills.slice(0, 8).join(", ") || "큰 공백 없음"],
     ["다음 과제", `${nextTask.title} - ${nextTask.deliverable}`],
@@ -6344,6 +6475,27 @@ function buildSummaryExportRows() {
     ["추가 교육자료", `${state.saved.length}개`],
     ["완료 교육자료", `${state.completed.length}개`]
   ];
+}
+
+function buildRoleDetailExportRows() {
+  const track = getSelectedTrack();
+  const role = getSelectedRole(track.id);
+  if (!role) return [["구분", "내용"], ["선택 직무", "미선택"]];
+
+  const rows = [
+    ["구분", "내용"],
+    ["직무군", track.title],
+    ["선택 직무", role.title],
+    ["직무 설명", role.focus],
+    ["전공 연결성", `${getMajorPathwayLabel(track, role)} - ${getMajorPathwayReason(track, role)} ${getMajorPathwayFocus(track, role)}`],
+    ["반복 키워드", role.postingKeywords.join(", ")]
+  ];
+
+  role.responsibilities.forEach((item, index) => rows.push([`채용공고 반복 업무 ${index + 1}`, item]));
+  role.requirements.forEach((item, index) => rows.push([`자격조건·필수 역량 ${index + 1}`, item]));
+  role.preferred.forEach((item, index) => rows.push([`우대·차별화 역량 ${index + 1}`, item]));
+  getRoleDecisionQuestions(track, role).forEach((item, index) => rows.push([`지원 전 확인 질문 ${index + 1}`, item]));
+  return rows;
 }
 
 function buildSavedResourceExportRows() {
@@ -6397,7 +6549,7 @@ function buildRoadmapExportRows() {
   const tasks = getVisibleRoadmapTasks(track.id);
   const context = getRecommendationContext(track, getGapSkills(track.id), tasks);
   const resourceUseCounts = new Map();
-  const rows = [["주차", "단계", "과제", "목표", "예상 시간", "산출물", "추천 교육자료", "완료 여부"]];
+  const rows = [["주차", "단계", "과제", "해야 할 일", "완료 기준", "예상 시간", "남길 산출물", "추천 교육자료", "교육자료 URL", "상태"]];
 
   tasks.forEach((task) => {
     const linkedResources = getRoadmapResourcesForTask(track, task, context, resourceUseCounts);
@@ -6409,9 +6561,11 @@ function buildRoadmapExportRows() {
       task.phase || "",
       task.title,
       task.objective,
+      (task.rubric || []).join("\n"),
       task.time,
       task.deliverable,
       linkedResources.map((resource) => resource.title).join("\n"),
+      linkedResources.map((resource) => resource.url).join("\n"),
       state.completedRoadmap.includes(getRoadmapStepId(track.id, task)) ? "완료" : "진행"
     ]);
   });
