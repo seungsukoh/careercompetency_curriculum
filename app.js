@@ -4644,6 +4644,1139 @@ Object.entries({
   resourceTaskLinks[resourceId] = [...new Set([...(resourceTaskLinks[resourceId] || []), ...taskTitles])];
 });
 
+function applyEmergingRoleExpansion() {
+  const mergeValues = (base = [], additions = []) => [...new Set([...(base || []), ...(additions || [])])];
+  const addTrackTags = (trackId, field, values) => {
+    const track = tracks.find((item) => item.id === trackId);
+    if (track) track[field] = mergeValues(track[field], values);
+  };
+  const addMajorFits = (major, { direct = [], bridge = [], bridgeFocus } = {}) => {
+    if (!majorRoleFitProfiles[major]) {
+      majorRoleFitProfiles[major] = { direct: [], bridge: [], bridgeFocus: bridgeFocus || "" };
+    }
+    majorRoleFitProfiles[major].direct = mergeValues(majorRoleFitProfiles[major].direct, direct);
+    majorRoleFitProfiles[major].bridge = mergeValues(majorRoleFitProfiles[major].bridge, bridge);
+    if (bridgeFocus) majorRoleFitProfiles[major].bridgeFocus = bridgeFocus;
+  };
+
+  Object.assign(industryLabels, {
+    aerospace: "항공·우주",
+    defense: "국방·방산",
+    energy: "전력·ESS",
+    ai: "AI·데이터"
+  });
+
+  Object.assign(majorLabels, {
+    electrical_power: "전기공학"
+  });
+
+  majorBridgeTracks.electrical_power = ["electronics-pcb", "embedded-control", "automotive-mobility", "semiconductor-equipment", "robotics-automation", "ai-engineering"];
+
+  [
+    ["production-quality", "majors", ["electrical_power"]],
+    ["semiconductor-equipment", "majors", ["electrical_power"]],
+    ["electronics-pcb", "majors", ["electrical_power"]],
+    ["embedded-control", "majors", ["electrical_power"]],
+    ["automotive-mobility", "majors", ["electrical_power"]],
+    ["mechanical-cae", "industries", ["aerospace", "defense"]],
+    ["electronics-pcb", "industries", ["defense", "aerospace", "energy"]],
+    ["embedded-control", "industries", ["defense", "aerospace"]],
+    ["production-quality", "industries", ["defense", "energy", "ai"]],
+    ["automotive-mobility", "industries", ["ai"]]
+  ].forEach(([trackId, field, values]) => addTrackTags(trackId, field, values));
+
+  const emergingTracks = [
+    {
+      id: "aerospace-defense",
+      title: "항공·우주·국방",
+      majors: ["mechanical", "electrical", "electrical_power", "both"],
+      industries: ["aerospace", "defense", "mobility", "electronics"],
+      difficulty: "상",
+      summary: "항공기, 드론, 위성, 방산 시스템의 임무 요구사항을 비행체·센서·통신·제어·검증 산출물로 바꾸는 직무군입니다.",
+      tasks: ["임무 요구사항 분해", "비행체·센서 모델링", "항전·통신 인터페이스 검토", "환경·안전 시험과 검증"],
+      skills: ["비행역학", "항공전자", "센서융합", "RF·레이더", "HIL·SIL", "MIL-STD"],
+      tools: ["MATLAB/Simulink", "Aerospace Blockset", "UAV Toolbox", "PX4", "STK", "DOORS/Polarion"],
+      outputs: ["임무 요구사항표", "비행·센서 모델 검증 리포트", "항전 인터페이스 정의서", "환경시험 체크리스트"],
+      misconceptions: ["항공·방산 직무는 멋있는 제품명보다 요구사항 추적, 시험 근거, 안전·환경 규격 이해가 중요합니다.", "기계·전기·전자·제어가 함께 쓰이므로 세부 직무별 산출물을 보고 선택해야 합니다."]
+    },
+    {
+      id: "robotics-automation",
+      title: "로봇·자동화",
+      majors: ["mechanical", "electrical", "electrical_power", "both"],
+      industries: ["robotics", "manufacturing", "electronics", "ai"],
+      difficulty: "중",
+      summary: "로봇 기구, 구동기, 센서, ROS, PLC, 비전, 안전 요구를 연결해 실제 작업 셀과 자율 동작을 구현하는 직무군입니다.",
+      tasks: ["작업 시나리오 정의", "센서·구동기 인터페이스 구성", "제어·경로 계획", "안전·검증 리포트 작성"],
+      skills: ["로봇기구", "ROS2", "SLAM·Navigation", "PLC·계장", "비전검사", "안전제어"],
+      tools: ["ROS2", "Gazebo", "RViz", "MoveIt", "OpenCV", "PLC", "EtherCAT"],
+      outputs: ["로봇 작업 시퀀스", "센서·액추에이터 I/O 표", "ROS 노드 구성도", "안전 인터록 체크리스트"],
+      misconceptions: ["로봇 직무는 코딩만이 아니라 기구·전장·제어·안전·현장 통합을 함께 봐야 합니다.", "데모 영상보다 재현 가능한 로그, 좌표계, I/O 정의가 준비 근거가 됩니다."]
+    },
+    {
+      id: "energy-ess",
+      title: "전력·ESS",
+      majors: ["electrical_power", "electrical", "mechanical", "chemical", "both"],
+      industries: ["energy", "battery", "electronics", "manufacturing"],
+      difficulty: "중",
+      summary: "전력계통, PCS, 인버터, 배터리, 보호계전, EMS 데이터를 연결해 전력·ESS 시스템을 설계·운영·검증하는 직무군입니다.",
+      tasks: ["부하·전력 요구사항 정의", "PCS·배터리 구성 검토", "보호·안전 로직 검증", "운영 데이터 분석"],
+      skills: ["전력공학", "전력전자", "ESS·BMS", "보호계전", "SCADA·EMS", "안전규격"],
+      tools: ["Simscape Electrical", "Simscape Battery", "MATLAB/Simulink", "PCS", "BMS", "SCADA", "Python"],
+      outputs: ["전력 요구사항표", "ESS 구성·보호 검토표", "충방전 로그 분석 리포트", "안전 시험 체크리스트"],
+      misconceptions: ["ESS는 배터리만 보는 직무가 아니라 PCS, 계통 연계, 보호, 열·안전, 운영 데이터를 함께 다룹니다.", "전기공학 전공자는 전력계통과 전력전자 산출물로 강점을 명확히 보여주는 편이 좋습니다."]
+    },
+    {
+      id: "ai-engineering",
+      title: "AI 적용 엔지니어링",
+      majors: ["mechanical", "electrical", "electrical_power", "chemical", "both"],
+      industries: ["ai", "manufacturing", "semiconductor", "mobility", "robotics", "electronics", "battery"],
+      difficulty: "중",
+      summary: "제조, 품질, 시험, 설비, 해석, 로봇 데이터를 AI 모델과 현장 의사결정 기준으로 연결하는 응용 직무군입니다.",
+      tasks: ["문제·데이터 정의", "기준 모델 학습·평가", "현장 적용 리스크 검토", "개선 리포트 작성"],
+      skills: ["데이터 전처리", "머신러닝", "컴퓨터비전", "이상탐지", "MLOps 기초", "설명가능성"],
+      tools: ["Python", "SQL", "scikit-learn", "PyTorch", "TensorFlow", "OpenCV", "MLflow", "Power BI"],
+      outputs: ["데이터 정의서", "모델 평가 리포트", "현장 적용 리스크표", "개선 우선순위 대시보드"],
+      misconceptions: ["AI 적용 직무는 모델을 만드는 것보다 어떤 현장 문제를 어떤 데이터와 판정 기준으로 개선할지 정의하는 일이 중요합니다.", "전공지식 없이 AI만 준비하면 공정·설비·시험 데이터를 설득력 있게 해석하기 어렵습니다."]
+    }
+  ];
+
+  const existingTrackIds = new Set(tracks.map((track) => track.id));
+  emergingTracks.forEach((track) => {
+    if (!existingTrackIds.has(track.id)) tracks.push(track);
+  });
+
+  Object.assign(diagnostics, {
+    "aerospace-defense": [
+      ["임무 요구사항", "임무 목적을 비행 조건, 센서, 통신, 검증 항목으로 나눌 수 있다."],
+      ["비행·제어", "자세, 속도, 고도, 경로 추종이 제어와 센서 데이터에 어떻게 연결되는지 설명할 수 있다."],
+      ["항전 인터페이스", "전원, 통신, 센서, 임무장비 인터페이스를 신호와 문서로 정리할 수 있다."],
+      ["환경·규격", "진동, 온도, EMI/EMC, MIL-STD 같은 시험 조건을 요구사항과 연결할 수 있다."],
+      ["검증 증거", "요구사항-시험 케이스-결과 리포트의 추적성을 설명할 수 있다."]
+    ],
+    "robotics-automation": [
+      ["작업 시나리오", "로봇이 수행할 동작을 좌표계, 경로, I/O, 안전 조건으로 나눌 수 있다."],
+      ["센서·구동기", "모터, 엔코더, 카메라, 라이다, 그리퍼 신호 흐름을 설명할 수 있다."],
+      ["ROS·제어", "노드, 토픽, launch, 제어 주기, 로그를 기준으로 문제를 분리할 수 있다."],
+      ["PLC·자동화", "PLC I/O, 인터록, 비상정지, 설비 상태 전환을 순서도로 정리할 수 있다."],
+      ["검증", "반복 동작, 위치 오차, 사이클 타임, 안전 조건을 시험 기준으로 만들 수 있다."]
+    ],
+    "energy-ess": [
+      ["전력 요구사항", "부하, 전압, 전류, 용량, 효율, 계통 연계 조건을 수치로 정의할 수 있다."],
+      ["PCS·인버터", "DC-AC 변환, 스위칭, 리플, 발열, 보호 조건을 설명할 수 있다."],
+      ["ESS·BMS", "SOC/SOH, 충방전 제한, 셀 밸런싱, 열·절연 안전 조건을 연결할 수 있다."],
+      ["보호·안전", "차단기, 보호계전, 접지, 절연, 비상정지 요구를 검토할 수 있다."],
+      ["운영 데이터", "충방전 로그와 알람 데이터를 기준으로 이상 원인 후보를 좁힐 수 있다."]
+    ],
+    "ai-engineering": [
+      ["문제정의", "현장 문제를 목표 지표, 입력 데이터, 판정 기준으로 바꿀 수 있다."],
+      ["전처리", "결측, 이상치, 라벨, 시간 동기화, 데이터 누수를 점검할 수 있다."],
+      ["모델평가", "정확도 외에 재현율, 오탐, 미탐, 비용, 현장 적용성을 비교할 수 있다."],
+      ["설명가능성", "모델 결과를 공정·설비·품질 원인 가설로 설명할 수 있다."],
+      ["운영", "모델 배포 후 성능 저하, 데이터 drift, 재학습 기준을 정리할 수 있다."]
+    ]
+  });
+
+  const emergingJobRoles = {
+    "aerospace-defense": [
+      {
+        id: "aerospace-systems-engineer",
+        title: "항공우주 시스템 엔지니어",
+        postingKeywords: ["시스템엔지니어링", "요구사항", "검증", "항공우주", "추적성"],
+        industries: ["aerospace", "defense", "all"],
+        focus: "항공기·위성·발사체·무인기의 임무 요구사항을 시스템 구조, 인터페이스, 시험 계획, 검증 증거로 바꾸는 직무",
+        coreWork: "임무 요구사항을 하위 시스템 요구, 인터페이스, 검증 방법, 시험 증거로 추적해 개발 리스크를 줄입니다.",
+        coreTerms: ["mission requirement", "system architecture", "interface control document", "V&V", "traceability", "DOORS", "Polarion", "FMEA", "MIL-STD-810", "EMI/EMC"],
+        tools: ["DOORS", "Polarion", "MATLAB", "Simulink", "Excel", "JIRA"],
+        coreCompetencies: ["요구사항을 기계·전장·제어·시험 항목으로 분해하는 역량", "인터페이스 변경이 성능·안전·일정에 미치는 영향을 추적하는 역량", "검증 계획과 결과 증거를 하나의 표로 관리하는 역량"],
+        responsibilities: ["임무 요구사항과 시스템 아키텍처 정리", "하위 시스템 인터페이스와 검증 방법 정의", "요구사항 추적표와 시험 증거 관리", "설계 변경 영향과 리스크 리뷰"],
+        requirements: ["기계·전기·전자·제어 중 하나의 공학 기초", "요구사항, 인터페이스, 검증 산출물 이해", "시험 결과를 요구사항 충족 여부로 문서화하는 역량"],
+        preferred: ["DOORS/Polarion 요구사항 관리 경험", "MIL-STD, 환경시험, EMI/EMC, FMEA 이해", "MATLAB/Simulink 기반 모델 검증 경험"]
+      },
+      {
+        id: "uav-flight-control-engineer",
+        title: "드론·UAM 비행제어 엔지니어",
+        postingKeywords: ["UAV", "비행제어", "PX4", "센서융합", "HIL"],
+        industries: ["aerospace", "defense", "robotics", "all"],
+        focus: "IMU, GPS, 모터, 제어 알고리즘, 비행 로그를 연결해 무인기의 자세·고도·경로 추종 성능을 검증하는 직무",
+        coreWork: "비행체 동역학과 센서 데이터를 제어 알고리즘, HIL, 비행 로그 분석으로 연결해 안정적인 비행 성능을 만듭니다.",
+        coreTerms: ["UAV", "UAM", "flight control", "PX4", "ArduPilot", "IMU", "GNSS", "Kalman Filter", "PID", "HIL", "SITL"],
+        tools: ["MATLAB", "Simulink", "UAV Toolbox", "PX4", "QGroundControl", "Python"],
+        coreCompetencies: ["자세·고도·경로 제어 성능을 로그와 응답 지표로 설명하는 역량", "센서 노이즈와 추정 오차가 비행 안정성에 미치는 영향을 판단하는 역량", "SITL/HIL 시험 조건과 실제 비행 로그 차이를 비교하는 역량"],
+        responsibilities: ["비행제어 알고리즘 모델링과 튜닝", "IMU/GNSS/압력 센서 데이터 분석", "SITL/HIL 기반 제어 검증", "비행 로그 기반 이상 원인 분석"],
+        requirements: ["동역학, 제어공학, 센서융합 기초", "MATLAB/Simulink 또는 Python 기반 데이터 분석", "비행 로그와 제어 응답 지표 해석"],
+        preferred: ["PX4/ArduPilot, QGroundControl, UAV Toolbox 경험", "HIL/SITL 검증, Kalman filter, 경로 계획 경험"]
+      },
+      {
+        id: "avionics-integration-engineer",
+        title: "항공전자·임무장비 통합 엔지니어",
+        postingKeywords: ["항공전자", "Avionics", "임무장비", "통신", "인터페이스"],
+        industries: ["aerospace", "defense", "electronics", "all"],
+        focus: "항공전자 장비, 센서, 통신, 전원, 임무장비 인터페이스를 통합하고 벤치·환경 시험으로 검증하는 직무",
+        coreWork: "전원, 통신, 센서, 임무장비의 인터페이스를 정의하고 통합 시험에서 발생하는 신호·통신 문제를 분리합니다.",
+        coreTerms: ["avionics", "mission equipment", "ICD", "ARINC", "MIL-STD-1553", "RS-422", "CAN", "EMI/EMC", "environmental test"],
+        tools: ["오실로스코프", "Logic Analyzer", "CANalyzer", "MATLAB", "Python", "DOORS"],
+        coreCompetencies: ["전원·통신·센서 인터페이스를 ICD와 시험 항목으로 바꾸는 역량", "통합 시험 로그에서 장비·케이블·소프트웨어 원인을 분리하는 역량", "EMI/EMC와 환경 시험 조건을 설계 검토에 반영하는 역량"],
+        responsibilities: ["항전 장비 인터페이스 정의", "벤치 통합 시험과 계측", "통신 로그와 신호 품질 분석", "환경·EMI 시험 이슈 대응"],
+        requirements: ["회로이론, 통신 인터페이스, 계측 기초", "전원, 접지, 신호 무결성, 로그 분석 역량", "요구사항과 시험 결과 문서화"],
+        preferred: ["ARINC, MIL-STD-1553, CAN, RS-422 경험", "EMI/EMC, 환경시험, 항공전자 통합 경험"]
+      },
+      {
+        id: "defense-systems-engineer",
+        title: "방산 시스템 엔지니어",
+        postingKeywords: ["방산", "체계공학", "무기체계", "요구사항", "시험평가"],
+        industries: ["defense", "aerospace", "electronics", "all"],
+        focus: "무기체계 요구사항, 운용 시나리오, 하위 장비 인터페이스, 시험평가 기준을 연결하는 방산 체계 개발 직무",
+        coreWork: "운용 시나리오를 체계 요구사항, 하위 장비 인터페이스, 시험평가 기준, 리스크 관리 산출물로 전환합니다.",
+        coreTerms: ["무기체계", "체계공학", "운용요구서", "시험평가", "RAM", "FMEA", "MIL-STD-810", "MIL-STD-461", "traceability"],
+        tools: ["DOORS", "Polarion", "Excel", "MATLAB", "JIRA", "시험평가 체크리스트"],
+        coreCompetencies: ["운용 요구를 기능 요구와 시험 기준으로 분해하는 역량", "하위 장비 변경이 체계 성능과 일정에 미치는 영향을 정리하는 역량", "시험평가 결과를 요구사항 충족 근거로 관리하는 역량"],
+        responsibilities: ["운용 시나리오와 요구사항 정리", "하위 장비 인터페이스 관리", "시험평가 항목과 판정 기준 정의", "RAM/FMEA 기반 리스크 관리"],
+        requirements: ["체계공학, 요구사항, 시험평가 문서 이해", "기계·전기·전자·SW 중 하나의 기술 언어", "협력사·시험기관과 변경 이슈를 추적하는 역량"],
+        preferred: ["방산 규격, MIL-STD, RAM, FMEA, 형상관리 경험", "요구사항 관리 도구와 시험평가 산출물 경험"]
+      },
+      {
+        id: "radar-rf-signal-engineer",
+        title: "레이더·RF 신호처리 엔지니어",
+        postingKeywords: ["Radar", "RF", "신호처리", "AESA", "MATLAB"],
+        industries: ["defense", "aerospace", "electronics", "all"],
+        focus: "RF 송수신, 레이더 파형, 신호처리, 탐지·추적 알고리즘을 시뮬레이션과 시험 데이터로 검증하는 직무",
+        coreWork: "RF 신호와 레이더 데이터를 필터링, 탐지, 추적, 성능 지표로 분석해 시스템 성능을 검증합니다.",
+        coreTerms: ["Radar", "RF", "AESA", "waveform", "Doppler", "range-Doppler", "CFAR", "tracking", "SNR", "MATLAB"],
+        tools: ["MATLAB", "Signal Processing Toolbox", "RF Toolbox", "Python", "오실로스코프", "스펙트럼 분석기"],
+        coreCompetencies: ["주파수, 대역폭, SNR, 도플러가 탐지 성능에 미치는 영향을 설명하는 역량", "range-Doppler map과 CFAR 결과를 성능 지표로 해석하는 역량", "시험 데이터와 시뮬레이션 결과 차이를 원인 가설로 정리하는 역량"],
+        responsibilities: ["RF·레이더 신호 데이터 분석", "탐지·추적 알고리즘 시뮬레이션", "시험 데이터 후처리와 성능 지표 산출", "파형·필터·임계값 변경 영향 검토"],
+        requirements: ["신호처리, 통신, 전자회로 기초", "MATLAB/Python 기반 데이터 분석", "주파수 영역과 시간 영역 신호 해석"],
+        preferred: ["Radar Toolbox, RF 계측, CFAR, tracking, AESA 개념 경험", "방산·항공 센서 시험 데이터 분석 경험"]
+      }
+    ],
+    "robotics-automation": [
+      {
+        id: "robot-mechanical-design-engineer",
+        title: "로봇 기구설계 엔지니어",
+        postingKeywords: ["로봇기구", "감속기", "엔드이펙터", "강성", "조립성"],
+        industries: ["robotics", "manufacturing", "all"],
+        focus: "로봇 링크, 구동부, 감속기, 엔드이펙터, 안전 커버를 작업 조건과 반복 정밀도에 맞게 설계하는 직무",
+        coreWork: "작업 하중, 반복 정밀도, 조립성, 유지보수성을 기준으로 로봇 기구와 엔드이펙터를 설계합니다.",
+        coreTerms: ["robot arm", "end effector", "payload", "repeatability", "backlash", "reducer", "stiffness", "fixture", "DFM/DFA"],
+        tools: ["SolidWorks", "CATIA", "ANSYS", "MATLAB", "Excel"],
+        coreCompetencies: ["작업 하중과 모션 범위를 기구 치수와 강성 조건으로 바꾸는 역량", "감속기·베어링·모터 선정 근거를 계산과 도면으로 정리하는 역량", "조립성과 안전 커버를 현장 작업 조건과 연결하는 역량"],
+        responsibilities: ["로봇 링크와 엔드이펙터 설계", "모터·감속기·베어링 선정 검토", "강성·진동·간섭 검토", "제작·조립 이슈 반영"],
+        requirements: ["기계요소, 동역학, CAD, 공차 기초", "하중 계산과 조립성 검토", "시제품 문제를 설계 변경으로 문서화하는 역량"],
+        preferred: ["로봇암, 그리퍼, 협동로봇 주변장치 설계 경험", "FEA, 모션 시뮬레이션, DFM/DFA 경험"]
+      },
+      {
+        id: "robot-control-engineer",
+        title: "로봇 제어 엔지니어",
+        postingKeywords: ["로봇제어", "모션제어", "ROS2", "경로계획", "서보"],
+        industries: ["robotics", "manufacturing", "all"],
+        focus: "모터, 엔코더, 제어기, 경로 계획을 연결해 위치·속도·토크 응답과 반복 동작 성능을 맞추는 직무",
+        coreWork: "로봇 동역학, 서보 응답, 경로 계획, 제어 주기를 조정해 반복 동작과 안전 정지를 검증합니다.",
+        coreTerms: ["motion control", "servo", "encoder", "trajectory", "PID", "FOC", "ROS2", "MoveIt", "EtherCAT"],
+        tools: ["MATLAB", "Simulink", "ROS2", "Gazebo", "EtherCAT", "Python"],
+        coreCompetencies: ["위치·속도·토크 응답을 제어 파라미터와 연결하는 역량", "경로 계획과 충돌 회피 조건을 시험 시나리오로 바꾸는 역량", "로그로 제어 지연, 진동, 오차 원인을 분리하는 역량"],
+        responsibilities: ["서보 제어와 경로 계획 구현", "ROS2/Gazebo 기반 시뮬레이션", "모션 로그 분석과 튜닝", "안전 정지와 인터록 검증"],
+        requirements: ["제어공학, 동역학, C++/Python 기초", "ROS2 또는 Simulink 모델링 이해", "센서·구동기 로그 분석"],
+        preferred: ["MoveIt, EtherCAT, 모션 컨트롤러, 실시간 제어 경험", "협동로봇 또는 모바일 로봇 제어 경험"]
+      },
+      {
+        id: "robot-perception-engineer",
+        title: "로봇 인지·비전 엔지니어",
+        postingKeywords: ["로봇비전", "Perception", "SLAM", "OpenCV", "딥러닝"],
+        industries: ["robotics", "ai", "manufacturing", "all"],
+        focus: "카메라, 라이다, 3D 센서 데이터를 좌표계·라벨·모델·판정 기준으로 연결해 로봇 인지 기능을 만드는 직무",
+        coreWork: "센서 데이터와 좌표계를 정리하고 인식·추정·분류 모델의 오탐·미탐을 현장 기준으로 줄입니다.",
+        coreTerms: ["perception", "OpenCV", "PCL", "SLAM", "LiDAR", "camera calibration", "YOLO", "point cloud", "sensor fusion"],
+        tools: ["ROS2", "OpenCV", "PCL", "Python", "PyTorch", "RViz"],
+        coreCompetencies: ["센서 캘리브레이션과 좌표계 변환을 설명하는 역량", "오탐·미탐 사례를 데이터와 환경 조건으로 분류하는 역량", "모델 결과를 로봇 경로·동작 판단과 연결하는 역량"],
+        responsibilities: ["카메라·라이다 데이터 수집과 전처리", "객체 인식·SLAM·센서융합 모델 적용", "오탐·미탐 원인 분석", "ROS2 노드와 시각화 구성"],
+        requirements: ["Python, 선형대수, 영상처리, ROS 기초", "데이터 라벨링과 모델 평가 지표 이해", "센서 로그 재현과 문제 분리"],
+        preferred: ["YOLO, PyTorch, OpenCV, PCL, SLAM 경험", "Jetson, ROS2, 실환경 데이터셋 개선 경험"]
+      },
+      {
+        id: "smart-factory-automation-engineer",
+        title: "스마트팩토리 자동화 엔지니어",
+        postingKeywords: ["스마트팩토리", "PLC", "SCADA", "MES", "자동화"],
+        industries: ["manufacturing", "robotics", "electronics", "all"],
+        focus: "설비, PLC, 센서, 로봇, MES/SCADA 데이터를 연결해 자동화 라인의 생산성과 품질을 개선하는 직무",
+        coreWork: "라인의 I/O, 상태 전환, 알람, MES 데이터를 연결해 자동화 설비의 정지·불량 원인을 줄입니다.",
+        coreTerms: ["PLC", "SCADA", "MES", "OPC UA", "EtherCAT", "Profinet", "line balancing", "OEE", "alarm", "interlock"],
+        tools: ["PLC", "SCADA", "MES", "Python", "Power BI", "Excel"],
+        coreCompetencies: ["설비 I/O와 상태 전환을 시퀀스로 정리하는 역량", "알람·정지·불량 데이터를 같은 시간축으로 분석하는 역량", "자동화 개선 효과를 OEE, takt time, 불량률로 설명하는 역량"],
+        responsibilities: ["자동화 설비 I/O와 제어 시퀀스 정리", "PLC·SCADA·MES 데이터 연계", "설비 정지와 품질 이슈 분석", "로봇·비전·센서 도입 검토"],
+        requirements: ["PLC, 센서, 전기회로, 생산 지표 이해", "Excel/Python 기반 데이터 정리", "현장 개선안을 표준작업으로 문서화"],
+        preferred: ["OPC UA, SCADA, MES, 비전검사, 로봇 셀 경험", "예지보전, 대시보드, 설비 데이터 분석 경험"]
+      },
+      {
+        id: "plc-instrumentation-engineer",
+        title: "PLC·계장제어 엔지니어",
+        postingKeywords: ["PLC", "계장", "시퀀스제어", "센서", "유지보수"],
+        industries: ["manufacturing", "energy", "chemical", "all"],
+        focus: "센서, 밸브, 모터, 인버터, PLC 로직, 인터록을 연결해 설비를 안전하고 반복 가능하게 운전하는 직무",
+        coreWork: "설비 I/O, PLC 시퀀스, 계장 신호, 인터록을 정리하고 트러블슈팅 절차를 만듭니다.",
+        coreTerms: ["PLC", "instrumentation", "I/O list", "sequence", "interlock", "VFD", "sensor", "valve", "HMI", "SCADA"],
+        tools: ["PLC", "HMI", "SCADA", "멀티미터", "오실로스코프", "Excel"],
+        coreCompetencies: ["I/O list와 배선도를 보고 센서·액추에이터 역할을 구분하는 역량", "시퀀스 로직과 인터록 조건을 순서도로 설명하는 역량", "알람 발생 시 전기·계장·기계 원인을 나눠 점검하는 역량"],
+        responsibilities: ["PLC I/O와 시퀀스 로직 관리", "계장 신호와 센서 상태 점검", "설비 인터록과 안전 조건 검토", "트러블슈팅과 유지보수 문서화"],
+        requirements: ["전기회로, 계측, PLC 기초", "도면·I/O list·HMI 화면 해석", "설비 이상 대응 절차 작성"],
+        preferred: ["인버터, 서보, SCADA, OPC UA 경험", "화학·전력·제조 설비 유지보수 경험"]
+      }
+    ],
+    "energy-ess": [
+      {
+        id: "power-systems-engineer",
+        title: "전력계통·전력설비 엔지니어",
+        postingKeywords: ["전력계통", "수배전", "보호계전", "부하", "전기설비"],
+        industries: ["energy", "manufacturing", "all"],
+        focus: "수배전 설비, 부하, 보호계전, 접지, 전력 품질을 검토해 전기설비의 안정성과 안전을 확보하는 직무",
+        coreWork: "부하와 계통 조건을 전압강하, 단락, 보호 협조, 접지, 전력 품질 기준으로 검토합니다.",
+        coreTerms: ["load flow", "short circuit", "protection relay", "grounding", "power quality", "수배전", "차단기", "계전기", "SCADA"],
+        tools: ["Excel", "MATLAB", "Simscape Electrical", "SCADA", "전력분석기"],
+        coreCompetencies: ["부하, 전압, 전류, 용량 조건을 전기설비 요구사항으로 정리하는 역량", "차단기·계전기·접지 조건을 안전 검토 항목으로 바꾸는 역량", "전력 품질과 알람 데이터를 운영 개선으로 연결하는 역량"],
+        responsibilities: ["수배전 설비 용량과 부하 검토", "보호계전과 접지 조건 관리", "전력 품질과 설비 알람 분석", "전기 안전 점검과 개선안 작성"],
+        requirements: ["전력공학, 회로이론, 전기설비 기초", "단선결선도와 부하표 해석", "전기 안전과 보호 협조 이해"],
+        preferred: ["전력분석, SCADA, 보호계전, 전기기사 수준의 설비 이해", "공장 전력설비 또는 신재생 연계 경험"]
+      },
+      {
+        id: "ess-bms-engineer",
+        title: "ESS·BMS 시스템 엔지니어",
+        postingKeywords: ["ESS", "BMS", "PCS", "SOC", "안전"],
+        industries: ["energy", "battery", "electronics", "all"],
+        focus: "배터리 랙, BMS, PCS, EMS, 열·소방·절연 안전 조건을 연결해 ESS 시스템을 설계·검증하는 직무",
+        coreWork: "ESS의 배터리 상태, PCS 운전, EMS 제어, 안전 신호를 통합해 충방전 성능과 고장 대응을 검증합니다.",
+        coreTerms: ["ESS", "BMS", "PCS", "EMS", "SOC", "SOH", "thermal runaway", "isolation monitoring", "fire safety", "SCADA"],
+        tools: ["Simscape Battery", "Simscape Electrical", "MATLAB", "Python", "BMS", "SCADA"],
+        coreCompetencies: ["셀·모듈·랙 신호를 SOC/SOH와 보호 조건으로 연결하는 역량", "PCS 운전 모드와 EMS 제어 조건을 시험 케이스로 바꾸는 역량", "열·절연·소방 안전 요구를 검증 체크리스트로 만드는 역량"],
+        responsibilities: ["ESS 구성과 BMS/PCS/EMS 인터페이스 정의", "충방전 로그와 알람 데이터 분석", "보호 로직과 안전 시험 조건 검토", "운영 이슈와 개선안 문서화"],
+        requirements: ["배터리, 전력전자, BMS, 안전 기초", "전압·전류·온도 로그 해석", "시스템 요구사항과 시험 결과 문서화"],
+        preferred: ["Simscape Battery, BMS 모델링, PCS/EMS 운영 데이터 경험", "UL/IEC 안전, 소방, 절연, 열폭주 대응 이해"]
+      },
+      {
+        id: "power-electronics-inverter-engineer",
+        title: "전력전자·인버터 엔지니어",
+        postingKeywords: ["전력전자", "인버터", "PCS", "게이트드라이브", "EMI"],
+        industries: ["energy", "mobility", "electronics", "all"],
+        focus: "인버터, 컨버터, PCS, 게이트 드라이브, 전류 센싱, EMI/열 검증을 수행하는 전력전자 직무",
+        coreWork: "전력 변환 회로의 효율, 리플, 발열, EMI, 보호 동작을 계측과 시뮬레이션으로 검증합니다.",
+        coreTerms: ["inverter", "converter", "IGBT", "SiC MOSFET", "gate driver", "PWM", "ripple", "EMI", "thermal", "PLECS"],
+        tools: ["Simscape Electrical", "LTspice", "PLECS", "PSIM", "오실로스코프", "전류 프로브", "전력분석기"],
+        coreCompetencies: ["전압·전류·스위칭 파형을 손실·발열·EMI와 연결하는 역량", "게이트 드라이브와 보호 회로 동작을 측정 조건으로 검증하는 역량", "부품 데이터시트 기반 정격·열·효율 검토를 수행하는 역량"],
+        responsibilities: ["전력 변환 회로 요구사항 정의", "부품 선정과 회로 시뮬레이션", "스위칭 파형·효율·발열 측정", "EMI/보호 동작 검증"],
+        requirements: ["회로이론, 전력전자, 전자회로 기초", "오실로스코프와 전류 프로브 계측", "부품 데이터시트와 열 설계 이해"],
+        preferred: ["SiC/GaN, PLECS/PSIM/Simscape Electrical 경험", "ESS PCS, EV 인버터, OBC, DC-DC 검증 경험"]
+      },
+      {
+        id: "electric-machine-drive-engineer",
+        title: "전기기기·모터드라이브 엔지니어",
+        postingKeywords: ["전기기기", "PMSM", "모터제어", "FOC", "인버터"],
+        industries: ["energy", "mobility", "robotics", "all"],
+        focus: "모터, 인버터, 센서, FOC, 열·효율·NVH 조건을 연결해 구동 시스템 성능을 맞추는 직무",
+        coreWork: "모터 파라미터, 인버터 제어, 센서 피드백, 시험 데이터를 연결해 토크·속도·효율 성능을 검증합니다.",
+        coreTerms: ["PMSM", "BLDC", "FOC", "PWM", "encoder", "resolver", "torque ripple", "efficiency map", "motor drive"],
+        tools: ["Motor Control Blockset", "Simulink", "Simscape Electrical", "오실로스코프", "전력분석기"],
+        coreCompetencies: ["모터 파라미터와 제어 응답을 토크·속도·효율 지표로 설명하는 역량", "전류 센싱, 엔코더, PWM 타이밍을 계측으로 검증하는 역량", "열·소음·효율 트레이드오프를 시험 데이터로 정리하는 역량"],
+        responsibilities: ["모터·인버터 제어 요구사항 정의", "FOC/PID 제어 튜닝", "전류·속도·토크 계측과 로그 분석", "효율·열·NVH 검증"],
+        requirements: ["전기기기, 전력전자, 제어공학 기초", "PWM, ADC, 센서 피드백 이해", "시험 데이터와 모델 응답 비교"],
+        preferred: ["Motor Control Blockset, PMSM/BLDC 제어, dyno 시험 경험", "EV·로봇·산업용 모터드라이브 경험"]
+      },
+      {
+        id: "renewable-energy-grid-engineer",
+        title: "신재생·계통연계 엔지니어",
+        postingKeywords: ["신재생", "계통연계", "인버터", "전력품질", "EMS"],
+        industries: ["energy", "all"],
+        focus: "태양광·풍력·ESS를 계통에 연계할 때 인버터, 전력 품질, 출력 제어, 운영 데이터를 검토하는 직무",
+        coreWork: "신재생 발전과 ESS의 출력 변동, 계통 연계 조건, 전력 품질, EMS 운영 전략을 함께 검토합니다.",
+        coreTerms: ["renewable energy", "grid connection", "PV inverter", "frequency regulation", "power quality", "EMS", "SCADA", "forecasting"],
+        tools: ["MATLAB", "Simulink", "Simscape Electrical", "Python", "SCADA", "Power BI"],
+        coreCompetencies: ["발전량·부하·ESS 운전 조건을 계통 안정성과 연결하는 역량", "전력 품질과 출력 제어 이슈를 데이터로 설명하는 역량", "운영 데이터 기반 예측·제어 개선안을 제안하는 역량"],
+        responsibilities: ["신재생·ESS 연계 조건 검토", "인버터 출력과 전력 품질 분석", "SCADA/EMS 운영 데이터 정리", "계통 영향과 개선안 문서화"],
+        requirements: ["전력공학, 신재생, 전력전자 기초", "전력 데이터와 운영 로그 해석", "계통 연계 기준 이해"],
+        preferred: ["PV/풍력/ESS 프로젝트, 출력 예측, EMS, SCADA 경험", "전력 품질 분석과 계통 안정도 검토 경험"]
+      }
+    ],
+    "ai-engineering": [
+      {
+        id: "manufacturing-ai-engineer",
+        title: "제조 AI 엔지니어",
+        postingKeywords: ["제조AI", "공정데이터", "예측모델", "Python", "MLOps"],
+        industries: ["ai", "manufacturing", "semiconductor", "battery", "all"],
+        focus: "공정·설비·품질 데이터를 AI 모델로 분석해 불량, 수율, 정지, 조건 변경 의사결정을 지원하는 직무",
+        coreWork: "현장 문제를 데이터셋과 목표 지표로 정의하고 모델 결과를 공정 개선 가설과 연결합니다.",
+        coreTerms: ["manufacturing AI", "feature engineering", "anomaly detection", "classification", "drift", "MLOps", "MES", "SPC"],
+        tools: ["Python", "SQL", "scikit-learn", "MLflow", "Power BI", "Jupyter"],
+        aiCompetency: { level: "핵심 역량", summary: "이 직무는 AI 모델 자체보다 현장 문제정의, 데이터 품질, 모델 평가, 운영 기준이 핵심입니다.", diagnostics: [["데이터 정의", "목표 지표와 입력 데이터를 현장 기준으로 정의할 수 있다."], ["운영 기준", "모델 성능 저하와 재학습 기준을 정리할 수 있다."]] },
+        coreCompetencies: ["공정 문제를 모델 목표와 라벨 기준으로 바꾸는 역량", "결측·이상치·데이터 누수 리스크를 점검하는 역량", "모델 결과를 현장 개선 우선순위로 설명하는 역량"],
+        responsibilities: ["공정·설비·품질 데이터셋 정의", "분류·예측·이상탐지 모델 실험", "모델 평가와 현장 적용 리스크 검토", "대시보드와 개선 리포트 작성"],
+        requirements: ["Python/SQL, 통계, 공정·품질 데이터 이해", "모델 평가 지표와 전처리 기초", "현업과 문제 정의를 맞추는 커뮤니케이션"],
+        preferred: ["MLOps, MLflow, Power BI, MES 데이터 경험", "반도체·배터리·제조 공정 AI 프로젝트 경험"]
+      },
+      {
+        id: "predictive-maintenance-ai-engineer",
+        title: "예지보전 AI 엔지니어",
+        postingKeywords: ["예지보전", "이상탐지", "센서데이터", "설비", "AI"],
+        industries: ["ai", "manufacturing", "energy", "semiconductor", "all"],
+        focus: "진동, 온도, 전류, 압력, 알람 로그를 분석해 설비 이상 징후와 정비 우선순위를 찾는 직무",
+        coreWork: "센서 시계열과 설비 이벤트를 정렬해 고장 전조, 오탐, 미탐, 정비 효과를 모델과 리포트로 검증합니다.",
+        coreTerms: ["predictive maintenance", "time series", "anomaly detection", "sensor fusion", "MTBF", "MTTR", "alarm log", "condition monitoring"],
+        tools: ["MATLAB", "Python", "Signal Processing", "Machine Learning", "Power BI", "SCADA"],
+        aiCompetency: { level: "핵심 역량", summary: "예지보전은 AI보다 먼저 센서 품질, 이벤트 정의, 정비 이력 연결이 성패를 가릅니다.", diagnostics: [["시계열", "센서 데이터를 시간 기준으로 정렬하고 이벤트와 연결할 수 있다."], ["오탐·미탐", "오탐과 미탐 비용을 기준으로 모델을 평가할 수 있다."]] },
+        coreCompetencies: ["센서 신호와 설비 이벤트를 같은 시간축으로 연결하는 역량", "이상탐지 결과를 정비 우선순위와 리스크로 설명하는 역량", "MTBF/MTTR 개선 효과를 데이터로 검증하는 역량"],
+        responsibilities: ["센서·알람·정비 이력 데이터 정리", "이상탐지와 고장 예측 모델 실험", "오탐·미탐 사례 분석", "정비 우선순위 리포트 작성"],
+        requirements: ["시계열 데이터, 신호처리, 통계 기초", "설비 상태와 정비 이력 이해", "Python/MATLAB 분석 역량"],
+        preferred: ["Predictive Maintenance Toolbox, SCADA/MES 데이터, 설비보전 경험", "제조·에너지 설비 AI 프로젝트 경험"]
+      },
+      {
+        id: "vision-inspection-ai-engineer",
+        title: "비전검사 AI 엔지니어",
+        postingKeywords: ["비전검사", "불량검출", "OpenCV", "딥러닝", "검사자동화"],
+        industries: ["ai", "manufacturing", "electronics", "semiconductor", "all"],
+        focus: "카메라, 조명, 렌즈, 라벨 데이터, 딥러닝 모델을 연결해 외관 불량 검사 기준을 자동화하는 직무",
+        coreWork: "검사 환경과 라벨 기준을 정리하고 불량 검출 모델의 오탐·미탐을 품질 기준으로 낮춥니다.",
+        coreTerms: ["machine vision", "defect detection", "OpenCV", "YOLO", "segmentation", "lighting", "lens", "false positive", "false negative"],
+        tools: ["OpenCV", "Python", "PyTorch", "TensorFlow", "NVIDIA Jetson", "Power BI"],
+        aiCompetency: { level: "핵심 역량", summary: "비전검사 AI는 모델보다 조명·렌즈·라벨 기준·품질 판정 기준을 함께 잡는 역량이 중요합니다.", diagnostics: [["라벨 기준", "불량 유형별 라벨 기준과 판정 기준을 정의할 수 있다."], ["검사 환경", "조명·렌즈·해상도가 검출 성능에 미치는 영향을 설명할 수 있다."]] },
+        coreCompetencies: ["불량 유형과 라벨 기준을 품질 판정 기준으로 정리하는 역량", "조명·렌즈·해상도 조건을 모델 성능과 연결하는 역량", "오탐·미탐 사례를 개선 데이터셋으로 바꾸는 역량"],
+        responsibilities: ["검사 이미지 수집과 라벨 기준 정의", "검출·분류·분할 모델 학습과 평가", "오탐·미탐 원인 분석", "현장 검사 장비 적용 리스크 검토"],
+        requirements: ["Python, OpenCV, 딥러닝 기초", "품질 검사 기준과 불량 유형 이해", "모델 평가 지표와 데이터셋 관리"],
+        preferred: ["YOLO/segmentation, Jetson/TensorRT, 조명·렌즈 셋업 경험", "전자·반도체·자동차 부품 비전검사 경험"]
+      },
+      {
+        id: "engineering-data-analyst",
+        title: "엔지니어링 데이터 분석가",
+        postingKeywords: ["데이터분석", "공학데이터", "SQL", "대시보드", "원인가설"],
+        industries: ["ai", "manufacturing", "mobility", "energy", "all"],
+        focus: "시험, 공정, 설비, 품질 데이터를 정리해 원인 가설, 우선순위, 의사결정 리포트를 만드는 직무",
+        coreWork: "여러 시스템의 데이터를 결합해 현업이 바로 판단할 수 있는 지표, 그래프, 원인 가설을 만듭니다.",
+        coreTerms: ["engineering data", "SQL", "dashboard", "Pareto", "correlation", "root cause", "Power BI", "Python", "data quality"],
+        tools: ["SQL", "Python", "Power BI", "Tableau", "Excel", "Jupyter"],
+        aiCompetency: { level: "도움 큼", summary: "AI 모델 이전에 데이터 품질, 지표 정의, 의사결정 리포트 역량이 중심입니다.", diagnostics: [["지표 정의", "현업 질문을 지표와 그래프로 바꿀 수 있다."], ["데이터 품질", "결측·중복·이상치를 분석 결론의 리스크로 설명할 수 있다."]] },
+        coreCompetencies: ["데이터 소스와 키를 이해해 분석 가능한 테이블로 결합하는 역량", "Pareto, 추세, 상관 분석을 원인 가설로 연결하는 역량", "현업 의사결정에 필요한 한 장 리포트를 만드는 역량"],
+        responsibilities: ["데이터 추출·정제·시각화", "품질·설비·시험 지표 분석", "원인 가설과 개선 우선순위 정리", "대시보드와 자동 리포트 운영"],
+        requirements: ["SQL, Python/Excel, 통계 기초", "공학 데이터의 단위·시간·조건 이해", "분석 결과를 현장 언어로 설명"],
+        preferred: ["Power BI/Tableau, 데이터 파이프라인, 자동 리포트 경험", "제조·품질·시험 데이터 분석 프로젝트 경험"]
+      },
+      {
+        id: "simulation-ai-engineer",
+        title: "시뮬레이션·디지털트윈 AI 엔지니어",
+        postingKeywords: ["디지털트윈", "시뮬레이션", "AI", "최적화", "모델기반"],
+        industries: ["ai", "mobility", "robotics", "energy", "manufacturing", "all"],
+        focus: "물리 모델, 시뮬레이션 데이터, 실험 로그, 최적화·AI 모델을 연결해 설계·제어·운영 판단을 빠르게 만드는 직무",
+        coreWork: "시뮬레이션과 실험 데이터를 비교해 모델 신뢰도를 확인하고 AI·최적화로 설계 변수와 운영 조건을 찾습니다.",
+        coreTerms: ["digital twin", "simulation", "surrogate model", "optimization", "DOE", "Simulink", "Simscape", "model validation", "parameter estimation"],
+        tools: ["MATLAB", "Simulink", "Simscape", "Optimization", "Python", "Machine Learning"],
+        aiCompetency: { level: "핵심 역량", summary: "시뮬레이션 AI는 물리 모델의 가정, 데이터 상관 검증, 최적화 목적함수를 명확히 정의해야 합니다.", diagnostics: [["모델 검증", "시뮬레이션과 실험 데이터 차이를 검증 리포트로 정리할 수 있다."], ["최적화", "목표와 제약 조건을 수식·지표로 정의할 수 있다."]] },
+        coreCompetencies: ["물리 모델의 입력·출력·가정을 실험 조건과 맞추는 역량", "DOE와 surrogate model로 변수 민감도를 설명하는 역량", "최적화 결과를 설계·제어 변경안으로 문서화하는 역량"],
+        responsibilities: ["물리 모델과 실험 데이터 상관 검증", "시뮬레이션 데이터셋 생성", "AI/최적화 기반 변수 탐색", "디지털트윈 검증 리포트 작성"],
+        requirements: ["시뮬레이션, 통계, Python/MATLAB 기초", "물리 모델 가정과 실험 데이터 해석", "목표·제약 조건 정의 역량"],
+        preferred: ["Simulink/Simscape, Optimization, surrogate model, parameter estimation 경험", "제조·에너지·모빌리티 디지털트윈 프로젝트 경험"]
+      }
+    ]
+  };
+
+  Object.entries(emergingJobRoles).forEach(([trackId, roles]) => {
+    const existingIds = new Set((jobRoles[trackId] || []).map((role) => role.id));
+    jobRoles[trackId] = [
+      ...(jobRoles[trackId] || []),
+      ...roles.filter((role) => !existingIds.has(role.id))
+    ];
+  });
+
+  Object.assign(roleDiagnostics, {
+    "aerospace-systems-engineer": [["요구사항", "임무 요구를 기능·성능·환경 요구로 나눌 수 있다."], ["인터페이스", "하위 시스템 간 신호와 책임 범위를 ICD로 정리할 수 있다."], ["검증", "요구사항별 검증 방법과 증거를 연결할 수 있다."], ["리스크", "변경 영향과 FMEA 항목을 추적할 수 있다."], ["규격", "환경·EMI 시험 조건을 요구사항과 연결할 수 있다."]],
+    "uav-flight-control-engineer": [["비행동역학", "자세·속도·고도 응답을 제어 지표로 설명할 수 있다."], ["센서융합", "IMU/GNSS 센서 오차와 추정 결과의 관계를 말할 수 있다."], ["PX4", "SITL/HIL과 실제 비행 로그의 차이를 비교할 수 있다."], ["튜닝", "PID 또는 경로 추종 파라미터 변경 영향을 분석할 수 있다."], ["안전", "failsafe와 비상 착륙 조건을 테스트 케이스로 만들 수 있다."]],
+    "avionics-integration-engineer": [["ICD", "전원·통신·센서 인터페이스를 문서로 정리할 수 있다."], ["계측", "통신 신호와 전원 품질을 계측기로 확인할 수 있다."], ["통합시험", "장비 통합 이슈를 로그와 변경 이력으로 추적할 수 있다."], ["EMI/EMC", "접지·차폐·케이블 조건이 노이즈에 미치는 영향을 설명할 수 있다."], ["환경시험", "진동·온도 시험 조건을 장비 요구사항과 연결할 수 있다."]],
+    "defense-systems-engineer": [["운용요구", "운용 시나리오를 기능 요구와 시험 항목으로 바꿀 수 있다."], ["체계공학", "하위 장비 변경이 체계 성능에 미치는 영향을 정리할 수 있다."], ["시험평가", "시험 기준, 판정 조건, 증거 자료를 연결할 수 있다."], ["RAM", "신뢰도·정비성 지표가 운용성에 미치는 영향을 설명할 수 있다."], ["형상관리", "요구사항과 변경 이력을 추적할 수 있다."]],
+    "radar-rf-signal-engineer": [["RF", "주파수, 대역폭, SNR이 성능에 미치는 영향을 설명할 수 있다."], ["신호처리", "필터링, FFT, range-Doppler 결과를 해석할 수 있다."], ["탐지", "CFAR와 임계값 변화가 오탐·미탐에 미치는 영향을 설명할 수 있다."], ["추적", "측정값과 track의 차이를 성능 지표로 볼 수 있다."], ["계측", "시험 데이터와 시뮬레이션 결과 차이를 원인 가설로 정리할 수 있다."]],
+    "robot-mechanical-design-engineer": [["하중", "payload와 작업 반력을 기구 설계 조건으로 바꿀 수 있다."], ["구동부", "모터·감속기·베어링 선정 근거를 설명할 수 있다."], ["강성", "강성·백래시·반복정밀도가 품질에 미치는 영향을 말할 수 있다."], ["엔드이펙터", "그리퍼와 fixture 요구사항을 작업물 기준으로 정리할 수 있다."], ["제조성", "조립·정비·안전 커버 조건을 도면에 반영할 수 있다."]],
+    "robot-control-engineer": [["모션제어", "위치·속도·토크 응답을 제어 파라미터와 연결할 수 있다."], ["경로계획", "trajectory와 충돌 회피 조건을 설명할 수 있다."], ["ROS2", "노드·토픽·launch 구조를 동작 흐름으로 말할 수 있다."], ["튜닝", "오버슈트·진동·정착시간을 로그로 비교할 수 있다."], ["안전", "비상정지와 인터록 조건을 검증 항목으로 만들 수 있다."]],
+    "robot-perception-engineer": [["센서", "카메라·라이다 데이터와 좌표계를 설명할 수 있다."], ["캘리브레이션", "내부·외부 파라미터가 인식 결과에 미치는 영향을 말할 수 있다."], ["모델평가", "오탐·미탐을 데이터와 환경 조건으로 분류할 수 있다."], ["SLAM", "지도·위치추정·경로계획의 연결 흐름을 설명할 수 있다."], ["ROS", "인지 결과를 로봇 동작 판단에 연결할 수 있다."]],
+    "smart-factory-automation-engineer": [["I/O", "센서·액추에이터 I/O와 설비 상태를 표로 만들 수 있다."], ["PLC", "시퀀스와 인터록을 순서도로 정리할 수 있다."], ["MES/SCADA", "알람·정지·불량 데이터를 시간 기준으로 연결할 수 있다."], ["OEE", "가동률·성능·품질 손실을 개선 우선순위로 바꿀 수 있다."], ["자동화", "로봇·비전·센서 도입 시 안전과 품질 조건을 설명할 수 있다."]],
+    "plc-instrumentation-engineer": [["도면", "배선도와 I/O list를 보고 계장 신호를 구분할 수 있다."], ["시퀀스", "PLC 동작 순서와 인터록 조건을 설명할 수 있다."], ["계측", "센서·밸브·인버터 신호 이상을 점검할 수 있다."], ["안전", "비상정지와 안전회로 요구를 정리할 수 있다."], ["트러블슈팅", "알람 발생 시 전기·계장·기계 원인을 나눌 수 있다."]],
+    "power-systems-engineer": [["부하", "부하표와 전압·전류·용량 조건을 해석할 수 있다."], ["수배전", "단선결선도와 차단기 구성을 설명할 수 있다."], ["보호계전", "보호 협조와 접지 조건의 목적을 말할 수 있다."], ["전력품질", "전압강하, 고조파, 역률 이슈를 설명할 수 있다."], ["안전", "전기 안전 점검 항목을 설비 요구사항과 연결할 수 있다."]],
+    "ess-bms-engineer": [["ESS 구성", "배터리 랙, BMS, PCS, EMS 역할을 구분할 수 있다."], ["충방전", "전압·전류·온도 로그를 SOC/SOH와 연결할 수 있다."], ["보호", "과전압, 과열, 절연 이상, 소방 조건을 검증 항목으로 만들 수 있다."], ["운영", "SCADA/EMS 알람과 운전 모드를 분석할 수 있다."], ["안전", "열폭주와 절연 안전 리스크를 설명할 수 있다."]],
+    "power-electronics-inverter-engineer": [["스위칭", "PWM, 게이트 드라이브, 전류 센싱을 회로 동작과 연결할 수 있다."], ["계측", "전압·전류·리플·효율을 계측할 수 있다."], ["발열", "손실과 열 조건을 부품 정격과 연결할 수 있다."], ["EMI", "스위칭과 배선이 EMI에 미치는 영향을 설명할 수 있다."], ["보호", "과전류·과전압 보호 동작을 시험할 수 있다."]],
+    "electric-machine-drive-engineer": [["전기기기", "PMSM/BLDC 구조와 토크 발생 원리를 설명할 수 있다."], ["FOC", "전류 제어와 속도 제어의 입력·출력을 구분할 수 있다."], ["센서", "엔코더·리졸버·전류 센싱 신호를 해석할 수 있다."], ["효율", "효율 map과 토크 ripple을 시험 데이터로 볼 수 있다."], ["검증", "제어 응답과 발열·NVH 리스크를 함께 판단할 수 있다."]],
+    "renewable-energy-grid-engineer": [["계통연계", "신재생 출력과 계통 조건을 연결할 수 있다."], ["인버터", "PV/ESS 인버터 운전 모드를 설명할 수 있다."], ["전력품질", "주파수, 전압, 고조파 이슈를 말할 수 있다."], ["EMS", "운영 데이터와 출력 제어 전략을 정리할 수 있다."], ["예측", "발전량·부하 예측이 운영에 미치는 영향을 설명할 수 있다."]],
+    "manufacturing-ai-engineer": [["문제정의", "공정 문제를 목표 지표와 라벨 기준으로 바꿀 수 있다."], ["전처리", "결측·이상치·데이터 누수를 점검할 수 있다."], ["모델평가", "오탐·미탐과 현장 비용 기준으로 모델을 비교할 수 있다."], ["설명", "모델 결과를 공정 원인 가설로 설명할 수 있다."], ["운영", "성능 저하와 재학습 기준을 정리할 수 있다."]],
+    "predictive-maintenance-ai-engineer": [["시계열", "센서 데이터를 이벤트와 같은 시간축으로 정렬할 수 있다."], ["이상탐지", "정상·이상 패턴을 지표로 구분할 수 있다."], ["정비이력", "고장·정비 기록을 모델 라벨과 연결할 수 있다."], ["평가", "오탐·미탐 비용을 기준으로 성능을 설명할 수 있다."], ["리포트", "정비 우선순위와 개선 효과를 문서화할 수 있다."]],
+    "vision-inspection-ai-engineer": [["라벨", "불량 유형별 라벨과 판정 기준을 정의할 수 있다."], ["광학", "조명·렌즈·해상도가 검출 성능에 미치는 영향을 말할 수 있다."], ["모델", "분류·검출·분할 모델의 차이를 설명할 수 있다."], ["평가", "오탐·미탐 사례를 데이터셋 개선으로 연결할 수 있다."], ["적용", "현장 검사 속도와 품질 기준을 함께 판단할 수 있다."]],
+    "engineering-data-analyst": [["데이터소스", "시험·공정·품질 데이터의 키와 단위를 이해할 수 있다."], ["SQL", "필요한 데이터를 추출·결합할 수 있다."], ["시각화", "Pareto, 추세, 상관 그래프로 문제를 설명할 수 있다."], ["원인가설", "분석 결과를 현업 원인 후보로 정리할 수 있다."], ["대시보드", "반복 확인할 지표와 해석 문장을 함께 제시할 수 있다."]],
+    "simulation-ai-engineer": [["물리모델", "입력·출력·가정과 실험 조건을 연결할 수 있다."], ["상관검증", "시뮬레이션과 실험 데이터 차이를 설명할 수 있다."], ["DOE", "변수와 목표·제약 조건을 정의할 수 있다."], ["Surrogate", "대체 모델의 학습 데이터와 적용 범위를 설명할 수 있다."], ["최적화", "최적화 결과를 설계·운영 변경안으로 정리할 수 있다."]]
+  });
+
+  const emergingResources = [
+    {
+      id: "mathworks-aerospace-blockset-examples",
+      title: "Aerospace Blockset 비행체 모델 예제",
+      provider: "MathWorks",
+      type: "공식문서/예제",
+      language: "영어",
+      difficulty: "적용",
+      estimatedMinutes: 180,
+      practiceMinutes: 240,
+      sequenceLevel: 4,
+      tracks: ["aerospace-defense"],
+      skills: ["항공우주", "비행역학", "모델링", "검증"],
+      prerequisites: ["Simulink 기초", "동역학 기초"],
+      reason: "비행체 모델, 좌표계, 환경 조건, 검증 흐름을 공식 예제로 확인할 수 있어 항공·방산 시스템 직무 산출물과 직접 연결됩니다.",
+      expectedOutput: "비행체 모델 입출력 요약과 검증 조건표",
+      qualityStatus: "reviewed",
+      url: "https://www.mathworks.com/help/aeroblks/examples.html"
+    },
+    {
+      id: "mathworks-uav-toolbox-examples",
+      title: "UAV Toolbox 드론 비행제어 예제",
+      provider: "MathWorks",
+      type: "공식문서/예제",
+      language: "영어",
+      difficulty: "적용",
+      estimatedMinutes: 180,
+      practiceMinutes: 240,
+      sequenceLevel: 4,
+      tracks: ["aerospace-defense", "robotics-automation"],
+      skills: ["UAV", "PX4", "비행제어", "센서융합", "HIL"],
+      prerequisites: ["Simulink 기초", "제어공학 기초"],
+      reason: "PX4 연동, 비행 시뮬레이션, 센서·제어 흐름을 예제로 볼 수 있어 드론·UAM 직무 준비에 적합합니다.",
+      expectedOutput: "비행제어 테스트 조건과 로그 분석 메모",
+      qualityStatus: "reviewed",
+      url: "https://www.mathworks.com/help/uav/examples.html"
+    },
+    {
+      id: "px4-autopilot-docs",
+      title: "PX4 Autopilot 공식 문서",
+      provider: "PX4",
+      type: "공식문서/실습",
+      language: "영어",
+      difficulty: "기초실습",
+      estimatedMinutes: 180,
+      practiceMinutes: 240,
+      sequenceLevel: 4,
+      tracks: ["aerospace-defense"],
+      skills: ["PX4", "SITL", "비행 로그", "UAV", "failsafe"],
+      prerequisites: ["Linux 기초", "드론 구성 이해"],
+      reason: "드론 제어 직무에서 자주 보이는 PX4, SITL, parameter, flight log 흐름을 공식 문서로 확인할 수 있습니다.",
+      expectedOutput: "PX4 파라미터와 비행 로그 확인 절차",
+      qualityStatus: "reviewed",
+      url: "https://docs.px4.io/main/en/"
+    },
+    {
+      id: "mathworks-robotics-system-toolbox-examples",
+      title: "Robotics System Toolbox 로봇 예제",
+      provider: "MathWorks",
+      type: "공식문서/예제",
+      language: "영어",
+      difficulty: "적용",
+      estimatedMinutes: 180,
+      practiceMinutes: 240,
+      sequenceLevel: 4,
+      tracks: ["robotics-automation"],
+      skills: ["로봇", "경로계획", "센서융합", "시뮬레이션"],
+      prerequisites: ["MATLAB 기초", "로봇공학 기초"],
+      reason: "로봇 모델링, 경로 계획, 센서 데이터 처리 예제를 통해 로봇 제어·인지 직무 산출물을 만들기 좋습니다.",
+      expectedOutput: "로봇 작업 시나리오와 경로 계획 결과 캡처",
+      qualityStatus: "reviewed",
+      url: "https://www.mathworks.com/help/robotics/examples.html"
+    },
+    {
+      id: "mathworks-ros-toolbox-examples",
+      title: "ROS Toolbox 예제",
+      provider: "MathWorks",
+      type: "공식문서/예제",
+      language: "영어",
+      difficulty: "적용",
+      estimatedMinutes: 150,
+      practiceMinutes: 240,
+      sequenceLevel: 4,
+      tracks: ["robotics-automation", "ai-engineering"],
+      skills: ["ROS", "ROS2", "센서데이터", "통합", "시뮬레이션"],
+      prerequisites: ["ROS 기초", "Python 또는 MATLAB 기초"],
+      reason: "ROS 메시지, 토픽, bag 데이터 흐름을 공식 예제로 확인해 로봇 소프트웨어와 인지 직무에 연결할 수 있습니다.",
+      expectedOutput: "ROS 노드·토픽 구성도와 센서 로그 확인 메모",
+      qualityStatus: "reviewed",
+      url: "https://www.mathworks.com/help/ros/examples.html"
+    },
+    {
+      id: "nav2-ros-docs",
+      title: "ROS2 Navigation2 공식 문서",
+      provider: "Open Navigation",
+      type: "공식문서/실습",
+      language: "영어",
+      difficulty: "기초실습",
+      estimatedMinutes: 180,
+      practiceMinutes: 300,
+      sequenceLevel: 4,
+      tracks: ["robotics-automation"],
+      skills: ["ROS2", "Navigation", "SLAM", "경로계획", "로봇제어"],
+      prerequisites: ["ROS2 기초"],
+      reason: "모바일 로봇 공고에서 반복되는 localization, navigation, planner, controller 구성을 공식 문서로 확인할 수 있습니다.",
+      expectedOutput: "Navigation stack 구성도와 파라미터 체크리스트",
+      qualityStatus: "reviewed",
+      url: "https://docs.nav2.org/"
+    },
+    {
+      id: "mathworks-simscape-battery-examples",
+      title: "Simscape Battery ESS·배터리 예제",
+      provider: "MathWorks",
+      type: "공식문서/예제",
+      language: "영어",
+      difficulty: "적용",
+      estimatedMinutes: 180,
+      practiceMinutes: 240,
+      sequenceLevel: 4,
+      tracks: ["energy-ess", "automotive-mobility"],
+      skills: ["ESS", "BMS", "배터리", "열관리", "시뮬레이션"],
+      prerequisites: ["Simulink 기초", "배터리 기초"],
+      reason: "셀·모듈·팩 모델과 열·전기 특성을 예제로 확인해 ESS/BMS 직무의 검증 산출물로 연결할 수 있습니다.",
+      expectedOutput: "ESS/BMS 모델 구성과 충방전 조건표",
+      qualityStatus: "reviewed",
+      url: "https://www.mathworks.com/help/simscape-battery/examples.html"
+    },
+    {
+      id: "nvidia-jetson-ai-course",
+      title: "NVIDIA Jetson AI 실습 과정",
+      provider: "NVIDIA",
+      type: "기업 공식교육",
+      language: "영어",
+      difficulty: "기초실습",
+      estimatedMinutes: 240,
+      practiceMinutes: 360,
+      sequenceLevel: 4,
+      tracks: ["ai-engineering", "robotics-automation"],
+      skills: ["컴퓨터비전", "Jetson", "딥러닝", "엣지AI", "추론"],
+      prerequisites: ["Python 기초", "딥러닝 입문"],
+      reason: "로봇·비전검사·엣지 AI 공고에서 자주 보이는 Jetson 기반 추론 실습을 공식 자료로 확인할 수 있습니다.",
+      expectedOutput: "이미지 추론 실습 결과와 오탐·미탐 사례 메모",
+      qualityStatus: "reviewed",
+      url: "https://developer.nvidia.com/embedded/learn/jetson-ai-certification-programs"
+    },
+    {
+      id: "mathworks-deep-learning-onramp",
+      title: "Deep Learning Onramp",
+      provider: "MathWorks",
+      type: "무료교육",
+      language: "영어",
+      difficulty: "입문",
+      estimatedMinutes: 120,
+      practiceMinutes: 90,
+      sequenceLevel: 2,
+      tracks: ["ai-engineering", "robotics-automation"],
+      skills: ["딥러닝", "분류", "모델평가", "MATLAB"],
+      prerequisites: ["MATLAB 기초"],
+      reason: "비전검사와 AI 적용 직무에서 딥러닝 개념과 모델 평가 흐름을 짧게 실습하기 좋습니다.",
+      expectedOutput: "분류 모델 실습 캡처와 평가 지표 요약",
+      qualityStatus: "reviewed",
+      url: "https://matlabacademy.mathworks.com/details/deep-learning-onramp/deeplearning"
+    }
+  ];
+
+  const existingResourceIds = new Set(resources.map((resource) => resource.id));
+  resources.push(...emergingResources
+    .filter((resource) => !existingResourceIds.has(resource.id))
+    .map(normalizeResource));
+
+  Object.entries({
+    "matlab-onramp": ["aerospace-defense", "robotics-automation", "energy-ess", "ai-engineering"],
+    "simulink-onramp": ["aerospace-defense", "robotics-automation", "energy-ess", "ai-engineering"],
+    "stateflow-onramp": ["aerospace-defense", "robotics-automation", "energy-ess"],
+    "control-design-onramp": ["aerospace-defense", "robotics-automation", "energy-ess"],
+    "signal-processing-onramp": ["aerospace-defense", "robotics-automation", "energy-ess", "ai-engineering"],
+    "sensor-fusion-onramp": ["aerospace-defense", "robotics-automation"],
+    "machine-learning-onramp": ["ai-engineering", "robotics-automation", "energy-ess"],
+    "google-ml-crash-course": ["ai-engineering", "robotics-automation", "manufacturing"],
+    "boostcourse-data-ai-basic": ["ai-engineering"],
+    "freecodecamp-python-data": ["ai-engineering", "robotics-automation", "energy-ess"],
+    "mathworks-predictive-maintenance": ["ai-engineering", "robotics-automation", "energy-ess"],
+    "mathworks-simscape-electrical": ["energy-ess", "robotics-automation"],
+    "mathworks-simscape-examples": ["energy-ess", "robotics-automation", "aerospace-defense"],
+    "mathworks-simulink-examples": ["aerospace-defense", "robotics-automation", "energy-ess", "ai-engineering"],
+    "mathworks-official-videos": ["aerospace-defense", "robotics-automation", "energy-ess", "ai-engineering"],
+    "mathworks-motor-control-blockset": ["energy-ess", "robotics-automation"],
+    "ti-power-management-training": ["energy-ess"],
+    "ti-precision-labs": ["energy-ess", "aerospace-defense"],
+    "ros-tutorials": ["robotics-automation"],
+    "comento-plc-control-practice": ["robotics-automation", "energy-ess"],
+    "ni-learn-test-measurement": ["aerospace-defense", "robotics-automation", "energy-ess"],
+    "edx-engineering-systems": ["aerospace-defense", "robotics-automation", "energy-ess"],
+    "ansys-innovation-courses": ["aerospace-defense", "robotics-automation"],
+    "ncs": ["aerospace-defense", "robotics-automation", "energy-ess", "ai-engineering"]
+  }).forEach(([resourceId, trackIds]) => {
+    const resource = resources.find((item) => item.id === resourceId);
+    if (resource) resource.tracks = mergeValues(resource.tracks, trackIds);
+  });
+
+  Object.assign(curriculumTasks, {
+    "aerospace-defense": [
+      { title: "임무 요구사항 분해", objective: "선택 직무의 임무, 운용 조건, 하위 시스템을 요구사항으로 나눕니다.", time: "2시간", deliverable: "임무 요구사항표와 하위 시스템 매핑", keywords: ["요구사항", "임무", "인터페이스"], finalCheck: "임무 요구가 시험 가능한 문장으로 정리됐는지" },
+      { title: "비행·센서 모델 확인", objective: "비행체, 센서, 제어 모델의 입력·출력과 가정을 확인합니다.", time: "3시간", deliverable: "비행·센서 모델 입출력 표", keywords: ["비행역학", "센서융합", "모델링"], finalCheck: "모델 가정과 실제 시험 조건의 차이를 적었는지" },
+      { title: "항전·통신 인터페이스 검토", objective: "전원, 통신, 센서, 임무장비 인터페이스와 계측 조건을 정리합니다.", time: "2시간", deliverable: "ICD 초안과 계측 채널표", keywords: ["항전", "통신", "ICD"], finalCheck: "신호, 전원, 데이터 방향이 구분됐는지" },
+      { title: "시험·안전 검증 리포트", objective: "환경·EMI·HIL 시험 조건과 요구사항 추적성을 리포트로 만듭니다.", time: "3시간", deliverable: "검증 매트릭스와 리스크 리포트", keywords: ["검증", "MIL-STD", "HIL"], finalCheck: "요구사항-시험-결과가 연결됐는지" }
+    ],
+    "robotics-automation": [
+      { title: "로봇 작업 시나리오 정의", objective: "작업물, 로봇 동작, 좌표계, 안전 조건을 한 흐름으로 정리합니다.", time: "2시간", deliverable: "작업 시퀀스와 좌표계 메모", keywords: ["작업 시나리오", "좌표계", "안전"], finalCheck: "로봇이 언제 무엇을 판단하는지 명확한지" },
+      { title: "센서·구동기 인터페이스", objective: "모터, 센서, 카메라, 라이다, PLC I/O 흐름을 표로 만듭니다.", time: "2시간", deliverable: "센서·액추에이터 I/O 정의표", keywords: ["센서", "구동기", "I/O"], finalCheck: "입력·출력·주기·이상 상태가 정리됐는지" },
+      { title: "제어·경로 계획 실습", objective: "ROS2, Simulink 또는 시뮬레이션 예제로 경로와 제어 응답을 확인합니다.", time: "3시간", deliverable: "ROS 노드 구성도와 제어 응답 캡처", keywords: ["ROS2", "경로계획", "제어"], finalCheck: "로그로 문제 원인을 재현할 수 있는지" },
+      { title: "현장 안전·검증 리포트", objective: "비상정지, 인터록, 반복 정밀도, 사이클 타임 기준을 정리합니다.", time: "2시간", deliverable: "안전 인터록 체크리스트와 검증 리포트", keywords: ["안전", "인터록", "검증"], finalCheck: "안전과 품질 기준이 함께 적혔는지" }
+    ],
+    "energy-ess": [
+      { title: "전력·부하 요구사항 정의", objective: "전압, 전류, 용량, 효율, 계통 조건을 수치로 정리합니다.", time: "2시간", deliverable: "전력 요구사항표와 부하 조건표", keywords: ["전력", "부하", "계통"], finalCheck: "수치 기준이 없는 요구사항이 남지 않았는지" },
+      { title: "PCS·배터리 구성 검토", objective: "BMS, PCS, EMS, 배터리 랙, 보호 장치의 역할을 구분합니다.", time: "3시간", deliverable: "ESS 구성도와 인터페이스 표", keywords: ["ESS", "BMS", "PCS"], finalCheck: "전력 흐름과 신호 흐름이 분리되어 있는지" },
+      { title: "보호·안전 로직 검증", objective: "과전압, 과전류, 절연, 열폭주, 비상정지 조건을 테스트 케이스로 만듭니다.", time: "2시간", deliverable: "보호 로직 테스트 케이스", keywords: ["보호", "안전", "절연"], finalCheck: "정상·고장·경계 조건이 포함됐는지" },
+      { title: "운영 데이터 분석 리포트", objective: "충방전 로그와 알람 데이터를 기준으로 이상 원인 후보를 정리합니다.", time: "3시간", deliverable: "운영 로그 분석 리포트", keywords: ["운영데이터", "알람", "SCADA"], finalCheck: "데이터 기반 원인 가설과 추가 확인 항목이 있는지" }
+    ],
+    "ai-engineering": [
+      { title: "문제와 데이터 정의", objective: "현장 문제를 목표 지표, 입력 데이터, 라벨 기준으로 바꿉니다.", time: "2시간", deliverable: "데이터 정의서와 목표 지표표", keywords: ["문제정의", "데이터", "라벨"], finalCheck: "모델보다 먼저 판단 기준이 정해졌는지" },
+      { title: "기준 모델 학습·평가", objective: "간단한 분류, 예측, 이상탐지 모델을 만들고 평가 지표를 비교합니다.", time: "3시간", deliverable: "모델 평가 리포트", keywords: ["모델평가", "이상탐지", "분류"], finalCheck: "오탐·미탐과 현장 비용을 적었는지" },
+      { title: "현장 적용 리스크 검토", objective: "데이터 누수, drift, 라벨 오류, 운영 조건 차이를 점검합니다.", time: "2시간", deliverable: "AI 적용 리스크 체크리스트", keywords: ["MLOps", "drift", "설명가능성"], finalCheck: "모델이 틀렸을 때의 대응 기준이 있는지" },
+      { title: "개선 리포트와 설명 자료", objective: "모델 결과를 공정·설비·품질 개선 우선순위로 번역합니다.", time: "2시간", deliverable: "개선 우선순위 리포트와 대시보드 초안", keywords: ["대시보드", "원인가설", "개선"], finalCheck: "현업 담당자가 다음 행동을 알 수 있는지" }
+    ]
+  });
+
+  Object.assign(starterKeywords, {
+    "aerospace-defense": "항공 우주 국방 방산 UAV UAM 비행제어 항공전자 레이더 RF 요구사항 HIL MIL-STD",
+    "robotics-automation": "로봇 자동화 ROS2 SLAM Navigation PLC 센서 구동기 비전검사 인터록 EtherCAT",
+    "energy-ess": "전력 ESS BMS PCS EMS 인버터 전력전자 보호계전 전기설비 SCADA 충방전",
+    "ai-engineering": "AI 적용 제조AI 데이터분석 이상탐지 비전검사 예지보전 MLOps Python SQL"
+  });
+
+  const emergingDirectRoles = {
+    mechanical: [
+      "aerospace-systems-engineer", "uav-flight-control-engineer", "defense-systems-engineer",
+      "robot-mechanical-design-engineer", "robot-control-engineer", "smart-factory-automation-engineer",
+      "simulation-ai-engineer"
+    ],
+    electrical: [
+      "aerospace-systems-engineer", "uav-flight-control-engineer", "avionics-integration-engineer", "defense-systems-engineer", "radar-rf-signal-engineer",
+      "robot-control-engineer", "robot-perception-engineer", "smart-factory-automation-engineer", "plc-instrumentation-engineer",
+      "power-electronics-inverter-engineer", "electric-machine-drive-engineer",
+      "manufacturing-ai-engineer", "predictive-maintenance-ai-engineer", "vision-inspection-ai-engineer", "engineering-data-analyst", "simulation-ai-engineer"
+    ],
+    electrical_power: [
+      "power-systems-engineer", "ess-bms-engineer", "power-electronics-inverter-engineer", "electric-machine-drive-engineer", "renewable-energy-grid-engineer",
+      "plc-instrumentation-engineer", "smart-factory-automation-engineer", "uav-flight-control-engineer", "avionics-integration-engineer"
+    ],
+    chemical: [
+      "ess-bms-engineer", "manufacturing-ai-engineer", "predictive-maintenance-ai-engineer", "engineering-data-analyst"
+    ]
+  };
+
+  addMajorFits("mechanical", {
+    direct: emergingDirectRoles.mechanical,
+    bridge: ["avionics-integration-engineer", "radar-rf-signal-engineer", "robot-perception-engineer", "plc-instrumentation-engineer", "ess-bms-engineer", "power-electronics-inverter-engineer", "electric-machine-drive-engineer", "renewable-energy-grid-engineer", "manufacturing-ai-engineer", "predictive-maintenance-ai-engineer", "vision-inspection-ai-engineer", "engineering-data-analyst"]
+  });
+  addMajorFits("electrical", {
+    direct: emergingDirectRoles.electrical,
+    bridge: ["robot-mechanical-design-engineer", "power-systems-engineer", "ess-bms-engineer", "renewable-energy-grid-engineer"]
+  });
+  addMajorFits("electrical_power", {
+    direct: emergingDirectRoles.electrical_power,
+    bridge: ["hardware-design-engineer", "pcb-design-engineer", "validation-engineer", "power-hardware-engineer", "emc-test-engineer", "embedded-firmware-engineer", "control-engineer", "motor-control-engineer", "vehicle-ee-architecture-engineer", "bms-control-engineer", "ev-power-electronics-engineer", "aerospace-systems-engineer", "defense-systems-engineer", "radar-rf-signal-engineer", "robot-control-engineer", "robot-perception-engineer", "manufacturing-ai-engineer", "predictive-maintenance-ai-engineer", "vision-inspection-ai-engineer", "engineering-data-analyst", "simulation-ai-engineer"],
+    bridgeFocus: "전력공학·전기기기·전력전자 강점을 ESS, 모터드라이브, 설비전기, 제어, 계측 데이터 산출물로 보여주는 것이 중요합니다."
+  });
+  addMajorFits("chemical", {
+    direct: emergingDirectRoles.chemical,
+    bridge: ["power-systems-engineer", "renewable-energy-grid-engineer", "vision-inspection-ai-engineer", "simulation-ai-engineer", "smart-factory-automation-engineer"]
+  });
+
+  Object.entries({
+    "aerospace-systems-engineer": ["mathworks-aerospace-blockset-examples", "simulink-onramp", "edx-engineering-systems", "ni-learn-test-measurement", "ncs"],
+    "uav-flight-control-engineer": ["mathworks-uav-toolbox-examples", "px4-autopilot-docs", "control-design-onramp", "sensor-fusion-onramp", "simulink-onramp", "ni-learn-test-measurement"],
+    "avionics-integration-engineer": ["ti-precision-labs", "signal-processing-onramp", "ni-learn-test-measurement", "mathworks-simulink-examples", "allaboutcircuits-textbook", "youtube-emc-emi-basics"],
+    "defense-systems-engineer": ["edx-engineering-systems", "mathworks-aerospace-blockset-examples", "ncs", "quality-one-fmea", "asq-fmea", "ni-learn-test-measurement"],
+    "radar-rf-signal-engineer": ["signal-processing-onramp", "matlab-onramp", "mathworks-official-videos", "coursera-engineering-data", "google-ml-crash-course"],
+    "robot-mechanical-design-engineer": ["mit-mechanics-materials", "mit-design-manufacturing", "ansys-innovation-courses", "mathworks-robotics-system-toolbox-examples", "kocw-mechanical-design"],
+    "robot-control-engineer": ["mathworks-robotics-system-toolbox-examples", "mathworks-ros-toolbox-examples", "control-design-onramp", "simulink-onramp", "ros-tutorials", "comento-plc-control-practice"],
+    "robot-perception-engineer": ["mathworks-ros-toolbox-examples", "nav2-ros-docs", "sensor-fusion-onramp", "mathworks-deep-learning-onramp", "nvidia-jetson-ai-course", "google-ml-crash-course"],
+    "smart-factory-automation-engineer": ["comento-plc-control-practice", "mathworks-predictive-maintenance", "boostcourse-data-ai-basic", "freecodecamp-python-data", "nist-process-capability", "comento-production-tech-internship"],
+    "plc-instrumentation-engineer": ["comento-plc-control-practice", "ni-learn-test-measurement", "kocw-embedded-control", "ti-precision-labs", "hrd-net-job-training"],
+    "power-systems-engineer": ["mathworks-simscape-electrical", "simscape-onramp", "matlab-onramp", "edx-engineering-systems", "ni-learn-test-measurement", "ncs"],
+    "ess-bms-engineer": ["mathworks-simscape-battery-examples", "mathworks-simscape-electrical", "simulink-onramp", "stateflow-onramp", "matlab-onramp", "mathworks-predictive-maintenance"],
+    "power-electronics-inverter-engineer": ["mathworks-simscape-electrical", "ti-power-management-training", "ti-precision-labs", "simscape-onramp", "mathworks-motor-control-blockset", "youtube-emc-emi-basics"],
+    "electric-machine-drive-engineer": ["mathworks-motor-control-blockset", "control-design-onramp", "mathworks-simscape-electrical", "simulink-onramp", "ni-learn-test-measurement"],
+    "renewable-energy-grid-engineer": ["mathworks-simscape-electrical", "mathworks-simscape-battery-examples", "matlab-onramp", "coursera-engineering-data", "google-ml-crash-course"],
+    "manufacturing-ai-engineer": ["google-ml-crash-course", "machine-learning-onramp", "boostcourse-data-ai-basic", "freecodecamp-python-data", "mathworks-predictive-maintenance", "statistics-onramp"],
+    "predictive-maintenance-ai-engineer": ["mathworks-predictive-maintenance", "signal-processing-onramp", "machine-learning-onramp", "google-ml-crash-course", "ni-learn-test-measurement"],
+    "vision-inspection-ai-engineer": ["mathworks-deep-learning-onramp", "nvidia-jetson-ai-course", "machine-learning-onramp", "google-ml-crash-course", "boostcourse-data-ai-basic"],
+    "engineering-data-analyst": ["freecodecamp-python-data", "google-ml-crash-course", "boostcourse-data-ai-basic", "statistics-onramp", "coursera-engineering-data"],
+    "simulation-ai-engineer": ["simulink-onramp", "simscape-onramp", "optimization-onramp", "machine-learning-onramp", "mathworks-simulink-examples", "mathworks-simscape-examples"]
+  }).forEach(([roleId, resourceIds]) => {
+    roleResourceLinks[roleId] = mergeValues(resourceIds, roleResourceLinks[roleId] || []);
+  });
+
+  Object.entries({
+    "mathworks-aerospace-blockset-examples": ["임무 요구사항 분해", "비행·센서 모델 확인", "시험·안전 검증 리포트"],
+    "mathworks-uav-toolbox-examples": ["비행·센서 모델 확인", "시험·안전 검증 리포트", "제어·경로 계획 실습"],
+    "px4-autopilot-docs": ["비행·센서 모델 확인", "시험·안전 검증 리포트"],
+    "mathworks-robotics-system-toolbox-examples": ["로봇 작업 시나리오 정의", "제어·경로 계획 실습"],
+    "mathworks-ros-toolbox-examples": ["센서·구동기 인터페이스", "제어·경로 계획 실습", "문제와 데이터 정의"],
+    "nav2-ros-docs": ["제어·경로 계획 실습", "현장 안전·검증 리포트"],
+    "mathworks-simscape-battery-examples": ["PCS·배터리 구성 검토", "보호·안전 로직 검증", "운영 데이터 분석 리포트"],
+    "nvidia-jetson-ai-course": ["기준 모델 학습·평가", "현장 적용 리스크 검토"],
+    "mathworks-deep-learning-onramp": ["기준 모델 학습·평가", "개선 리포트와 설명 자료"],
+    "mathworks-simscape-electrical": ["전력·부하 요구사항 정의", "PCS·배터리 구성 검토", "보호·안전 로직 검증"],
+    "ti-power-management-training": ["전력·부하 요구사항 정의", "보호·안전 로직 검증"],
+    "mathworks-motor-control-blockset": ["보호·안전 로직 검증", "제어·경로 계획 실습"],
+    "mathworks-predictive-maintenance": ["운영 데이터 분석 리포트", "문제와 데이터 정의", "기준 모델 학습·평가"],
+    "google-ml-crash-course": ["문제와 데이터 정의", "기준 모델 학습·평가", "현장 적용 리스크 검토"],
+    "boostcourse-data-ai-basic": ["문제와 데이터 정의", "개선 리포트와 설명 자료"],
+    "freecodecamp-python-data": ["문제와 데이터 정의", "기준 모델 학습·평가", "개선 리포트와 설명 자료"],
+    "comento-plc-control-practice": ["센서·구동기 인터페이스", "현장 안전·검증 리포트", "보호·안전 로직 검증"],
+    "ni-learn-test-measurement": ["항전·통신 인터페이스 검토", "시험·안전 검증 리포트", "보호·안전 로직 검증"]
+  }).forEach(([resourceId, taskTitles]) => {
+    resourceTaskLinks[resourceId] = mergeValues(resourceTaskLinks[resourceId], taskTitles);
+  });
+
+  Object.assign(industryDiagnostics, {
+    aerospace: [["요구사항추적", "임무 요구사항을 하위 시스템과 검증 항목으로 나눌 수 있다."], ["비행·환경검증", "비행 조건, 환경 시험, 센서 데이터를 검증 기준과 연결할 수 있다."]],
+    defense: [["체계공학", "운용 시나리오와 하위 장비 요구사항의 관계를 설명할 수 있다."], ["규격·시험평가", "MIL-STD, 환경시험, 시험평가 기준을 요구사항과 연결할 수 있다."]],
+    energy: [["전력·ESS", "부하, PCS, BMS, 보호, 운영 데이터를 하나의 시스템으로 설명할 수 있다."], ["안전·보호", "전기 안전, 절연, 보호계전, 열폭주 리스크를 검토할 수 있다."]],
+    ai: [["문제정의", "AI 모델보다 먼저 목표 지표, 데이터, 판정 기준을 정의할 수 있다."], ["운영검증", "모델 성능 저하와 현장 적용 리스크를 점검할 수 있다."]]
+  });
+}
+
+applyEmergingRoleExpansion();
+
+function applyAutonomousVehicleSoftwareExpansion() {
+  const mergeValues = (base = [], additions = []) => [...new Set([...(base || []), ...(additions || [])])];
+  const addMajorFits = (major, { direct = [], bridge = [], bridgeFocus } = {}) => {
+    if (!majorRoleFitProfiles[major]) {
+      majorRoleFitProfiles[major] = { direct: [], bridge: [], bridgeFocus: bridgeFocus || "" };
+    }
+    majorRoleFitProfiles[major].direct = mergeValues(majorRoleFitProfiles[major].direct, direct);
+    majorRoleFitProfiles[major].bridge = mergeValues(majorRoleFitProfiles[major].bridge, bridge);
+    if (bridgeFocus) majorRoleFitProfiles[major].bridgeFocus = bridgeFocus;
+  };
+
+  if (!tracks.some((track) => track.id === "autonomous-sdv")) {
+    tracks.splice(2, 0, {
+      id: "autonomous-sdv",
+      title: "자율주행·차량 SW",
+      majors: ["electrical", "electrical_power", "mechanical", "both"],
+      industries: ["mobility", "ai", "electronics", "robotics"],
+      difficulty: "상",
+      summary: "카메라·레이더·라이다·GPS/IMU, 차량 네트워크, AUTOSAR/SDV 플랫폼, 진단·OTA·보안을 연결해 차량 SW 기능을 개발·검증하는 직무군입니다.",
+      tasks: ["자율주행 기능 요구사항 분해", "인지·센서융합·경로계획 모델 검토", "차량 SW 플랫폼·진단 인터페이스 정의", "시나리오·로그 기반 검증"],
+      skills: ["인지·센서융합", "Localization", "Planning·Control", "AUTOSAR·SDV", "UDS·OTA", "ISO 21434"],
+      tools: ["MATLAB/Simulink", "Automated Driving Toolbox", "RoadRunner", "ROS2", "CANoe/CANalyzer", "AUTOSAR", "Python"],
+      outputs: ["자율주행 기능 요구사항표", "센서/CAN 로그 동기화 리포트", "시나리오 검증표", "AUTOSAR 인터페이스 정의서", "진단·OTA 테스트 케이스"],
+      misconceptions: ["자율주행은 AI 모델 하나가 아니라 센서 데이터, 차량 제어, 안전 시나리오, 차량 SW 플랫폼, 검증 체계가 함께 움직입니다.", "차량용 SW는 코딩만 보는 직무가 아니라 CAN/UDS, AUTOSAR, 요구사항, 테스트, 기능안전·보안까지 연결해 설명해야 합니다."]
+    });
+  }
+
+  if (!majorBridgeTracks.electrical_power.includes("autonomous-sdv")) majorBridgeTracks.electrical_power.push("autonomous-sdv");
+  ["electrical", "mechanical"].forEach((major) => {
+    majorBridgeTracks[major] = mergeValues(majorBridgeTracks[major], ["autonomous-sdv"]);
+  });
+
+  Object.assign(diagnostics, {
+    "autonomous-sdv": [
+      ["인지·센서융합", "카메라, 레이더, 라이다, GPS/IMU 데이터가 자율주행 판단에 어떻게 쓰이는지 설명할 수 있다."],
+      ["시나리오 검증", "AEB, LKA, ACC, cut-in, VRU 같은 시나리오를 테스트 조건과 Pass/Fail 기준으로 바꿀 수 있다."],
+      ["차량 네트워크", "CAN, Ethernet, SOME/IP, UDS, DBC의 역할을 차량 기능 흐름과 연결할 수 있다."],
+      ["SW 플랫폼", "AUTOSAR Classic/Adaptive, middleware, service, safety 요구사항의 차이를 설명할 수 있다."],
+      ["보안·OTA", "ISO 21434, secure boot, OTA, 진단 로그가 차량 SW 품질과 안전에 왜 필요한지 설명할 수 있다."]
+    ]
+  });
+
+  const autonomousRoles = [
+    {
+      id: "autonomous-perception-engineer",
+      title: "자율주행 인지 알고리즘 엔지니어",
+      postingKeywords: ["Perception", "Camera", "LiDAR", "Radar", "Deep Learning"],
+      industries: ["mobility", "ai", "robotics", "all"],
+      focus: "카메라·라이다·레이더 데이터를 객체, 차선, 신호, 주행 가능 영역으로 인식하고 오탐·미탐을 줄이는 직무",
+      coreWork: "센서 데이터셋, 라벨 기준, 인지 모델, 평가 지표를 연결해 자율주행 기능의 오탐·미탐 리스크를 줄입니다.",
+      coreTerms: ["perception", "camera", "LiDAR", "radar", "object detection", "segmentation", "lane detection", "false positive", "false negative", "dataset", "annotation"],
+      tools: ["Python", "PyTorch", "OpenCV", "ROS2", "MATLAB", "Automated Driving Toolbox"],
+      aiCompetency: { level: "핵심 역량", summary: "인지 직무는 AI 모델, 센서 조건, 라벨 품질, 평가 지표가 직무의 중심입니다.", keywords: ["Perception", "Dataset", "오탐·미탐"], diagnostics: [["인지 평가", "오탐·미탐 사례를 센서 조건과 라벨 기준으로 분류할 수 있다."], ["데이터셋", "학습·검증 데이터 분리와 라벨 품질 리스크를 설명할 수 있다."]] },
+      coreCompetencies: ["센서별 장단점과 인지 모델 입력·출력을 설명하는 역량", "오탐·미탐 사례를 데이터셋 개선 항목으로 바꾸는 역량", "인지 결과를 차량 시나리오와 안전 리스크로 연결하는 역량"],
+      responsibilities: ["주행 센서 데이터셋 수집·전처리", "객체·차선·주행 가능 영역 인지 모델 평가", "오탐·미탐 원인 분석", "인지 결과와 주행 시나리오 검증 지표 연결"],
+      requirements: ["Python, 영상처리, 딥러닝, 선형대수 기초", "카메라·라이다·레이더 데이터와 라벨 기준 이해", "모델 성능 지표와 실패 사례 분석"],
+      preferred: ["ROS2, OpenCV, PyTorch, TensorRT, Automated Driving Toolbox 경험", "차량 센서 로그와 주행 데이터셋 평가 경험"]
+    },
+    {
+      id: "sensor-fusion-localization-engineer",
+      title: "센서퓨전·측위 엔지니어",
+      postingKeywords: ["Sensor Fusion", "Localization", "Kalman Filter", "GPS/IMU", "SLAM"],
+      industries: ["mobility", "robotics", "ai", "all"],
+      focus: "카메라, 레이더, 라이다, GPS/IMU, wheel speed 데이터를 시간 동기화하고 차량 위치·객체 추정을 안정화하는 직무",
+      coreWork: "센서 시간 동기화, 좌표계, 추정 필터, 위치 오차를 관리해 자율주행 판단의 입력 신뢰도를 높입니다.",
+      coreTerms: ["sensor fusion", "localization", "Kalman Filter", "GPS", "IMU", "SLAM", "coordinate frame", "time synchronization", "tracking", "HD map"],
+      tools: ["MATLAB", "Sensor Fusion Toolbox", "ROS2", "Python", "RViz", "RoadRunner"],
+      aiCompetency: { level: "중요", summary: "AI 모델보다 센서 동기화, 좌표계, 추정 오차 검증이 핵심입니다.", keywords: ["센서융합", "Localization", "Kalman Filter"], diagnostics: [["동기화", "센서 시간 차이가 추정 결과에 미치는 영향을 설명할 수 있다."], ["오차", "위치 오차와 추적 성능을 평가 지표로 정리할 수 있다."]] },
+      coreCompetencies: ["센서 좌표계와 시간 동기화를 로그로 검증하는 역량", "Kalman filter와 tracking 결과를 성능 지표로 해석하는 역량", "지도·차량 상태·센서 오차가 주행 판단에 주는 영향을 설명하는 역량"],
+      responsibilities: ["센서 로그 시간 동기화와 좌표계 정리", "객체 추적·차량 localization 모델 검증", "GPS/IMU/차량 CAN 로그 비교", "센서 오류와 추정 실패 시나리오 분석"],
+      requirements: ["확률·선형대수, 신호처리, 센서융합 기초", "MATLAB/Python 기반 로그 분석", "차량 좌표계와 CAN 신호 이해"],
+      preferred: ["Sensor Fusion Toolbox, ROS2, SLAM, HD map, GNSS/IMU 경험", "실차 주행 로그 기반 localization 검증 경험"]
+    },
+    {
+      id: "autonomous-planning-control-engineer",
+      title: "자율주행 판단·경로계획·제어 엔지니어",
+      postingKeywords: ["Planning", "Control", "Trajectory", "Behavior", "MPC"],
+      industries: ["mobility", "ai", "robotics", "all"],
+      focus: "인지·측위 결과를 기반으로 차선 변경, 추종, 정지, 회피 경로를 만들고 차량 제어 응답을 검증하는 직무",
+      coreWork: "주행 상황을 behavior, trajectory, control command로 바꾸고 시나리오별 안전·승차감·법규 기준을 검증합니다.",
+      coreTerms: ["behavior planning", "path planning", "trajectory", "MPC", "LKA", "ACC", "AEB", "cut-in", "comfort", "safety constraint"],
+      tools: ["MATLAB", "Simulink", "Model Predictive Control", "RoadRunner", "CarMaker", "Python"],
+      aiCompetency: { level: "중요", summary: "경로계획은 AI보다 시나리오, 제약조건, 제어 응답 검증이 더 직접적인 준비 근거가 됩니다.", keywords: ["Planning", "MPC", "Scenario"], diagnostics: [["시나리오", "주행 상황을 제약조건과 목표함수로 바꿀 수 있다."], ["응답", "경로와 제어 명령이 차량 응답에 미치는 영향을 검증할 수 있다."]] },
+      coreCompetencies: ["주행 시나리오를 상태, 목표, 제약조건으로 바꾸는 역량", "경로와 제어 응답을 안전·승차감 지표로 비교하는 역량", "시뮬레이션 결과와 차량 로그 차이를 원인 가설로 정리하는 역량"],
+      responsibilities: ["주행 행동·경로계획 로직 검토", "LKA/ACC/AEB 제어 응답 검증", "시뮬레이션 기반 시나리오 평가", "안전 제약조건과 예외 상황 정리"],
+      requirements: ["제어공학, 차량동역학, 알고리즘 기초", "Simulink/MATLAB 또는 Python 시뮬레이션", "주행 시나리오와 평가 지표 이해"],
+      preferred: ["MPC, RoadRunner, CarMaker, PreScan, 실차 로그 분석 경험", "ADAS/자율주행 planning 프로젝트 경험"]
+    },
+    {
+      id: "autonomous-simulation-validation-engineer",
+      title: "자율주행 시뮬레이션·검증 엔지니어",
+      postingKeywords: ["Scenario", "Simulation", "ADAS", "RoadRunner", "Validation"],
+      industries: ["mobility", "ai", "electronics", "all"],
+      focus: "주행 시나리오, 센서 모델, HIL/SIL, 실차 로그를 연결해 자율주행 기능의 Pass/Fail 기준을 검증하는 직무",
+      coreWork: "요구사항을 시나리오와 평가 지표로 바꾸고 시뮬레이션·실차 로그를 비교해 기능 실패 조건을 찾습니다.",
+      coreTerms: ["scenario", "simulation", "RoadRunner", "CarMaker", "PreScan", "HIL", "SIL", "KPIs", "coverage", "corner case"],
+      tools: ["RoadRunner", "Automated Driving Toolbox", "Simulink Test", "Python", "CANoe", "dSPACE"],
+      aiCompetency: { level: "중요", summary: "자율주행 검증에서는 corner case 탐색과 로그 분류에 데이터 분석 역량이 크게 쓰입니다.", keywords: ["Scenario Mining", "Corner Case", "로그분석"], diagnostics: [["검증 커버리지", "시나리오 커버리지와 실패 조건을 지표로 설명할 수 있다."], ["로그 분류", "실패 로그를 센서·인지·제어·시나리오 원인으로 나눌 수 있다."]] },
+      coreCompetencies: ["요구사항을 주행 시나리오와 Pass/Fail 기준으로 바꾸는 역량", "SIL/HIL/실차 결과 차이를 원인별로 분류하는 역량", "corner case와 검증 커버리지를 리포트로 정리하는 역량"],
+      responsibilities: ["자율주행 시나리오 설계와 테스트 케이스 작성", "시뮬레이션·HIL·실차 로그 비교", "Pass/Fail 기준과 검증 커버리지 관리", "실패 케이스 원인 분석"],
+      requirements: ["ADAS 기능, 센서 로그, 차량 네트워크, 테스트 설계 이해", "MATLAB/Python 기반 로그 분석", "요구사항과 테스트 케이스 추적"],
+      preferred: ["RoadRunner, CarMaker, PreScan, dSPACE, Simulink Test 경험", "scenario mining, corner case 분석 경험"]
+    },
+    {
+      id: "vehicle-sw-platform-engineer",
+      title: "차량 SW 플랫폼·AUTOSAR 엔지니어",
+      postingKeywords: ["AUTOSAR", "BSW", "Middleware", "SDV", "SOME/IP"],
+      industries: ["mobility", "electronics", "all"],
+      focus: "AUTOSAR Classic/Adaptive, BSW, middleware, service, Ethernet/SOME-IP를 기반으로 차량 SW 플랫폼을 구성하는 직무",
+      coreWork: "ECU 기능을 software component, interface, service, communication stack으로 나누고 통합·빌드·검증 흐름을 관리합니다.",
+      coreTerms: ["AUTOSAR Classic", "AUTOSAR Adaptive", "BSW", "RTE", "SWC", "SOME/IP", "DDS", "ara::com", "Service-Oriented Architecture", "SDV"],
+      tools: ["AUTOSAR", "Vector", "DaVinci", "EB tresos", "CANoe", "Git", "C/C++", "QNX/Linux"],
+      aiCompetency: { level: "보조 역량", summary: "차량 SW 플랫폼은 AI보다 요구사항·인터페이스·빌드·통합 검증을 정확히 다루는 역량이 우선입니다.", keywords: ["요구사항 분석", "인터페이스 정리"], diagnostics: [["인터페이스", "SWC와 service interface를 요구사항과 연결할 수 있다."], ["통합", "빌드·통합 오류를 로그와 설정 기준으로 분리할 수 있다."]] },
+      coreCompetencies: ["차량 기능을 SWC, BSW, RTE, middleware 인터페이스로 분해하는 역량", "CAN/Ethernet/SOME-IP 통신을 플랫폼 설정과 연결하는 역량", "빌드·통합 오류를 설정·코드·통신 원인으로 분리하는 역량"],
+      responsibilities: ["AUTOSAR SWC/BSW 설정과 인터페이스 관리", "CAN/Ethernet/SOME-IP 통신 스택 연동", "빌드·통합·버전 관리", "플랫폼 요구사항과 테스트 케이스 작성"],
+      requirements: ["C/C++, 임베디드 SW, 차량 네트워크 기초", "AUTOSAR Classic/Adaptive 개념과 SWC/RTE/BSW 이해", "Git, 빌드 로그, 통합 테스트 경험"],
+      preferred: ["Vector DaVinci, EB tresos, CANoe, QNX/Linux, Adaptive AUTOSAR 경험", "SDV, service-oriented architecture, Ethernet 통신 경험"]
+    },
+    {
+      id: "vehicle-diagnostics-ota-engineer",
+      title: "차량 진단·OTA 엔지니어",
+      postingKeywords: ["UDS", "DTC", "OTA", "DoIP", "진단"],
+      industries: ["mobility", "electronics", "all"],
+      focus: "UDS, DTC, DoIP, bootloader, OTA 업데이트, 실패 복구 조건을 설계·검증하는 차량 SW 직무",
+      coreWork: "차량 기능의 고장 상태를 진단 서비스, DTC, update campaign, rollback, 로그 분석으로 관리합니다.",
+      coreTerms: ["UDS", "DTC", "DoIP", "bootloader", "OTA", "FOTA", "SOTA", "rollback", "diagnostic session", "flash programming"],
+      tools: ["CANoe", "CANalyzer", "Vector", "UDS", "Python", "Git", "JIRA"],
+      aiCompetency: { level: "보조 역량", summary: "진단·OTA는 AI보다 오류 상태 정의, 업데이트 실패 조건, 재현 로그 관리가 핵심입니다.", keywords: ["진단 로그", "업데이트 실패 분석"], diagnostics: [["진단 서비스", "UDS 서비스와 DTC가 어떤 고장 상태를 표현하는지 설명할 수 있다."], ["OTA 검증", "업데이트 실패와 rollback 조건을 테스트 케이스로 만들 수 있다."]] },
+      coreCompetencies: ["UDS 서비스와 DTC를 기능 고장 상태와 연결하는 역량", "OTA 업데이트 단계별 실패·복구 조건을 테스트하는 역량", "진단 로그를 재현 조건과 원인 후보로 정리하는 역량"],
+      responsibilities: ["UDS 진단 서비스와 DTC 요구사항 정의", "OTA/bootloader 업데이트 시나리오 검증", "DoIP/CAN 진단 로그 분석", "업데이트 실패·rollback 테스트 케이스 작성"],
+      requirements: ["CAN, Ethernet, UDS, DTC, bootloader 기초", "C/C++ 또는 Python 기반 로그 분석", "요구사항과 테스트 케이스 문서화"],
+      preferred: ["CANoe Diagnostic, DoIP, OTA 플랫폼, secure boot 경험", "차량 진단 표준과 양산 업데이트 프로세스 이해"]
+    },
+    {
+      id: "vehicle-cybersecurity-engineer",
+      title: "차량 사이버보안 엔지니어",
+      postingKeywords: ["ISO 21434", "TARA", "Secure Boot", "HSM", "Cybersecurity"],
+      industries: ["mobility", "electronics", "defense", "all"],
+      focus: "차량 네트워크, ECU, OTA, 진단, 키 관리의 위협을 분석하고 ISO 21434 기반 보안 요구사항과 검증 증거를 만드는 직무",
+      coreWork: "차량 기능과 통신 경로의 위협을 TARA로 분석하고 secure boot, 인증, 암호화, 로그 검증 요구사항으로 바꿉니다.",
+      coreTerms: ["ISO 21434", "TARA", "UNECE R155", "UNECE R156", "secure boot", "HSM", "key management", "penetration test", "SBOM", "threat analysis"],
+      tools: ["CANoe", "Wireshark", "Python", "HSM", "JIRA", "Polarion", "보안 체크리스트"],
+      aiCompetency: { level: "보조 역량", summary: "보안 직무는 AI보다 위협 모델링, 요구사항 추적, 검증 증거 관리가 우선입니다.", keywords: ["TARA", "보안 요구사항"], diagnostics: [["위협분석", "자산·위협·취약점·공격 경로를 표로 정리할 수 있다."], ["보안검증", "보안 요구사항과 테스트 증거를 연결할 수 있다."]] },
+      coreCompetencies: ["차량 기능·네트워크·OTA 경로를 threat scenario로 나누는 역량", "보안 요구사항을 ECU·통신·진단 테스트로 바꾸는 역량", "보안 이슈를 기능안전·품질·개발 프로세스와 연결하는 역량"],
+      responsibilities: ["TARA와 보안 요구사항 작성", "CAN/Ethernet/OTA 위협 시나리오 분석", "secure boot, key management, 인증 요구 검토", "보안 검증 증거와 이슈 추적"],
+      requirements: ["차량 네트워크, 임베디드 SW, 보안 기초", "ISO 21434, TARA, 암호화·인증 개념 이해", "요구사항과 테스트 증거 문서화"],
+      preferred: ["UNECE R155/R156, HSM, secure boot, penetration test 경험", "AUTOSAR SecOC, OTA 보안, SBOM 이해"]
+    }
+  ];
+
+  jobRoles["autonomous-sdv"] = mergeValues(jobRoles["autonomous-sdv"] || [], autonomousRoles).filter((role, index, arr) => (
+    arr.findIndex((item) => item.id === role.id) === index
+  ));
+
+  Object.assign(roleDiagnostics, {
+    "autonomous-perception-engineer": [["센서", "카메라·라이다·레이더 데이터 특성과 한계를 설명할 수 있다."], ["라벨", "객체·차선·영역 라벨 기준을 판정 기준으로 만들 수 있다."], ["모델평가", "precision, recall, 오탐, 미탐을 시나리오와 연결할 수 있다."], ["데이터셋", "학습·검증 데이터 분리와 bias 리스크를 설명할 수 있다."], ["안전", "인지 실패가 차량 동작에 미치는 위험을 정리할 수 있다."]],
+    "sensor-fusion-localization-engineer": [["좌표계", "센서 좌표계와 차량 좌표계 변환을 설명할 수 있다."], ["동기화", "센서 시간 동기화 오류가 추정 결과에 미치는 영향을 말할 수 있다."], ["Kalman Filter", "예측과 보정 단계의 입력·출력을 구분할 수 있다."], ["Localization", "GPS/IMU/차량 CAN 로그로 위치 오차를 평가할 수 있다."], ["Tracking", "객체 추적 결과와 raw detection 차이를 설명할 수 있다."]],
+    "autonomous-planning-control-engineer": [["Behavior", "차선 변경, 정지, 추종 같은 행동 결정을 조건으로 표현할 수 있다."], ["Trajectory", "경로의 안전·승차감·법규 제약을 평가할 수 있다."], ["Control", "조향·가감속 명령이 차량 응답에 미치는 영향을 설명할 수 있다."], ["Scenario", "cut-in, VRU, 급정거 같은 시나리오를 테스트로 만들 수 있다."], ["검증", "시뮬레이션과 로그 차이를 원인 가설로 정리할 수 있다."]],
+    "autonomous-simulation-validation-engineer": [["시나리오", "주행 시나리오를 actor, road, event, 평가 지표로 나눌 수 있다."], ["Pass/Fail", "기능 요구사항을 판정 기준으로 바꿀 수 있다."], ["SIL/HIL", "SIL, HIL, 실차 검증 목적 차이를 설명할 수 있다."], ["로그분석", "실패 로그를 센서·인지·제어·시나리오 원인으로 분류할 수 있다."], ["커버리지", "검증 커버리지와 corner case 의미를 설명할 수 있다."]],
+    "vehicle-sw-platform-engineer": [["AUTOSAR", "SWC, RTE, BSW, Adaptive service의 역할을 구분할 수 있다."], ["통신", "CAN, Ethernet, SOME/IP, DDS가 차량 기능에 어떻게 쓰이는지 설명할 수 있다."], ["빌드", "빌드·통합 오류를 설정, 코드, 의존성 원인으로 나눌 수 있다."], ["요구사항", "플랫폼 요구사항을 인터페이스와 테스트 케이스로 연결할 수 있다."], ["SDV", "service-oriented architecture와 ECU 중심 구조의 차이를 말할 수 있다."]],
+    "vehicle-diagnostics-ota-engineer": [["UDS", "진단 session, service, DID, routine control의 목적을 설명할 수 있다."], ["DTC", "고장 상태를 DTC와 freeze frame으로 정리할 수 있다."], ["OTA", "업데이트, 검증, 실패, rollback 흐름을 테스트 케이스로 만들 수 있다."], ["DoIP", "CAN 진단과 Ethernet/DoIP 진단 차이를 설명할 수 있다."], ["로그", "업데이트 실패 로그를 재현 조건과 원인 후보로 나눌 수 있다."]],
+    "vehicle-cybersecurity-engineer": [["TARA", "자산, 위협, 취약점, 공격 경로를 표로 만들 수 있다."], ["ISO 21434", "보안 요구사항과 검증 증거의 관계를 설명할 수 있다."], ["Secure Boot", "secure boot, HSM, key management의 목적을 말할 수 있다."], ["OTA 보안", "업데이트 인증과 rollback 리스크를 검토할 수 있다."], ["보안검증", "보안 테스트 결과를 요구사항 충족 증거로 정리할 수 있다."]]
+  });
+
+  const newResources = [
+    {
+      id: "mathworks-autosar-blockset-examples",
+      title: "AUTOSAR Blockset 예제",
+      provider: "MathWorks",
+      type: "공식문서/예제",
+      language: "영어",
+      difficulty: "적용",
+      estimatedMinutes: 180,
+      practiceMinutes: 240,
+      sequenceLevel: 4,
+      tracks: ["autonomous-sdv", "embedded-control", "automotive-mobility"],
+      skills: ["AUTOSAR", "SWC", "RTE", "인터페이스", "차량 SW"],
+      prerequisites: ["Simulink 기초", "차량 SW 개념"],
+      reason: "AUTOSAR SWC, 인터페이스, 코드 생성 흐름을 공식 예제로 확인해 차량 SW 플랫폼 직무의 산출물과 직접 연결됩니다.",
+      expectedOutput: "AUTOSAR SWC 인터페이스 정의와 테스트 케이스 초안",
+      qualityStatus: "reviewed",
+      url: "https://www.mathworks.com/help/autosar/examples.html"
+    },
+    {
+      id: "mathworks-vehicle-network-toolbox-examples",
+      title: "Vehicle Network Toolbox 예제",
+      provider: "MathWorks",
+      type: "공식문서/예제",
+      language: "영어",
+      difficulty: "적용",
+      estimatedMinutes: 150,
+      practiceMinutes: 180,
+      sequenceLevel: 4,
+      tracks: ["autonomous-sdv", "automotive-mobility", "embedded-control"],
+      skills: ["CAN", "DBC", "UDS", "차량통신", "로그분석"],
+      prerequisites: ["CAN 기초"],
+      reason: "CAN 메시지, DBC, 차량 네트워크 로그 분석 흐름을 공식 예제로 확인해 ECU·진단·검증 직무에 연결하기 좋습니다.",
+      expectedOutput: "CAN/DBC 신호 정의표와 로그 분석 메모",
+      qualityStatus: "reviewed",
+      url: "https://www.mathworks.com/help/vnt/examples.html"
+    },
+    {
+      id: "mathworks-roadrunner-scenario-examples",
+      title: "RoadRunner 주행 시나리오 예제",
+      provider: "MathWorks",
+      type: "공식문서/예제",
+      language: "영어",
+      difficulty: "적용",
+      estimatedMinutes: 180,
+      practiceMinutes: 240,
+      sequenceLevel: 4,
+      tracks: ["autonomous-sdv", "automotive-mobility"],
+      skills: ["RoadRunner", "시나리오", "자율주행 검증", "시뮬레이션"],
+      prerequisites: ["자율주행 기능 이해"],
+      reason: "자율주행 검증에서 중요한 도로·actor·event·평가 지표를 시나리오 산출물로 만드는 데 적합한 공식 예제입니다.",
+      expectedOutput: "자율주행 시나리오 정의표와 평가 지표 초안",
+      qualityStatus: "reviewed",
+      url: "https://www.mathworks.com/help/roadrunner/examples.html"
+    },
+    {
+      id: "autoisac-cybersecurity-best-practices",
+      title: "Auto-ISAC Automotive Cybersecurity Best Practices",
+      provider: "Auto-ISAC",
+      type: "산업 가이드",
+      language: "영어",
+      difficulty: "기초실습",
+      estimatedMinutes: 120,
+      practiceMinutes: 120,
+      sequenceLevel: 3,
+      tracks: ["autonomous-sdv"],
+      skills: ["차량보안", "TARA", "ISO 21434", "보안 요구사항"],
+      prerequisites: ["차량 네트워크 기초"],
+      reason: "차량 사이버보안 직무에서 요구되는 위협 분석, 보안 요구사항, 조직 프로세스 관점을 빠르게 정리하는 산업 가이드입니다.",
+      expectedOutput: "차량 기능 1개에 대한 위협 시나리오와 보안 요구사항 표",
+      qualityStatus: "reviewed",
+      url: "https://automotiveisac.com/best-practices/"
+    }
+  ];
+
+  const existingResourceIds = new Set(resources.map((resource) => resource.id));
+  resources.push(...newResources.filter((resource) => !existingResourceIds.has(resource.id)).map(normalizeResource));
+
+  [
+    "mathworks-automated-driving-examples",
+    "mathworks-lane-following-sensor-fusion",
+    "mathworks-simulink-test-manager",
+    "mathworks-fault-tolerant-fuel-control",
+    "mathworks-automated-driving-examples",
+    "mathworks-official-videos",
+    "sensor-fusion-onramp",
+    "control-design-onramp",
+    "simulink-onramp",
+    "stateflow-onramp",
+    "signal-processing-onramp",
+    "machine-learning-onramp",
+    "mathworks-deep-learning-onramp",
+    "google-ml-crash-course",
+    "freecodecamp-python-data",
+    "youtube-css-can-bus",
+    "youtube-mathworks-hil-testing",
+    "nvidia-jetson-ai-course",
+    "ros-tutorials",
+    "mathworks-ros-toolbox-examples"
+  ].forEach((resourceId) => {
+    const resource = resources.find((item) => item.id === resourceId);
+    if (resource) resource.tracks = mergeValues(resource.tracks, ["autonomous-sdv"]);
+  });
+
+  Object.assign(curriculumTasks, {
+    "autonomous-sdv": [
+      { title: "자율주행 기능 요구사항 분해", objective: "지원 직무가 인지, 센서융합, 판단, 제어, 플랫폼, 진단 중 어디에 가까운지 요구사항으로 나눕니다.", time: "2시간", deliverable: "자율주행 기능 요구사항표", keywords: ["ADAS", "요구사항", "기능분해"], finalCheck: "기능 입력, 출력, 실패 조건이 적혔는지" },
+      { title: "센서·차량 로그 구조 정리", objective: "카메라·레이더·라이다·GPS/IMU와 CAN/DBC 신호를 시간 기준으로 정리합니다.", time: "3시간", deliverable: "센서/CAN 로그 동기화 표", keywords: ["센서융합", "CAN", "로그"], finalCheck: "센서 데이터와 차량 신호가 같은 시간축에 놓였는지" },
+      { title: "시나리오·SW 인터페이스 검증", objective: "주행 시나리오 또는 AUTOSAR/UDS 인터페이스를 테스트 케이스로 바꿉니다.", time: "3시간", deliverable: "시나리오·인터페이스 테스트 케이스", keywords: ["RoadRunner", "AUTOSAR", "UDS"], finalCheck: "정상·고장·경계 조건이 포함됐는지" },
+      { title: "차량 SW 검증 리포트", objective: "인지 실패, 제어 응답, 진단 로그, OTA/보안 리스크 중 하나를 최종 리포트로 정리합니다.", time: "3시간", deliverable: "차량 SW 검증 리포트", keywords: ["검증", "OTA", "보안"], finalCheck: "지원 회사 공고 키워드와 산출물이 직접 연결됐는지" }
+    ]
+  });
+
+  Object.assign(starterKeywords, {
+    "autonomous-sdv": "자율주행 ADAS Perception Sensor Fusion Localization Planning Control AUTOSAR SDV UDS OTA ISO21434 RoadRunner"
+  });
+
+  const autonomousDirect = [
+    "autonomous-perception-engineer",
+    "sensor-fusion-localization-engineer",
+    "autonomous-planning-control-engineer",
+    "autonomous-simulation-validation-engineer",
+    "vehicle-sw-platform-engineer",
+    "vehicle-diagnostics-ota-engineer",
+    "vehicle-cybersecurity-engineer"
+  ];
+  addMajorFits("electrical", { direct: autonomousDirect });
+  addMajorFits("electrical_power", {
+    direct: ["vehicle-diagnostics-ota-engineer", "vehicle-cybersecurity-engineer"],
+    bridge: autonomousDirect,
+    bridgeFocus: "전력·전기기기 강점에 CAN/UDS, AUTOSAR, 센서 로그, 검증 문서를 보완하면 차량 SW·자율주행 직무로 확장할 수 있습니다."
+  });
+  addMajorFits("mechanical", {
+    direct: ["autonomous-planning-control-engineer", "autonomous-simulation-validation-engineer"],
+    bridge: ["autonomous-perception-engineer", "sensor-fusion-localization-engineer", "vehicle-sw-platform-engineer", "vehicle-diagnostics-ota-engineer", "vehicle-cybersecurity-engineer"]
+  });
+  addMajorFits("chemical", {
+    bridge: ["autonomous-simulation-validation-engineer", "vehicle-cybersecurity-engineer"]
+  });
+
+  Object.entries({
+    "autonomous-perception-engineer": ["mathworks-automated-driving-examples", "mathworks-lane-following-sensor-fusion", "mathworks-deep-learning-onramp", "nvidia-jetson-ai-course", "sensor-fusion-onramp", "google-ml-crash-course"],
+    "sensor-fusion-localization-engineer": ["sensor-fusion-onramp", "mathworks-lane-following-sensor-fusion", "mathworks-automated-driving-examples", "mathworks-ros-toolbox-examples", "signal-processing-onramp", "matlab-onramp"],
+    "autonomous-planning-control-engineer": ["control-design-onramp", "simulink-onramp", "mathworks-automated-driving-examples", "mathworks-roadrunner-scenario-examples", "mathworks-lane-following-sensor-fusion", "youtube-mathworks-hil-testing"],
+    "autonomous-simulation-validation-engineer": ["mathworks-roadrunner-scenario-examples", "mathworks-automated-driving-examples", "mathworks-simulink-test-manager", "youtube-mathworks-hil-testing", "ni-learn-test-measurement", "sensor-fusion-onramp"],
+    "vehicle-sw-platform-engineer": ["mathworks-autosar-blockset-examples", "mathworks-vehicle-network-toolbox-examples", "simulink-onramp", "stateflow-onramp", "youtube-css-can-bus", "freecodecamp-python-data"],
+    "vehicle-diagnostics-ota-engineer": ["mathworks-vehicle-network-toolbox-examples", "youtube-css-can-bus", "stateflow-onramp", "simulink-onramp", "freecodecamp-python-data", "ni-learn-test-measurement"],
+    "vehicle-cybersecurity-engineer": ["autoisac-cybersecurity-best-practices", "mathworks-vehicle-network-toolbox-examples", "youtube-css-can-bus", "freecodecamp-python-data", "ncs"]
+  }).forEach(([roleId, resourceIds]) => {
+    roleResourceLinks[roleId] = mergeValues(resourceIds, roleResourceLinks[roleId] || []);
+  });
+
+  Object.entries({
+    "mathworks-automated-driving-examples": ["자율주행 기능 요구사항 분해", "센서·차량 로그 구조 정리", "시나리오·SW 인터페이스 검증"],
+    "mathworks-lane-following-sensor-fusion": ["자율주행 기능 요구사항 분해", "센서·차량 로그 구조 정리", "시나리오·SW 인터페이스 검증"],
+    "mathworks-roadrunner-scenario-examples": ["시나리오·SW 인터페이스 검증", "차량 SW 검증 리포트"],
+    "mathworks-autosar-blockset-examples": ["시나리오·SW 인터페이스 검증", "차량 SW 검증 리포트"],
+    "mathworks-vehicle-network-toolbox-examples": ["센서·차량 로그 구조 정리", "시나리오·SW 인터페이스 검증", "차량 SW 검증 리포트"],
+    "autoisac-cybersecurity-best-practices": ["차량 SW 검증 리포트"],
+    "sensor-fusion-onramp": ["센서·차량 로그 구조 정리"],
+    "mathworks-deep-learning-onramp": ["센서·차량 로그 구조 정리"],
+    "nvidia-jetson-ai-course": ["센서·차량 로그 구조 정리"],
+    "youtube-css-can-bus": ["센서·차량 로그 구조 정리", "차량 SW 검증 리포트"],
+    "youtube-mathworks-hil-testing": ["시나리오·SW 인터페이스 검증", "차량 SW 검증 리포트"]
+  }).forEach(([resourceId, taskTitles]) => {
+    resourceTaskLinks[resourceId] = mergeValues(resourceTaskLinks[resourceId], taskTitles);
+  });
+
+  industryDiagnostics.mobility = mergeValues(industryDiagnostics.mobility, [
+    ["SDV", "차량 기능을 ECU 중심 구조와 서비스 중심 구조로 나누어 설명할 수 있다."],
+    ["자율주행 검증", "주행 시나리오와 센서/CAN 로그를 Pass/Fail 기준과 연결할 수 있다."]
+  ]);
+  industryDiagnostics.ai = mergeValues(industryDiagnostics.ai || [], [
+    ["자율주행 AI", "인지 모델 결과를 차량 안전 시나리오와 오탐·미탐 기준으로 평가할 수 있다."]
+  ]);
+}
+
+applyAutonomousVehicleSoftwareExpansion();
+
 const storageKey = "careerCompetencyPilot";
 const primaryViews = ["tracks", "diagnosis", "roadmap", "saved", "references"];
 
@@ -4793,7 +5926,7 @@ function loadState() {
     const stored = JSON.parse(localStorage.getItem(storageKey));
     const { year: _ignoredYear, ...storedProfile } = stored?.profile || {};
     const profile = { ...defaultState.profile, ...storedProfile };
-    if (!["mechanical", "electrical", "chemical"].includes(profile.major)) {
+    if (!["mechanical", "electrical_power", "electrical", "chemical"].includes(profile.major)) {
       profile.major = defaultState.profile.major;
     }
     profile.goal = defaultState.profile.goal;
@@ -6068,7 +7201,34 @@ function getRoleCurriculumOutput(track, role) {
     "process-integration-engineer": "공정통합 split lot 변경 리스크 메모와 module interaction map",
     "semiconductor-facility-engineer": "Utility excursion 영향도 매트릭스와 비상 대응 체크리스트",
     "fdc-apc-process-control-engineer": "FDC alarm rule sheet와 APC/R2R control plan",
-    "defect-failure-analysis-engineer": "defect Pareto·wafer map pattern 메모와 FA 원인 가설 리포트"
+    "defect-failure-analysis-engineer": "defect Pareto·wafer map pattern 메모와 FA 원인 가설 리포트",
+    "aerospace-systems-engineer": "임무 요구사항 추적표와 검증 매트릭스",
+    "uav-flight-control-engineer": "비행제어 테스트 조건표와 로그 분석 리포트",
+    "avionics-integration-engineer": "항전 인터페이스 정의서와 통합 시험 체크리스트",
+    "defense-systems-engineer": "운용 요구사항-시험평가 추적표",
+    "radar-rf-signal-engineer": "레이더 신호처리 성능 분석 리포트",
+    "robot-mechanical-design-engineer": "로봇 기구 요구사항표와 엔드이펙터 설계 검토표",
+    "robot-control-engineer": "로봇 제어 응답 로그와 경로 계획 검증 리포트",
+    "robot-perception-engineer": "센서 캘리브레이션 메모와 오탐·미탐 분석표",
+    "smart-factory-automation-engineer": "설비 I/O 정의표와 OEE 개선 리포트",
+    "plc-instrumentation-engineer": "PLC 시퀀스와 인터록 점검표",
+    "power-systems-engineer": "전력 부하 요구사항표와 보호계전 검토표",
+    "ess-bms-engineer": "ESS 구성·보호 로직 테스트 케이스",
+    "power-electronics-inverter-engineer": "인버터 계측 결과와 EMI·발열 검토표",
+    "electric-machine-drive-engineer": "모터드라이브 제어 응답과 효율 분석 리포트",
+    "renewable-energy-grid-engineer": "계통연계 조건 검토표와 운영 데이터 리포트",
+    "manufacturing-ai-engineer": "제조 AI 데이터 정의서와 모델 평가 리포트",
+    "predictive-maintenance-ai-engineer": "설비 이상탐지 리포트와 정비 우선순위표",
+    "vision-inspection-ai-engineer": "비전검사 라벨 기준표와 오탐·미탐 분석표",
+    "engineering-data-analyst": "공학 데이터 대시보드와 원인 가설 리포트",
+    "simulation-ai-engineer": "시뮬레이션 상관 검증표와 최적화 결과 리포트",
+    "autonomous-perception-engineer": "자율주행 인지 모델 평가표와 오탐·미탐 분석 리포트",
+    "sensor-fusion-localization-engineer": "센서/CAN 로그 동기화표와 localization 오차 분석 리포트",
+    "autonomous-planning-control-engineer": "주행 시나리오별 경로계획·제어 응답 검증 리포트",
+    "autonomous-simulation-validation-engineer": "자율주행 시나리오 검증표와 corner case 리포트",
+    "vehicle-sw-platform-engineer": "AUTOSAR SWC 인터페이스 정의서와 통합 테스트 케이스",
+    "vehicle-diagnostics-ota-engineer": "UDS·OTA 테스트 케이스와 실패 로그 분석 리포트",
+    "vehicle-cybersecurity-engineer": "TARA 위협분석표와 차량 보안 요구사항 검증표"
   };
   if (roleOutputById[role.id]) return roleOutputById[role.id];
   if (role.title.includes("필드이슈") || role.title.includes("Warranty")) return "필드이슈 8D 원인분석표와 보증 데이터 기반 품질 개선 리포트";
@@ -6184,8 +7344,15 @@ function getRoleExplicitToolTerms(track, role) {
     "JIRA", "Polarion", "DOORS", "CANoe", "CANalyzer", "CANape", "INCA", "CAPL",
     "AUTOSAR", "AUTOSAR Classic", "AUTOSAR Adaptive", "UDS", "DTC", "DBC", "ODX",
     "XCP", "HIL", "SIL", "MIL", "dSPACE", "NI VeriStand", "Vector", "CarMaker",
-    "PreScan", "RoadRunner", "ROS", "ROS2", "Gazebo", "RViz", "SLAM", "Yocto",
-    "Buildroot", "BSP", "Kernel", "Linux", "Device tree", "PLC", "CD-SEM", "SEM", "SEM/EDS", "FIB", "KLA", "OES", "RGA", "ellipsometry", "scatterometry", "WAT", "PCM", "SCADA", "BMS/FMS", "XRD",
+    "SOME/IP", "DDS", "ara::com", "DoIP", "OTA", "FOTA", "SOTA", "ISO 21434", "UNECE R155", "UNECE R156",
+    "Cybersecurity", "Secure Boot", "HSM", "TARA", "SBOM", "QNX", "Adaptive Platform",
+    "PreScan", "RoadRunner", "Aerospace Blockset", "UAV Toolbox", "PX4", "ArduPilot", "QGroundControl",
+    "STK", "DO-178C", "DO-254", "MIL-STD-810", "MIL-STD-461", "AESA", "Radar", "RF",
+    "GNSS", "IMU", "INS", "Kalman Filter", "ROS", "ROS2", "Gazebo", "RViz", "SLAM", "Nav2", "MoveIt",
+    "OpenCV", "PCL", "YOLO", "NVIDIA Jetson", "CUDA", "TensorRT", "TensorFlow", "PyTorch",
+    "MLflow", "DVC", "Docker", "Kubernetes", "Yocto",
+    "Buildroot", "BSP", "Kernel", "Linux", "Device tree", "PLC", "EtherCAT", "Profinet", "OPC UA",
+    "PCS", "ESS", "EMS", "BMS", "PMSM", "FOC", "VFD", "CD-SEM", "SEM", "SEM/EDS", "FIB", "KLA", "OES", "RGA", "ellipsometry", "scatterometry", "WAT", "PCM", "SCADA", "BMS/FMS", "XRD",
     "FTIR", "DSC", "TGA", "GC/MS", "HPLC", "HAZOP", "PSM", "MSDS", "GMP", "SOP"
   ];
 
@@ -6342,6 +7509,7 @@ function getRoleArtifactExamples(track, role) {
   if (/(반도체|웨이퍼|Defect|CD|식각|플라즈마|계측|장비)/i.test(text)) examples.push("Recipe 변경 이력, 계측 지표, 장비 로그 기반 원인 가설");
   if (/(PCB|회로|전원|리플|EMC|오실로스코프|부품선정)/i.test(text)) examples.push("회로 블록도, 부품 선정표, 측정 포인트와 검증 결과");
   if (/(MCU|펌웨어|UART|SPI|I2C|CAN|PWM|ADC)/i.test(text)) examples.push("주변장치 매핑표, 통신 로그, 디버깅 재현 절차");
+  if (/(자율주행|Perception|Sensor Fusion|Localization|Planning|RoadRunner|SDV|UDS|OTA|ISO 21434|SOME\/IP)/i.test(text)) examples.push("자율주행 시나리오 검증표, 센서/CAN 로그 동기화표, 차량 SW 인터페이스 정의서");
   if (/(차량|차체|BIW|섀시|현가|조향|제동|파워트레인|구동계|배터리팩|BMS|E\/E|ECU|ADAS|HIL|SIL|DVP&R|실차|CANoe|AUTOSAR)/i.test(text)) examples.push("차량 요구사항표, 인터페이스 정의서, 시험계획서와 검증 리포트");
   if (/(Linux|Device Driver|Kernel|Yocto|BSP|부팅)/i.test(text)) examples.push("device tree·드라이버 로그 분석 메모와 이미지 빌드 흐름도");
   if (/(ROS|Navigation|SLAM|로봇|센서)/i.test(text)) examples.push("ROS 노드·토픽 구성도와 센서 데이터 흐름 로그");
