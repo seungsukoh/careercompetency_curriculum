@@ -208,11 +208,11 @@ a:focus-visible {
 
 .app-guidance-banner {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 10px;
-  align-items: start;
-  margin: 0 0 14px;
-  padding: 12px 16px;
+  grid-template-columns: minmax(220px, auto) minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  margin: 0 0 16px;
+  padding: 16px 18px;
   color: var(--on-dark);
   background: var(--deep-bg);
   border: 1px solid color-mix(in srgb, var(--heritage-navy) 72%, var(--signal-gold) 28%);
@@ -224,17 +224,24 @@ a:focus-visible {
 .app-guidance-banner strong {
   color: var(--accent);
   font-family: var(--font-caption);
-  font-size: 1rem;
+  font-size: 1.14rem;
   font-weight: 900;
   letter-spacing: 1.8px;
   white-space: nowrap;
 }
 
+.app-guidance-banner div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
 .app-guidance-banner span {
+  display: block;
   color: var(--on-dark);
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.55;
+  font-size: 1.08rem;
+  font-weight: 800;
+  line-height: 1.5;
   word-break: keep-all;
   overflow-wrap: anywhere;
 }
@@ -3752,8 +3759,8 @@ li {
 
   .app-guidance-banner {
     grid-template-columns: 1fr;
-    gap: 6px;
-    padding: 12px;
+    gap: 8px;
+    padding: 14px;
   }
 
   .layout {
