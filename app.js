@@ -6214,15 +6214,12 @@ function renderEducationSummaryCard(resource, index, context, tasks) {
           <p>${resource.provider} · ${resource.type} · ${formatMinutes(resource.totalMinutes)}</p>
         </div>
       </div>
-      <details class="education-detail-disclosure">
-        <summary>교육내용 상세보기</summary>
-        <div class="education-summary-body">
-          <p><strong>교육 소개</strong>${introText}</p>
-          <p><strong>추천 이유</strong>${reason}</p>
-          <p><strong>내 커리큘럼 연결</strong>${taskText}</p>
-          <p><strong>남길 결과물</strong>${outputText}</p>
-        </div>
-      </details>
+      <div class="education-summary-body">
+        <p><strong>교육 소개</strong>${introText}</p>
+        <p><strong>추천 이유</strong>${reason}</p>
+        <p><strong>내 커리큘럼 연결</strong>${taskText}</p>
+        <p><strong>남길 결과물</strong>${outputText}</p>
+      </div>
       <div class="education-summary-actions">
         <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
         ${renderSaveActionButton(resource, "내 커리큘럼에 추가")}
@@ -6965,7 +6962,11 @@ function renderCompetencyActionPlan(context, tasks) {
                   <span>예시 자료</span>
                   ${item.resources.map((resource) => `
                     <div class="competency-example-resource">
-                      <strong>${resource.title}</strong>
+                      <div class="competency-example-main">
+                        <strong>${resource.title}</strong>
+                        <p><strong>교육 소개</strong>${getResourceIntroText(resource)}</p>
+                        <p><strong>남길 결과물</strong>${resource.expectedOutput || item.deliverable}</p>
+                      </div>
                       <div>
                         <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
                         ${renderSaveActionButton(resource, "내 커리큘럼에 추가")}
@@ -7538,7 +7539,15 @@ function getResourceBadgeText(resource) {
 }
 
 function getResourceOpenLabel(resource) {
-  return "교육 열기";
+  const text = getResourceBadgeText(resource);
+  if (/youtube|영상|동영상/i.test(text)) return "영상 페이지 열기";
+  if (/코멘토|렛유인|부트캠프|현장실습|KDT|멘토링|인턴체험|강좌|과정|course|Coursera|edX|K-MOOC|KOCW|STEP|HRD-Net|인프런|Udemy|Boostcourse/i.test(text)) {
+    return "과정 페이지 열기";
+  }
+  if (/MathWorks|Ansys|NI|Google|Texas Instruments|STMicroelectronics|Arm|KiCad|Linux Kernel|Yocto|ROS|공식|문서|예제|자료/i.test(text)) {
+    return "자료 페이지 열기";
+  }
+  return "페이지 열기";
 }
 
 function renderSaveActionButton(resource, label = "내 커리큘럼에 추가") {

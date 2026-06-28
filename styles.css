@@ -2360,6 +2360,10 @@ li {
 .education-summary-body {
   display: grid;
   gap: 6px;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
 }
 
 .education-detail-disclosure {
@@ -2390,6 +2394,8 @@ li {
 
 .education-detail-disclosure .education-summary-body {
   padding: 10px;
+  border: 0;
+  border-radius: 0;
 }
 
 .education-summary-body strong {
@@ -2678,10 +2684,29 @@ li {
   border-radius: 6px;
 }
 
+.competency-example-main {
+  display: grid;
+  gap: 5px;
+}
+
 .competency-example-resource strong {
   min-width: 0;
   overflow-wrap: anywhere;
   font-size: 0.84rem;
+}
+
+.competency-example-resource p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.competency-example-resource p strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--ink);
+  font-size: 0.74rem;
 }
 
 .competency-example-resource > div {
