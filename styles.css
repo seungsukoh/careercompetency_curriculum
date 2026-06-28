@@ -408,6 +408,92 @@ input::placeholder {
   padding: 0 12px;
 }
 
+.role-context-bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.25fr) minmax(0, 1.1fr) auto;
+  gap: 10px;
+  align-items: stretch;
+  padding: 12px;
+  background: #f7fbfc;
+  border-bottom: 1px solid var(--line);
+}
+
+.role-context-main,
+.role-context-summary,
+.role-context-stats span {
+  min-width: 0;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #c8e5ec;
+  border-radius: 7px;
+}
+
+.role-context-main,
+.role-context-summary {
+  display: grid;
+  gap: 3px;
+}
+
+.role-context-main span,
+.role-context-summary strong {
+  color: var(--accent);
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.role-context-main strong {
+  font-size: 0.96rem;
+  line-height: 1.3;
+}
+
+.role-context-main em,
+.role-context-summary span,
+.role-context-summary em {
+  min-width: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-style: normal;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.role-context-summary em {
+  color: #164e63;
+  font-weight: 800;
+}
+
+.role-context-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.role-context-stats span {
+  display: grid;
+  gap: 2px;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.role-context-stats strong {
+  color: var(--primary);
+  font-size: 0.95rem;
+}
+
+.role-context-actions {
+  display: grid;
+  gap: 8px;
+  align-content: stretch;
+  min-width: 118px;
+}
+
+.role-context-actions .primary-button,
+.role-context-actions .ghost-button {
+  min-height: 34px;
+  padding: 0 10px;
+  font-size: 0.82rem;
+}
+
 .view {
   display: none;
   padding: 18px;
@@ -440,6 +526,38 @@ input::placeholder {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
+}
+
+.flow-overview {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 12px;
+  background: #f8fcfd;
+  border: 1px solid #c8e5ec;
+  border-radius: var(--radius);
+}
+
+.flow-overview div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
+
+.flow-overview strong {
+  color: var(--ink);
+  font-size: 0.86rem;
+}
+
+.flow-overview span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
 }
 
 .selected-role-overview-slot:empty {
@@ -639,6 +757,38 @@ input::placeholder {
   margin-top: 14px;
   padding: 16px;
   background: #fbfcfa;
+}
+
+.track-common-disclosure summary {
+  cursor: pointer;
+  list-style-position: outside;
+}
+
+.track-common-disclosure summary span {
+  display: inline-grid;
+  gap: 3px;
+  vertical-align: middle;
+}
+
+.track-common-disclosure summary strong {
+  color: var(--ink);
+}
+
+.track-common-disclosure summary small {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.track-common-disclosure summary .eyebrow {
+  margin: 0;
+  font-style: normal;
+}
+
+.track-common-body {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
 }
 
 .track-detail-head {
@@ -1274,6 +1424,45 @@ li {
   color: #5f4a25;
 }
 
+.roadmap-decision-panel,
+.diagnosis-focus-panel {
+  display: grid;
+  gap: 8px;
+}
+
+.roadmap-decision-panel {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.roadmap-decision-panel > div,
+.diagnosis-focus-panel > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #cfe3d8;
+  border-radius: 7px;
+}
+
+.roadmap-decision-panel > div:last-child:nth-child(5) {
+  grid-column: 1 / -1;
+}
+
+.roadmap-decision-panel strong,
+.diagnosis-focus-panel strong {
+  color: var(--ink);
+  font-size: 0.82rem;
+}
+
+.roadmap-decision-panel span,
+.diagnosis-focus-panel span {
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
 .reference-priority-panel,
 .reference-section {
   display: grid;
@@ -1674,6 +1863,44 @@ li {
   display: block;
   margin-bottom: 3px;
   color: var(--ink);
+}
+
+.diagnostic-group {
+  display: grid;
+}
+
+.diagnostic-group details {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.diagnostic-group summary {
+  cursor: pointer;
+  padding: 12px 13px;
+  list-style-position: outside;
+}
+
+.diagnostic-group summary span {
+  display: inline-grid;
+  gap: 3px;
+  vertical-align: middle;
+}
+
+.diagnostic-group summary strong {
+  color: var(--ink);
+}
+
+.diagnostic-group summary em {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-style: normal;
+}
+
+.diagnostic-group-items {
+  display: grid;
+  gap: 8px;
+  padding: 0 12px 12px;
 }
 
 .check-item {
@@ -2202,11 +2429,21 @@ li {
     grid-template-columns: 1fr;
   }
 
+  .role-context-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .role-context-stats,
+  .role-context-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .profile-panel {
     position: static;
   }
 
   .track-grid,
+  .flow-overview,
   .role-filter-bar,
   .inline-wordcloud-panel,
   .selected-role-overview,
@@ -2220,7 +2457,9 @@ li {
   .expert-review-grid,
   .detail-grid,
   .diagnosis-context-strip,
+  .diagnosis-focus-panel,
   .diagnosis-guide-grid,
+  .roadmap-decision-panel,
   .duration-strategy-grid,
   .goal-rule-grid,
   .reference-resource-grid,
@@ -2267,6 +2506,11 @@ li {
   }
 
   .metric-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .role-context-stats,
+  .role-context-actions {
     grid-template-columns: 1fr;
   }
 

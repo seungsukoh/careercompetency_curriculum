@@ -2604,7 +2604,7 @@ const learningGoals = {
   },
   foundation: {
     label: "전공 보완",
-    summary: "직무확보에서 비어 있는 전공·도구 역량을 먼저 메웁니다.",
+    summary: "역량 체크에서 비어 있는 전공·도구 역량을 먼저 메웁니다.",
     preferredDifficulties: ["입문", "기초실습"],
     prioritySkills: ["전공지식", "통계", "회로이론", "재료역학", "공정 흐름", "물질수지", "열역학", "C언어"]
   },
@@ -2624,7 +2624,7 @@ const learningGoals = {
 
 const goalRecommendationLabels = {
   explore: "직무 이해와 용어 확인 우선",
-  foundation: "직무확보 공백 보완 우선",
+  foundation: "역량 체크 공백 보완 우선",
   portfolio: "실습 산출물과 포트폴리오 근거 우선",
   interview: "면접 설명 근거와 직무 키워드 우선"
 };
@@ -2637,7 +2637,7 @@ const goalScoringRules = {
   },
   foundation: {
     label: "전공 보완",
-    resource: "직무확보에서 비어 있는 전공·도구 역량",
+    resource: "역량 체크에서 비어 있는 전공·도구 역량",
     roadmap: "보완 필요 역량과 직접 맞닿은 기초 과제"
   },
   portfolio: {
@@ -3764,6 +3764,7 @@ function bindElements() {
     "nextActionPanel",
     "profileImpactPanel",
     "workflowStatus",
+    "roleContextBar",
     "trackCount",
     "roleSearchInput",
     "roleGroupFilter",
@@ -3939,6 +3940,7 @@ function renderViews() {
     view.classList.toggle("is-active", view.id === `${state.view}View`);
   });
   renderWorkflowStatus();
+  renderRoleContextBar();
   scheduleWordCloudLayout();
 }
 
@@ -3984,7 +3986,7 @@ function getWorkflowSteps({ track, role, checkedCount, score, gapCount, savedCou
     },
     {
       view: "diagnosis",
-      title: "보유 역량",
+      title: "역량 체크",
       status: checkedCount ? `${checkedCount}개 체크 · ${score}%` : "체크 전",
       complete: checkedCount > 0
     },
@@ -4002,7 +4004,7 @@ function getWorkflowSteps({ track, role, checkedCount, score, gapCount, savedCou
     },
     {
       view: "saved",
-      title: "내 계획",
+      title: "계획서",
       status: savedCount ? `${savedCount}개 자료 저장` : "자동 구성 확인",
       complete: savedCount > 0
     }
@@ -4016,9 +4018,9 @@ function getNextWorkflowStep(steps, activeIndex) {
   if (!diagnosisStep.complete) {
     return {
       view: "diagnosis",
-      title: "보유 역량을 먼저 체크하세요",
+      title: "보유한 역량을 먼저 체크하세요",
       body: "지원 직무에서 이미 갖춘 역량을 제외해야 로드맵이 부족 역량 중심으로 좁혀집니다.",
-      action: "보유 역량 체크",
+      action: "역량 체크",
       primary: true
     };
   }
@@ -4036,9 +4038,9 @@ function getNextWorkflowStep(steps, activeIndex) {
   if (!savedStep.complete) {
     return {
       view: "saved",
-      title: "로드맵을 내 계획으로 정리하세요",
+      title: "로드맵을 계획서로 정리하세요",
       body: "자동 배치된 주차별 과제와 교육자료를 한 화면에서 확인하고 내보낼 수 있습니다.",
-      action: "내 계획 보기",
+      action: "계획서 보기",
       primary: state.view === "roadmap"
     };
   }
@@ -4050,6 +4052,45 @@ function getNextWorkflowStep(steps, activeIndex) {
     action: "로드맵 재확인",
     primary: false
   };
+}
+
+function renderRoleContextBar() {
+  if (!elements.roleContextBar) return;
+  const track = getSelectedTrack();
+  const role = getSelectedRole(track.id);
+  const diagnosticItems = getDiagnosticItems(track);
+  const checkedCount = diagnosticItems.filter((item) => state.checked[item.id]).length;
+  const gapItems = getGapItems(track.id);
+  const aiProfile = getRoleAiCompetencyProfile(role);
+  const output = role ? getRoleCurriculumOutput(track, role) : track.outputs[0];
+  const majorLabel = getMajorPathwayLabel(track, role);
+  const gapPreview = gapItems.length
+    ? gapItems.slice(0, 3).map((item) => item.skill).join(", ")
+    : "큰 공백 없음";
+
+  elements.roleContextBar.innerHTML = `
+    <div class="role-context-main">
+      <span>현재 기준</span>
+      <strong>${role?.title || track.title}</strong>
+      <em>${track.title} · ${getMajorLabel()} ${majorLabel}</em>
+    </div>
+    <div class="role-context-stats" aria-label="선택 직무 준비 현황">
+      <span><strong>${checkedCount}/${diagnosticItems.length}</strong>확보 체크</span>
+      <span><strong>${gapItems.length}개</strong>보완 역량</span>
+      <span><strong>${getDurationLabel()}</strong>${learningGoals[state.profile.goal]?.label || "준비"}</span>
+      ${aiProfile ? `<span><strong>${aiProfile.level}</strong>AI·데이터</span>` : ""}
+    </div>
+    <div class="role-context-summary">
+      <strong>이번 계획의 결과물</strong>
+      <span>${output}</span>
+      <em>우선 보완: ${gapPreview}</em>
+    </div>
+    <div class="role-context-actions">
+      <button class="ghost-button" type="button" data-view-target="tracks">직무 상세</button>
+      <button class="primary-button" type="button" data-view-target="diagnosis">역량 체크</button>
+      <button class="ghost-button" type="button" data-view-target="roadmap">로드맵</button>
+    </div>
+  `;
 }
 
 function renderProfileImpact() {
@@ -4176,7 +4217,7 @@ function getMajorRoleFit(track, role, major = state.profile.major) {
     return {
       level: "direct",
       reason: `${majorLabel} 전공지식이 ${role.title}의 반복 업무와 직접 맞닿아 있습니다.`,
-      focus: "체크하지 못한 직무확보 항목만 보완하면 바로 로드맵 우선순위에 반영됩니다."
+      focus: "체크하지 못한 역량 항목만 보완하면 바로 로드맵 우선순위에 반영됩니다."
     };
   }
   if (role && profile?.bridge.includes(role.id)) {
@@ -4204,7 +4245,7 @@ function getMajorRoleFit(track, role, major = state.profile.major) {
   return {
     level: "explore",
     reason: `${majorLabel} 전공자는 이 직무의 필수 언어와 산출물을 먼저 확인해야 합니다.`,
-    focus: "직무확보 체크에서 모르는 항목이 많으면 탐색 단계 로드맵으로 시작하는 편이 좋습니다."
+    focus: "역량 체크에서 모르는 항목이 많으면 탐색 단계 로드맵으로 시작하는 편이 좋습니다."
   };
 }
 
@@ -4334,7 +4375,7 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
             </div>
           ` : ""}
           <div class="flow-actions">
-            <button class="primary-button" type="button" data-view-target="diagnosis">보유 역량 체크하기</button>
+            <button class="primary-button" type="button" data-view-target="diagnosis">역량 체크하기</button>
             <button class="ghost-button" type="button" data-view-target="roadmap">로드맵 보기</button>
             <button class="ghost-button" type="button" data-view-target="references">참고자료 보기</button>
           </div>
@@ -4409,7 +4450,7 @@ function renderInlineRoleWordCloud(track, role) {
           </ul>
         </div>
         <div class="flow-actions">
-          <button class="primary-button" type="button" data-view-target="diagnosis">보유 역량 체크하기</button>
+          <button class="primary-button" type="button" data-view-target="diagnosis">역량 체크하기</button>
           <button class="ghost-button" type="button" data-view-target="roadmap">부족 역량 로드맵 보기</button>
         </div>
       </div>
@@ -4471,20 +4512,26 @@ function renderTrackDetail() {
   const selectedRole = getSelectedRole(track.id);
 
   elements.trackDetail.innerHTML = `
-    <div class="track-detail-head">
-      <p class="eyebrow">직무군 공통 참고 정보</p>
-      <h3>${track.title}</h3>
-      <p>${selectedRole ? `${selectedRole.title} 상세 정보는 위 선택 카드 바로 아래에 모았습니다. ` : ""}아래 내용은 같은 직무군에서 함께 쓰이는 공통 업무, 도구, 산출물입니다.</p>
-    </div>
-    <div class="detail-grid">
-      ${detailBlock("주요 업무", track.tasks)}
-      ${detailBlock("핵심 역량", track.skills)}
-      ${detailBlock("사용 도구", track.tools)}
-      ${detailBlock("포트폴리오 산출물", track.outputs)}
-    </div>
-    <div class="detail-grid">
-      ${detailBlock("흔한 오해", track.misconceptions)}
-    </div>
+    <details class="track-common-disclosure">
+      <summary>
+        <span>
+          <em class="eyebrow">직무군 공통 참고 정보</em>
+          <strong>${track.title}</strong>
+          <small>${selectedRole ? `${selectedRole.title} 상세 정보는 위 선택 카드 바로 아래에 모았습니다.` : "같은 직무군에서 함께 쓰이는 공통 정보입니다."}</small>
+        </span>
+      </summary>
+      <div class="track-common-body">
+        <div class="detail-grid">
+          ${detailBlock("주요 업무", track.tasks)}
+          ${detailBlock("핵심 역량", track.skills)}
+          ${detailBlock("사용 도구", track.tools)}
+          ${detailBlock("포트폴리오 산출물", track.outputs)}
+        </div>
+        <div class="detail-grid">
+          ${detailBlock("흔한 오해", track.misconceptions)}
+        </div>
+      </div>
+    </details>
   `;
 }
 
@@ -4509,7 +4556,7 @@ function renderRoleWordCloud(track, role, modifier = "") {
       <div class="word-cloud-terms">
         ${terms.map((term, index) => renderWordCloudTerm(term, index, index === 0)).join("")}
       </div>
-      <figcaption>${role.title} 직무상세의 주요 업무, 자격요건, 우대역량, 직무확보 문항에서 반복되는 단어일수록 크게 표시합니다.</figcaption>
+      <figcaption>${role.title} 직무상세의 주요 업무, 자격요건, 우대역량, 역량 체크 문항에서 반복되는 단어일수록 크게 표시합니다.</figcaption>
     </figure>
   `;
 }
@@ -4714,7 +4761,7 @@ function renderRoleFitPanel(track, role) {
 function renderExpertReviewPanel(track, role) {
   const reviewItems = getExpertReviewItems(track, role);
   return `
-    <details class="expert-review-panel" open>
+    <details class="expert-review-panel">
       <summary>
         <span>
           <em class="eyebrow">직무 전문가 검토</em>
@@ -4964,14 +5011,14 @@ function getWordCloudAsset(track, role) {
     return {
       src: `/assets/wordcloud-role-${role.id}.png`,
       alt: `${role.title} 세부 직무 역량 워드 클라우드`,
-      caption: `${role.title} 채용공고 키워드, 직무확보 문항, 업무·자격요건에서 반복되는 역량일수록 크게 표시됩니다.`
+      caption: `${role.title} 채용공고 키워드, 역량 체크 문항, 업무·자격요건에서 반복되는 역량일수록 크게 표시됩니다.`
     };
   }
 
   return {
     src: `/assets/wordcloud-${track.id}.png`,
     alt: `${track.title} 핵심 역량 워드 클라우드`,
-    caption: "단어 크기는 직무 설명, 직무확보 문항, 과제, 교육자료에서 반복 강조되는 정도를 반영합니다."
+    caption: "단어 크기는 직무 설명, 역량 체크 문항, 과제, 교육자료에서 반복 강조되는 정도를 반영합니다."
   };
 }
 
@@ -4990,21 +5037,7 @@ function renderDiagnostics() {
   const questions = getDiagnosticItems(track);
   elements.diagnosisTitle.textContent = role ? `${track.title} · ${role.title}` : track.title;
   elements.diagnosisGuide.innerHTML = renderDiagnosisGuide(track, role, questions);
-  elements.diagnosticList.innerHTML = questions.map((item) => {
-    const checked = Boolean(state.checked[item.id]);
-    return `
-      <label class="check-item ${checked ? "is-checked" : ""}">
-        <input type="checkbox" data-check-id="${item.id}" aria-label="${item.skill} 역량 보유 여부" ${checked ? "checked" : ""}>
-        <span>
-          <span class="diagnostic-source">${item.source}</span>
-          <span class="diagnostic-state">${checked ? "확보함" : "보완 필요"}</span>
-          <strong>${item.skill}</strong>
-          <span class="diagnostic-question">${item.question}</span>
-          <span class="diagnostic-choice-rule">체크 기준: 도움 없이 설명하거나 간단한 산출물로 증명할 수 있을 때만 체크하세요.</span>
-        </span>
-      </label>
-    `;
-  }).join("");
+  elements.diagnosticList.innerHTML = renderDiagnosticGroups(questions);
 
   elements.diagnosticList.querySelectorAll("[data-check-id]").forEach((input) => {
     input.addEventListener("change", () => {
@@ -5014,6 +5047,8 @@ function renderDiagnostics() {
       renderRoadmap();
       renderSaved();
       renderMetrics();
+      renderWorkflowStatus();
+      renderRoleContextBar();
     });
   });
 
@@ -5034,11 +5069,62 @@ function renderDiagnostics() {
     : `<div class="empty-state">현재 체크리스트 기준으로 큰 공백이 없습니다. 산출물 정리 단계로 넘어가세요.</div>`;
 }
 
+function renderDiagnosticGroups(questions) {
+  const groups = questions.reduce((acc, item) => {
+    if (!acc.has(item.source)) acc.set(item.source, []);
+    acc.get(item.source).push(item);
+    return acc;
+  }, new Map());
+
+  return [...groups.entries()].map(([source, items], index) => {
+    const checkedCount = items.filter((item) => state.checked[item.id]).length;
+    const open = index < 2 || checkedCount < items.length;
+    return `
+      <section class="diagnostic-group">
+        <details ${open ? "open" : ""}>
+          <summary>
+            <span>
+              <strong>${source}</strong>
+              <em>${checkedCount}/${items.length}개 확보</em>
+            </span>
+          </summary>
+          <div class="diagnostic-group-items">
+            ${items.map(renderDiagnosticCheckItem).join("")}
+          </div>
+        </details>
+      </section>
+    `;
+  }).join("");
+}
+
+function renderDiagnosticCheckItem(item) {
+  const checked = Boolean(state.checked[item.id]);
+  return `
+    <label class="check-item ${checked ? "is-checked" : ""}">
+      <input type="checkbox" data-check-id="${item.id}" aria-label="${item.skill} 역량 보유 여부" ${checked ? "checked" : ""}>
+      <span>
+        <span class="diagnostic-source">${item.source}</span>
+        <span class="diagnostic-state">${checked ? "확보함" : "보완 필요"}</span>
+        <strong>${item.skill}</strong>
+        <span class="diagnostic-question">${item.question}</span>
+        <span class="diagnostic-choice-rule">체크 기준: 도움 없이 설명하거나 간단한 산출물로 증명할 수 있을 때만 체크하세요.</span>
+      </span>
+    </label>
+  `;
+}
+
 function renderDiagnosisGuide(track, role, questions) {
   const roleItems = questions.filter((item) => item.source === role?.title).length;
   const industryItems = questions.filter((item) => item.source === getIndustryLabel()).length;
   const checkedCount = questions.filter((item) => state.checked[item.id]).length;
   const gapCount = Math.max(questions.length - checkedCount, 0);
+  const gapPreview = questions
+    .filter((item) => !state.checked[item.id])
+    .slice(0, 4)
+    .map((item) => item.skill)
+    .join(", ") || "큰 공백 없음";
+  const aiProfile = getRoleAiCompetencyProfile(role);
+  const output = role ? getRoleCurriculumOutput(track, role) : track.outputs[0];
   const diagnosisScope = [
     "트랙 공통",
     role ? `${role.title} ${roleItems}개` : "",
@@ -5054,6 +5140,22 @@ function renderDiagnosisGuide(track, role, questions) {
       <span><strong>선택 직무</strong>${role?.title || track.title}</span>
       <span><strong>체크 완료</strong>${checkedCount}/${questions.length}개</span>
       <span><strong>로드맵 반영</strong>${gapCount}개 보완 역량</span>
+    </div>
+    <div class="diagnosis-focus-panel">
+      <div>
+        <strong>로드맵에서 우선 볼 역량</strong>
+        <span>${gapPreview}</span>
+      </div>
+      <div>
+        <strong>최종 산출물</strong>
+        <span>${output}</span>
+      </div>
+      ${aiProfile ? `
+        <div>
+          <strong>AI·데이터 역량</strong>
+          <span>${aiProfile.level} · ${aiProfile.keywords.slice(0, 3).join(", ")}</span>
+        </div>
+      ` : ""}
     </div>
     <div class="diagnosis-guide-grid">
       <span><strong>확보함</strong>혼자 설명, 실습, 산출물 중 하나로 증명 가능</span>
@@ -5179,19 +5281,20 @@ function renderRoadmapGuidance(context, tasks) {
     : `교육자료를 직접 고르지 않아도 ${getDurationLabel()} 기준으로 자동 로드맵을 구성했습니다.`;
 
   elements.roadmapGuidance.innerHTML = `
+    ${renderRoadmapDecisionPanel(context, tasks)}
     <h3>${selectedText}</h3>
     <p>${durationStrategy.summary} ${context.role?.title || context.track.title}에서 이미 체크한 보유 역량은 뒤로 두고, 체크하지 않은 보완 역량(${gapText})을 우선해 과제와 교육자료를 배치합니다.</p>
     ${renderCompetencyActionPlan(context, tasks)}
     ${checkedCount ? "" : `
       <div class="workflow-warning">
         <strong>보유 역량 체크 전입니다</strong>
-        아직 확보한 역량을 체크하지 않아 모든 직무확보 항목을 보완 대상으로 보고 있습니다. 실제 보유 역량을 체크하면 이미 아는 내용은 뒤로 빠지고 부족 역량 중심으로 로드맵이 다시 좁혀집니다.
-        <button class="ghost-button" type="button" data-view-target="diagnosis">보유 역량 체크하기</button>
+        아직 확보한 역량을 체크하지 않아 모든 역량 항목을 보완 대상으로 보고 있습니다. 실제 보유 역량을 체크하면 이미 아는 내용은 뒤로 빠지고 부족 역량 중심으로 로드맵이 다시 좁혀집니다.
+        <button class="ghost-button" type="button" data-view-target="diagnosis">역량 체크하기</button>
       </div>
     `}
     <p class="company-detail-inline"><strong>지원 전 필수 확인</strong> 이 로드맵은 일반적인 직무내용 기반 추천입니다. 지원 회사의 직무상세에 나온 업무·자격요건·우대사항을 확인한 뒤, 공고와 직접 맞닿은 역량과 산출물을 우선 준비하세요.</p>
     <p class="company-detail-inline"><strong>실습 자료 안내</strong> 시뮬레이션, 현장실습, 직무부트캠프, KDT 과정은 일정·비용·선발 여부가 바뀔 수 있습니다. 앱에서는 직무 산출물과 연결되는 후보로 제시하고, 신청 전 과정 상세를 확인하세요.</p>
-    <p>주차별 과제에서 교육·실습자료를 열고, 필요한 자료만 내 계획에 추가해 진행하세요.</p>
+    <p>주차별 과제에서 교육·실습자료를 열고, 필요한 자료만 계획에 추가해 진행하세요.</p>
     <div class="badge-row">
       <span class="badge">기간: ${getDurationLabel()}</span>
       <span class="badge">목표 반영: ${context.goal.label} · ${goalLabel}</span>
@@ -5213,6 +5316,45 @@ function renderRoadmapGuidance(context, tasks) {
   `;
 }
 
+function renderRoadmapDecisionPanel(context, tasks) {
+  const role = context.role;
+  const output = role ? getRoleCurriculumOutput(context.track, role) : context.track.outputs[0];
+  const acquired = context.acquiredSkills.length
+    ? context.acquiredSkills.slice(0, 4).join(", ")
+    : "아직 체크 전";
+  const gaps = context.gapSkills.length
+    ? context.gapSkills.slice(0, 4).join(", ")
+    : "큰 공백 없음";
+  const firstTask = tasks[0]?.title || "직무상세 분해";
+  const aiProfile = getRoleAiCompetencyProfile(role);
+  return `
+    <div class="roadmap-decision-panel" aria-label="로드맵 구성 기준">
+      <div>
+        <strong>선택 직무</strong>
+        <span>${role?.title || context.track.title}</span>
+      </div>
+      <div>
+        <strong>제외한 보유 역량</strong>
+        <span>${acquired}</span>
+      </div>
+      <div>
+        <strong>우선 보완</strong>
+        <span>${gaps}</span>
+      </div>
+      <div>
+        <strong>첫 산출물</strong>
+        <span>${firstTask} · ${output}</span>
+      </div>
+      ${aiProfile ? `
+        <div>
+          <strong>AI·데이터 반영</strong>
+          <span>${aiProfile.level} · ${aiProfile.summary}</span>
+        </div>
+      ` : ""}
+    </div>
+  `;
+}
+
 function renderReferences() {
   if (!elements.referenceList || !elements.referenceGuidance || !elements.referenceCount) return;
 
@@ -5229,7 +5371,7 @@ function renderReferences() {
   elements.referenceCount.textContent = `${resources.length}개 자료`;
   elements.referenceGuidance.innerHTML = `
     <h3>자료는 참고자료에서 찾고, 계획에는 필요한 것만 넣으세요</h3>
-    <p>로드맵은 선택 직무와 부족 역량에 맞는 자료만 자동 배치합니다. 이 탭은 전체 교육·실습자료 보관함이며, 분야별로 열어보고 관심 자료만 내 계획에 추가하면 됩니다.</p>
+    <p>로드맵은 선택 직무와 부족 역량에 맞는 자료만 자동 배치합니다. 이 탭은 전체 교육·실습자료 보관함이며, 분야별로 열어보고 관심 자료만 계획에 추가하면 됩니다.</p>
     <div class="badge-row">
       <span class="badge">선택 직무: ${role?.title || track.title}</span>
       <span class="badge">전체 자료: ${resources.length}개</span>
@@ -5506,7 +5648,7 @@ function getTaskPriorityReason(task, trackId) {
   const role = getSelectedRole(trackId);
   const roleKeyword = role?.postingKeywords.find((keyword) => text.includes(keyword));
 
-  if (gapMatch) return `현재 직무확보에서 비어 있는 ${gapMatch} 역량을 직접 보완합니다.`;
+  if (gapMatch) return `현재 역량 체크에서 비어 있는 ${gapMatch} 역량을 직접 보완합니다.`;
   if (roleKeyword) return `${role.title} 채용공고 키워드인 ${roleKeyword}와 바로 연결됩니다.`;
   if (state.profile.goal === "portfolio" || state.profile.goal === "interview") return "짧은 기간 안에 설명 가능한 산출물을 남기는 과제입니다.";
   if (state.profile.goal === "explore") return "직무 탐색 목표에 맞춰 업무 흐름과 핵심 용어를 확인하는 과제입니다.";
@@ -5662,7 +5804,7 @@ function renderCompetencyActionPlan(context, tasks) {
     <section class="competency-action-panel" aria-label="역량 확보 우선순위">
       <div class="competency-action-head">
         <strong>역량 확보 우선순위</strong>
-        <span>먼저 할 일을 정한 뒤, 예시 자료 중 필요한 것만 내 계획에 넣으세요.</span>
+        <span>먼저 할 일을 정한 뒤, 예시 자료 중 필요한 것만 계획에 넣으세요.</span>
       </div>
       <div class="competency-action-list">
         ${actionItems.map((item, index) => `
@@ -5680,7 +5822,7 @@ function renderCompetencyActionPlan(context, tasks) {
                       <strong>${resource.title}</strong>
                       <div>
                         <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
-                        ${renderSaveActionButton(resource, "내 계획 추가")}
+                        ${renderSaveActionButton(resource, "계획 추가")}
                       </div>
                     </div>
                   `).join("")}
@@ -5753,7 +5895,7 @@ function renderHandsOnResourcePanel(context) {
             </span>
             <span>
               <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
-              ${renderSaveActionButton(resource, "내 계획 추가")}
+              ${renderSaveActionButton(resource, "계획 추가")}
             </span>
           </div>
         `).join("")}
@@ -5873,7 +6015,7 @@ function getGoalResourceScore(resource, context) {
 function getCompetencyFitSignal(resource, context) {
   const score = getCompetencyFitScore(resource, context);
   if (score < 24) return "";
-  return "직무확보 기반 추천";
+  return "역량 체크 기반 추천";
 }
 
 function getGoalFitSignal(resource, context) {
@@ -5932,11 +6074,11 @@ function getEducationResourceSignals(resource, context) {
   if (competencyFitSignal) signals.push(competencyFitSignal);
   if (goalFitSignal) signals.push(goalFitSignal);
   if (mathWorksRoleNeed) signals.push("MathWorks 요구 직무");
-  if (matchedGaps.length) signals.push(`직무확보 보완: ${matchedGaps.slice(0, 2).join(", ")}`);
+  if (matchedGaps.length) signals.push(`역량 체크 보완: ${matchedGaps.slice(0, 2).join(", ")}`);
   if (mathWorksMatches.length) signals.push(`MathWorks 역량: ${mathWorksMatches.slice(0, 2).join(", ")}`);
   if (roleKeywordMatches.length) signals.push(`채용 키워드: ${roleKeywordMatches.slice(0, 2).join(", ")}`);
   if (linkedTasks.length) signals.push(`로드맵 연결: ${linkedTasks.slice(0, 2).join(", ")}`);
-  if (state.saved.includes(resource.id)) signals.push("내 계획 선택됨");
+  if (state.saved.includes(resource.id)) signals.push("계획 선택됨");
 
   return signals;
 }
@@ -6250,7 +6392,7 @@ function getResourceOpenLabel(resource) {
     : "교육 열기";
 }
 
-function renderSaveActionButton(resource, label = "내 계획에 추가") {
+function renderSaveActionButton(resource, label = "계획에 추가") {
   const saved = state.saved.includes(resource.id);
   return `
     <button class="resource-action ${saved ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
@@ -6331,13 +6473,13 @@ function renderSaved() {
       <section class="plan-selected-resources">
         <div class="section-heading compact">
           <div>
-            <p class="eyebrow">내 계획에 추가한 자료</p>
+            <p class="eyebrow">추가한 자료</p>
             <h3>추가 교육자료</h3>
           </div>
         </div>
         ${items.map((resource) => renderResourceCard(resource, null, null, true)).join("")}
       </section>
-    ` : `<div class="empty-state">추가한 교육자료가 없어도 위 자동 로드맵으로 바로 시작할 수 있습니다. 필요한 자료만 주차 안에서 내 계획에 추가하세요.</div>`}
+    ` : `<div class="empty-state">추가한 교육자료가 없어도 위 자동 로드맵으로 바로 시작할 수 있습니다. 필요한 자료만 주차 안에서 계획에 추가하세요.</div>`}
   `;
   elements.savedList.querySelectorAll("[data-roadmap-step-id]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -6387,7 +6529,7 @@ function renderSavedGuidance(items, tasks) {
   const durationStrategy = getDurationStrategy();
 
   elements.savedGuidance.innerHTML = `
-    <h3>내 계획은 완성된 로드맵입니다</h3>
+    <h3>계획서는 완성된 로드맵입니다</h3>
     <p>로드맵 구성에서 계산된 주차별 과제와 자동 배치 교육자료를 한 화면에 모았습니다. 자료를 직접 고르지 않아도 ${durationStrategy.label} 기준으로 시작할 수 있고, 추가한 자료는 각 주차 추천에 우선 반영됩니다.</p>
     <div class="badge-row">
       <span class="badge">로드맵 주차: ${tasks.length}개</span>
@@ -6483,7 +6625,7 @@ function getResourceSignals(resource, context) {
   if (resource.core) signals.push("핵심 직무역량 교육");
   if (competencyFitSignal) signals.push(competencyFitSignal);
   if (goalFitSignal) signals.push(goalFitSignal);
-  if (matchedGaps.length) signals.push(`직무확보 보완: ${matchedGaps.slice(0, 3).join(", ")}`);
+  if (matchedGaps.length) signals.push(`역량 체크 보완: ${matchedGaps.slice(0, 3).join(", ")}`);
   if (matchedGoal.length) signals.push(`목표 적합: ${matchedGoal.slice(0, 2).join(", ")}`);
   if (matchedRoleKeywords.length) signals.push(`세부 직무 키워드: ${matchedRoleKeywords.slice(0, 2).join(", ")}`);
   if (context.goalKey === "portfolio" && resource.practiceMinutes >= 60) signals.push("실습 산출물 우선");
@@ -6624,7 +6766,7 @@ function buildPlanExportWorkbook() {
     { name: "실행계획", rows: buildRoadmapExportRows() },
     { name: "선택직무상세", rows: buildRoleDetailExportRows() },
     { name: "교육자료", rows: buildSavedResourceExportRows() },
-    { name: "직무확보", rows: buildDiagnosisExportRows() }
+    { name: "역량체크", rows: buildDiagnosisExportRows() }
   ];
 }
 
@@ -6652,7 +6794,7 @@ function buildSummaryExportRows() {
     ["직무군", track.title],
     ["선택 직무", role?.title || "미선택"],
     ["직무 설명", role?.focus || track.summary],
-    ["직무확보율", `${getDiagnosticScore(track.id)}%`],
+    ["역량 확보율", `${getDiagnosticScore(track.id)}%`],
     ["보완 역량", gapSkills.slice(0, 8).join(", ") || "큰 공백 없음"],
     ["다음 과제", `${nextTask.title} - ${nextTask.deliverable}`],
     ["다음 추천 교육자료", nextResource],
@@ -6766,7 +6908,7 @@ function buildRoadmapExportRows() {
 
 function buildDiagnosisExportRows() {
   const track = getSelectedTrack();
-  const rows = [["출처", "역량", "직무확보 문항", "체크 여부"]];
+  const rows = [["출처", "역량", "역량 체크 문항", "체크 여부"]];
   getDiagnosticItems(track).forEach((item) => {
     rows.push([
       item.source,
