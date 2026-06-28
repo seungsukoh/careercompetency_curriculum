@@ -8163,12 +8163,12 @@ function buildExcelXml(sheets) {
   <Styles>
     <Style ss:ID="Default" ss:Name="Normal">
       <Alignment ss:Vertical="Top" ss:WrapText="1"/>
-      <Font ss:FontName="Malgun Gothic" ss:Size="10"/>
+      <Font ss:FontName="맑은 고딕" ss:Size="12"/>
     </Style>
     <Style ss:ID="Header">
       <Alignment ss:Vertical="Center" ss:WrapText="1"/>
-      <Font ss:FontName="Malgun Gothic" ss:Size="10" ss:Bold="1"/>
-      <Interior ss:Color="#E6F2EC" ss:Pattern="Solid"/>
+      <Font ss:FontName="맑은 고딕" ss:Size="12" ss:Bold="1" ss:Color="#FFFFFF"/>
+      <Interior ss:Color="#102A43" ss:Pattern="Solid"/>
     </Style>
   </Styles>
   ${sheets.map((sheet) => buildExcelWorksheet(sheet.name, sheet.rows)).join("\n")}
