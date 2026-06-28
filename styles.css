@@ -2451,18 +2451,19 @@ li {
 .education-summary-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 14px;
 }
 
 .education-summary-card {
   display: grid;
   gap: 10px;
   min-width: 0;
-  padding: 12px;
+  padding: 14px;
   background: var(--surface-raised);
   border: 1px solid var(--line);
   border-left: 4px solid var(--primary);
-  border-radius: 6px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
 }
 
 .education-summary-card.is-saved {
@@ -2515,8 +2516,8 @@ li {
 
 .education-summary-body {
   display: grid;
-  gap: 6px;
-  padding: 10px;
+  gap: 8px;
+  padding: 12px;
   background: var(--surface-muted);
   border: 1px solid var(--line);
   border-radius: 6px;
@@ -2560,7 +2561,7 @@ li {
   gap: 10px;
   align-items: start;
   min-width: 0;
-  padding: 7px 0;
+  padding: 8px 0;
   border-top: 1px solid var(--line);
 }
 
@@ -2585,6 +2586,21 @@ li {
   color: var(--muted);
   overflow-wrap: anywhere;
   word-break: keep-all;
+}
+
+.education-info-row.is-opinion {
+  padding: 10px;
+  background: var(--primary-soft);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+}
+
+.education-info-row.is-opinion strong {
+  color: var(--primary-dark);
+}
+
+.education-info-row.is-opinion span {
+  color: var(--ink);
 }
 
 .education-summary-actions {
@@ -2716,7 +2732,7 @@ li {
 .reference-section-body,
 .reference-resource-grid {
   display: grid;
-  gap: 8px;
+  gap: 12px;
 }
 
 .reference-resource-grid {
@@ -2725,9 +2741,11 @@ li {
 
 .reference-resource-card {
   min-width: 0;
+  overflow: hidden;
   background: var(--surface-raised);
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
 }
 
 .reference-resource-card.is-saved {
@@ -2742,7 +2760,17 @@ li {
   gap: 10px;
   min-height: 58px;
   padding: 10px;
+  background: var(--surface);
   cursor: pointer;
+}
+
+.reference-resource-card[open] {
+  border-color: var(--line-strong);
+}
+
+.reference-resource-card[open] > summary {
+  background: var(--primary-soft);
+  border-bottom: 1px solid var(--line);
 }
 
 .reference-resource-card > summary > * {
@@ -3356,13 +3384,15 @@ li {
 
 .roadmap-resource-list {
   display: grid;
-  gap: 8px;
+  gap: 12px;
 }
 
 .roadmap-resource-item {
-  background: var(--surface-muted);
+  overflow: hidden;
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
 }
 
 .roadmap-resource-item.is-completed {
@@ -3378,8 +3408,17 @@ li {
   gap: 10px;
   min-height: 46px;
   padding: 10px;
+  background: var(--surface);
   cursor: pointer;
   list-style: none;
+}
+
+.roadmap-resource-item[open] {
+  border-color: var(--line-strong);
+}
+
+.roadmap-resource-item[open] summary {
+  background: var(--primary-soft);
 }
 
 .roadmap-resource-item summary::-webkit-details-marker {
@@ -3482,8 +3521,9 @@ li {
 
 .roadmap-resource-detail {
   display: grid;
-  gap: 8px;
-  padding: 0 10px 10px;
+  gap: 10px;
+  padding: 12px;
+  background: var(--surface-raised);
   border-top: 1px solid var(--line);
 }
 
@@ -3586,18 +3626,32 @@ li {
   line-height: 1.45;
 }
 
+.recommendation-note.is-review {
+  display: grid;
+  gap: 4px;
+  color: var(--ink);
+  background: var(--surface-muted);
+  border-left: 3px solid var(--accent);
+}
+
+.recommendation-note.is-review strong {
+  color: var(--primary-dark);
+  font-weight: 900;
+}
+
 .plan-roadmap {
   display: grid;
-  gap: 12px;
+  gap: 16px;
 }
 
 .plan-week-card {
   display: grid;
-  gap: 10px;
-  padding: 14px;
+  gap: 12px;
+  padding: 16px;
   background: var(--surface-raised);
   border: 1px solid var(--line);
   border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
 }
 
 .plan-week-card.is-completed {
@@ -3628,19 +3682,30 @@ li {
 
 .plan-resource-list {
   display: grid;
-  gap: 8px;
+  gap: 12px;
 }
 
 .plan-resource-item {
-  background: var(--surface-muted);
+  overflow: hidden;
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius);
 }
 
 .plan-resource-item summary {
   padding: 10px;
+  background: var(--surface);
   cursor: pointer;
   list-style: none;
+}
+
+.plan-resource-item[open] {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-soft);
+}
+
+.plan-resource-item[open] summary {
+  background: var(--primary-soft);
 }
 
 .plan-resource-item summary::-webkit-details-marker {
@@ -3664,8 +3729,9 @@ li {
 
 .plan-resource-detail {
   display: grid;
-  gap: 8px;
-  padding: 0 10px 10px;
+  gap: 10px;
+  padding: 12px;
+  background: var(--surface-raised);
   border-top: 1px solid var(--line);
 }
 

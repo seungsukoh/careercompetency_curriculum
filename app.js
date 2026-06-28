@@ -5934,7 +5934,7 @@ function renderExpertReviewPanel(track, role) {
     <details class="expert-review-panel">
       <summary>
         <span>
-          <em class="eyebrow">직무 전문가 검토</em>
+          <em class="eyebrow">직무 추천 의견</em>
           <strong>${role.title} 내용·교육과정 연결성</strong>
         </span>
       </summary>
@@ -5968,7 +5968,7 @@ function getExpertReviewItems(track, role) {
     },
     {
       title: "필수 역량",
-      body: `전문가 관점에서는 ${expertSkillText} 항목을 말로만 설명하는 것보다 ${output}처럼 제출 가능한 산출물로 남기는지가 중요합니다.`
+      body: `직무 관점에서는 ${expertSkillText} 항목을 말로만 설명하는 것보다 ${output}처럼 제출 가능한 산출물로 남기는지가 중요합니다.`
     },
     {
       title: "교육과정",
@@ -6698,7 +6698,7 @@ function renderRoadmapDecisionPanel(context, tasks) {
         <span>${personaReview.title} · ${personaReview.body}</span>
       </div>
       <div class="is-wide">
-        <strong>직무 전문가 검토</strong>
+        <strong>직무 추천 의견</strong>
         <span>${expertReview.title} · ${expertReview.body}</span>
       </div>
       ${aiProfile ? `
@@ -6783,7 +6783,7 @@ function renderEducationSummaryCard(resource, index, context, tasks) {
         <div class="education-info-row"><strong>교육 소개</strong><span>${introText}</span></div>
         <div class="education-info-row"><strong>다루는 역량</strong><span>${getResourceSkillSummary(resource)}</span></div>
         <div class="education-info-row"><strong>추천 이유</strong><span>${reason}</span></div>
-        <div class="education-info-row"><strong>전문가 검토</strong><span>${expertReview}</span></div>
+        <div class="education-info-row is-opinion"><strong>추천 의견</strong><span>${expertReview}</span></div>
         <div class="education-info-row"><strong>내 커리큘럼 연결</strong><span>${taskText}</span></div>
         <div class="education-info-row"><strong>완성할 산출물</strong><span>${outputText}</span></div>
       </div>
@@ -6885,12 +6885,12 @@ function renderPersonaExpertAuditPanel(context, tasks) {
   const bridgeFocus = getMajorPathwayFocus(context.track, role);
 
   return `
-    <div class="persona-review-grid" aria-label="학생 페르소나와 전문가 검토 기준">
+    <div class="persona-review-grid" aria-label="학생 페르소나와 추천 의견 기준">
       <span><strong>직무 미확신 학생</strong>직무상세, 워드클라우드, 반복 업무를 먼저 보고 맞는 직무인지 판단하게 했습니다.</span>
       <span><strong>전공 직결 학생</strong>기초 강좌를 많이 쌓기보다 공고 문장과 산출물로 증명할 교육을 우선합니다.</span>
       <span><strong>전공 확장 학생</strong>${bridgeFocus || "직무 용어와 도구를 보완한 뒤 작은 실습 산출물로 연결합니다."}</span>
       <span><strong>단기 준비 학생</strong>${shortResource ? `${shortResource.title}처럼 짧게 시작할 수 있는 자료를 먼저 검토합니다.` : "긴 강좌보다 핵심 단원과 산출물 작성 중심으로 줄입니다."}</span>
-      <span class="is-full"><strong>직무 전문가 기준</strong>${role?.title || context.track.title} 교육은 직무 연결 ${roleResources.length}개, 직접 링크 ${directCount}개, 실습형 ${handsOnCount}개를 확인했습니다. 회사 공고와 산출물이 맞지 않는 자료는 내 커리큘럼에서 제외하세요.</span>
+      <span class="is-full"><strong>직무 추천 기준</strong>${role?.title || context.track.title} 교육은 직무 연결 ${roleResources.length}개, 직접 링크 ${directCount}개, 실습형 ${handsOnCount}개를 확인했습니다. 회사 공고와 산출물이 맞지 않는 자료는 내 커리큘럼에서 제외하세요.</span>
       <span class="is-full"><strong>과제 적용 기준</strong>${tasks.map((task) => task.deliverable).slice(0, 3).join(", ")}처럼 제출 가능한 결과로 남길 수 있는 자료만 우선합니다.</span>
     </div>
   `;
@@ -6919,8 +6919,8 @@ function getExpertResourceReview(resource, context, task = null) {
   if (resource.broad) signals.push("범용 보조 자료");
 
   const verdict = roleDirectMatch || gapMatches.length || roleKeywordMatches.length || taskMatches.length
-    ? "우선 검토"
-    : "보조 검토";
+    ? "우선 추천"
+    : "보조 추천";
   const signalText = signals.length ? signals.slice(0, 4).join(" · ") : "직무 기초 보완";
   return `${verdict}: ${signalText}. 교육을 본 뒤 ${resource.expectedOutput || "직무 산출물"}로 남길 수 있을 때 계획에 넣으세요.`;
 }
@@ -7111,7 +7111,7 @@ function renderReferenceResourceItem(resource, context) {
         <div class="education-info-row"><strong>교육 소개</strong><span>${getResourceIntroText(resource)}</span></div>
         <div class="education-info-row"><strong>다루는 역량</strong><span>${getResourceSkillSummary(resource)}</span></div>
         ${signals.length ? `<div class="education-info-row"><strong>추천 이유</strong><span>${signals.join(" · ")}</span></div>` : ""}
-        <div class="education-info-row"><strong>전문가 검토</strong><span>${getExpertResourceReview(resource, context)}</span></div>
+        <div class="education-info-row is-opinion"><strong>추천 의견</strong><span>${getExpertResourceReview(resource, context)}</span></div>
         <div class="education-info-row"><strong>완성할 산출물</strong><span>${resource.expectedOutput}</span></div>
         <div class="roadmap-resource-actions">
           <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
@@ -7760,7 +7760,7 @@ function renderCompetencyActionPlan(context, tasks) {
                         <strong class="competency-example-title">${resource.title}</strong>
                         <div class="education-info-row"><strong>교육 소개</strong><span>${getResourceIntroText(resource)}</span></div>
                         <div class="education-info-row"><strong>다루는 역량</strong><span>${getResourceSkillSummary(resource)}</span></div>
-                        <div class="education-info-row"><strong>전문가 검토</strong><span>${getExpertResourceReview(resource, context, item.task)}</span></div>
+                        <div class="education-info-row is-opinion"><strong>추천 의견</strong><span>${getExpertResourceReview(resource, context, item.task)}</span></div>
                         <div class="education-info-row"><strong>완성할 산출물</strong><span>${resource.expectedOutput || item.deliverable}</span></div>
                       </div>
                       <div class="competency-example-actions">
@@ -8290,7 +8290,7 @@ function renderRoadmapResourceItem(resource, task, context) {
         <div class="education-info-row"><strong>교육 소개</strong><span>${getResourceIntroText(resource)}</span></div>
         <div class="education-info-row"><strong>다루는 역량</strong><span>${getResourceSkillSummary(resource)}</span></div>
         <div class="education-info-row"><strong>추천 이유</strong><span>${connectionReason}</span></div>
-        <div class="education-info-row"><strong>전문가 검토</strong><span>${getExpertResourceReview(resource, context, task)}</span></div>
+        <div class="education-info-row is-opinion"><strong>추천 의견</strong><span>${getExpertResourceReview(resource, context, task)}</span></div>
         <div class="education-info-row"><strong>연결 산출물</strong><span>${resource.expectedOutput}</span></div>
         <div class="education-info-row"><strong>연결 신호</strong><span>${signals.length ? signals.join(" · ") : `${task.deliverable}에 바로 연결됩니다.`}</span></div>
         <div class="roadmap-resource-actions">
@@ -8471,7 +8471,7 @@ function renderPlanResourceItem(resource, task, context) {
         <div class="education-info-row"><strong>교육 소개</strong><span>${getResourceIntroText(resource)}</span></div>
         <div class="education-info-row"><strong>다루는 역량</strong><span>${getResourceSkillSummary(resource)}</span></div>
         <div class="education-info-row"><strong>추천 이유</strong><span>${connectionReason}</span></div>
-        <div class="education-info-row"><strong>전문가 검토</strong><span>${getExpertResourceReview(resource, context, task)}</span></div>
+        <div class="education-info-row is-opinion"><strong>추천 의견</strong><span>${getExpertResourceReview(resource, context, task)}</span></div>
         <div class="education-info-row"><strong>연결 신호</strong><span>${signals.join(" · ") || `${task.deliverable}에 연결되는 자료입니다.`}</span></div>
         <div class="education-info-row"><strong>산출물</strong><span>${resource.expectedOutput}</span></div>
         <div class="roadmap-resource-actions">
@@ -8539,7 +8539,7 @@ function renderResourceCard(resource, context = null, priorityIndex = null, show
       <p>${resource.reason}</p>
       ${linkedTasks.length ? `<p><strong>연결 과제:</strong> ${linkedTasks.join(", ")}</p>` : ""}
       ${signals.length ? `<div class="recommendation-note">${signals.join(" · ")}</div>` : ""}
-      ${context ? `<div class="recommendation-note is-review">${getExpertResourceReview(resource, context)}</div>` : ""}
+      ${context ? `<div class="recommendation-note is-review"><strong>추천 의견</strong><span>${getExpertResourceReview(resource, context)}</span></div>` : ""}
       <div class="resource-learning-meta" aria-label="학습 정보">
         <span><strong>자료 형식</strong>${resource.type}</span>
         <span><strong>학습</strong>${formatMinutes(resource.estimatedMinutes)}</span>
@@ -8785,7 +8785,7 @@ function buildSummaryExportRows() {
     ["역량 확보율", `${getDiagnosticScore(track.id)}%`],
     ["보완 역량", gapSkills.slice(0, 8).join(", ") || "큰 공백 없음"],
     ["학생 페르소나", `${personaReview.title} - ${personaReview.body}`],
-    ["직무 전문가 검토", `${expertReview.title} - ${expertReview.body}`],
+    ["직무 추천 의견", `${expertReview.title} - ${expertReview.body}`],
     ["다음 과제", `${nextTask.title} - ${nextTask.deliverable}`],
     ["다음 추천 교육자료", nextResource],
     ["완료 주차", `${completedWeeks}/${visibleTasks.length}`],
@@ -8872,7 +8872,7 @@ function buildSavedResourceExportRows() {
     "선행",
     "연결 과제",
     "산출물",
-    "전문가 검토",
+    "추천 의견",
     "URL"
   ]];
 
