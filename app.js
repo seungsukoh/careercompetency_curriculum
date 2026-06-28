@@ -124,6 +124,7 @@ function getSequenceLevel(difficulty) {
     "기초": 2,
     "기초실습": 3,
     "적용": 4,
+    "산출물": 5,
     "포트폴리오": 5
   }[difficulty] || 9;
 }
@@ -332,7 +333,7 @@ const resources = [
     tracks: ["production-quality", "semiconductor-equipment", "mechanical-cae", "embedded-control"],
     skills: ["이상탐지", "설비개선", "신호처리", "데이터 분석", "검증"],
     prerequisites: ["MATLAB 기초", "데이터 분석 기초"],
-    reason: "설비 로그, 센서 신호, 이상 징후를 분석해야 하는 생산기술·장비·시험 직무에서 포트폴리오형 산출물로 연결하기 좋습니다.",
+    reason: "설비 로그, 센서 신호, 이상 징후를 분석해야 하는 생산기술·장비·시험 직무에서 실습 결과물로 연결하기 좋습니다.",
     expectedOutput: "설비 이상 징후 분석 시나리오와 개선 가설",
     qualityStatus: "candidate",
     url: "https://www.mathworks.com/help/predmaint/"
@@ -1704,7 +1705,7 @@ const resources = [
     tracks: ["production-quality", "semiconductor-equipment", "chemical-process", "embedded-control"],
     skills: ["Python/SQL", "데이터 분석", "Git", "문서화"],
     prerequisites: ["프로그래밍 입문"],
-    reason: "공정 데이터, 수율 분석, 로그 정리 과제를 코드 기반 포트폴리오로 남길 때 적합합니다.",
+    reason: "공정 데이터, 수율 분석, 로그 정리 과제를 코드 기반 산출물로 남길 때 적합합니다.",
     expectedOutput: "CSV 분석 노트북 또는 GitHub README 초안",
     qualityStatus: "verified",
     url: "https://www.freecodecamp.org/learn/data-analysis-with-python/"
@@ -2023,10 +2024,10 @@ const resources = [
     practiceMinutes: 600,
     sequenceLevel: 5,
     tracks: ["production-quality", "mechanical-cae", "automotive-mobility"],
-    skills: ["생산기술", "공정설계", "신차개발", "문제해결", "포트폴리오"],
+    skills: ["생산기술", "공정설계", "신차개발", "문제해결", "산출물 정리"],
     prerequisites: ["관심 산업 공고 1개", "기초 품질·공정 용어"],
     reason: "현직자와 5주 동안 생산기술, 공정설계, 신차 개발 프로세스를 과제형으로 경험하는 외부 부트캠프입니다. 강의 수강보다 직무 산출물을 남기는 목적에 맞습니다.",
-    expectedOutput: "공정설계 실습 과제, 신차 개발 프로세스 정리, 포트폴리오 초안",
+    expectedOutput: "공정설계 실습 과제, 신차 개발 프로세스 정리, 산출물 초안",
     qualityStatus: "candidate",
     engagement: {
       checkedAt: "2026-06-28",
@@ -2045,10 +2046,10 @@ const resources = [
     practiceMinutes: 600,
     sequenceLevel: 5,
     tracks: ["semiconductor-equipment", "production-quality"],
-    skills: ["반도체 장비", "설비기술", "Trouble Shooting", "현직자 과제", "포트폴리오"],
+    skills: ["반도체 장비", "설비기술", "Trouble Shooting", "현직자 과제", "산출물 정리"],
     prerequisites: ["반도체 8대 공정 흐름", "장비 기본 용어"],
     reason: "대기업·외국계 현직자의 반도체 장비 직무 경험을 과제형으로 따라가며 장비 엔지니어의 반복 업무와 문제해결 방식을 익히는 후보입니다.",
-    expectedOutput: "장비 직무 업무 분해표와 설비 이슈 대응 포트폴리오 초안",
+    expectedOutput: "장비 직무 업무 분해표와 설비 이슈 대응 산출물 초안",
     qualityStatus: "candidate",
     engagement: {
       checkedAt: "2026-06-28",
@@ -2199,7 +2200,7 @@ const resources = [
     practiceMinutes: 720,
     sequenceLevel: 5,
     tracks: ["electronics-pcb", "semiconductor-equipment", "embedded-control"],
-    skills: ["저전력 설계", "검증", "회로설계", "RTL/검증", "포트폴리오"],
+    skills: ["저전력 설계", "검증", "회로설계", "RTL/검증", "산출물 정리"],
     prerequisites: ["디지털 회로 기초", "반도체 설계 흐름 이해"],
     reason: "저전력 설계 기법과 검증 방법론을 실무 과정으로 다루는 후보입니다. 회로·반도체 설계 검증 직무의 산출물형 준비에 연결됩니다.",
     expectedOutput: "저전력 설계 요구사항, 검증 항목, 결과 해석 체크리스트",
@@ -2289,37 +2290,37 @@ const roadmaps = {
     ["직무 이해", "설계 업무와 산출물을 정리하고 관심 제품을 하나 고릅니다.", "제품 구조와 요구사항 1쪽 요약"],
     ["전공·도구 보완", "재료역학, CAD, 수치해석 교육자료를 보며 작은 부품을 모델링합니다.", "부품 모델과 주요 치수표"],
     ["해석 적용", "하중과 구속조건을 정의하고 해석 가정을 문서화합니다.", "경계조건과 결과 해석 노트"],
-    ["포트폴리오 정리", "설계 변경안과 근거를 리포트로 정리합니다.", "설계 검토 보고서"]
+    ["산출물 정리", "설계 변경안과 근거를 리포트로 정리합니다.", "설계 검토 보고서"]
   ],
   "production-quality": [
     ["직무 이해", "생산기술, 공정기술, 품질 직무 차이를 비교합니다.", "직무별 업무 비교표"],
     ["데이터 기초", "공정 데이터의 산포, 이상치, 관리도를 학습합니다.", "관리도 예제 정리"],
     ["문제해결 적용", "FMEA 또는 8D 구조로 불량 사례를 분석합니다.", "불량 원인 분석 초안"],
-    ["포트폴리오 정리", "개선 전후 지표와 재발 방지안을 제안합니다.", "개선 보고서 1부"]
+    ["산출물 정리", "개선 전후 지표와 재발 방지안을 제안합니다.", "개선 보고서 1부"]
   ],
   "semiconductor-equipment": [
     ["공정 흐름", "주요 반도체 공정의 목적과 입출력을 연결합니다.", "공정 흐름도"],
     ["장비 변수", "진공, 온도, 압력, 플라즈마 같은 장비 조건을 정리합니다.", "장비 조건 용어표"],
     ["수율 분석", "불량 데이터와 계측 지표를 기준으로 원인 가설을 세웁니다.", "Pareto 분석 예시"],
-    ["포트폴리오 정리", "조건 변경의 효과와 리스크를 검토합니다.", "공정 개선 검토표"]
+    ["산출물 정리", "조건 변경의 효과와 리스크를 검토합니다.", "공정 개선 검토표"]
   ],
   "chemical-process": [
     ["공정 이해", "원료, 반응, 분리, 제품 품질 지표를 하나의 흐름으로 연결합니다.", "화학공정 흐름도"],
     ["전공·도구 보완", "물질수지, 열역학, 반응·분리공정 개념을 작은 예제로 복습합니다.", "물질수지 계산 노트"],
     ["조건·품질 분석", "공정 조건 변화가 수율, 순도, 불량, 안전 리스크에 미치는 영향을 비교합니다.", "조건 변경 검토표"],
-    ["포트폴리오 정리", "공정 개선안과 HAZOP 관점 리스크를 함께 정리합니다.", "공정 개선·안전 검토 보고서"]
+    ["산출물 정리", "공정 개선안과 HAZOP 관점 리스크를 함께 정리합니다.", "공정 개선·안전 검토 보고서"]
   ],
   "electronics-pcb": [
     ["회로 기본기", "전원, 신호, 임피던스, 노이즈 관점에서 회로를 봅니다.", "회로 블록도"],
     ["부품·시뮬레이션", "주요 부품 데이터시트를 읽고 간단한 회로를 시뮬레이션합니다.", "부품 선정표"],
     ["PCB·계측", "배치, 리턴패스, 디커플링, 측정 계획을 정리합니다.", "PCB 리뷰 체크리스트"],
-    ["포트폴리오 정리", "요구사항 대비 측정 결과를 요약합니다.", "검증 리포트"]
+    ["산출물 정리", "요구사항 대비 측정 결과를 요약합니다.", "검증 리포트"]
   ],
   "embedded-control": [
     ["MCU 기본", "GPIO, Timer, ADC, PWM, 인터럽트의 역할을 정리합니다.", "주변장치 요약표"],
     ["통신·센서", "UART, SPI, I2C 중 하나를 골라 데이터 흐름을 설계합니다.", "통신 로그 계획"],
     ["제어 적용", "간단한 PID 응답을 시뮬레이션하거나 실험합니다.", "응답 그래프"],
-    ["포트폴리오 정리", "코드, 실험 조건, 디버깅 과정을 정리합니다.", "펌웨어 프로젝트 노트"]
+    ["산출물 정리", "코드, 실험 조건, 디버깅 과정을 정리합니다.", "펌웨어 프로젝트 노트"]
   ]
 };
 
@@ -2327,7 +2328,7 @@ roadmaps["automotive-mobility"] = [
   ["직무 이해", "차량 개발 직무를 차체·섀시·전장·제어·검증으로 나누고 관심 직무의 반복 업무를 고릅니다.", "자동차 세부 직무 비교표"],
   ["요구사항 분해", "차량 기능 요구사항을 부품, 센서, 제어기, 시험 조건으로 나누어 봅니다.", "차량 시스템 요구사항표"],
   ["도구·검증 보완", "CAN 신호, MATLAB/Simulink, CAD 또는 HIL 중 선택 직무에 필요한 도구를 작은 예제로 확인합니다.", "인터페이스·시험 조건 노트"],
-  ["포트폴리오 정리", "선택 직무의 설계 변경안 또는 검증 결과를 한 장 리포트로 정리합니다.", "자동차 직무 검증 리포트"]
+  ["산출물 정리", "선택 직무의 설계 변경안 또는 검증 결과를 한 장 리포트로 정리합니다.", "자동차 직무 검증 리포트"]
 ];
 
 const curriculumTasks = {
@@ -2672,7 +2673,7 @@ const curriculumTasks = {
     },
     {
       title: "디버깅 노트와 README",
-      objective: "코드보다 문제를 어떻게 좁혔는지 보이는 포트폴리오 노트를 만듭니다.",
+      objective: "코드보다 문제를 어떻게 좁혔는지 보이는 산출물 노트를 만듭니다.",
       time: "2시간",
       steps: [
         "버그 상황, 재현 방법, 관측 로그를 적습니다.",
@@ -2719,7 +2720,7 @@ const durationLabels = {
   "2": "2주 집중",
   "4": "4주 기본",
   "8": "8주 심화",
-  "12": "12주 포트폴리오"
+  "12": "12주 장기 준비"
 };
 
 const durationStrategies = {
@@ -2737,15 +2738,15 @@ const durationStrategies = {
   },
   "8": {
     label: "8주 심화",
-    summary: "전공 보완, 실습 반복, 포트폴리오 초안을 함께 만듭니다.",
+    summary: "전공 보완, 실습 반복, 설명 가능한 산출물 초안을 함께 만듭니다.",
     resourceRule: "주차당 최대 3개 자료, 심화·실습 자료와 반복 과제 포함",
     taskRule: "핵심 과제를 반복해 판단 기준과 개선 근거 강화"
   },
   "12": {
-    label: "12주 포트폴리오",
+    label: "12주 장기 준비",
     summary: "심화자료와 산출물 보강, 면접 설명 근거까지 포함합니다.",
     resourceRule: "주차당 최대 3개 자료, 공식·심화·프로젝트형 자료 조합",
-    taskRule: "반복 수행 후 포트폴리오 보강과 면접 답변 문장화"
+    taskRule: "반복 수행 후 산출물 보강과 면접 답변 문장화"
   }
 };
 
@@ -4682,9 +4683,15 @@ function bindEvents() {
   });
 
   document.addEventListener("click", (event) => {
-    const resetTarget = event.target.closest("[data-reset-plan]");
-    if (resetTarget) {
-      confirmAndResetState();
+    const selectAllEducationTarget = event.target.closest("[data-roadmap-select-all]");
+    if (selectAllEducationTarget) {
+      selectAllCurrentRoadmapResources();
+      return;
+    }
+
+    const clearAllEducationTarget = event.target.closest("[data-roadmap-clear-all]");
+    if (clearAllEducationTarget) {
+      clearCurrentRoadmapResourceSelection();
       return;
     }
 
@@ -5326,7 +5333,7 @@ function renderTracks() {
       <p>${role.focus}</p>
       <span class="badge-row">
         <span class="badge major-pathway-badge">${majorPathwayLabel}</span>
-        ${role.postingKeywords.slice(0, 2).map((keyword) => `<span class="badge">${keyword}</span>`).join("")}
+        ${role.postingKeywords.slice(0, 4).map((keyword) => `<span class="badge">${keyword}</span>`).join("")}
       </span>
     </button>
   `;
@@ -5680,7 +5687,7 @@ function renderTrackDetail() {
           ${detailBlock("주요 업무", track.tasks)}
           ${detailBlock("핵심 역량", track.skills)}
           ${detailBlock("사용 도구", track.tools)}
-          ${detailBlock("포트폴리오 산출물", track.outputs)}
+          ${detailBlock("준비 산출물", track.outputs)}
         </div>
         <div class="detail-grid">
           ${detailBlock("흔한 오해", track.misconceptions)}
@@ -6718,7 +6725,11 @@ function renderEducationSummaryPanel(context, tasks, selectedText) {
           <h3>${selectedText}</h3>
           <p>상세 목록을 모두 읽기 전에, 먼저 아래 교육이 어떤 내용인지와 왜 추천됐는지 확인하세요.</p>
         </div>
-        <button class="primary-button" type="button" data-view-target="saved">내 커리큘럼 확인</button>
+        <div class="education-summary-headline-actions">
+          <button class="ghost-button" type="button" data-roadmap-select-all>모든 교육 선택하기</button>
+          <button class="ghost-button" type="button" data-roadmap-clear-all>모든 교육 선택 해제</button>
+          <button class="primary-button" type="button" data-view-target="saved">내 커리큘럼 확인</button>
+        </div>
       </div>
       <div class="education-summary-list">
         ${summaryResources.map((resource, index) => renderEducationSummaryCard(resource, index, context, tasks)).join("")}
@@ -6757,10 +6768,10 @@ function renderEducationSummaryCard(resource, index, context, tasks) {
         </div>
       </div>
       <div class="education-summary-body">
-        <p><strong>교육 소개</strong>${introText}</p>
-        <p><strong>추천 이유</strong>${reason}</p>
-        <p><strong>내 커리큘럼 연결</strong>${taskText}</p>
-        <p><strong>완성할 산출물</strong>${outputText}</p>
+        <div class="education-info-row"><strong>교육 소개</strong><span>${introText}</span></div>
+        <div class="education-info-row"><strong>추천 이유</strong><span>${reason}</span></div>
+        <div class="education-info-row"><strong>내 커리큘럼 연결</strong><span>${taskText}</span></div>
+        <div class="education-info-row"><strong>완성할 산출물</strong><span>${outputText}</span></div>
       </div>
       <div class="education-summary-actions">
         <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
@@ -7055,7 +7066,7 @@ function getRoleSpecificCurriculumTasks(track, role) {
     },
     {
       title: "지원 회사 맞춤 검증",
-      baseTitle: baseTasks[3]?.title || "포트폴리오 정리",
+      baseTitle: baseTasks[3]?.title || "산출물 정리",
       objective: "일반 직무 커리큘럼을 지원 회사 공고 기준으로 다시 좁혀 면접에서 설명 가능한 근거로 정리합니다.",
       time: "2시간",
       steps: [
@@ -7386,7 +7397,7 @@ function getVisibleRoadmapTasks(trackId) {
   if (weeks <= 4) return prioritizedCoreTasks.slice(0, weeks);
 
   const expanded = [...prioritizedCoreTasks];
-  const phases = weeks >= 12 ? ["심화 반복", "포트폴리오 보강"] : ["심화 반복"];
+  const phases = weeks >= 12 ? ["심화 반복", "산출물 보강"] : ["심화 반복"];
   phases.forEach((phase) => {
     prioritizedCoreTasks.forEach((task) => {
       expanded.push(createExtendedRoadmapTask(task, phase, expanded.length + 1));
@@ -7436,7 +7447,7 @@ function getTaskPriorityReason(task, trackId) {
 }
 
 function createExtendedRoadmapTask(task, phase, planWeek) {
-  const isPortfolioPhase = phase === "포트폴리오 보강";
+  const isPortfolioPhase = phase === "산출물 보강";
   return {
     ...task,
     title: isPortfolioPhase ? `${task.baseTitle} 산출물 보강` : `${task.baseTitle} 심화 반복`,
@@ -7511,6 +7522,42 @@ function getRecommendedResources(track, context) {
     .map((item) => item.resource);
 }
 
+function getRoadmapRecommendedResources(track, tasks, context) {
+  const resourceUseCounts = new Map();
+  return uniqueResources(tasks.flatMap((task) => {
+    const linkedResources = getRoadmapResourcesForTask(track, task, context, resourceUseCounts);
+    linkedResources.forEach((resource) => {
+      resourceUseCounts.set(resource.id, (resourceUseCounts.get(resource.id) || 0) + 1);
+    });
+    return linkedResources;
+  }));
+}
+
+function getCurrentRoadmapSelectionResources() {
+  if (!hasActiveRoleSelection()) return [];
+  const track = getSelectedTrack();
+  const tasks = getVisibleRoadmapTasks(track.id);
+  const context = getRecommendationContext(track, getGapSkills(track.id), tasks);
+  return getRoadmapRecommendedResources(track, tasks, context);
+}
+
+function selectAllCurrentRoadmapResources() {
+  const ids = getCurrentRoadmapSelectionResources().map((resource) => resource.id);
+  if (!ids.length) return;
+  state.saved = [...new Set([...state.saved, ...ids])];
+  saveState();
+  render();
+}
+
+function clearCurrentRoadmapResourceSelection() {
+  const ids = new Set(getCurrentRoadmapSelectionResources().map((resource) => resource.id));
+  if (!ids.size) return;
+  state.saved = state.saved.filter((id) => !ids.has(id));
+  state.completed = state.completed.filter((id) => !ids.has(id));
+  saveState();
+  render();
+}
+
 function getRoadmapResourcesForTask(track, task, context, resourceUseCounts = new Map()) {
   const trackResources = resources.filter((resource) => resource.tracks.includes(track.id));
   const selectedResources = trackResources.filter((resource) => state.saved.includes(resource.id));
@@ -7582,9 +7629,10 @@ function renderCompetencyActionPlan(context, tasks) {
                   ${item.resources.map((resource) => `
                     <div class="competency-example-resource">
                       <div class="competency-example-main">
-                        <strong>${resource.title}</strong>
-                        <p><strong>교육 소개</strong>${getResourceIntroText(resource)}</p>
-                        <p><strong>완성할 산출물</strong>${resource.expectedOutput || item.deliverable}</p>
+                        <span class="competency-example-label">교육명</span>
+                        <strong class="competency-example-title">${resource.title}</strong>
+                        <div class="education-info-row"><strong>교육 소개</strong><span>${getResourceIntroText(resource)}</span></div>
+                        <div class="education-info-row"><strong>완성할 산출물</strong><span>${resource.expectedOutput || item.deliverable}</span></div>
                       </div>
                       <div>
                         <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
@@ -8108,11 +8156,11 @@ function renderRoadmapResourceItem(resource, task, context) {
         </span>
       </summary>
       <div class="roadmap-resource-detail">
-        <p>${resource.provider} · ${resource.difficulty} · ${formatMinutes(resource.totalMinutes)}</p>
-        <p><strong>교육 소개:</strong> ${getResourceIntroText(resource)}</p>
-        <p><strong>추천 이유:</strong> ${connectionReason}</p>
-        <p><strong>연결 산출물:</strong> ${resource.expectedOutput}</p>
-        ${signals.length ? `<p>${signals.join(" · ")}</p>` : `<p>${task.deliverable}에 바로 연결됩니다.</p>`}
+        <div class="education-info-row is-meta"><strong>교육 정보</strong><span>${resource.provider} · ${resource.difficulty} · ${formatMinutes(resource.totalMinutes)}</span></div>
+        <div class="education-info-row"><strong>교육 소개</strong><span>${getResourceIntroText(resource)}</span></div>
+        <div class="education-info-row"><strong>추천 이유</strong><span>${connectionReason}</span></div>
+        <div class="education-info-row"><strong>연결 산출물</strong><span>${resource.expectedOutput}</span></div>
+        <div class="education-info-row"><strong>연결 신호</strong><span>${signals.length ? signals.join(" · ") : `${task.deliverable}에 바로 연결됩니다.`}</span></div>
         <div class="roadmap-resource-actions">
           <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
           ${renderSaveActionButton(resource)}
@@ -8292,9 +8340,9 @@ function renderPlanResourceItem(resource, task, context) {
         </span>
       </summary>
       <div class="plan-resource-detail">
-        <p><strong>추천 이유:</strong> ${connectionReason}</p>
-        <p>${signals.join(" · ") || `${task.deliverable}에 연결되는 자료입니다.`}</p>
-        <p><strong>산출물:</strong> ${resource.expectedOutput}</p>
+        <div class="education-info-row"><strong>추천 이유</strong><span>${connectionReason}</span></div>
+        <div class="education-info-row"><strong>연결 신호</strong><span>${signals.join(" · ") || `${task.deliverable}에 연결되는 자료입니다.`}</span></div>
+        <div class="education-info-row"><strong>산출물</strong><span>${resource.expectedOutput}</span></div>
         <div class="roadmap-resource-actions">
           <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
           ${renderCompleteActionButton(resource)}
