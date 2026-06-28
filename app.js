@@ -85,12 +85,12 @@ tracks.splice(1, 0, {
   majors: ["mechanical", "electrical", "both"],
   industries: ["mobility", "manufacturing", "electronics"],
   difficulty: "중",
-  summary: "차량 시스템 요구사항을 차체·섀시·파워트레인·전장·제어·검증 산출물로 나누어 개발하는 직무군입니다.",
-  tasks: ["차량 요구사항 분해", "차체·섀시·열관리 설계", "전장·제어 시스템 검증", "실차·HIL 시험과 양산 이관"],
-  skills: ["차량동역학", "차체·섀시", "전장 아키텍처", "CAN/LIN", "HIL·실차검증"],
-  tools: ["CATIA/Creo", "MATLAB/Simulink", "CANoe/CANalyzer", "HIL", "Excel/Python"],
-  outputs: ["차량 시스템 요구사항표", "부품·제어 인터페이스 정의서", "시험계획서", "검증 리포트"],
-  misconceptions: ["자동차 직무는 기구설계 하나로 끝나지 않고 차체, 섀시, 전장, 제어, 검증으로 세분화됩니다.", "전공과 맞는지 보려면 부품명보다 반복 업무와 시험 산출물을 함께 봐야 합니다."]
+  summary: "차량 시스템 요구사항을 차체·섀시·내외장·전동화·전장·제어·검증·양산 품질 산출물로 나누어 개발하는 직무군입니다.",
+  tasks: ["차량 요구사항 분해", "차체·섀시·내외장·열관리 설계", "전장·BMS·제어 시스템 검증", "실차·HIL 시험과 신차 양산 이관"],
+  skills: ["차량동역학", "차체·섀시·내외장", "전장 아키텍처", "CAN/LIN/Ethernet", "HIL·실차검증", "IATF·APQP"],
+  tools: ["CATIA/Creo", "MATLAB/Simulink", "CANoe/CANalyzer", "HIL", "DVP&R", "Excel/Python"],
+  outputs: ["차량 시스템 요구사항표", "부품·제어 인터페이스 정의서", "DVP&R 시험계획서", "검증 리포트", "양산 품질 체크리스트"],
+  misconceptions: ["자동차 직무는 기구설계 하나로 끝나지 않고 차체, 섀시, 내외장, 전장, BMS, 제어, 검증, 양산 품질로 세분화됩니다.", "전공과 맞는지 보려면 부품명보다 반복 업무와 시험·품질 산출물을 함께 봐야 합니다."]
 });
 
 function normalizeResource(resource) {
@@ -2148,6 +2148,13 @@ const automotiveResourceIds = new Set([
   "mathworks-predictive-maintenance",
   "simscape-onramp",
   "mathworks-simscape-electrical",
+  "mathworks-simulink-examples",
+  "mathworks-fault-tolerant-fuel-control",
+  "mathworks-simulink-test-manager",
+  "mathworks-lane-following-sensor-fusion",
+  "mathworks-vehicle-dynamics-examples",
+  "mathworks-automated-driving-examples",
+  "mathworks-official-videos",
   "sensor-fusion-onramp",
   "optimization-onramp",
   "mit-design-manufacturing",
@@ -2168,11 +2175,22 @@ const automotiveResourceIds = new Set([
   "coursera-embedded-control",
   "coursera-engineering-data",
   "edx-engineering-systems",
+  "nist-control-charts",
+  "nist-process-capability",
+  "asq-quality-tools",
+  "quality-one-fmea",
+  "asq-fmea",
+  "asq-eight-d",
+  "coursera-six-sigma-quality",
   "khan-math-physics-basics",
   "freecodecamp-python-data",
   "inflearn-free-it-practice",
   "step-engineering",
   "hrd-net-job-training",
+  "comento-production-tech-internship",
+  "comento-production-management-core",
+  "comento-plc-control-practice",
+  "letuin-low-power-design-validation",
   "ansys-innovation-courses",
   "ni-learn-test-measurement",
   "google-ml-crash-course",
@@ -2182,7 +2200,8 @@ const automotiveResourceIds = new Set([
   "youtube-css-can-bus",
   "youtube-skilllync-ev-crash-course",
   "youtube-mathworks-hil-testing",
-  "youtube-emc-emi-basics"
+  "youtube-emc-emi-basics",
+  "youtube-cqe-quality-tools"
 ]);
 
 resources.forEach((resource) => {
@@ -2767,37 +2786,51 @@ const majorRoleFitProfiles = {
 
 majorRoleFitProfiles.mechanical.direct.push(
   "vehicle-body-design-engineer",
+  "vehicle-interior-exterior-design-engineer",
   "chassis-suspension-engineer",
   "powertrain-mechanical-engineer",
+  "vehicle-calibration-engineer",
   "vehicle-thermal-management-engineer",
   "ev-battery-pack-engineer",
+  "automotive-manufacturing-engineer",
+  "automotive-quality-field-engineer",
   "vehicle-test-validation-engineer"
 );
 majorRoleFitProfiles.mechanical.bridge.push(
   "vehicle-ee-architecture-engineer",
+  "wiring-harness-engineer",
   "automotive-embedded-sw-engineer",
+  "bms-control-engineer",
   "hil-sil-validation-engineer",
   "adas-validation-engineer",
+  "functional-safety-engineer",
   "ev-power-electronics-engineer"
 );
 majorRoleFitProfiles.electrical.direct.push(
   "vehicle-ee-architecture-engineer",
+  "wiring-harness-engineer",
   "automotive-embedded-sw-engineer",
+  "bms-control-engineer",
   "hil-sil-validation-engineer",
   "adas-validation-engineer",
+  "functional-safety-engineer",
+  "vehicle-calibration-engineer",
   "ev-power-electronics-engineer"
 );
 majorRoleFitProfiles.electrical.bridge.push(
   "vehicle-body-design-engineer",
+  "vehicle-interior-exterior-design-engineer",
   "chassis-suspension-engineer",
   "powertrain-mechanical-engineer",
   "vehicle-thermal-management-engineer",
   "ev-battery-pack-engineer",
+  "automotive-manufacturing-engineer",
+  "automotive-quality-field-engineer",
   "vehicle-test-validation-engineer"
 );
 
 const starterKeywords = {
-  "automotive-mobility": "자동차 차체 섀시 전장 ECU CAN HIL ADAS 검증",
+  "automotive-mobility": "자동차 차체 섀시 내외장 전장 ECU BMS 하네스 CAN HIL ADAS 기능안전 캘리브레이션 양산품질 검증",
   "mechanical-cae": "재료역학 기계요소설계 구조해석 CAD",
   "production-quality": "품질관리 SPC 관리도 FMEA 공정능력",
   "semiconductor-equipment": "반도체 공정 소자 진공 플라즈마 계측",
@@ -3082,6 +3115,16 @@ jobRoles["automotive-mobility"] = [
     preferred: ["자동차 패키지 레이아웃 또는 BIW 프로젝트 경험", "GD&T, 공차 누적, DFM/DFA 이해", "충돌·강성·NVH 해석 결과를 설계 변경으로 연결"]
   },
   {
+    id: "vehicle-interior-exterior-design-engineer",
+    title: "내외장·의장 설계 엔지니어",
+    postingKeywords: ["내장설계", "외장설계", "의장", "Trim", "감성품질"],
+    industries: ["mobility", "all"],
+    focus: "내장재, 외장 부품, 시트·콘솔·범퍼·램프 주변 구조를 패키지, 감성품질, 조립성, 법규 조건에 맞게 설계하는 직무",
+    responsibilities: ["내장 trim, 외장 garnish, 범퍼, 콘솔, 시트 주변 장착 구조 설계", "gap/flush, 감성품질, 이음, 스퀵·래틀, 조립성 요구사항 검토", "사출, 도장, 표면처리, 체결 구조를 도면·공차로 정의", "협력사 사양, 금형성, 양산 품질 이슈를 설계 변경으로 반영"],
+    requirements: ["3D CAD와 2D 도면, 공차, 체결 구조 이해", "사출·도장·표면처리·조립 공정 기초", "내외장 패키지 간섭과 법규 요구사항 검토", "시제품·양산 이슈를 설계 변경 근거로 문서화"],
+    preferred: ["CATIA/NX 기반 내외장 부품 설계 프로젝트", "감성품질, gap/flush, squeak & rattle 평가 이해", "협력사 금형성 검토와 DFM/DFA 경험"]
+  },
+  {
     id: "chassis-suspension-engineer",
     title: "섀시·현가·제동 엔지니어",
     postingKeywords: ["섀시", "현가", "조향", "제동", "차량동역학"],
@@ -3122,6 +3165,16 @@ jobRoles["automotive-mobility"] = [
     preferred: ["배터리팩 구조 설계 또는 BMS 연동 프로젝트", "UN R100, ISO 26262, 열폭주 안전 개념 이해", "CAN 데이터와 온도·전압 로그 분석"]
   },
   {
+    id: "bms-control-engineer",
+    title: "BMS 제어·배터리 시스템 SW 엔지니어",
+    postingKeywords: ["BMS", "SOC", "SOH", "셀밸런싱", "배터리진단"],
+    industries: ["mobility", "battery", "electronics", "all"],
+    focus: "배터리 전압·전류·온도 데이터를 기반으로 SOC/SOH 추정, 셀 밸런싱, 보호 로직, 진단 기능을 설계·검증하는 직무",
+    responsibilities: ["셀 전압, pack 전류, 온도, 절연, 인터락 신호 요구사항 정의", "SOC/SOH 추정, 셀 밸런싱, 충방전 제한, 보호 로직 검증", "BMS CAN 신호, DTC, fault handling 테스트 케이스 작성", "충전·방전·저온·고온 조건 로그를 분석해 고장 원인과 개선안을 정리"],
+    requirements: ["배터리 전기화학 기초와 전압·전류·온도 로그 이해", "제어공학, 신호처리, C/C++ 또는 MATLAB/Simulink 기초", "CAN, DBC, UDS/DTC 진단 기본 이해", "요구사항을 테스트 케이스와 검증 리포트로 바꾸는 역량"],
+    preferred: ["BMS 모델링, SOC/SOH 알고리즘, Kalman filter 기초", "HIL/SIL 또는 실차 충방전 로그 분석 경험", "ISO 26262, HV safety, 기능안전 요구사항 이해"]
+  },
+  {
     id: "vehicle-ee-architecture-engineer",
     title: "차량 전장 E/E 아키텍처 엔지니어",
     postingKeywords: ["E/E Architecture", "ECU", "CAN", "LIN", "Ethernet"],
@@ -3132,6 +3185,16 @@ jobRoles["automotive-mobility"] = [
     preferred: ["AUTOSAR, UDS, CANoe/CANalyzer 사용 경험", "와이어링 하네스 또는 전장품 검증 경험", "기능안전 ISO 26262 기본 개념"]
   },
   {
+    id: "wiring-harness-engineer",
+    title: "와이어링 하네스 설계 엔지니어",
+    postingKeywords: ["와이어링", "하네스", "커넥터", "전원분배", "회로도"],
+    industries: ["mobility", "electronics", "all"],
+    focus: "차량 전원·접지·통신·센서 신호를 회로도와 하네스 경로로 정의하고 전류 용량, 보호, 조립성을 검토하는 직무",
+    responsibilities: ["전원, 접지, CAN/LIN/Ethernet, 센서·액추에이터 신호 회로도 작성", "커넥터, 터미널, 와이어 게이지, fuse/relay, splice 조건 검토", "하네스 routing, 고정점, 간섭, 방수, 조립 작업성 검토", "회로 변경이 전원분배, 진단, 하네스 제조성에 미치는 영향 분석"],
+    requirements: ["회로이론, 전기전자 기초, 전류 용량과 전압강하 이해", "차량 회로도, connector pin map, fuse/relay box 구조 해석", "CAN/LIN 통신선, shield, 접지, 노이즈 기초", "도면 변경 이력과 협력사 사양을 관리하는 역량"],
+    preferred: ["Capital, CATIA Electrical, E3.series 등 전장 설계 도구 경험", "EMC, 방수, 고전압 하네스, serviceability 검토 경험", "차량 전장품 또는 하네스 양산 이슈 대응 경험"]
+  },
+  {
     id: "automotive-embedded-sw-engineer",
     title: "차량 임베디드 SW·ECU 엔지니어",
     postingKeywords: ["ECU", "AUTOSAR", "C/C++", "CAN", "진단"],
@@ -3140,6 +3203,16 @@ jobRoles["automotive-mobility"] = [
     responsibilities: ["C/C++ 기반 ECU 소프트웨어 기능 구현", "CAN 신호 송수신, 진단 서비스, fault handling 개발", "센서 입력, 상태머신, 제어 출력 로직 검증", "벤치·실차 로그로 재현 조건을 찾고 수정 내역 문서화"],
     requirements: ["C언어, 자료구조, MCU, 인터럽트 기본 이해", "CAN 통신, DBC, UDS 진단 기초", "컴파일, 디버깅, Git 기반 변경 이력 관리", "테스트 케이스와 로그 분석으로 문제 원인 분리"],
     preferred: ["AUTOSAR Classic/Adaptive 또는 RTOS 경험", "CANoe, CANalyzer, Lauterbach, Vector 도구 경험", "기능안전 요구사항과 SW 검증 프로세스 이해"]
+  },
+  {
+    id: "vehicle-calibration-engineer",
+    title: "차량 제어 캘리브레이션 엔지니어",
+    postingKeywords: ["Calibration", "캘리브레이션", "CANape", "제어파라미터", "실차로그"],
+    industries: ["mobility", "electronics", "all"],
+    focus: "파워트레인, 전동화, 제동, 조향, 열관리 제어 파라미터를 실차·벤치 로그 기준으로 조정해 성능과 안정성을 맞추는 직무",
+    responsibilities: ["제어 요구사항을 calibration parameter와 평가 지표로 분해", "dyno, HIL, 실차 시험에서 CAN 로그와 센서 데이터를 수집", "성능, NVH, 열, 연비·전비, 응답성 지표를 비교해 파라미터 조정안 작성", "변경 전후 결과와 부작용을 검증 리포트로 정리"],
+    requirements: ["제어공학, 차량동역학 또는 전동화 시스템 기초", "CAN, DBC, 데이터 로깅, 그래프 후처리 이해", "MATLAB/Python/Excel로 시험 결과를 비교하는 역량", "성능 요구사항과 안전 제한 조건을 함께 고려하는 판단"],
+    preferred: ["CANape, INCA, CANalyzer, Simulink 기반 calibration 경험", "파워트레인·BMS·열관리·제동 제어 로그 분석 경험", "DOE, 최적화, 자동 리포트 작성 경험"]
   },
   {
     id: "hil-sil-validation-engineer",
@@ -3162,6 +3235,16 @@ jobRoles["automotive-mobility"] = [
     preferred: ["ROS, Python, MATLAB, CarMaker, PreScan 경험", "카메라·레이다·라이다 데이터 처리 경험", "ISO 26262 또는 SOTIF 기본 개념"]
   },
   {
+    id: "functional-safety-engineer",
+    title: "기능안전·SOTIF 엔지니어",
+    postingKeywords: ["ISO 26262", "SOTIF", "ASIL", "HARA", "Safety Case"],
+    industries: ["mobility", "electronics", "all"],
+    focus: "차량 전장·제어 기능의 위험원을 분석하고 ASIL, 안전 요구사항, 검증 증거를 묶어 기능안전과 SOTIF 근거를 만드는 직무",
+    responsibilities: ["HARA, item definition, safety goal, ASIL 산정 지원", "시스템·SW·HW 안전 요구사항과 검증 항목 추적", "FTA/FMEA, 안전 메커니즘, diagnostic coverage 검토", "SOTIF 관점에서 오인식·오작동 시나리오와 안전 검증 근거 정리"],
+    requirements: ["ISO 26262, SOTIF, ASIL, safety requirement 기본 이해", "요구사항 추적성, 테스트 케이스, 검증 증거 관리", "FMEA/FTA와 시스템 인터페이스를 연결하는 역량", "전장·제어·ADAS 기능의 실패 모드를 설명하는 역량"],
+    preferred: ["Polarion, DOORS, Jama 등 요구사항 관리 도구 경험", "ASIL 분해, safety case, confirmation review 이해", "ADAS/전동화/제어기 개발 프로세스 경험"]
+  },
+  {
     id: "ev-power-electronics-engineer",
     title: "EV 전력전자·인버터 엔지니어",
     postingKeywords: ["인버터", "OBC", "DC-DC", "전력전자", "게이트드라이브"],
@@ -3170,6 +3253,26 @@ jobRoles["automotive-mobility"] = [
     responsibilities: ["전압·전류·전력·효율 요구사항 정의", "스위칭 소자, 게이트 드라이버, 센싱 회로, 보호 회로 검토", "리플, 손실, 발열, EMI 측정 결과 분석", "모터·배터리·제어기 인터페이스와 안전 요구사항 검토"],
     requirements: ["전력전자, 회로이론, 전자회로 기초", "MOSFET/IGBT/SiC 소자와 스위칭 동작 이해", "오실로스코프, 전류 프로브, 전력분석기 계측", "열·EMI·보호 로직을 검증 리포트로 정리"],
     preferred: ["SPICE/PLECS/Simulink 기반 전력전자 모델링", "자동차 EMC, HV 안전, 절연 요구사항 이해", "인버터 또는 전원회로 Bring-up 경험"]
+  },
+  {
+    id: "automotive-manufacturing-engineer",
+    title: "자동차 생산기술·신차 양산 엔지니어",
+    postingKeywords: ["생산기술", "신차양산", "공정설계", "APQP", "라인셋업"],
+    industries: ["mobility", "manufacturing", "all"],
+    focus: "신차 부품과 조립 공정을 양산 라인에 안정적으로 올리기 위해 공정 설계, 설비·치구, APQP, 초기 품질을 관리하는 직무",
+    responsibilities: ["신차 개발 단계의 공정 흐름, 설비, 치구, 작업 조건 검토", "라인 셋업, takt time, 병목, 작업성, 자동화 개선안 도출", "APQP, PPAP, PFMEA, Control Plan 기준으로 양산 준비 상태 확인", "초기 유동 품질 문제와 생산성 지표를 개선 활동으로 연결"],
+    requirements: ["자동차 조립·가공·검사 공정과 생산기술 용어 이해", "takt time, line balancing, OEE, 설비 정지 분석", "PFMEA, Control Plan, APQP/PPAP 기본 이해", "현장 이슈를 표준작업서와 조건 변경으로 정리하는 역량"],
+    preferred: ["PLC, 비전검사, 로봇, 자동화 설비 기초", "신차 양산 이벤트, 파일럿 생산, 초기 품질 개선 경험", "협력사·품질·설계 부서와 이슈 트래킹 경험"]
+  },
+  {
+    id: "automotive-quality-field-engineer",
+    title: "자동차 품질·필드이슈 분석 엔지니어",
+    postingKeywords: ["필드클레임", "IATF 16949", "8D", "Warranty", "품질개선"],
+    industries: ["mobility", "manufacturing", "all"],
+    focus: "시장 품질, 보증 데이터, 고객 클레임, 생산·부품 이력을 연결해 필드 이슈 원인과 재발 방지 대책을 찾는 직무",
+    responsibilities: ["필드 클레임, warranty, 고객 불만, 서비스 데이터를 유형별로 분류", "차량 로그, 부품 이력, 생산 lot, 협력사 변경 이력을 연결해 원인 후보 도출", "8D, FMEA, Control Plan, 개선 전후 효과를 품질 보고서로 정리", "설계·생산·협력사와 재발 방지 대책과 검증 일정을 관리"],
+    requirements: ["IATF 16949, 8D, FMEA, Control Plan, APQP/PPAP 기본 이해", "도면·규격·검사성적서와 차량 품질 이슈를 연결하는 역량", "Excel/Python 기반 품질 데이터 분류와 Pareto 분석", "고객 문제를 기술 원인과 개선 조치로 문서화"],
+    preferred: ["보증 데이터, VOC, 필드 로그, CAN 데이터 분석 경험", "협력사 품질 개선 또는 고객 품질 대응 경험", "품질 비용, 재발률, 개선 효과 지표 관리 경험"]
   },
   {
     id: "vehicle-test-validation-engineer",
@@ -3398,6 +3501,46 @@ const aiRoleCompetencyProfiles = {
     requirements: ["AI 모델 출력과 ECU 상태·진단 로직의 인터페이스를 이해"],
     preferred: ["인지 모델 출력 검증, 로그 기반 디버깅, 안전 요구사항 추적 경험"],
     diagnostics: [["AI SW 인터페이스", "모델 출력, ECU 상태, 진단 로그를 요구사항과 테스트 케이스로 연결할 수 있다."]]
+  },
+  "bms-control-engineer": {
+    level: "중요",
+    summary: "SOC/SOH 추정, 이상 셀 탐지, 충방전 제한 조건 판단에서 데이터 기반 모델링 역량이 중요합니다.",
+    keywords: ["AI", "SOC 추정", "배터리 로그"],
+    requirements: ["전압·전류·온도 로그를 입력 변수와 검증 지표로 정리하는 데이터 처리 역량"],
+    preferred: ["SOC/SOH 추정, Kalman filter, 이상탐지, Python/MATLAB 로그 분석 경험"],
+    diagnostics: [["BMS 데이터", "전압·전류·온도 로그를 기준으로 SOC/SOH 추정 또는 이상 셀 탐지 문제를 정의할 수 있다."]]
+  },
+  "vehicle-calibration-engineer": {
+    level: "중요",
+    summary: "실차·벤치 로그를 기반으로 제어 파라미터 조정 후보를 좁히고 변경 전후를 자동 비교하는 역량입니다.",
+    keywords: ["데이터 기반 캘리브레이션", "최적화"],
+    requirements: ["시험 로그와 calibration parameter를 같은 표로 묶어 성능 지표를 비교하는 역량"],
+    preferred: ["DOE, 최적화, Python/MATLAB 자동 리포트, CANape/INCA 로그 분석 경험"],
+    diagnostics: [["캘리브레이션 데이터", "파라미터 변경 전후의 성능 지표와 부작용을 로그 기반으로 비교할 수 있다."]]
+  },
+  "functional-safety-engineer": {
+    level: "도움됨",
+    summary: "요구사항과 시험 증거가 많아질수록 추적성, 위험원 분류, safety case 정리에 데이터 관리 역량이 도움이 됩니다.",
+    keywords: ["AI 요구사항분석", "추적성"],
+    requirements: ["요구사항, 위험원, 테스트 케이스, 검증 증거를 표준 구조로 연결하는 역량"],
+    preferred: ["요구사항 자동 분류, traceability matrix, safety case 문서화 경험"],
+    diagnostics: [["안전 요구사항 추적", "위험원, safety goal, ASIL, 테스트 증거를 하나의 추적표로 연결할 수 있다."]]
+  },
+  "automotive-manufacturing-engineer": {
+    level: "도움됨",
+    summary: "라인 정지, takt time, 초기 품질 데이터를 분석해 신차 양산 안정화 우선순위를 잡는 데 쓰입니다.",
+    keywords: ["예지보전", "라인 데이터"],
+    requirements: ["라인 셋업 데이터와 품질 지표를 개선 후보로 바꾸는 데이터 분석 기초"],
+    preferred: ["OEE, 설비 정지 로그, 비전검사, 자동화 데이터 분석 경험"],
+    diagnostics: [["양산 데이터", "라인 정지, takt time, 불량률 변화를 연결해 개선 우선순위를 제안할 수 있다."]]
+  },
+  "automotive-quality-field-engineer": {
+    level: "중요",
+    summary: "보증, VOC, 필드 로그, 생산 이력을 연결해 반복 클레임과 재발 방지 우선순위를 찾는 역량입니다.",
+    keywords: ["AI", "필드클레임", "불량분류"],
+    requirements: ["클레임 텍스트와 보증·생산 이력을 분류하고 Pareto로 우선순위를 정하는 역량"],
+    preferred: ["VOC/보증 데이터 분류, 품질 이상탐지, 자동 8D 초안 작성 경험"],
+    diagnostics: [["필드 품질 AI", "필드 클레임과 생산 이력을 묶어 반복 이슈와 원인 후보를 분류할 수 있다."]]
   }
 };
 
@@ -3729,6 +3872,69 @@ const roleExpertEnhancementProfiles = {
     coreCompetencies: ["시험 항목, 계측 채널, 판정 기준을 요구사항 추적성으로 연결하는 역량", "실차·벤치·환경 시험 결과를 그래프와 Pass/Fail 문장으로 정리하는 역량", "불합격 항목의 원인 가설, 재시험 조건, 개선 요청을 관리하는 역량"],
     requirements: ["DVP&R, 계측 채널, CAN 로그, 환경시험, 내구시험 이해", "시험 결과를 요구사항과 비교해 재현 조건을 정의하는 역량"],
     preferred: ["실차 주행시험, 환경챔버, NVH, durability 시험 경험", "Python/MATLAB 기반 로그 후처리와 이슈 트래킹 경험"]
+  },
+  "vehicle-interior-exterior-design-engineer": {
+    coreWork: "내장 trim, 외장 garnish, 범퍼, 콘솔, 시트 주변 구조를 패키지, gap/flush, 감성품질, 조립성 기준으로 설계합니다.",
+    coreTerms: ["interior trim", "exterior trim", "gap/flush", "squeak & rattle", "B-surface", "mounting boss", "clip", "injection molding", "surface finish", "DFM", "CATIA"],
+    tools: ["CATIA", "NX", "Teamcenter", "PLM", "DFMEA", "품질 체크시트"],
+    coreCompetencies: ["패키지 간섭, 장착 구조, 체결 방향을 3D CAD에서 검토하는 역량", "gap/flush, 이음, 소음, 표면 품질을 설계 요구사항으로 바꾸는 역량", "사출·도장·금형성·조립성을 도면과 공차에 반영하는 역량"],
+    requirements: ["내외장 부품 구조, 사출/도장/표면처리, 체결 구조, 공차 이해", "시제품과 양산 이슈를 설계 변경 사유로 문서화하는 역량"],
+    preferred: ["감성품질, squeak & rattle, 금형성 검토 경험", "협력사 사양 협의와 PLM 설계 변경 경험"],
+    diagnostics: [["내외장 패키지", "내장·외장 부품의 간섭, 장착 공간, gap/flush 요구를 설계 제약으로 정리할 수 있다."], ["감성품질", "squeak & rattle, 표면 품질, 이음 문제를 원인 후보와 개선안으로 설명할 수 있다."], ["사출·도장", "사출, 도장, 표면처리, 체결 방식이 설계 형상과 품질에 미치는 영향을 말할 수 있다."], ["도면·공차", "장착 구조와 조립성을 도면·공차·체크리스트로 표현할 수 있다."], ["양산 이슈", "협력사·금형·조립 이슈를 설계 변경 요구사항으로 바꿀 수 있다."]]
+  },
+  "wiring-harness-engineer": {
+    coreWork: "전원, 접지, 통신, 센서 신호를 회로도와 하네스 경로로 정의하고 전류 용량, 보호, 조립성, 노이즈 리스크를 검토합니다.",
+    coreTerms: ["wiring harness", "connector", "terminal", "pin map", "fuse", "relay", "wire gauge", "voltage drop", "grounding", "shield", "routing", "Capital"],
+    tools: ["Capital", "CATIA Electrical", "E3.series", "CANoe", "Excel", "회로도"],
+    coreCompetencies: ["회로도와 connector pin map을 읽고 신호·전원·접지를 분리하는 역량", "전류 용량, 전압강하, fuse/relay 보호 조건을 계산·검토하는 역량", "하네스 routing, 고정점, 방수, 조립 작업성을 설계에 반영하는 역량"],
+    requirements: ["회로이론, 전압강하, 전류 용량, 접지, CAN/LIN 통신선 이해", "회로 변경이 하네스 제조성과 진단 요구사항에 미치는 영향을 설명하는 역량"],
+    preferred: ["Capital/CATIA Electrical/E3.series 경험", "EMC, 방수 커넥터, 고전압 하네스, serviceability 검토 경험"],
+    diagnostics: [["회로도", "전원, 접지, 통신, 센서 신호를 회로도와 pin map에서 구분할 수 있다."], ["전원보호", "wire gauge, fuse, relay, 전압강하 조건을 기준으로 전원 보호 요구를 설명할 수 있다."], ["하네스 경로", "routing, 고정점, 방수, 조립 작업성을 설계 체크리스트로 만들 수 있다."], ["노이즈", "shield, grounding, twisted pair가 통신 품질과 EMC에 미치는 영향을 설명할 수 있다."], ["변경영향", "회로 변경이 커넥터, 하네스 제조, 진단 요구사항에 주는 영향을 정리할 수 있다."]]
+  },
+  "bms-control-engineer": {
+    coreWork: "전압·전류·온도 로그를 기반으로 SOC/SOH 추정, 셀 밸런싱, 보호 로직, 진단 요구사항을 설계·검증합니다.",
+    coreTerms: ["BMS", "SOC", "SOH", "cell balancing", "thermal runaway", "isolation monitoring", "contactor", "pre-charge", "DTC", "Kalman filter", "CAN", "HIL"],
+    tools: ["MATLAB", "Simulink", "Stateflow", "CANoe", "CANalyzer", "Python", "HIL"],
+    coreCompetencies: ["배터리 전압·전류·온도 신호를 상태 추정과 보호 조건으로 연결하는 역량", "SOC/SOH, 셀 밸런싱, 충방전 제한 로직을 테스트 케이스로 검증하는 역량", "CAN 로그와 DTC로 fault handling 원인을 분리하는 역량"],
+    requirements: ["배터리 셀 특성, BMS 인터페이스, CAN/DBC, 진단, 제어 로직 이해", "로그 데이터를 시간 기준으로 정렬하고 검증 기준과 비교하는 역량"],
+    preferred: ["Kalman filter, Simulink/Stateflow BMS 모델, HIL 검증 경험", "HV safety, contactor, pre-charge, isolation monitoring 이해"],
+    diagnostics: [["BMS 신호", "전압, 전류, 온도, 인터락, 절연 신호를 BMS 기능과 연결할 수 있다."], ["SOC/SOH", "SOC/SOH 추정의 입력 데이터와 검증 지표를 설명할 수 있다."], ["보호로직", "과전압, 저전압, 과열, 절연 이상 조건을 보호 로직과 DTC로 정리할 수 있다."], ["CAN 로그", "BMS CAN 로그에서 fault 발생 조건과 관련 신호를 찾을 수 있다."], ["HIL 검증", "BMS 요구사항을 정상·고장·경계 조건 테스트 케이스로 바꿀 수 있다."]]
+  },
+  "vehicle-calibration-engineer": {
+    coreWork: "제어 파라미터를 시험 로그와 성능 지표로 조정해 파워트레인·전동화·제동·열관리 제어 성능을 맞춥니다.",
+    coreTerms: ["calibration", "CANape", "INCA", "parameter tuning", "dyno test", "CAN logging", "map", "lookup table", "DOE", "optimization", "drivability", "NVH"],
+    tools: ["CANape", "INCA", "CANalyzer", "MATLAB", "Python", "Simulink", "Excel"],
+    coreCompetencies: ["calibration parameter와 성능 지표를 같은 데이터셋으로 비교하는 역량", "변경 전후 응답성, 열, NVH, 효율, 안전 제한 조건을 함께 판단하는 역량", "시험 로그를 기반으로 파라미터 조정 근거와 부작용을 리포트로 남기는 역량"],
+    requirements: ["제어공학, 차량동역학 또는 전동화 시스템, CAN 로그, lookup table 이해", "MATLAB/Python/Excel로 시험 결과를 비교하는 역량"],
+    preferred: ["CANape/INCA, dyno test, DOE, 자동 리포트, 최적화 경험", "파워트레인·BMS·열관리·제동 calibration 로그 분석 경험"],
+    diagnostics: [["파라미터", "제어 파라미터와 성능 지표를 연결해 변경 목적을 설명할 수 있다."], ["CAN 로그", "CAN 로그와 센서 데이터를 시간 기준으로 정렬해 변경 전후를 비교할 수 있다."], ["성능지표", "응답성, 효율, NVH, 온도, 안전 제한 조건을 함께 판단할 수 있다."], ["DOE", "파라미터 조합 실험에서 고정할 조건과 비교할 지표를 정할 수 있다."], ["리포트", "캘리브레이션 변경 근거와 부작용을 검증 리포트로 정리할 수 있다."]]
+  },
+  "functional-safety-engineer": {
+    coreWork: "위험원 분석, ASIL 산정, 안전 요구사항, 검증 증거를 연결해 기능안전·SOTIF 근거를 만듭니다.",
+    coreTerms: ["ISO 26262", "SOTIF", "ASIL", "HARA", "FTA", "FMEA", "safety goal", "safety requirement", "safety mechanism", "diagnostic coverage", "safety case", "traceability"],
+    tools: ["Polarion", "DOORS", "Jama", "Excel", "FMEA", "FTA", "Simulink Test"],
+    coreCompetencies: ["item definition과 HARA를 통해 safety goal과 ASIL을 도출하는 역량", "시스템·SW·HW 안전 요구사항을 테스트 증거와 추적하는 역량", "FMEA/FTA와 diagnostic coverage를 안전 메커니즘 검토로 연결하는 역량"],
+    requirements: ["ISO 26262, SOTIF, ASIL, HARA, FMEA/FTA 기본 이해", "요구사항 추적성, 테스트 케이스, 검증 증거 관리 역량"],
+    preferred: ["Polarion/DOORS/Jama 요구사항 관리 경험", "safety case, confirmation review, ASIL decomposition 이해"],
+    diagnostics: [["HARA", "item definition, hazard, operational situation, ASIL 산정 흐름을 설명할 수 있다."], ["안전요구사항", "safety goal을 시스템·SW·HW 요구사항과 테스트 케이스로 연결할 수 있다."], ["FMEA/FTA", "고장 모드와 fault tree를 안전 메커니즘과 연결할 수 있다."], ["SOTIF", "오인식·오작동 시나리오를 안전 검증 조건으로 정리할 수 있다."], ["추적성", "안전 요구사항과 검증 증거를 traceability matrix로 관리할 수 있다."]]
+  },
+  "automotive-manufacturing-engineer": {
+    coreWork: "신차 부품을 양산 라인에 올리기 위해 공정 흐름, 설비·치구, APQP, 초기 품질, 생산성 지표를 관리합니다.",
+    coreTerms: ["APQP", "PPAP", "PFMEA", "Control Plan", "pilot build", "line setup", "takt time", "line balancing", "OEE", "fixture", "vision inspection", "robot"],
+    tools: ["MES", "Excel", "Power BI", "PLC", "Minitab", "APQP", "PPAP"],
+    coreCompetencies: ["신차 양산 이벤트에서 공정, 설비, 치구, 작업 조건 리스크를 찾는 역량", "takt time, 병목, OEE, 초기 품질 데이터를 개선 우선순위로 바꾸는 역량", "APQP/PPAP/PFMEA/Control Plan을 양산 준비 산출물로 연결하는 역량"],
+    requirements: ["자동차 조립·가공·검사 공정, APQP/PPAP/PFMEA 기본 이해", "라인 셋업, takt time, line balancing, 설비 정지 분석 역량"],
+    preferred: ["PLC, 로봇, 비전검사, 자동화 설비 셋업 경험", "파일럿 생산, 초기 유동 품질, 신차 양산 이슈 대응 경험"],
+    diagnostics: [["공정설계", "신차 부품의 공정 흐름, 설비, 치구, 검사 조건을 정리할 수 있다."], ["라인셋업", "takt time, line balancing, 병목 공정을 기준으로 개선안을 제안할 수 있다."], ["APQP/PPAP", "PFMEA, Control Plan, PPAP 승인 자료의 관계를 설명할 수 있다."], ["초기품질", "초기 유동 불량과 생산성 지표를 개선 과제로 연결할 수 있다."], ["자동화", "PLC, 로봇, 비전검사 도입 시 필요한 안전·품질 조건을 말할 수 있다."]]
+  },
+  "automotive-quality-field-engineer": {
+    coreWork: "필드 클레임, warranty, VOC, 생산 이력, 부품 변경 이력을 연결해 시장 품질 원인과 재발 방지 대책을 찾습니다.",
+    coreTerms: ["field claim", "warranty", "VOC", "IATF 16949", "8D", "FMEA", "Control Plan", "Pareto", "root cause", "SCAR", "lot traceability", "customer quality"],
+    tools: ["Minitab", "Excel", "Power BI", "8D", "APQP", "PPAP", "품질 대시보드"],
+    coreCompetencies: ["필드 클레임과 보증 데이터를 유형별로 분류하고 Pareto로 우선순위를 잡는 역량", "생산 lot, 협력사 변경, 차량 로그를 원인 가설로 연결하는 역량", "8D, FMEA, Control Plan 개선 전후 효과를 품질 보고서로 정리하는 역량"],
+    requirements: ["IATF 16949, 8D, FMEA, Control Plan, APQP/PPAP 기본 이해", "품질 데이터 분류, 검사 기준, 고객 문제 문서화 역량"],
+    preferred: ["필드 로그, VOC, warranty 데이터 분석 경험", "협력사 품질 개선, 고객 품질 대응, 품질 비용·재발률 관리 경험"],
+    diagnostics: [["필드클레임", "필드 클레임과 warranty 데이터를 유형별로 분류할 수 있다."], ["추적성", "생산 lot, 부품 변경, 협력사 이력, 차량 로그를 원인 후보로 연결할 수 있다."], ["8D", "문제 정의, containment, root cause, corrective action을 8D 구조로 정리할 수 있다."], ["품질시스템", "IATF 16949, FMEA, Control Plan, APQP/PPAP가 품질 문제 해결에 어떻게 연결되는지 설명할 수 있다."], ["개선효과", "재발률, 품질 비용, 고객 영향 기준으로 개선 효과를 판단할 수 있다."]]
   }
 };
 
@@ -3972,15 +4178,22 @@ const roleResourceLinks = {
 
 Object.assign(roleResourceLinks, {
   "vehicle-body-design-engineer": ["mit-mechanics-materials", "kocw-mechanical-design", "mit-design-manufacturing", "mit-fea-solids", "optimization-onramp", "step-engineering", "hrd-net-job-training"],
+  "vehicle-interior-exterior-design-engineer": ["mit-design-manufacturing", "kocw-mechanical-design", "mit-mechanics-materials", "step-engineering", "hrd-net-job-training", "comento-production-tech-internship", "udemy-free-practical-tools"],
   "chassis-suspension-engineer": ["mit-mechanics-materials", "mit-fea-solids", "matlab-onramp", "simulink-onramp", "signal-processing-onramp", "optimization-onramp", "coursera-engineering-data", "youtube-nptel-vehicle-dynamics"],
   "powertrain-mechanical-engineer": ["mit-mechanics-materials", "mit-fea-solids", "simscape-onramp", "matlab-onramp", "signal-processing-onramp", "mathworks-predictive-maintenance", "edx-engineering-systems", "youtube-skilllync-ev-crash-course"],
   "vehicle-thermal-management-engineer": ["mit-fea-solids", "mit-numerical-me", "matlab-onramp", "simscape-onramp", "signal-processing-onramp", "coursera-engineering-data", "edx-engineering-systems", "youtube-skilllync-ev-crash-course"],
   "ev-battery-pack-engineer": ["simscape-onramp", "mathworks-simscape-electrical", "matlab-onramp", "signal-processing-onramp", "statistics-onramp", "kocw-electronics-circuit", "hrd-net-job-training", "youtube-skilllync-ev-crash-course"],
+  "bms-control-engineer": ["simulink-onramp", "stateflow-onramp", "control-design-onramp", "simscape-onramp", "mathworks-simscape-electrical", "matlab-onramp", "signal-processing-onramp", "youtube-css-can-bus", "youtube-skilllync-ev-crash-course"],
   "vehicle-ee-architecture-engineer": ["allaboutcircuits-textbook", "mit-circuits", "kocw-electronics-circuit", "ti-precision-labs", "analog-dialogue", "simulink-onramp", "edx-engineering-systems", "youtube-css-can-bus", "youtube-emc-emi-basics"],
+  "wiring-harness-engineer": ["allaboutcircuits-textbook", "mit-circuits", "kocw-electronics-circuit", "analog-dialogue", "ti-precision-labs", "youtube-css-can-bus", "youtube-emc-emi-basics", "hrd-net-job-training"],
   "automotive-embedded-sw-engineer": ["stm32-mooc-gpio-timer-uart", "arm-embedded-systems", "stm32-education", "kocw-embedded-control", "stateflow-onramp", "simulink-onramp", "freecodecamp-python-data", "inflearn-free-it-practice", "youtube-css-can-bus"],
+  "vehicle-calibration-engineer": ["control-design-onramp", "simulink-onramp", "matlab-onramp", "signal-processing-onramp", "optimization-onramp", "mathworks-vehicle-dynamics-examples", "youtube-nptel-vehicle-dynamics", "youtube-mathworks-hil-testing"],
   "hil-sil-validation-engineer": ["simulink-onramp", "stateflow-onramp", "control-design-onramp", "matlab-onramp", "signal-processing-onramp", "coursera-embedded-control", "freecodecamp-python-data", "youtube-mathworks-hil-testing", "youtube-css-can-bus"],
   "adas-validation-engineer": ["sensor-fusion-onramp", "signal-processing-onramp", "matlab-onramp", "simulink-onramp", "machine-learning-onramp", "coursera-embedded-control", "freecodecamp-python-data", "youtube-mathworks-hil-testing"],
+  "functional-safety-engineer": ["ncs", "quality-one-fmea", "asq-fmea", "simulink-onramp", "mathworks-simulink-test-manager", "mathworks-fault-tolerant-fuel-control", "edx-engineering-systems", "youtube-mathworks-hil-testing"],
   "ev-power-electronics-engineer": ["mathworks-simscape-electrical", "simscape-onramp", "ti-precision-labs", "kocw-electronics-circuit", "analog-dialogue", "simulink-onramp", "edx-engineering-systems", "youtube-skilllync-ev-crash-course", "youtube-emc-emi-basics"],
+  "automotive-manufacturing-engineer": ["comento-production-tech-internship", "comento-production-management-core", "nist-process-capability", "quality-one-fmea", "asq-fmea", "asq-eight-d", "step-engineering", "hrd-net-job-training"],
+  "automotive-quality-field-engineer": ["quality-one-fmea", "asq-fmea", "asq-eight-d", "asq-quality-tools", "nist-control-charts", "nist-process-capability", "coursera-six-sigma-quality", "youtube-cqe-quality-tools"],
   "vehicle-test-validation-engineer": ["matlab-onramp", "signal-processing-onramp", "mathworks-predictive-maintenance", "statistics-onramp", "step-engineering", "hrd-net-job-training", "youtube-nptel-vehicle-dynamics", "youtube-mathworks-hil-testing"]
 });
 
@@ -5118,7 +5331,11 @@ function getRoleSearchText(track, role) {
     track.summary,
     role.title,
     role.focus,
+    role.coreWork,
     ...(role.postingKeywords || []),
+    ...(role.coreTerms || []),
+    ...(role.tools || []),
+    ...(role.coreCompetencies || []),
     ...(role.responsibilities || []),
     ...(role.requirements || []),
     ...(role.preferred || [])
@@ -5450,6 +5667,13 @@ function getRoleLinkedResources(role) {
 }
 
 function getRoleCurriculumOutput(track, role) {
+  if (role.title.includes("필드이슈") || role.title.includes("Warranty")) return "필드이슈 8D 원인분석표와 보증 데이터 기반 품질 개선 리포트";
+  if (role.title.includes("내외장") || role.title.includes("의장")) return "내외장 설계·감성품질 체크리스트와 품질 이슈 원인 가설표";
+  if (role.title.includes("기능안전") || role.title.includes("SOTIF")) return "HARA-안전요구사항 추적표와 safety case 초안";
+  if (role.title.includes("캘리브레이션")) return "캘리브레이션 파라미터 변경 근거표와 로그 비교 리포트";
+  if (role.title.includes("BMS")) return "BMS 요구사항-테스트 케이스표와 fault 로그 분석 리포트";
+  if (role.title.includes("하네스")) return "하네스 회로·경로 검토표와 변경 영향 분석표";
+  if (role.title.includes("양산")) return "신차 양산 준비 체크리스트와 초기 품질 개선 리포트";
   if (role.title.includes("검증") || role.title.includes("시험")) return "시험계획서와 Pass/Fail 검증 리포트";
   if (role.title.includes("품질") || role.title.includes("공정")) return "조건 변경 검토표와 개선 보고서";
   if (role.title.includes("설계") || role.title.includes("하드웨어")) return "요구사항표, 설계 검토표, 측정 리포트";
@@ -6701,6 +6925,83 @@ function getAutomotiveRolePracticeProfile(role) {
       dataDeliverable: "인버터 계측 결과 리포트",
       finalCheck: "전력전자, EMI, HV 안전, 계측, 보호회로"
     },
+    "vehicle-interior-exterior-design-engineer": {
+      system: "내외장·의장",
+      input: "패키지 제약, gap/flush, 장착 구조, 사출·도장 조건",
+      method: "간섭, 감성품질, 제조성 체크",
+      dataTheme: "내외장 품질·설계 변경",
+      dataInput: "gap/flush 측정값, squeak & rattle 사례, 조립 불량 이력",
+      analysis: "품질 이슈를 체결, 공차, 금형, 조립 조건으로 분리",
+      coreDeliverable: "내외장 설계·감성품질 체크리스트",
+      dataDeliverable: "내외장 품질 이슈 원인 가설표",
+      finalCheck: "내외장 패키지, 감성품질, 사출·도장, 조립성"
+    },
+    "wiring-harness-engineer": {
+      system: "와이어링 하네스",
+      input: "전원, 접지, CAN/LIN 신호, 커넥터, wire gauge 조건",
+      method: "회로도와 하네스 경로를 전류·노이즈·조립성 기준으로 검토",
+      dataTheme: "전장 회로·하네스 변경 영향",
+      dataInput: "pin map, fuse/relay 조건, 전압강하 계산, routing 변경 이력",
+      analysis: "회로 변경 영향과 제조·진단 리스크를 신호 단위로 표시",
+      coreDeliverable: "하네스 회로·경로 검토표",
+      dataDeliverable: "전원분배·하네스 변경 영향 분석표",
+      finalCheck: "하네스, 커넥터, 전원분배, 접지, EMC"
+    },
+    "bms-control-engineer": {
+      system: "BMS 제어·진단",
+      input: "셀 전압, pack 전류, 온도, 절연, 인터락, CAN 진단 요구",
+      method: "SOC/SOH, 보호 로직, DTC를 테스트 케이스로 변환",
+      dataTheme: "BMS 충방전·fault 로그",
+      dataInput: "전압, 전류, 온도, SOC, SOH, DTC, contactor 상태 로그",
+      analysis: "고장 조건과 보호 동작을 신호·알고리즘·하드웨어로 분리",
+      coreDeliverable: "BMS 요구사항-테스트 케이스표",
+      dataDeliverable: "BMS 로그 기반 fault 분석 리포트",
+      finalCheck: "BMS, SOC/SOH, 셀밸런싱, 보호로직, CAN 진단"
+    },
+    "vehicle-calibration-engineer": {
+      system: "차량 제어 캘리브레이션",
+      input: "제어 파라미터, lookup table, CAN 로그, 성능 지표",
+      method: "변경 전후 응답과 제한 조건 비교",
+      dataTheme: "실차·벤치 calibration 로그",
+      dataInput: "파라미터 변경 이력, 속도·토크·온도·전류·NVH 로그",
+      analysis: "성능 개선과 부작용을 지표별로 비교",
+      coreDeliverable: "캘리브레이션 파라미터 변경 근거표",
+      dataDeliverable: "실차 로그 기반 캘리브레이션 비교 리포트",
+      finalCheck: "Calibration, CANape/INCA, 제어파라미터, 실차로그"
+    },
+    "functional-safety-engineer": {
+      system: "기능안전·SOTIF",
+      input: "item definition, hazard, safety goal, ASIL, 검증 증거",
+      method: "위험원을 안전 요구사항과 테스트 증거로 추적",
+      dataTheme: "안전 요구사항·검증 추적성",
+      dataInput: "HARA 표, FMEA/FTA, 테스트 케이스, 검증 결과",
+      analysis: "위험원, 안전 메커니즘, 검증 증거의 누락 항목을 표시",
+      coreDeliverable: "HARA-안전요구사항 추적표",
+      dataDeliverable: "기능안전 검증 증거 매트릭스",
+      finalCheck: "ISO 26262, SOTIF, ASIL, HARA, Safety Case"
+    },
+    "automotive-manufacturing-engineer": {
+      system: "신차 양산·생산기술",
+      input: "공정 흐름, 설비, 치구, takt time, 초기 품질 지표",
+      method: "APQP 관점으로 양산 준비 리스크를 분해",
+      dataTheme: "라인 셋업·초기 품질 데이터",
+      dataInput: "takt time, 정지시간, 불량률, OEE, 파일럿 생산 이슈",
+      analysis: "병목, 설비, 작업성, 품질 리스크를 개선 우선순위로 정리",
+      coreDeliverable: "신차 양산 준비 체크리스트",
+      dataDeliverable: "라인 셋업·초기 품질 개선 리포트",
+      finalCheck: "APQP, PPAP, PFMEA, 라인셋업, 초기품질"
+    },
+    "automotive-quality-field-engineer": {
+      system: "자동차 품질·필드이슈",
+      input: "필드 클레임, warranty, VOC, 생산 lot, 부품 변경 이력",
+      method: "8D와 추적성 기준으로 원인 후보를 좁힘",
+      dataTheme: "보증·필드 품질 데이터",
+      dataInput: "클레임 유형, 보증 비용, lot 이력, 차량 로그, 개선 전후 지표",
+      analysis: "반복 이슈와 원인 후보를 Pareto와 8D 구조로 표시",
+      coreDeliverable: "필드이슈 8D 원인분석표",
+      dataDeliverable: "보증 데이터 기반 품질 개선 리포트",
+      finalCheck: "IATF 16949, 8D, Warranty, 필드클레임, 재발방지"
+    },
     "vehicle-test-validation-engineer": {
       system: "실차 시험·차량 검증",
       input: "DVP&R, 시험 조건, 계측 채널, 판정 기준",
@@ -7178,7 +7479,7 @@ function getEducationResourceScore(resource, context) {
   const acquiredOnlyPenalty = context.gapSkills.length && acquiredMatches && !gapMatches ? 80 : 0;
   const noGapPenalty = context.gapSkills.length && !gapMatches ? 28 : 0;
 
-  return roleDirectMatch * 140
+  return roleDirectMatch * 520
     + coreResource * 90
     + gapMatches * 48
     + mathWorksRoleNeed * 80
@@ -7283,7 +7584,7 @@ function getTaskResourceScore(resource, task, context, resourceUseCounts = new M
     + coreResource * 95
     + (coreResource && directTaskMatches ? 75 : 0)
     + selectedMatch * 90
-    + roleDirectMatch * 45
+    + roleDirectMatch * 240
     + mathWorksRoleNeed * 35
     + matchedSkills * 45
     + Math.min(keywordMatches, 6) * 10
