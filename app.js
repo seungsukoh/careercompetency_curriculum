@@ -2984,6 +2984,8 @@ function bindElements() {
     "selectedTrackMetric",
     "diagnosticMetric",
     "savedMetric",
+    "nextActionPanel",
+    "workflowStatus",
     "trackCount",
     "roleSearchInput",
     "roleGroupFilter",
@@ -3147,6 +3149,111 @@ function renderViews() {
   document.querySelectorAll(".view").forEach((view) => {
     view.classList.toggle("is-active", view.id === `${state.view}View`);
   });
+  renderWorkflowStatus();
+}
+
+function renderWorkflowStatus() {
+  if (!elements.workflowStatus || !elements.nextActionPanel) return;
+
+  const track = getSelectedTrack();
+  const role = getSelectedRole(track.id);
+  const diagnosticItems = getDiagnosticItems(track);
+  const checkedCount = diagnosticItems.filter((item) => state.checked[item.id]).length;
+  const score = getDiagnosticScore(track.id);
+  const gapCount = getGapItems(track.id).length;
+  const savedCount = getSavedResources().length;
+  const steps = getWorkflowSteps({ track, role, checkedCount, score, gapCount, savedCount });
+  const activeIndex = Math.max(steps.findIndex((step) => step.view === state.view), 0);
+
+  elements.workflowStatus.innerHTML = steps.map((step, index) => `
+    <button class="workflow-step ${index === activeIndex ? "is-active" : ""} ${step.complete ? "is-complete" : ""}" type="button" data-view-target="${step.view}">
+      <span class="workflow-step-number">${index + 1}</span>
+      <span>
+        <strong>${step.title}</strong>
+        <em>${step.status}</em>
+      </span>
+    </button>
+  `).join("");
+
+  const nextStep = getNextWorkflowStep(steps, activeIndex);
+  elements.nextActionPanel.innerHTML = `
+    <p class="eyebrow">다음 행동</p>
+    <h3>${nextStep.title}</h3>
+    <p>${nextStep.body}</p>
+    <button class="${nextStep.primary ? "primary-button" : "ghost-button"} full-width" type="button" data-view-target="${nextStep.view}">${nextStep.action}</button>
+  `;
+}
+
+function getWorkflowSteps({ track, role, checkedCount, score, gapCount, savedCount }) {
+  return [
+    {
+      view: "tracks",
+      title: "직무 선택",
+      status: role ? `${role.title}` : track.title,
+      complete: Boolean(role)
+    },
+    {
+      view: "diagnosis",
+      title: "보유 역량",
+      status: checkedCount ? `${checkedCount}개 체크 · ${score}%` : "체크 전",
+      complete: checkedCount > 0
+    },
+    {
+      view: "roadmap",
+      title: "부족 역량 로드맵",
+      status: gapCount ? `보완 ${gapCount}개 기준` : "보완 공백 낮음",
+      complete: true
+    },
+    {
+      view: "saved",
+      title: "내 계획",
+      status: savedCount ? `${savedCount}개 자료 저장` : "자동 구성 확인",
+      complete: savedCount > 0
+    }
+  ];
+}
+
+function getNextWorkflowStep(steps, activeIndex) {
+  const diagnosisStep = steps.find((step) => step.view === "diagnosis");
+  const savedStep = steps.find((step) => step.view === "saved");
+
+  if (!diagnosisStep.complete) {
+    return {
+      view: "diagnosis",
+      title: "보유 역량을 먼저 체크하세요",
+      body: "지원 직무에서 이미 갖춘 역량을 제외해야 로드맵이 부족 역량 중심으로 좁혀집니다.",
+      action: "보유 역량 체크",
+      primary: true
+    };
+  }
+
+  if (state.view !== "roadmap" && state.view !== "saved") {
+    return {
+      view: "roadmap",
+      title: "부족 역량 로드맵을 확인하세요",
+      body: "체크하지 않은 항목을 기준으로 주차별 과제와 직접 교육자료가 배치됩니다.",
+      action: "로드맵 보기",
+      primary: true
+    };
+  }
+
+  if (!savedStep.complete) {
+    return {
+      view: "saved",
+      title: "로드맵을 내 계획으로 정리하세요",
+      body: "자동 배치된 주차별 과제와 교육자료를 한 화면에서 확인하고 내보낼 수 있습니다.",
+      action: "내 계획 보기",
+      primary: state.view === "roadmap"
+    };
+  }
+
+  return {
+    view: steps[Math.min(activeIndex + 1, steps.length - 1)]?.view || "roadmap",
+    title: "지원 회사 공고와 다시 대조하세요",
+    body: "일반 직무 기반 추천이므로 회사별 직무상세의 업무, 자격요건, 우대사항과 맞는 항목을 우선하세요.",
+    action: "로드맵 재확인",
+    primary: false
+  };
 }
 
 function getSelectedTrack() {
@@ -3818,6 +3925,8 @@ function renderDiagnostics() {
 function renderDiagnosisGuide(track, role, questions) {
   const roleItems = questions.filter((item) => item.source === role?.title).length;
   const industryItems = questions.filter((item) => item.source === getIndustryLabel()).length;
+  const checkedCount = questions.filter((item) => state.checked[item.id]).length;
+  const gapCount = Math.max(questions.length - checkedCount, 0);
   const diagnosisScope = [
     "트랙 공통",
     role ? `${role.title} ${roleItems}개` : "",
@@ -3828,6 +3937,11 @@ function renderDiagnosisGuide(track, role, questions) {
       <p class="eyebrow">선택 기준</p>
       <h3>채용공고에서 요구하는 역량 중 내가 확보한 내용만 체크</h3>
       <p>${diagnosisScope} 기준으로 확보 여부를 확인합니다. 체크하지 않은 항목은 자동 로드맵의 주차별 과제와 교육자료 배치에 바로 반영됩니다.</p>
+    </div>
+    <div class="diagnosis-context-strip" aria-label="진단 현황">
+      <span><strong>선택 직무</strong>${role?.title || track.title}</span>
+      <span><strong>체크 완료</strong>${checkedCount}/${questions.length}개</span>
+      <span><strong>로드맵 반영</strong>${gapCount}개 보완 역량</span>
     </div>
     <div class="diagnosis-guide-grid">
       <span><strong>확보함</strong>혼자 설명, 실습, 산출물 중 하나로 증명 가능</span>
