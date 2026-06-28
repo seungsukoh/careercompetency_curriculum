@@ -355,6 +355,28 @@ input::placeholder {
   text-overflow: ellipsis;
 }
 
+.workflow-warning {
+  display: grid;
+  gap: 8px;
+  padding: 11px 12px;
+  color: #3f4f2f;
+  background: #f5f8ec;
+  border: 1px solid #d7e0bb;
+  border-radius: 7px;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.workflow-warning strong {
+  color: var(--ink);
+  font-weight: 900;
+}
+
+.workflow-warning .ghost-button {
+  justify-self: start;
+  padding: 0 12px;
+}
+
 .view {
   display: none;
   padding: 18px;
@@ -1233,6 +1255,24 @@ li {
   font-style: normal;
   font-weight: 700;
   line-height: 1.35;
+}
+
+.resource-trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 7px;
+}
+
+.resource-trust-badges span {
+  padding: 3px 6px;
+  color: #3f4f2f;
+  background: #f5f8ec;
+  border: 1px solid #d7e0bb;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .roadmap-resource-status {

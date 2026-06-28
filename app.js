@@ -4055,6 +4055,7 @@ function renderRoadmapGuidance(context, tasks) {
   const selectedResources = getSavedResources();
   const roleResourceCount = getRoleLinkedResourceIds(context.role).length;
   const gapText = context.gapSkills.length ? context.gapSkills.slice(0, 4).join(", ") : "큰 공백 없음";
+  const checkedCount = context.acquiredSkills.length;
   const goalLabel = getGoalRecommendationLabel(context.goalKey);
   const durationStrategy = getDurationStrategy();
   const selectedText = selectedResources.length
@@ -4064,6 +4065,13 @@ function renderRoadmapGuidance(context, tasks) {
   elements.roadmapGuidance.innerHTML = `
     <h3>${selectedText}</h3>
     <p>${durationStrategy.summary} ${context.role?.title || context.track.title}에서 이미 체크한 보유 역량은 뒤로 두고, 체크하지 않은 보완 역량(${gapText})을 우선해 과제와 교육자료를 배치합니다.</p>
+    ${checkedCount ? "" : `
+      <div class="workflow-warning">
+        <strong>보유 역량 체크 전입니다</strong>
+        아직 확보한 역량을 체크하지 않아 모든 직무확보 항목을 보완 대상으로 보고 있습니다. 실제 보유 역량을 체크하면 이미 아는 내용은 뒤로 빠지고 부족 역량 중심으로 로드맵이 다시 좁혀집니다.
+        <button class="ghost-button" type="button" data-view-target="diagnosis">보유 역량 체크하기</button>
+      </div>
+    `}
     <p class="company-detail-inline">이 로드맵은 일반적인 직무내용 기반 추천입니다. 지원 회사의 직무상세에 나온 업무·자격요건·우대사항을 확인한 뒤, 공고와 직접 맞닿은 역량과 산출물을 우선 준비하세요.</p>
     <p>내 계획은 이 구성 결과를 완성된 로드맵 형태로 모아 보고 엑셀로 내보내는 화면입니다.</p>
     <div class="badge-row">
@@ -4725,6 +4733,7 @@ function renderRoadmapResourceItem(resource, task, context) {
         <span class="roadmap-resource-title">
           <strong>${resource.title}</strong>
           <em>${resource.provider} · ${resource.type} · ${formatMinutes(resource.totalMinutes)}</em>
+          ${renderResourceTrustBadges(resource)}
         </span>
         <span class="roadmap-resource-status">${coreLabel}자동추천 ${score}점</span>
       </summary>
@@ -4743,6 +4752,19 @@ function renderRoadmapResourceItem(resource, task, context) {
       </div>
     </details>
   `;
+}
+
+function renderResourceTrustBadges(resource) {
+  const badges = [];
+  const directUrl = !/search|results\?|query=|courses\/free\/?$/i.test(resource.url || "");
+
+  if (directUrl) badges.push("직접 링크");
+  if (resource.engagement?.views) badges.push(`조회 ${resource.engagement.views.replace(/\s*views/i, "")}`);
+  if (resource.engagement?.comments) badges.push("댓글 검수");
+
+  return badges.length
+    ? `<span class="resource-trust-badges">${badges.slice(0, 3).map((badge) => `<span>${badge}</span>`).join("")}</span>`
+    : "";
 }
 
 function getResourceEngagementSummary(resource) {
