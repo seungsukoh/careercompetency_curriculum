@@ -6,6 +6,7 @@
   --cream-muted: #f8f0e4;
   --heritage-navy: #0e2750;
   --signal-gold: #c9a86a;
+  --deep-bg: #061328;
   --navy: var(--heritage-navy);
   --navy-dark: var(--heritage-navy);
   --navy-muted: #52677a;
@@ -399,7 +400,7 @@ input::placeholder {
 
 .primary-button:hover,
 .primary-button:focus-visible {
-  background: var(--primary-dark);
+  background: var(--deep-bg);
 }
 
 .summary-preview {
@@ -1315,8 +1316,8 @@ input::placeholder {
   justify-content: space-between;
   padding: 10px 12px;
   color: #ffffff;
-  background: var(--primary-dark);
-  border: 1px solid var(--primary-dark);
+  background: var(--deep-bg);
+  border: 1px solid var(--deep-bg);
   border-radius: 6px;
 }
 
