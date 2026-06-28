@@ -3433,19 +3433,377 @@ const aiRoleCompetencyProfiles = {
   }
 };
 
-applyAiRoleCompetencyProfiles();
+const roleExpertEnhancementProfiles = {
+  "chemical-process-engineer": {
+    coreWork: "PFD/P&ID, 물질수지, 열수지, 반응·분리 조건을 연결해 공정이 안정적으로 돌아가는 조건과 변경 리스크를 판단합니다.",
+    coreTerms: ["PFD", "P&ID", "물질수지", "열수지", "반응기", "증류", "공정모사", "HAZOP", "MOC", "수율", "순도", "Aspen Plus"],
+    tools: ["Aspen Plus", "Aspen HYSYS", "MATLAB", "Excel", "Minitab", "P&ID"],
+    coreCompetencies: ["공정 흐름을 입력·출력·관리 변수로 분해하는 역량", "조건 변경이 수율·순도·안전·에너지에 미치는 영향을 검토하는 역량", "현장 변경 이력을 표준 조건과 검증 자료로 남기는 역량"],
+    requirements: ["PFD/P&ID를 읽고 반응기, 열교환기, 증류탑, 펌프의 역할을 설명하는 역량", "전환율, 선택도, 수율, 순도를 계산하고 손실 원인을 가정하는 역량"],
+    preferred: ["Aspen Plus/HYSYS 기반 공정모사와 민감도 분석 경험", "HAZOP, MOC, PSM 관점의 변경 리스크 검토 경험"]
+  },
+  "battery-process-engineer": {
+    coreWork: "믹싱, 코팅, 건조, 캘린더링, 조립, 활성화 조건을 품질 지표와 연결해 전극·셀 수율을 개선합니다.",
+    coreTerms: ["슬러리", "믹싱", "코팅", "건조", "캘린더링", "전극두께", "전극밀도", "수분관리", "formation", "aging", "SPC", "DOE"],
+    tools: ["Minitab", "JMP", "Python", "SQL", "MES", "LIMS"],
+    coreCompetencies: ["공정 조건과 전극 품질 지표를 같은 표로 묶는 역량", "불량 유형을 공정 이력과 연결해 개선 실험을 설계하는 역량", "수분, 점도, 코팅 균일도, 압연 밀도를 양산 조건으로 관리하는 역량"],
+    requirements: ["전극 공정 조건과 두께, 밀도, 수분, 불량률의 관계를 해석하는 역량", "DOE/SPC 기반으로 조건 변경 전후를 비교하는 역량"],
+    preferred: ["전극·조립·활성화 데이터 분석 또는 MES/검사 데이터 처리 경험", "전기화학 평가 결과를 공정 조건과 연결한 경험"]
+  },
+  "materials-rnd-engineer": {
+    coreWork: "조성, 합성 조건, 분석 데이터, 물성 평가 결과를 묶어 후보 소재와 scale-up 방향을 제안합니다.",
+    coreTerms: ["조성설계", "합성조건", "물성평가", "XRD", "SEM", "FTIR", "DSC", "TGA", "점도", "전도도", "DOE", "Scale-up"],
+    tools: ["XRD", "SEM", "FTIR", "DSC", "TGA", "GC/MS", "HPLC", "Python", "JMP"],
+    coreCompetencies: ["분석 장비 결과를 소재 구조·조성·성능 변화로 해석하는 역량", "실험 조건과 물성 결과를 재사용 가능한 데이터셋으로 정리하는 역량", "lab 조건을 양산 조건으로 옮길 때의 품질·수율 리스크를 찾는 역량"],
+    requirements: ["소재 조성, 합성 온도, 시간, 분위기 조건을 실험표로 관리하는 역량", "분석 결과와 물성 평가 결과를 한 문단으로 설명하는 역량"],
+    preferred: ["DOE, 통계 분석, 문헌·특허 조사 기반 후보 소재 선정 경험", "scale-up 검토 또는 공정 이관 리스크 정리 경험"]
+  },
+  "process-safety-engineer": {
+    coreWork: "화학물질, 설비, 운전 조건의 위험을 HAZOP/PSM 관점으로 평가하고 사고 예방 기준을 관리합니다.",
+    coreTerms: ["HAZOP", "PSM", "MSDS", "LOPA", "MOC", "SIS", "인터록", "relief valve", "위험성평가", "작업허가", "환경규제", "비상대응"],
+    tools: ["MSDS", "HAZOP", "PSM", "Excel", "LIMS"],
+    coreCompetencies: ["공정 변수 이상 조건을 원인·결과·보호계층으로 나누는 역량", "변경관리, 작업허가, 비상대응 기준을 현장 절차와 연결하는 역량", "사고 사례를 설비·운전·절차 문제로 재분류하는 역량"],
+    requirements: ["MSDS, 공정안전자료, 운전절차, 변경관리 문서의 역할을 설명하는 역량", "온도, 압력, 유량, 조성 이상 조건의 위험도를 평가하는 역량"],
+    preferred: ["HAZOP/LOPA 워크시트 작성 또는 PSM 심사 대응 경험", "환경 배출, 폐수, 폐기물 관리 기준 검토 경험"]
+  },
+  "bioprocess-engineer": {
+    coreWork: "배양, 정제, 충전, 품질, validation 조건을 GMP 문서와 연결해 바이오 생산 공정을 안정화합니다.",
+    coreTerms: ["GMP", "SOP", "batch record", "deviation", "CAPA", "bioreactor", "CIP", "SIP", "purification", "validation", "HPLC", "sterility"],
+    tools: ["HPLC", "LIMS", "MES", "SOP", "Excel", "Minitab"],
+    coreCompetencies: ["배양 pH, DO, 온도, 배지 조건을 수율·순도와 연결하는 역량", "SOP, batch record, deviation을 정확한 기록으로 관리하는 역량", "validation 결과와 변경관리 리스크를 품질 시스템으로 설명하는 역량"],
+    requirements: ["GMP 용어와 공정 기록 문서의 목적을 이해하는 역량", "배양·정제 조건과 품질 지표를 연결해 원인 가설을 세우는 역량"],
+    preferred: ["deviation/CAPA 정리, process validation, cleaning validation 이해", "영문 규정과 품질 시스템 문서 해석 경험"]
+  },
+  "mechanical-design-engineer": {
+    coreWork: "제품 요구사항을 3D 형상, 2D 도면, 공차, BOM, 조립·제조 리스크로 바꿔 설계 변경 근거를 만듭니다.",
+    coreTerms: ["3D CAD", "2D drawing", "GD&T", "공차누적", "BOM", "DFM/DFA", "사출", "판금", "가공", "시제품", "design review", "PLM"],
+    tools: ["CATIA", "NX", "Creo", "SolidWorks", "Teamcenter", "Windchill", "PLM"],
+    coreCompetencies: ["기능 요구사항을 기준면, 주요 치수, 공차로 바꾸는 도면화 역량", "간섭, 체결, 분해 방향, 작업 공간을 검토하는 조립성 판단 역량", "금형·가공·판금·사출 리스크를 설계 변경으로 반영하는 역량"],
+    requirements: ["GD&T, 기준면, 공차누적, 체결 구조를 도면에서 확인하는 역량", "BOM, 소재, 표면처리, 제조공정을 설계 검토 항목으로 정리하는 역량"],
+    preferred: ["PLM 기반 설계 변경, ECR/ECO, 양산 이관 경험", "DFMEA 또는 design review 체크리스트 작성 경험"]
+  },
+  "cae-analysis-engineer": {
+    coreWork: "하중 케이스, 경계조건, 재료 물성, 접촉, 메시를 검증해 설계 변경 판단에 쓸 해석 근거를 만듭니다.",
+    coreTerms: ["FEA", "mesh convergence", "boundary condition", "contact", "nonlinear", "modal analysis", "fatigue", "safety factor", "correlation", "post-processing", "DOE"],
+    tools: ["ANSYS Mechanical", "Abaqus", "HyperMesh", "HyperView", "nCode", "MATLAB", "Python"],
+    coreCompetencies: ["해석 목적에 맞는 하중, 구속, 접촉, 재료 물성을 정의하는 역량", "메시 수렴성과 시험 상관성으로 해석 신뢰도를 설명하는 역량", "결과 contour를 안전율, 피로수명, 설계 변경안으로 번역하는 역량"],
+    requirements: ["FEA solver, 요소 품질, 경계조건, contact 조건의 영향을 설명하는 역량", "modal, fatigue, thermal stress 중 필요한 해석 케이스를 고르는 역량"],
+    preferred: ["HyperMesh 전처리, nCode 피로해석, Python/MATLAB 후처리 자동화 경험", "시험 데이터와 해석 결과 correlation 검토 경험"]
+  },
+  "manufacturing-design-engineer": {
+    coreWork: "설계안을 실제 금형, 가공, 조립, 검사 조건에서 반복 생산 가능한 구조로 바꾸고 제조 리스크를 줄입니다.",
+    coreTerms: ["DFM", "DFA", "공차누적", "금형성", "가공성", "조립성", "검사성", "fixture", "process capability", "APQP", "PPAP", "PFMEA"],
+    tools: ["CATIA", "NX", "SolidWorks", "Minitab", "APQP", "PPAP"],
+    coreCompetencies: ["설계 형상이 가공·금형·조립 불량으로 이어질 가능성을 찾는 역량", "공차와 검사 기준을 공정능력, 치구, 작업성 관점으로 검토하는 역량", "시제품 이슈를 양산 조건과 설계 변경 요구사항으로 재정의하는 역량"],
+    requirements: ["DFM/DFA, 공차누적, 검사 기준, 공정능력 기초를 이해하는 역량", "APQP/PPAP 또는 양산 이관 절차에서 설계팀이 확인할 항목을 아는 역량"],
+    preferred: ["PFMEA, Control Plan, 협력사 제조성 검토 경험", "치구 개선 또는 조립 불량 원인 분석 경험"]
+  },
+  "thermal-cfd-engineer": {
+    coreWork: "발열원, 냉각 경로, 유동 조건, 경계조건을 모델링해 온도·압력손실·냉각 성능 리스크를 검증합니다.",
+    coreTerms: ["CFD", "heat transfer", "thermal resistance", "conjugate heat transfer", "pressure drop", "fan curve", "coolant flow", "thermal runaway", "mesh", "boundary condition"],
+    tools: ["ANSYS Fluent", "STAR-CCM+", "Simscape", "Simulink", "MATLAB", "Python"],
+    coreCompetencies: ["발열량, 대류 조건, 접촉 열저항, 유량을 해석 조건으로 정의하는 역량", "온도 분포와 압력손실을 냉각 구조 개선안으로 연결하는 역량", "열화상, 센서, 실험 데이터와 CFD 결과를 비교하는 역량"],
+    requirements: ["열전달, 유체역학, 수치해석, 경계조건 설정 근거를 설명하는 역량", "전자제품 방열, 배터리 열관리, HVAC 냉각 루프를 구분하는 역량"],
+    preferred: ["ANSYS Fluent/STAR-CCM+ 전처리와 후처리 경험", "시험상관, 민감도 분석, Python/MATLAB 후처리 경험"]
+  },
+  "mechanical-test-engineer": {
+    coreWork: "요구사항을 시험 항목, 계측 채널, 판정 기준으로 바꾸고 내구·진동·환경 시험 결과를 설계 개선 근거로 만듭니다.",
+    coreTerms: ["DVP&R", "내구시험", "진동시험", "환경챔버", "strain gauge", "accelerometer", "DAQ", "데이터로거", "fatigue", "Weibull", "Pass/Fail"],
+    tools: ["NI", "MATLAB", "Python", "환경챔버", "데이터로거", "오실로스코프"],
+    coreCompetencies: ["시험 목적에 맞는 센서, 샘플링, 판정 기준을 정의하는 역량", "파손 위치와 하중 조건을 원인 가설로 연결하는 역량", "재시험 조건과 개선 전후 비교 결과를 리포트로 남기는 역량"],
+    requirements: ["DVP&R, 시험계획서, Pass/Fail 기준, 계측 채널을 이해하는 역량", "진동, 온습도, 하중, 변위 데이터를 해석하는 역량"],
+    preferred: ["NI DAQ, MATLAB/Python 시험 데이터 후처리 경험", "신뢰성 수명 추정, Weibull, 환경시험 규격 이해"]
+  },
+  "process-engineer": {
+    coreWork: "공정 변수, 설비 상태, 품질 데이터를 연결해 수율·불량·생산성 문제의 원인 후보와 조건 변경안을 찾습니다.",
+    coreTerms: ["CTQ", "DOE", "SPC", "Cpk", "OCAP", "MES", "recipe", "yield", "line yield", "standard work", "PFMEA", "control chart"],
+    tools: ["MES", "Minitab", "JMP", "Python", "SQL", "Excel", "Power BI"],
+    coreCompetencies: ["공정 조건과 품질 지표를 하나의 개선 가설로 묶는 역량", "DOE/SPC/Cpk로 조건 변경 전후를 판단하는 역량", "표준작업서와 작업 조건표에 개선 결과를 반영하는 역량"],
+    requirements: ["CTQ, 관리도, Cpk, Pareto, DOE 결과를 해석하는 역량", "설비 알람, 공정 조건, 불량 데이터를 같은 시간 기준으로 보는 역량"],
+    preferred: ["MES/설비 로그 분석, OCAP, PFMEA, 8D 개선 경험", "Python/SQL 또는 BI 도구 기반 공정 데이터 처리 경험"]
+  },
+  "quality-engineer": {
+    coreWork: "검사 데이터와 고객 요구사항을 기준으로 품질 리스크를 예방하고 불량 재발 방지 체계를 운영합니다.",
+    coreTerms: ["QA/QC", "IATF 16949", "ISO 9001", "FMEA", "Control Plan", "MSA", "Gauge R&R", "8D", "APQP", "PPAP", "Cpk", "SPC"],
+    tools: ["Minitab", "JMP", "Excel", "MSA", "APQP", "PPAP"],
+    coreCompetencies: ["도면·규격·검사성적서를 Pass/Fail 기준으로 해석하는 역량", "FMEA, Control Plan, MSA, 8D를 같은 품질 문제 해결 흐름으로 연결하는 역량", "고객 클레임과 내부 불량을 재발방지 대책으로 관리하는 역량"],
+    requirements: ["SPC, Cpk, MSA, Gauge R&R, 검사 기준을 이해하는 역량", "ISO 9001/IATF 16949 문서·기록 관리 체계를 설명하는 역량"],
+    preferred: ["APQP/PPAP, 고객 감사, 협력사 품질 이슈 대응 경험", "8D 보고서와 원인분석 자료 작성 경험"]
+  },
+  "production-data-engineer": {
+    coreWork: "MES, 설비 로그, 검사 데이터를 정리해 불량·정지·수율 개선 우선순위를 숫자와 대시보드로 제시합니다.",
+    coreTerms: ["MES", "SQL", "Python", "pandas", "Power BI", "Tableau", "Spotfire", "Pareto", "anomaly detection", "dashboard", "OEE", "yield loss"],
+    tools: ["SQL", "Python", "pandas", "Power BI", "Tableau", "Spotfire", "MES"],
+    coreCompetencies: ["lot, 설비, 시간, 불량 유형을 키로 데이터를 조인하는 역량", "Pareto, trend, 상관 분석으로 개선 과제 우선순위를 잡는 역량", "현장 담당자가 바로 이해할 수 있는 대시보드와 해석 문장을 만드는 역량"],
+    requirements: ["SQL/Python 기반 데이터 전처리, 이상치, 결측 처리 역량", "MES, ERP, 설비 로그, 검사 데이터 구조를 이해하는 역량"],
+    preferred: ["이상탐지, 예측모델, 자동 리포트, BI 대시보드 구축 경험", "공정 조건과 품질 지표를 함께 해석한 경험"]
+  },
+  "production-technology-engineer": {
+    coreWork: "라인 배치, takt time, 설비 정지, 작업 방법을 개선해 생산성, 품질, 안전을 동시에 높입니다.",
+    coreTerms: ["takt time", "line balancing", "OEE", "bottleneck", "PLC", "vision inspection", "fixture", "poka-yoke", "downtime", "standard work", "5S", "Kaizen"],
+    tools: ["PLC", "Excel", "Power BI", "MES", "Minitab", "vision inspection"],
+    coreCompetencies: ["공정별 작업시간과 병목을 분석해 라인 개선 우선순위를 잡는 역량", "설비·치구·작업 방법 변경을 표준작업으로 정착시키는 역량", "자동화 투자 효과를 불량률, 정지시간, 생산성 지표로 검증하는 역량"],
+    requirements: ["takt time, line balancing, OEE, 정지시간 분석을 이해하는 역량", "PLC, 센서, 치구, 안전 조건을 개선안에 반영하는 역량"],
+    preferred: ["자동화 설비 셋업, vision inspection, poka-yoke 개선 경험", "Lean, 5S, Kaizen, 표준작업서 작성 경험"]
+  },
+  "supplier-quality-engineer": {
+    coreWork: "협력사 공정과 부품 품질을 평가하고 PPAP, 감사, 8D 개선으로 공급 리스크를 관리합니다.",
+    coreTerms: ["SQE", "supplier audit", "PPAP", "APQP", "8D", "SCAR", "incoming inspection", "Control Plan", "MSA", "IATF 16949", "process audit"],
+    tools: ["APQP", "PPAP", "MSA", "Minitab", "Excel", "8D"],
+    coreCompetencies: ["협력사 공정 흐름과 검사 기준을 감사 체크리스트로 확인하는 역량", "부품 변경과 품질 이슈를 PPAP/APQP 승인 자료로 추적하는 역량", "8D 개선 대책의 임시조치와 영구조치를 구분해 추적하는 역량"],
+    requirements: ["도면, 규격, 검사성적서, Control Plan을 함께 읽는 역량", "수입검사, 공정감사, 협력사 개선 일정 관리 역량"],
+    preferred: ["IATF 16949 고객 대응, supplier audit, SCAR 발행 경험", "영문 품질 문서와 협력사 커뮤니케이션 경험"]
+  },
+  "semiconductor-process-engineer": {
+    coreWork: "노광, 식각, 증착, CMP 등 단위공정 recipe와 계측 결과를 연결해 CD, overlay, defect, 수율을 개선합니다.",
+    coreTerms: ["lithography", "etch", "deposition", "CMP", "diffusion", "recipe", "CD", "overlay", "uniformity", "defect", "OCAP", "SPC"],
+    tools: ["JMP", "Minitab", "Python", "SQL", "Spotfire", "MES"],
+    coreCompetencies: ["recipe 변경 목적과 결과 지표를 DOE/SPC로 검증하는 역량", "CD, overlay, thickness, defect, 수율을 공정 조건과 연결하는 역량", "OCAP 이탈 시 확인 순서와 변경 리스크를 설명하는 역량"],
+    requirements: ["반도체 공정 흐름과 단위공정별 핵심 계측 지표를 이해하는 역량", "recipe, lot, wafer, 장비 이력을 조합해 조건 변경 효과를 판단하는 역량"],
+    preferred: ["Python/SQL/JMP 기반 공정 데이터 분석 경험", "OCAP, FMEA, DOE, 수율 개선 프로젝트 경험"]
+  },
+  "semiconductor-equipment-engineer": {
+    coreWork: "진공, RF, 가스, 온도, 로봇 이송, 센서 로그를 보고 장비 가동률과 공정 안정성을 높입니다.",
+    coreTerms: ["vacuum", "plasma", "RF power", "MFC", "pump", "valve", "robot transfer", "PM", "MTBF", "MTTR", "SECS/GEM", "troubleshooting"],
+    tools: ["PLC", "오실로스코프", "멀티미터", "MES", "Python", "Excel"],
+    coreCompetencies: ["알람, 센서값, 장비 로그를 시간 기준으로 묶어 원인 후보를 좁히는 역량", "PM 이후 성능 검증과 재발 방지 항목을 정하는 역량", "진공, RF, 가스, 온도 계통의 역할을 공정 결과와 연결하는 역량"],
+    requirements: ["MFC, valve, pump, RF generator, chuck, robot 등 장비 구성요소 이해", "MTBF/MTTR, PM, alarm log, interlock을 활용한 troubleshooting 역량"],
+    preferred: ["PLC, SECS/GEM, 장비 로그 분석, 부품 교체 후 검증 경험", "클린룸 안전 절차와 변경 이력 관리 경험"]
+  },
+  "semiconductor-yield-engineer": {
+    coreWork: "wafer map, defect, bin, 계측, 공정 이력을 결합해 수율 손실 원인과 개선 우선순위를 찾습니다.",
+    coreTerms: ["wafer map", "defect classification", "bin map", "lot history", "yield loss", "Pareto", "correlation", "spatial pattern", "root cause", "data join", "JMP", "Spotfire"],
+    tools: ["Python", "SQL", "JMP", "Spotfire", "Power BI", "MES"],
+    coreCompetencies: ["lot, wafer, die, 공정 이력을 키로 수율 데이터를 조인하는 역량", "wafer map 패턴과 defect Pareto로 원인 후보를 세우는 역량", "개선 전후 수율, 결함률, 재발 여부를 같은 기준으로 비교하는 역량"],
+    requirements: ["defect, bin, wafer map, 공정 이력 데이터 구조를 이해하는 역량", "통계, 시각화, 상관 분석으로 수율 저하 가설을 만드는 역량"],
+    preferred: ["Python/SQL 기반 수율 데이터 처리, Spotfire/JMP 분석 경험", "이미지/defect 분류 또는 수율 예측 모델 검토 경험"]
+  },
+  "etch-process-engineer": {
+    coreWork: "플라즈마 식각 recipe의 RF power, pressure, gas flow를 조정해 CD, selectivity, residue, uniformity를 관리합니다.",
+    coreTerms: ["plasma etch", "RF power", "pressure", "gas flow", "selectivity", "etch rate", "endpoint", "residue", "over etch", "undercut", "CD bias", "uniformity"],
+    tools: ["JMP", "Minitab", "Python", "SQL", "MES", "OCAP"],
+    coreCompetencies: ["식각률, 선택비, 균일도, CD 변화를 recipe 조건과 연결하는 역량", "RF power, pressure, gas flow 조건 변경의 효과와 리스크를 설명하는 역량", "residue, over etch, undercut 불량을 확인 실험으로 좁히는 역량"],
+    requirements: ["플라즈마, 진공, 가스 유량, RF power, endpoint 기본 이해", "DOE/SPC로 recipe 변경 전후를 판단하는 역량"],
+    preferred: ["OCAP/8D 보고, 장비 로그와 계측 데이터 correlation 경험", "Python/JMP 기반 식각 조건 데이터 분석 경험"]
+  },
+  "metrology-engineer": {
+    coreWork: "CD, overlay, 두께, defect review 계측의 신뢰성을 관리하고 공정팀이 판단할 수 있는 데이터 기준을 제공합니다.",
+    coreTerms: ["CD-SEM", "overlay", "thickness", "defect review", "sampling plan", "repeatability", "reproducibility", "drift", "MSA", "Gauge R&R", "trend chart", "metrology recipe"],
+    tools: ["CD-SEM", "SEM", "MSA", "JMP", "Minitab", "Python", "SQL"],
+    coreCompetencies: ["계측 recipe, 측정 위치, 샘플 수, 반복 측정 조건을 정의하는 역량", "반복성, 재현성, drift를 구분해 계측 신뢰도를 설명하는 역량", "계측 trend와 공정 이력을 연결해 이상 징후를 찾는 역량"],
+    requirements: ["CD, overlay, thickness, defect 등 계측 지표와 오차 요인을 이해하는 역량", "MSA/Gauge R&R와 trend chart 해석 역량"],
+    preferred: ["CD-SEM/defect review 데이터 처리, Python/SQL 분석 경험", "공정팀·수율팀에 판단 가능한 리포트 제공 경험"]
+  },
+  "hardware-design-engineer": {
+    coreWork: "요구사항을 회로 블록도, schematic, 부품 선정, PCB 리뷰, bring-up 검증으로 연결합니다.",
+    coreTerms: ["schematic", "BOM", "derating", "power integrity", "signal integrity", "sensor interface", "bring-up", "datasheet", "ripple", "ESD", "EMI", "test point"],
+    tools: ["Altium Designer", "OrCAD", "LTspice", "오실로스코프", "멀티미터", "전류 프로브"],
+    coreCompetencies: ["데이터시트로 부품 정격, derating, 대체품 리스크를 판단하는 역량", "전원·센서·통신·MCU 블록 간 신호 흐름을 설계하는 역량", "bring-up 실패를 전원, 클럭, 리셋, 통신 순서로 좁히는 역량"],
+    requirements: ["회로이론, 전자회로, 전원 리플, 발열, 노이즈 기초 이해", "오실로스코프와 멀티미터로 요구사항 대비 측정 결과를 확인하는 역량"],
+    preferred: ["SPICE 시뮬레이션, PCB layout review, EMC/ESD 고려 경험", "Python/MATLAB 기반 측정 데이터 정리 경험"]
+  },
+  "pcb-design-engineer": {
+    coreWork: "회로 요구사항을 stack-up, 임피던스, 배치, 리턴패스, EMC/DFM 규칙으로 바꿔 제조 가능한 PCB를 만듭니다.",
+    coreTerms: ["stack-up", "controlled impedance", "return path", "differential pair", "via", "decoupling", "ground plane", "creepage", "clearance", "DFM", "DFT", "EMC"],
+    tools: ["Altium Designer", "OrCAD", "PADS", "KiCad", "Sigrity", "PCB CAD"],
+    coreCompetencies: ["전원 루프와 리턴패스를 기준으로 노이즈 리스크를 찾는 역량", "고속·전원·아날로그 신호의 배치와 라우팅 우선순위를 정하는 역량", "제조성, 테스트 포인트, 커넥터 방향을 양산 기준으로 검토하는 역량"],
+    requirements: ["stack-up, 임피던스, clearance, creepage, via, decoupling 이해", "schematic과 PCB layout 사이의 연결 오류를 검토하는 역량"],
+    preferred: ["EMC/EMI 개선, signal integrity/power integrity 검토 경험", "DFM/DFT 체크리스트와 제조사 피드백 반영 경험"]
+  },
+  "validation-engineer": {
+    coreWork: "제품 요구사항을 측정 조건, 장비 설정, Pass/Fail 기준, 이슈 재현 절차로 바꿔 검증 리포트를 만듭니다.",
+    coreTerms: ["test plan", "Pass/Fail", "test case", "오실로스코프", "logic analyzer", "power supply", "thermal chamber", "DAQ", "automation", "issue reproduction", "Python"],
+    tools: ["오실로스코프", "Logic Analyzer", "전원공급기", "Python", "MATLAB", "환경챔버", "JIRA"],
+    coreCompetencies: ["측정 위치, 프로브 설정, 샘플링 조건을 재현 가능하게 정의하는 역량", "불합격 현상을 로그, 조건, 변경 이력과 연결하는 역량", "반복 측정과 리포트 작성을 자동화하는 역량"],
+    requirements: ["요구사항, test case, Pass/Fail 기준, 측정 장비 설정을 이해하는 역량", "전기적 측정 결과를 원인 가설과 다음 실험으로 연결하는 역량"],
+    preferred: ["Python 기반 테스트 자동화, 로그 분석, 이슈 트래킹 경험", "환경시험, 장기 신뢰성 시험, 인증 시험 대응 경험"]
+  },
+  "power-hardware-engineer": {
+    coreWork: "Buck/Boost/LDO/SMPS 전원 구조를 설계하고 리플, transient, 손실, 발열, EMI를 검증합니다.",
+    coreTerms: ["buck", "boost", "LDO", "SMPS", "ripple", "transient", "gate driver", "inductor", "MOSFET", "thermal", "EMI filter", "loop compensation"],
+    tools: ["LTspice", "PLECS", "PSIM", "오실로스코프", "전류 프로브", "전력분석기", "Altium Designer"],
+    coreCompetencies: ["입력 전압, 출력 전류, 효율, 리플 요구사항을 전원 tree로 정리하는 역량", "소자 손실과 열저항으로 온도 상승을 추정하는 역량", "스위칭 노이즈, 접지, 필터, 레이아웃 리스크를 검토하는 역량"],
+    requirements: ["전력전자, 전자회로, 스위칭 소자, ripple/transient 측정 이해", "LTspice/PLECS 같은 회로 시뮬레이션 결과를 해석하는 역량"],
+    preferred: ["SMPS bring-up, EMI 개선, loop compensation 검토 경험", "전원 PCB layout review와 열 측정 경험"]
+  },
+  "emc-test-engineer": {
+    coreWork: "전도·방사 노이즈, ESD, EFT, surge 시험 결과를 분석해 접지, 쉴드, 필터 개선안을 찾습니다.",
+    coreTerms: ["EMC", "EMI", "ESD", "radiated emission", "conducted emission", "EFT", "surge", "CISPR", "LISN", "shielding", "grounding", "filter"],
+    tools: ["오실로스코프", "스펙트럼 분석기", "LISN", "EMC chamber", "전류 프로브", "Excel"],
+    coreCompetencies: ["노이즈 경로를 케이블, 접지, 쉴드, 필터 관점으로 추적하는 역량", "규격, 시험 조건, 판정 기준을 시험 계획으로 정리하는 역량", "시험 실패 원인을 개선 실험과 재시험 조건으로 좁히는 역량"],
+    requirements: ["전도/방사 노이즈, ESD, EFT, surge 시험 차이를 이해하는 역량", "EMC 규격과 측정 셋업을 읽고 Pass/Fail을 판단하는 역량"],
+    preferred: ["CISPR, IEC 61000 계열 시험 대응 경험", "PCB/하네스/접지 개선안 제안 경험"]
+  },
+  "embedded-firmware-engineer": {
+    coreWork: "MCU 주변장치, 인터럽트, 통신, 상태머신을 구현하고 로그와 계측으로 펌웨어 문제를 디버깅합니다.",
+    coreTerms: ["C/C++", "MCU", "RTOS", "interrupt", "UART", "SPI", "I2C", "CAN", "ADC", "PWM", "JTAG", "unit test"],
+    tools: ["STM32", "Arduino", "Git", "Logic Analyzer", "오실로스코프", "JIRA"],
+    coreCompetencies: ["GPIO, Timer, ADC, PWM, UART를 기능 요구사항에 매핑하는 역량", "인터럽트, 버퍼, timeout, checksum 오류를 로그로 추적하는 역량", "하드웨어 인터페이스와 코드 동작을 동시에 확인하는 역량"],
+    requirements: ["C/C++, 포인터, 비트 연산, volatile, 메모리 맵 이해", "UART/SPI/I2C/CAN 통신과 디버거 사용 역량"],
+    preferred: ["RTOS task, unit test, Git 기반 협업, 펌웨어 bring-up 경험", "logic analyzer와 오실로스코프 기반 디버깅 경험"]
+  },
+  "control-engineer": {
+    coreWork: "시스템 모델, 센서 피드백, 제어 알고리즘을 설계하고 응답 지표로 튜닝 결과를 검증합니다.",
+    coreTerms: ["PID", "state-space", "observer", "Kalman filter", "sensor fusion", "Bode plot", "overshoot", "settling time", "Simulink", "control design", "plant model"],
+    tools: ["MATLAB", "Simulink", "Control System Toolbox", "Stateflow", "Simscape"],
+    coreCompetencies: ["입력, 출력, 상태, 외란을 나눠 제어 모델을 구성하는 역량", "오버슈트, 정착시간, 정상상태 오차로 튜닝 결과를 비교하는 역량", "시뮬레이션과 실제 로그 차이를 모델 오차로 설명하는 역량"],
+    requirements: ["제어공학, 신호처리, 샘플링, 필터링, PID 튜닝 이해", "Simulink 모델과 실험 데이터를 비교하는 역량"],
+    preferred: ["상태추정, 센서융합, 모델 기반 설계, 자동 코드 생성 이해", "실험 로그 기반 제어 성능 검증 경험"]
+  },
+  "robotics-software-engineer": {
+    coreWork: "센서, 인지, localization, path planning, control 노드를 연결해 로봇이 안정적으로 움직이게 합니다.",
+    coreTerms: ["ROS2", "node", "topic", "SLAM", "localization", "path planning", "navigation", "camera", "LiDAR", "IMU", "Gazebo", "RViz"],
+    tools: ["ROS", "ROS2", "Gazebo", "RViz", "Python", "C++", "Git"],
+    coreCompetencies: ["센서 좌표계, 시간 동기화, 메시 흐름을 시스템 관점으로 설명하는 역량", "navigation stack의 localization, planning, control 연결을 이해하는 역량", "로그와 bag 파일로 센서·제어·통신 문제를 분리하는 역량"],
+    requirements: ["ROS node/topic/message, TF 좌표계, launch/config 이해", "Python/C++ 기반 로봇 소프트웨어 디버깅 역량"],
+    preferred: ["SLAM, perception, sensor fusion, Gazebo 시뮬레이션 경험", "ROS 패키지 README와 실행 환경 정리 경험"]
+  },
+  "embedded-linux-engineer": {
+    coreWork: "bootloader, kernel, device tree, driver, rootfs, 빌드 시스템을 연결해 임베디드 리눅스 보드를 동작시킵니다.",
+    coreTerms: ["bootloader", "kernel", "device tree", "driver", "Yocto", "Buildroot", "rootfs", "cross compile", "BSP", "I2C", "SPI", "UART"],
+    tools: ["Linux", "Yocto", "Buildroot", "Git", "JIRA", "오실로스코프", "Logic Analyzer"],
+    coreCompetencies: ["부팅 로그를 bootloader, kernel, rootfs 단계로 나눠 원인을 찾는 역량", "device tree와 드라이버 설정을 하드웨어 인터페이스와 연결하는 역량", "이미지 빌드, 패키지, 커널 설정 변경을 재현 가능하게 관리하는 역량"],
+    requirements: ["Linux kernel log, device tree, driver, cross compile 이해", "I2C/SPI/UART/GPIO 인터페이스 문제를 회로도와 로그로 좁히는 역량"],
+    preferred: ["Yocto/Buildroot 이미지 빌드, BSP 포팅, bootloader 설정 경험", "Git 기반 패치 관리와 시스템 로그 분석 경험"]
+  },
+  "motor-control-engineer": {
+    coreWork: "인버터, 센서 피드백, PWM/ADC 타이밍, FOC/PID 제어를 연결해 모터 응답과 보호 로직을 검증합니다.",
+    coreTerms: ["FOC", "SVPWM", "PWM", "ADC", "encoder", "hall sensor", "current sensor", "inverter", "PI control", "fault protection", "Motor Control Blockset", "Simulink"],
+    tools: ["MATLAB", "Simulink", "Motor Control Blockset", "오실로스코프", "전류 프로브", "STM32"],
+    coreCompetencies: ["PWM 주기와 ADC 샘플링 타이밍을 제어 성능과 연결하는 역량", "속도·위치·전류 루프의 역할과 튜닝 결과를 설명하는 역량", "과전류, 과열, 센서 오류 보호 로직을 테스트 케이스로 검증하는 역량"],
+    requirements: ["전력전자, 제어공학, BLDC/PMSM, encoder/hall sensor 이해", "전류 파형과 응답 그래프로 튜닝 결과를 평가하는 역량"],
+    preferred: ["FOC, SVPWM, Motor Control Blockset, 실시간 제어 실험 경험", "인버터 bring-up과 fault protection 검증 경험"]
+  },
+  "vehicle-body-design-engineer": {
+    coreWork: "BIW와 외장 부품의 강성, 충돌, NVH, 제조성을 고려해 차체 구조와 접합·공차 조건을 설계합니다.",
+    coreTerms: ["BIW", "crashworthiness", "NVH", "stamping", "welding", "hem flange", "spot weld", "GD&T", "DFMEA", "package", "tolerance stack-up", "CATIA"],
+    tools: ["CATIA", "NX", "Teamcenter", "HyperMesh", "Abaqus", "LS-DYNA"],
+    coreCompetencies: ["차체 package, 체결, 용접, 공차가 조립 품질에 미치는 영향을 판단하는 역량", "충돌·강성·NVH 요구를 설계 검토 항목으로 바꾸는 역량", "프레스 성형성과 접합 조건을 설계 변경에 반영하는 역량"],
+    requirements: ["BIW 구조, 판금 성형, spot weld, hem flange, GD&T 이해", "차체 부품 도면과 조립 공차를 읽는 역량"],
+    preferred: ["DFMEA, crash/NVH 해석 결과 반영, PLM 설계 변경 경험", "CATIA/NX 기반 automotive package 검토 경험"]
+  },
+  "chassis-suspension-engineer": {
+    coreWork: "현가, 조향, 제동 부품의 기구학, 강성, 내구, ride & handling 성능을 설계·해석·시험으로 검증합니다.",
+    coreTerms: ["suspension kinematics", "steering", "brake", "ride & handling", "K&C", "bushing", "durability", "toe", "camber", "compliance", "Adams", "DVP&R"],
+    tools: ["Adams", "MATLAB", "Simulink", "CATIA", "NX", "nCode"],
+    coreCompetencies: ["현가 geometry 변화가 toe, camber, ride & handling에 미치는 영향을 설명하는 역량", "부싱, 링크, 너클, 제동 부품의 하중 경로와 내구 리스크를 판단하는 역량", "K&C, 실차 시험, 해석 결과를 설계 변경으로 연결하는 역량"],
+    requirements: ["기구학, 차량동역학, 내구 하중, 조향·제동 시스템 이해", "DVP&R과 시험 결과를 설계 요구사항으로 정리하는 역량"],
+    preferred: ["Adams 기반 현가 해석, K&C 시험 데이터 해석 경험", "nCode 피로해석 또는 실차 ride & handling 평가 이해"]
+  },
+  "powertrain-mechanical-engineer": {
+    coreWork: "엔진, 변속기, e-axle, 기어, 베어링, 윤활, 냉각, NVH 요구를 만족하도록 구동계 기계 부품을 설계합니다.",
+    coreTerms: ["powertrain", "e-axle", "gear", "bearing", "lubrication", "NVH", "torque", "dyno test", "thermal", "GT-SUITE", "AVL Cruise", "durability"],
+    tools: ["GT-SUITE", "AVL Cruise", "MATLAB", "Simulink", "CATIA", "nCode"],
+    coreCompetencies: ["토크 전달 경로와 기어·베어링 하중을 설계 검토 항목으로 바꾸는 역량", "윤활, 열, NVH, 내구 시험 결과를 원인 가설로 연결하는 역량", "동력성능과 내구 요구를 시험계획서로 정리하는 역량"],
+    requirements: ["기계요소, 동역학, 열전달, 윤활, NVH 기초 이해", "dyno test와 실차 로그를 해석하는 역량"],
+    preferred: ["GT-SUITE/AVL Cruise 동력계 모델링 또는 내구 시험 데이터 분석 경험", "e-axle, 감속기, 변속기 설계 검토 경험"]
+  },
+  "vehicle-thermal-management-engineer": {
+    coreWork: "배터리, 모터, 인버터, HVAC 열원을 냉각 루프와 연결해 고온·저온·급속충전 조건의 온도 리스크를 관리합니다.",
+    coreTerms: ["HVAC", "coolant loop", "radiator", "chiller", "heat pump", "battery thermal", "inverter cooling", "pump", "fan curve", "Amesim", "GT-SUITE", "CFD"],
+    tools: ["Amesim", "GT-SUITE", "ANSYS Fluent", "Simscape", "Simulink", "MATLAB"],
+    coreCompetencies: ["열원, 냉각수 유량, 라디에이터, chiller, heat pump를 시스템으로 해석하는 역량", "고온, 저온, 급속충전, 견인 조건을 시험·해석 조건으로 정의하는 역량", "실차 온도 로그와 열 모델 결과를 비교하는 역량"],
+    requirements: ["열전달, 유체역학, 냉동공조, 배터리 열관리 기초 이해", "coolant loop와 HVAC 구성품의 역할을 설명하는 역량"],
+    preferred: ["Amesim/GT-SUITE/Simscape 기반 열관리 모델링 경험", "CFD와 실차 온도 데이터 correlation 경험"]
+  },
+  "ev-battery-pack-engineer": {
+    coreWork: "셀, 모듈, 팩 하우징, busbar, 냉각, BMS, HV 안전 요구를 통합해 배터리팩 구조와 검증 항목을 설계합니다.",
+    coreTerms: ["cell", "module", "battery pack", "BMS", "busbar", "thermal runaway", "HV safety", "isolation", "cooling plate", "IP rating", "UN38.3", "ECE R100"],
+    tools: ["CATIA", "NX", "Simulink", "Simscape", "CANoe", "MATLAB"],
+    coreCompetencies: ["셀-모듈-팩 구조와 전기·열·기계 인터페이스를 함께 보는 역량", "절연, 인터락, 열폭주, 방수, 진동 시험 조건을 검증 항목으로 바꾸는 역량", "CAN 로그와 온도·전압 데이터를 고장 가설로 연결하는 역량"],
+    requirements: ["BMS 인터페이스, HV safety, isolation, thermal runaway 이해", "팩 구조, 냉각 구조, busbar, sealing, IP rating 검토 역량"],
+    preferred: ["UN38.3/ECE R100 등 배터리 안전 시험 이해", "Simscape/Simulink 기반 배터리 모델 또는 CAN 로그 분석 경험"]
+  },
+  "vehicle-ee-architecture-engineer": {
+    coreWork: "차량 기능을 ECU, 센서, 액추에이터, 전원, 하네스, CAN/LIN/Ethernet 신호로 분해해 E/E 구조를 설계합니다.",
+    coreTerms: ["E/E architecture", "ECU", "CAN", "LIN", "Ethernet", "DBC", "UDS", "DTC", "AUTOSAR", "wiring harness", "power distribution", "functional safety"],
+    tools: ["CANoe", "CANalyzer", "CANape", "Vector", "AUTOSAR", "Polarion", "DOORS"],
+    coreCompetencies: ["기능 요구사항을 ECU, 네트워크 신호, 전원, 하네스 인터페이스로 분해하는 역량", "DBC, UDS, DTC, diagnostic flow를 시스템 요구사항과 연결하는 역량", "한 ECU 변경이 다른 기능, 전원, 네트워크에 미치는 영향을 검토하는 역량"],
+    requirements: ["CAN/LIN/Ethernet, DBC, UDS, DTC, ECU 인터페이스 이해", "요구사항 추적성과 변경 영향 분석 역량"],
+    preferred: ["AUTOSAR, ISO 26262, Polarion/DOORS 요구사항 관리 경험", "Vector 도구 기반 네트워크 로그 분석 경험"]
+  },
+  "automotive-embedded-sw-engineer": {
+    coreWork: "ECU 소프트웨어에서 센서 입력, 상태머신, 제어 출력, CAN 진단, 안전 요구사항을 구현하고 검증합니다.",
+    coreTerms: ["AUTOSAR", "C/C++", "ECU", "state machine", "CAN", "UDS", "DBC", "bootloader", "diagnostics", "VectorCAST", "MISRA", "ASIL"],
+    tools: ["CANoe", "CANalyzer", "CAPL", "AUTOSAR", "VectorCAST", "Git", "JIRA"],
+    coreCompetencies: ["센서 입력, 상태머신, 제어 출력, 진단 로직을 요구사항에 맞춰 구현하는 역량", "CAN/UDS/DBC 로그로 ECU 동작과 오류 조건을 추적하는 역량", "테스트 케이스와 코드 변경을 요구사항 추적성으로 연결하는 역량"],
+    requirements: ["C/C++, AUTOSAR, CAN, UDS, DBC, bootloader, diagnostics 이해", "MISRA, ASIL, 요구사항 기반 테스트의 기본 개념"],
+    preferred: ["CANoe/CAPL, VectorCAST, unit test, HIL 연동 경험", "AUTOSAR Classic SWC/RTE/BSW 구조 이해"]
+  },
+  "hil-sil-validation-engineer": {
+    coreWork: "요구사항을 MIL/SIL/HIL 테스트 케이스, fault injection, 자동화 시퀀스로 바꿔 ECU 기능을 검증합니다.",
+    coreTerms: ["MIL", "SIL", "HIL", "dSPACE", "NI VeriStand", "CANoe", "CAPL", "Simulink Test", "fault injection", "test automation", "test sequence", "coverage"],
+    tools: ["dSPACE", "NI VeriStand", "CANoe", "CANalyzer", "CAPL", "Simulink Test", "MATLAB"],
+    coreCompetencies: ["요구사항을 정상·고장·경계 조건 테스트 케이스로 바꾸는 역량", "HIL 장비, I/O, CAN 신호, plant model 연결을 설명하는 역량", "실패 로그를 모델, 장비, SW 원인으로 분리하는 역량"],
+    requirements: ["MIL/SIL/HIL, plant model, CAN 신호, Pass/Fail 기준 이해", "테스트 자동화와 로그 분석으로 재현 조건을 찾는 역량"],
+    preferred: ["dSPACE/NI VeriStand/CANoe 기반 HIL 검증 경험", "Simulink Test, CAPL, Python 테스트 자동화 경험"]
+  },
+  "adas-validation-engineer": {
+    coreWork: "AEB, LKA, ACC 등 ADAS 기능을 센서 로그, 인지 결과, 시나리오, 안전 기준으로 검증합니다.",
+    coreTerms: ["ADAS", "AEB", "LKA", "ACC", "camera", "radar", "LiDAR", "sensor fusion", "scenario", "false positive", "false negative", "SOTIF"],
+    tools: ["CarMaker", "PreScan", "RoadRunner", "MATLAB", "Simulink", "ROS2", "Python"],
+    coreCompetencies: ["카메라·레이더·라이다·GPS/IMU 데이터를 시간 기준으로 동기화하는 역량", "시나리오별 expected behavior와 Pass/Fail 기준을 정의하는 역량", "false positive/negative 사례를 센서·인지·판단 문제로 분리하는 역량"],
+    requirements: ["AEB/LKA/ACC 기능, 센서융합, 주행 시나리오, CAN 로그 이해", "SOTIF/ISO 26262 관점의 안전 실패 조건을 설명하는 역량"],
+    preferred: ["CarMaker/PreScan/RoadRunner 기반 시나리오 검증 경험", "인지 모델 출력과 실차 로그 비교 분석 경험"]
+  },
+  "ev-power-electronics-engineer": {
+    coreWork: "인버터, OBC, DC-DC의 전력 소자, 게이트 드라이브, 센싱, 열, EMI, 보호 로직을 설계·검증합니다.",
+    coreTerms: ["inverter", "OBC", "DC-DC", "SiC", "IGBT", "MOSFET", "gate driver", "current sensing", "isolation", "EMI", "thermal", "PLECS"],
+    tools: ["PLECS", "LTspice", "PSIM", "Simulink", "오실로스코프", "전류 프로브", "전력분석기"],
+    coreCompetencies: ["전압·전류·효율·리플 요구사항을 회로와 계측 조건으로 바꾸는 역량", "스위칭 손실, 발열, EMI, 절연 리스크를 동시에 검토하는 역량", "보호회로와 fault 조건을 테스트 케이스로 검증하는 역량"],
+    requirements: ["전력전자, SiC/MOSFET/IGBT, gate driver, current sensing 이해", "PLECS/LTspice/Simulink 시뮬레이션과 측정 결과 해석 역량"],
+    preferred: ["인버터/OBC/DC-DC bring-up, EMI 개선, HV safety 검증 경험", "전력분석기와 전류 프로브 기반 효율·파형 측정 경험"]
+  },
+  "vehicle-test-validation-engineer": {
+    coreWork: "차량 요구사항을 DVP&R, 실차·벤치·환경 시험 조건, 계측 채널, 판정 기준으로 바꿔 검증합니다.",
+    coreTerms: ["DVP&R", "vehicle test", "bench test", "environmental chamber", "CAN logging", "data logger", "NVH", "durability", "Pass/Fail", "retest", "test plan", "issue tracking"],
+    tools: ["CANoe", "CANalyzer", "데이터로거", "MATLAB", "Python", "환경챔버", "JIRA"],
+    coreCompetencies: ["시험 항목, 계측 채널, 판정 기준을 요구사항 추적성으로 연결하는 역량", "실차·벤치·환경 시험 결과를 그래프와 Pass/Fail 문장으로 정리하는 역량", "불합격 항목의 원인 가설, 재시험 조건, 개선 요청을 관리하는 역량"],
+    requirements: ["DVP&R, 계측 채널, CAN 로그, 환경시험, 내구시험 이해", "시험 결과를 요구사항과 비교해 재현 조건을 정의하는 역량"],
+    preferred: ["실차 주행시험, 환경챔버, NVH, durability 시험 경험", "Python/MATLAB 기반 로그 후처리와 이슈 트래킹 경험"]
+  }
+};
 
-function applyAiRoleCompetencyProfiles() {
-  const rolesById = Object.values(jobRoles).flat().reduce((acc, role) => {
+applyAiRoleCompetencyProfiles();
+applyRoleExpertEnhancementProfiles();
+
+function applyRoleExpertEnhancementProfiles() {
+  const rolesById = getRolesById();
+
+  Object.entries(roleExpertEnhancementProfiles).forEach(([roleId, profile]) => {
+    const role = rolesById[roleId];
+    if (!role) return;
+    role.coreWork = profile.coreWork || role.coreWork;
+    role.coreTerms = mergeUniqueRoleItems(role.coreTerms, profile.coreTerms);
+    role.tools = mergeUniqueRoleItems(role.tools, profile.tools);
+    role.coreCompetencies = mergeUniqueRoleItems(role.coreCompetencies, profile.coreCompetencies);
+    role.postingKeywords = mergeUniqueRoleItems(role.postingKeywords, [
+      ...(profile.keywords || []),
+      ...(profile.coreTerms || []),
+      ...(profile.tools || [])
+    ]).slice(0, 22);
+    role.responsibilities = mergeUniqueRoleItems(role.responsibilities, profile.responsibilities);
+    role.requirements = mergeUniqueRoleItems(role.requirements, profile.requirements);
+    role.preferred = mergeUniqueRoleItems(role.preferred, profile.preferred);
+    roleDiagnostics[roleId] = mergeUniqueDiagnostics(roleDiagnostics[roleId] || [], profile.diagnostics || []);
+  });
+}
+
+function getRolesById() {
+  return Object.values(jobRoles).flat().reduce((acc, role) => {
     acc[role.id] = role;
     return acc;
   }, {});
+}
+
+function applyAiRoleCompetencyProfiles() {
+  const rolesById = getRolesById();
 
   Object.entries(aiRoleCompetencyProfiles).forEach(([roleId, profile]) => {
     const role = rolesById[roleId];
     if (!role) return;
     role.aiCompetency = profile;
-    role.postingKeywords = mergeUniqueRoleItems(role.postingKeywords, profile.keywords).slice(0, 9);
+    role.postingKeywords = mergeUniqueRoleItems(role.postingKeywords, profile.keywords).slice(0, 16);
     role.requirements = mergeUniqueRoleItems(role.requirements, profile.requirements);
     role.preferred = mergeUniqueRoleItems(role.preferred, profile.preferred);
     roleDiagnostics[roleId] = mergeUniqueDiagnostics(roleDiagnostics[roleId] || [], profile.diagnostics || []);
@@ -4428,6 +4786,7 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
           <p class="eyebrow">이 직무가 맞나요?</p>
           <h3>${role.title}</h3>
           <p>${role.focus}</p>
+          ${renderRoleCoreWorkSummary(role)}
           <div class="role-decision-mini">
             <strong>지원 전 질문</strong>
             <ul>
@@ -4473,6 +4832,7 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
             </div>
           </div>
           <div class="role-detail-grid is-prominent">
+            ${detailBlock("현업 핵심역량", getRoleCoreCompetencyItems(role))}
             ${detailBlock("채용공고 반복 업무", role.responsibilities)}
             ${detailBlock("자격조건·필수 역량", role.requirements)}
             ${detailBlock("우대·차별화 역량", role.preferred)}
@@ -4520,6 +4880,23 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
       </details>
     </article>
   `;
+}
+
+function renderRoleCoreWorkSummary(role) {
+  if (!role.coreWork) return "";
+  return `
+    <div class="role-core-work">
+      <strong>현업에서 하는 일</strong>
+      <span>${role.coreWork}</span>
+    </div>
+  `;
+}
+
+function getRoleCoreCompetencyItems(role) {
+  if (role.coreCompetencies?.length) return role.coreCompetencies;
+  return (roleDiagnostics[role.id] || [])
+    .slice(0, 4)
+    .map(([skill, description]) => `${skill}: ${description}`);
 }
 
 function renderRoleDecisionDashboard(track, role, checkedCount, totalCount, gapItems, output) {
@@ -4722,7 +5099,7 @@ function getHiringEvidence(track, role) {
 }
 
 function renderRoleWordCloud(track, role, modifier = "") {
-  const terms = getRoleWordCloudTerms(track, role).slice(0, 20);
+  const terms = getRoleWordCloudTerms(track, role).slice(0, 28);
   return `
     <figure class="word-cloud-panel ${modifier}" aria-label="${role.title} 직무 키워드 워드클라우드">
       <div class="word-cloud-head">
@@ -4732,7 +5109,7 @@ function renderRoleWordCloud(track, role, modifier = "") {
       <div class="word-cloud-terms">
         ${terms.map((term, index) => renderWordCloudTerm(term, index, index === 0)).join("")}
       </div>
-      <figcaption>${role.title} 직무상세의 주요 업무, 자격요건, 우대역량에서 반복되는 단어일수록 크게 표시합니다.</figcaption>
+      <figcaption>${role.title} 직무상세의 주요 업무, 자격요건, 우대역량, 도구, 시뮬레이션, 역량진단에서 반복되는 단어일수록 크게 표시합니다.</figcaption>
     </figure>
   `;
 }
@@ -5042,11 +5419,16 @@ function roleFitBlock(title, items) {
 function getRoleWordCloudTerms(track, role) {
   const weightedTerms = [];
   addWeightedRoleTerms(weightedTerms, role.postingKeywords, 24);
+  addWeightedRoleTerms(weightedTerms, role.coreTerms, 28);
+  addWeightedRoleTerms(weightedTerms, role.tools, 22);
+  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.coreWork), 20);
+  addWeightedRoleTerms(weightedTerms, role.coreCompetencies, 18);
   addWeightedRoleTerms(weightedTerms, getRoleExplicitToolTerms(track, role), 18);
   addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.responsibilities), 19);
   addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.requirements), 17);
   addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.focus), 15);
   addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.preferred), 12);
+  addWeightedRoleTerms(weightedTerms, getRoleDiagnosticTerms(role), 16);
   addWeightedRoleTerms(weightedTerms, getRoleSimulationTerms(track, role), 14);
   addWeightedRoleTerms(weightedTerms, getTrackToolTerms(track), 8);
 
@@ -5054,7 +5436,7 @@ function getRoleWordCloudTerms(track, role) {
   weightedTerms.forEach(({ word, weight }) => {
     const cleanWord = cleanRoleTerm(word);
     const key = getRoleTermKey(cleanWord);
-    if (!key || cleanWord.length < 2) return;
+    if (!key || cleanWord.length < 2 || roleTermStopWords.has(cleanWord)) return;
     const current = scoreMap.get(key) || { word: cleanWord, score: 0 };
     current.score += weight;
     scoreMap.set(key, current);
@@ -5072,22 +5454,39 @@ function getRoleExplicitToolTerms(track, role) {
   const roleText = [
     role.title,
     role.focus,
+    role.coreWork,
     ...(role.postingKeywords || []),
+    ...(role.coreTerms || []),
+    ...(role.tools || []),
+    ...(role.coreCompetencies || []),
     ...(role.responsibilities || []),
     ...(role.requirements || []),
-    ...(role.preferred || [])
+    ...(role.preferred || []),
+    ...getRoleDiagnosticTerms(role)
   ].join(" ");
   const toolTerms = [
     "MATLAB", "Simulink", "Simscape", "Stateflow", "Python", "SQL", "Excel",
-    "Minitab", "JMP", "Aspen", "HYSYS", "LIMS", "MES", "SPC", "DOE",
-    "CATIA", "Creo", "SolidWorks", "ANSYS", "Abaqus", "HyperWorks", "CFD", "FEA",
-    "SPICE", "PCB CAD", "KiCad", "오실로스코프", "멀티미터", "Logic Analyzer",
-    "STM32", "Arduino", "Git", "CANoe", "CANalyzer", "CAPL", "AUTOSAR", "UDS", "DBC",
-    "HIL", "SIL", "dSPACE", "NI", "Vector", "CarMaker", "PreScan",
-    "ROS", "ROS2", "Gazebo", "RViz", "Yocto", "BSP", "Kernel", "Linux", "PLC"
+    "Minitab", "JMP", "Power BI", "Tableau", "Spotfire", "Aspen Plus", "Aspen HYSYS",
+    "Aspen", "HYSYS", "COMSOL", "gPROMS", "LIMS", "MES", "ERP", "SPC", "DOE",
+    "MSA", "Gauge R&R", "APQP", "PPAP", "Control Plan", "8D", "A3", "IATF 16949",
+    "CATIA", "NX", "Creo", "SolidWorks", "Teamcenter", "Windchill", "PLM", "GD&T",
+    "DFMEA", "PFMEA", "DVP&R", "ANSYS Mechanical", "ANSYS Fluent", "Abaqus", "HyperMesh",
+    "HyperView", "HyperWorks", "nCode", "Adams", "GT-SUITE", "Amesim", "AVL Cruise",
+    "CFD", "FEA", "SPICE", "LTspice", "PLECS", "PSIM", "PCB CAD", "Altium Designer",
+    "OrCAD", "PADS", "KiCad", "Sigrity", "오실로스코프", "멀티미터", "Logic Analyzer",
+    "전류 프로브", "전력분석기", "환경챔버", "데이터로거", "STM32", "Arduino", "Git",
+    "JIRA", "Polarion", "DOORS", "CANoe", "CANalyzer", "CANape", "INCA", "CAPL",
+    "AUTOSAR", "AUTOSAR Classic", "AUTOSAR Adaptive", "UDS", "DTC", "DBC", "ODX",
+    "XCP", "HIL", "SIL", "MIL", "dSPACE", "NI VeriStand", "Vector", "CarMaker",
+    "PreScan", "RoadRunner", "ROS", "ROS2", "Gazebo", "RViz", "SLAM", "Yocto",
+    "Buildroot", "BSP", "Kernel", "Linux", "Device tree", "PLC", "SEM", "XRD",
+    "FTIR", "DSC", "TGA", "GC/MS", "HPLC", "HAZOP", "PSM", "MSDS", "GMP", "SOP"
   ];
 
-  return uniqueRoleTerms(toolTerms.filter((term) => roleTextMatchesTerm(roleText, term)));
+  return uniqueRoleTerms([
+    ...(role.tools || []),
+    ...toolTerms.filter((term) => roleTextMatchesTerm(roleText, term))
+  ].flatMap(splitRoleToolTerm));
 }
 
 function getRoleSimulationTerms(track, role) {
@@ -5104,6 +5503,13 @@ function getTrackToolTerms(track) {
   return uniqueRoleTerms((track.tools || []).flatMap(splitRoleToolTerm));
 }
 
+function getRoleDiagnosticTerms(role) {
+  return (roleDiagnostics[role.id] || []).flatMap(([skill, description]) => [
+    skill,
+    ...extractRoleTerms(description).slice(0, 4)
+  ]);
+}
+
 function splitRoleToolTerm(term) {
   return String(term || "")
     .split(/[\/·,]/)
@@ -5113,7 +5519,7 @@ function splitRoleToolTerm(term) {
 
 function roleTextMatchesTerm(text, term) {
   const escapedTerm = escapeRegExp(String(term));
-  return new RegExp(`(^|[^0-9A-Za-z가-힣+#])${escapedTerm}([^0-9A-Za-z가-힣+#]|$)`, "i").test(text);
+  return new RegExp(`(^|[^0-9A-Za-z가-힣+#&])${escapedTerm}([^0-9A-Za-z가-힣+#&]|$)`, "i").test(text);
 }
 
 function uniqueRoleTerms(terms) {
@@ -5134,7 +5540,8 @@ function escapeRegExp(value) {
 function addWeightedRoleTerms(target, words, weight) {
   (words || []).forEach((word) => {
     String(word || "")
-      .split(/[\/·]/)
+      .replace(/\s+(및|또는)\s+/g, ",")
+      .split(/[\/·,;]/)
       .map((part) => part.trim())
       .filter(Boolean)
       .forEach((part) => target.push({ word: part, weight }));
@@ -5157,7 +5564,7 @@ function extractRoleTerms(values) {
 
 function cleanRoleTerm(word) {
   return String(word || "")
-    .replace(/[^0-9A-Za-z가-힣+#\s-]/g, "")
+    .replace(/[^0-9A-Za-z가-힣+#&\s-]/g, "")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -5171,7 +5578,10 @@ const roleTermStopWords = new Set([
   "경험", "역량", "조건", "결과", "문서화", "리포트", "계획", "요구사항", "가능성",
   "비교", "정의", "설명", "기준", "역할", "사용", "수행", "지원", "문제", "이슈",
   "기본", "신규", "또는", "같은", "위한", "통한", "등", "수", "할", "있는", "검토",
-  "개선", "확인", "연결", "제안", "수립", "운영", "대응", "필요"
+  "개선", "확인", "연결", "제안", "수립", "운영", "대응", "필요", "업무", "현업",
+  "상세", "반복", "자격", "우대", "중심", "실제", "주요", "핵심", "설계", "해석",
+  "시험", "검증", "구조", "기능", "로그", "데이터", "시스템", "자료", "항목", "변경",
+  "Pass", "Fail", "pass", "fail"
 ]);
 
 function getRoleFitSignals(track, role) {
@@ -5244,10 +5654,15 @@ function getRoleCombinedText(track, role) {
     ...(track.tools || []),
     role.title,
     role.focus,
+    role.coreWork,
     ...(role.postingKeywords || []),
+    ...(role.coreTerms || []),
+    ...(role.tools || []),
+    ...(role.coreCompetencies || []),
     ...(role.responsibilities || []),
     ...(role.requirements || []),
-    ...(role.preferred || [])
+    ...(role.preferred || []),
+    ...getRoleDiagnosticTerms(role)
   ].join(" ");
 }
 

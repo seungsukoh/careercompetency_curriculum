@@ -1190,6 +1190,26 @@ input::placeholder {
   font-size: 1rem;
 }
 
+.role-core-work {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.role-core-work strong {
+  color: var(--ink);
+  font-size: 0.86rem;
+}
+
+.selected-role-summary .role-core-work span {
+  color: var(--text);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
 .selected-role-summary p,
 .selected-role-summary li,
 .selected-role-summary span,
@@ -1680,7 +1700,7 @@ input::placeholder {
 }
 
 .word-cloud-panel.is-compact .word-cloud-terms {
-  min-height: 220px;
+  min-height: 260px;
   padding: 12px 10px;
 }
 
