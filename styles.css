@@ -2615,8 +2615,13 @@ li {
   border-radius: 6px;
 }
 
-.roadmap-decision-panel > div:last-child:nth-child(5) {
+.roadmap-decision-panel > div.is-full,
+.persona-review-grid > .is-full {
   grid-column: 1 / -1;
+}
+
+.roadmap-decision-panel > div.is-wide {
+  grid-column: span 2;
 }
 
 .roadmap-decision-panel strong,
@@ -2897,12 +2902,17 @@ li {
   font-size: 1rem;
 }
 
+.competency-example-actions,
 .competency-example-resource > div:last-child {
   display: flex;
   flex-wrap: wrap;
   justify-content: end;
   gap: 6px;
   min-width: 0;
+}
+
+.competency-example-actions {
+  align-content: start;
 }
 
 .competency-example-resource .resource-action,
@@ -3017,7 +3027,15 @@ li {
   gap: 8px;
 }
 
-.duration-strategy-grid span {
+.persona-review-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.duration-strategy-grid span,
+.persona-review-grid span {
   min-width: 0;
   padding: 10px;
   color: var(--muted);
@@ -3028,7 +3046,8 @@ li {
   line-height: 1.4;
 }
 
-.duration-strategy-grid strong {
+.duration-strategy-grid strong,
+.persona-review-grid strong {
   display: block;
   margin-bottom: 3px;
   color: var(--ink);
@@ -3781,12 +3800,17 @@ li {
   .diagnosis-next-panel,
   .roadmap-final-cta,
   .duration-strategy-grid,
+  .persona-review-grid,
   .reference-category-strip,
   .reference-resource-grid,
   .resource-learning-meta,
   .workflow-status,
   .roadmap {
     grid-template-columns: 1fr;
+  }
+
+  .roadmap-decision-panel > div.is-wide {
+    grid-column: 1 / -1;
   }
 
   .role-result-panel {
@@ -3905,6 +3929,7 @@ li {
     align-items: stretch;
   }
 
+  .competency-example-actions,
   .competency-example-resource > div:last-child,
   .hands-on-resource-link > span:last-child {
     display: grid;

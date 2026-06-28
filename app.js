@@ -6657,6 +6657,7 @@ function renderRoadmapGuidance(context, tasks) {
         <span><strong>자료 기준</strong>${durationStrategy.resourceRule}</span>
         <span><strong>과제 기준</strong>${durationStrategy.taskRule}</span>
       </div>
+      ${renderPersonaExpertAuditPanel(context, tasks)}
     </details>
   `;
 }
@@ -6664,6 +6665,8 @@ function renderRoadmapGuidance(context, tasks) {
 function renderRoadmapDecisionPanel(context, tasks) {
   const role = context.role;
   const output = role ? getRoleCurriculumOutput(context.track, role) : context.track.outputs[0];
+  const personaReview = getStudentPersonaReview(context);
+  const expertReview = getExpertCurriculumReview(context, tasks);
   const acquired = context.acquiredSkills.length
     ? context.acquiredSkills.slice(0, 4).join(", ")
     : "아직 체크 전";
@@ -6690,8 +6693,16 @@ function renderRoadmapDecisionPanel(context, tasks) {
         <strong>첫 산출물</strong>
         <span>${firstTask} · ${output}</span>
       </div>
+      <div class="is-wide">
+        <strong>학생 페르소나</strong>
+        <span>${personaReview.title} · ${personaReview.body}</span>
+      </div>
+      <div class="is-wide">
+        <strong>직무 전문가 검토</strong>
+        <span>${expertReview.title} · ${expertReview.body}</span>
+      </div>
       ${aiProfile ? `
-        <div>
+        <div class="is-full">
           <strong>AI·데이터 반영</strong>
           <span>${aiProfile.level} · ${aiProfile.summary}</span>
         </div>
@@ -6754,6 +6765,7 @@ function renderEducationSummaryCard(resource, index, context, tasks) {
   const saved = state.saved.includes(resource.id);
   const linkedTask = getPrimaryTaskForResource(resource, tasks, context);
   const reason = getEducationSummaryReason(resource, linkedTask, context);
+  const expertReview = getExpertResourceReview(resource, context, linkedTask);
   const introText = getResourceIntroText(resource);
   const outputText = resource.expectedOutput || "직무 산출물";
   const taskText = linkedTask ? `${linkedTask.weekLabel || `${index + 1}주차`} · ${linkedTask.title}` : "연결 과제";
@@ -6771,6 +6783,7 @@ function renderEducationSummaryCard(resource, index, context, tasks) {
         <div class="education-info-row"><strong>교육 소개</strong><span>${introText}</span></div>
         <div class="education-info-row"><strong>다루는 역량</strong><span>${getResourceSkillSummary(resource)}</span></div>
         <div class="education-info-row"><strong>추천 이유</strong><span>${reason}</span></div>
+        <div class="education-info-row"><strong>전문가 검토</strong><span>${expertReview}</span></div>
         <div class="education-info-row"><strong>내 커리큘럼 연결</strong><span>${taskText}</span></div>
         <div class="education-info-row"><strong>완성할 산출물</strong><span>${outputText}</span></div>
       </div>
@@ -6799,6 +6812,117 @@ function getEducationSummaryReason(resource, task, context) {
     : "선택 직무와 부족 역량에 연결되는 교육입니다.";
   const text = signals.length ? `${signals.join(" · ")} · ${connectionReason}` : connectionReason;
   return truncateText(text, 100);
+}
+
+function getStudentPersonaReview(context) {
+  const pathway = getMajorPathway(context.track, context.role);
+  const selectedCount = getSavedResources().length;
+  const checkedCount = context.acquiredSkills.length;
+
+  if (!checkedCount) {
+    return {
+      title: "역량 체크 전 학생",
+      body: "추천 폭을 넓게 둔 상태입니다. 보유 역량을 체크하면 이미 아는 교육은 뒤로 빠집니다."
+    };
+  }
+
+  if (context.durationWeeks <= 2) {
+    return {
+      title: "단기 준비 학생",
+      body: "긴 강좌보다 직무상세 확인, 핵심 역량 1개 보완, 바로 남길 산출물 중심으로 줄였습니다."
+    };
+  }
+
+  if (pathway === "bridge") {
+    return {
+      title: "전공 확장 학생",
+      body: "전공과 바로 맞지 않는 용어·도구를 먼저 보완하고, 작은 실습 산출물로 연결하도록 봅니다."
+    };
+  }
+
+  if (context.gapSkills.length >= 3) {
+    return {
+      title: "기초 보완 학생",
+      body: "부족 역량이 많은 상태라 고난도 자료보다 기초 교육과 산출물 예시를 우선 배치합니다."
+    };
+  }
+
+  if (selectedCount) {
+    return {
+      title: "실행 계획 학생",
+      body: "이미 고른 교육을 주차별 과제에 연결해 내 커리큘럼에서 바로 실행할 수 있게 정리합니다."
+    };
+  }
+
+  return {
+    title: "전공 직결 학생",
+    body: "기초 설명보다 지원 직무의 반복 업무, 도구, 산출물로 증명할 수 있는 교육을 우선합니다."
+  };
+}
+
+function getExpertCurriculumReview(context, tasks) {
+  const roleResources = getRoleLinkedResources(context.role)
+    .filter((resource) => resource.tracks.includes(context.track.id));
+  const directCount = roleResources.filter(isDirectResourceUrl).length;
+  const handsOnCount = roleResources.filter(isHandsOnResource).length;
+  const taskCoverage = tasks.filter((task) => getRoadmapResourcesForTask(context.track, task, context).length).length;
+  const title = roleResources.length ? "교육 매핑 확인" : "교육 매핑 보완 필요";
+  const body = roleResources.length
+    ? `선택 직무 연결 교육 ${roleResources.length}개, 직접 열리는 자료 ${directCount}개, 실습형 후보 ${handsOnCount}개를 기준으로 ${taskCoverage}/${tasks.length}개 과제에 배치했습니다.`
+    : "직무 전용 교육이 부족하므로 참고자료에서 회사 공고와 직접 맞는 자료만 추가하세요.";
+
+  return { title, body };
+}
+
+function renderPersonaExpertAuditPanel(context, tasks) {
+  const role = context.role;
+  const roleResources = getRoleLinkedResources(role)
+    .filter((resource) => resource.tracks.includes(context.track.id));
+  const directCount = roleResources.filter(isDirectResourceUrl).length;
+  const handsOnCount = roleResources.filter(isHandsOnResource).length;
+  const shortResource = getRecommendedResources(context.track, context)
+    .find((resource) => resource.totalMinutes <= 180);
+  const bridgeFocus = getMajorPathwayFocus(context.track, role);
+
+  return `
+    <div class="persona-review-grid" aria-label="학생 페르소나와 전문가 검토 기준">
+      <span><strong>직무 미확신 학생</strong>직무상세, 워드클라우드, 반복 업무를 먼저 보고 맞는 직무인지 판단하게 했습니다.</span>
+      <span><strong>전공 직결 학생</strong>기초 강좌를 많이 쌓기보다 공고 문장과 산출물로 증명할 교육을 우선합니다.</span>
+      <span><strong>전공 확장 학생</strong>${bridgeFocus || "직무 용어와 도구를 보완한 뒤 작은 실습 산출물로 연결합니다."}</span>
+      <span><strong>단기 준비 학생</strong>${shortResource ? `${shortResource.title}처럼 짧게 시작할 수 있는 자료를 먼저 검토합니다.` : "긴 강좌보다 핵심 단원과 산출물 작성 중심으로 줄입니다."}</span>
+      <span class="is-full"><strong>직무 전문가 기준</strong>${role?.title || context.track.title} 교육은 직무 연결 ${roleResources.length}개, 직접 링크 ${directCount}개, 실습형 ${handsOnCount}개를 확인했습니다. 회사 공고와 산출물이 맞지 않는 자료는 내 커리큘럼에서 제외하세요.</span>
+      <span class="is-full"><strong>과제 적용 기준</strong>${tasks.map((task) => task.deliverable).slice(0, 3).join(", ")}처럼 제출 가능한 결과로 남길 수 있는 자료만 우선합니다.</span>
+    </div>
+  `;
+}
+
+function getExpertResourceReview(resource, context, task = null) {
+  if (!context) {
+    return "관심 있는 회사의 직무상세와 교육 내용이 직접 맞을 때만 내 커리큘럼에 추가하세요.";
+  }
+
+  const signals = [];
+  const roleDirectMatch = getRoleLinkedResourceIds(context.role).includes(resource.id);
+  const gapMatches = getResourceGapMatches(resource, context);
+  const roleKeywordMatches = getRoleKeywordMatches(resource, context.role);
+  const taskMatches = task
+    ? getResourceLinkedTasks(resource.id, [task])
+    : getResourceLinkedTasks(resource.id, context.visibleTasks);
+  const mathWorksNeed = resource.provider === "MathWorks" && isMathWorksRequiredForRole(context);
+
+  if (roleDirectMatch) signals.push("선택 직무 직접 연결");
+  if (taskMatches.length) signals.push(`과제 연결: ${taskMatches.slice(0, 1).join(", ")}`);
+  if (gapMatches.length) signals.push(`부족 역량: ${gapMatches.slice(0, 2).join(", ")}`);
+  if (roleKeywordMatches.length) signals.push(`공고 키워드: ${roleKeywordMatches.slice(0, 2).join(", ")}`);
+  if (isHandsOnResource(resource)) signals.push("실습·산출물형");
+  if (mathWorksNeed) signals.push("모델링·시뮬레이션 직무 보강");
+  if (resource.broad) signals.push("범용 보조 자료");
+
+  const verdict = roleDirectMatch || gapMatches.length || roleKeywordMatches.length || taskMatches.length
+    ? "우선 검토"
+    : "보조 검토";
+  const signalText = signals.length ? signals.slice(0, 4).join(" · ") : "직무 기초 보완";
+  return `${verdict}: ${signalText}. 교육을 본 뒤 ${resource.expectedOutput || "직무 산출물"}로 남길 수 있을 때 계획에 넣으세요.`;
 }
 
 function getResourceIntroText(resource) {
@@ -6987,6 +7111,7 @@ function renderReferenceResourceItem(resource, context) {
         <div class="education-info-row"><strong>교육 소개</strong><span>${getResourceIntroText(resource)}</span></div>
         <div class="education-info-row"><strong>다루는 역량</strong><span>${getResourceSkillSummary(resource)}</span></div>
         ${signals.length ? `<div class="education-info-row"><strong>추천 이유</strong><span>${signals.join(" · ")}</span></div>` : ""}
+        <div class="education-info-row"><strong>전문가 검토</strong><span>${getExpertResourceReview(resource, context)}</span></div>
         <div class="education-info-row"><strong>완성할 산출물</strong><span>${resource.expectedOutput}</span></div>
         <div class="roadmap-resource-actions">
           <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
@@ -7631,13 +7756,14 @@ function renderCompetencyActionPlan(context, tasks) {
                   ${item.resources.map((resource) => `
                     <div class="competency-example-resource">
                       <div class="competency-example-main">
-                        <span class="competency-example-label">교육명</span>
+                        <span class="competency-example-label">추천 교육</span>
                         <strong class="competency-example-title">${resource.title}</strong>
                         <div class="education-info-row"><strong>교육 소개</strong><span>${getResourceIntroText(resource)}</span></div>
                         <div class="education-info-row"><strong>다루는 역량</strong><span>${getResourceSkillSummary(resource)}</span></div>
+                        <div class="education-info-row"><strong>전문가 검토</strong><span>${getExpertResourceReview(resource, context, item.task)}</span></div>
                         <div class="education-info-row"><strong>완성할 산출물</strong><span>${resource.expectedOutput || item.deliverable}</span></div>
                       </div>
-                      <div>
+                      <div class="competency-example-actions">
                         <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
                         ${renderSaveActionButton(resource, "내 커리큘럼에 추가")}
                       </div>
@@ -7665,6 +7791,7 @@ function getCompetencyActionItems(context, tasks) {
       "일반 커리큘럼 산출물을 지원 회사 공고 문장에 맞춰 줄이고, 면접에서 설명할 근거만 남깁니다."
     ];
     return {
+      task,
       title: task.title,
       body: defaultBodies[index] || task.objective,
       deliverable: task.deliverable,
@@ -8163,6 +8290,7 @@ function renderRoadmapResourceItem(resource, task, context) {
         <div class="education-info-row"><strong>교육 소개</strong><span>${getResourceIntroText(resource)}</span></div>
         <div class="education-info-row"><strong>다루는 역량</strong><span>${getResourceSkillSummary(resource)}</span></div>
         <div class="education-info-row"><strong>추천 이유</strong><span>${connectionReason}</span></div>
+        <div class="education-info-row"><strong>전문가 검토</strong><span>${getExpertResourceReview(resource, context, task)}</span></div>
         <div class="education-info-row"><strong>연결 산출물</strong><span>${resource.expectedOutput}</span></div>
         <div class="education-info-row"><strong>연결 신호</strong><span>${signals.length ? signals.join(" · ") : `${task.deliverable}에 바로 연결됩니다.`}</span></div>
         <div class="roadmap-resource-actions">
@@ -8196,6 +8324,10 @@ function renderResourceTrustBadges(resource) {
 
 function isHandsOnResource(resource) {
   return /실습|시뮬레이션|부트캠프|프로젝트|멘토링|현장실습|KDT|인턴체험|과제형|Maintenance|Trouble Shooting/i.test(getResourceBadgeText(resource));
+}
+
+function isDirectResourceUrl(resource) {
+  return !/search|results\?|query=|courses\/free\/?$/i.test(resource.url || "");
 }
 
 function getResourceBadgeText(resource) {
@@ -8339,6 +8471,7 @@ function renderPlanResourceItem(resource, task, context) {
         <div class="education-info-row"><strong>교육 소개</strong><span>${getResourceIntroText(resource)}</span></div>
         <div class="education-info-row"><strong>다루는 역량</strong><span>${getResourceSkillSummary(resource)}</span></div>
         <div class="education-info-row"><strong>추천 이유</strong><span>${connectionReason}</span></div>
+        <div class="education-info-row"><strong>전문가 검토</strong><span>${getExpertResourceReview(resource, context, task)}</span></div>
         <div class="education-info-row"><strong>연결 신호</strong><span>${signals.join(" · ") || `${task.deliverable}에 연결되는 자료입니다.`}</span></div>
         <div class="education-info-row"><strong>산출물</strong><span>${resource.expectedOutput}</span></div>
         <div class="roadmap-resource-actions">
@@ -8406,6 +8539,7 @@ function renderResourceCard(resource, context = null, priorityIndex = null, show
       <p>${resource.reason}</p>
       ${linkedTasks.length ? `<p><strong>연결 과제:</strong> ${linkedTasks.join(", ")}</p>` : ""}
       ${signals.length ? `<div class="recommendation-note">${signals.join(" · ")}</div>` : ""}
+      ${context ? `<div class="recommendation-note is-review">${getExpertResourceReview(resource, context)}</div>` : ""}
       <div class="resource-learning-meta" aria-label="학습 정보">
         <span><strong>자료 형식</strong>${resource.type}</span>
         <span><strong>학습</strong>${formatMinutes(resource.estimatedMinutes)}</span>
@@ -8632,6 +8766,8 @@ function buildSummaryExportRows() {
   const nextTask = getNextCurriculumTask(track.id);
   const context = getRecommendationContext(track, gapSkills, visibleTasks);
   const nextResource = getRecommendedResources(track, context)[0]?.title || "없음";
+  const personaReview = getStudentPersonaReview(context);
+  const expertReview = getExpertCurriculumReview(context, visibleTasks);
   const completedWeeks = visibleTasks
     .map((task) => getRoadmapStepId(track.id, task))
     .filter((stepId) => state.completedRoadmap.includes(stepId)).length;
@@ -8648,6 +8784,8 @@ function buildSummaryExportRows() {
     ["직무 설명", role?.focus || track.summary],
     ["역량 확보율", `${getDiagnosticScore(track.id)}%`],
     ["보완 역량", gapSkills.slice(0, 8).join(", ") || "큰 공백 없음"],
+    ["학생 페르소나", `${personaReview.title} - ${personaReview.body}`],
+    ["직무 전문가 검토", `${expertReview.title} - ${expertReview.body}`],
     ["다음 과제", `${nextTask.title} - ${nextTask.deliverable}`],
     ["다음 추천 교육자료", nextResource],
     ["완료 주차", `${completedWeeks}/${visibleTasks.length}`],
@@ -8734,11 +8872,12 @@ function buildSavedResourceExportRows() {
     "선행",
     "연결 과제",
     "산출물",
+    "전문가 검토",
     "URL"
   ]];
 
   if (!plannedResources.length) {
-    rows.push(["교육자료가 없습니다.", "", "", "", "", "", "", "", "", "", "", "", "", ""]);
+    rows.push(["교육자료가 없습니다.", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]);
     return rows;
   }
 
@@ -8761,6 +8900,7 @@ function buildSavedResourceExportRows() {
       resource.prerequisites.length ? resource.prerequisites.join(", ") : "없음",
       linkedAutoTasks.join(", ") || getResourceLinkedTasks(resource.id, visibleTasks).join(", ") || "직무 공통",
       resource.expectedOutput,
+      getExpertResourceReview(resource, context),
       resource.url
     ]);
   });
