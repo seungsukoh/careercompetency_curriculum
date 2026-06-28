@@ -4,11 +4,13 @@
   --cream: #f4eadb;
   --cream-surface: #fffaf2;
   --cream-muted: #f8f0e4;
-  --navy: #0e2750;
-  --navy-dark: #0e2750;
+  --heritage-navy: #0e2750;
+  --signal-gold: #c9a86a;
+  --navy: var(--heritage-navy);
+  --navy-dark: var(--heritage-navy);
   --navy-muted: #52677a;
   --navy-soft: #e9edf0;
-  --gold: #c9a86a;
+  --gold: var(--signal-gold);
   --gold-dark: #7a5417;
   --bg: var(--cream);
   --surface: var(--cream-surface);
