@@ -2966,6 +2966,7 @@ const defaultState = {
 let state = loadState();
 let deferredInstallPrompt = null;
 let serviceWorkerRefreshing = false;
+let wordCloudLayoutFrame = null;
 
 const elements = {};
 
@@ -3086,6 +3087,8 @@ function bindEvents() {
     deferredInstallPrompt = null;
     elements.installButton.hidden = true;
   });
+
+  window.addEventListener("resize", scheduleWordCloudLayout);
 }
 
 function loadState() {
@@ -3140,6 +3143,7 @@ function render() {
   renderRoadmap();
   renderSaved();
   renderMetrics();
+  scheduleWordCloudLayout();
 }
 
 function renderViews() {
@@ -3151,6 +3155,7 @@ function renderViews() {
     view.classList.toggle("is-active", view.id === `${state.view}View`);
   });
   renderWorkflowStatus();
+  scheduleWordCloudLayout();
 }
 
 function renderWorkflowStatus() {
@@ -3574,6 +3579,7 @@ function renderTrackDetail() {
           ${detailBlock("우대·차별화 역량", selectedRole.preferred)}
         </div>
         ${renderMajorConnectionPanel(track, selectedRole)}
+        ${renderExpertReviewPanel(track, selectedRole)}
         ${renderRoleFitPanel(track, selectedRole)}
         <div class="evidence-panel">
           <div>
@@ -3627,23 +3633,11 @@ function getHiringEvidence(track, role) {
 }
 
 function renderRoleWordCloud(track, role, modifier = "") {
-  const terms = getRoleWordCloudTerms(track, role).slice(0, 32);
-  const primaryTerm = terms[0];
-  const { topTerms, bottomTerms } = splitWordCloudBands(terms.slice(1));
+  const terms = getRoleWordCloudTerms(track, role).slice(0, 20);
   return `
     <figure class="word-cloud-panel ${modifier}" aria-label="${role.title} 직무 키워드 워드클라우드">
       <div class="word-cloud-terms">
-        <div class="word-cloud-band">
-          ${topTerms.map((term, index) => renderWordCloudTerm(term, index)).join("")}
-        </div>
-        ${primaryTerm ? `
-          <div class="word-cloud-center">
-            ${renderWordCloudTerm(primaryTerm, 0, true)}
-          </div>
-        ` : ""}
-        <div class="word-cloud-band">
-          ${bottomTerms.map((term, index) => renderWordCloudTerm(term, index + topTerms.length)).join("")}
-        </div>
+        ${terms.map((term, index) => renderWordCloudTerm(term, index, index === 0)).join("")}
       </div>
       <figcaption>${role.title} 직무상세의 주요 업무, 자격요건, 우대역량, 직무확보 문항에서 반복되는 단어일수록 크게 표시합니다.</figcaption>
     </figure>
@@ -3654,50 +3648,186 @@ function renderWordCloudTerm(term, index, isPrimary = false) {
   return `<span class="word-cloud-term ${isPrimary ? "is-primary" : ""} weight-${term.level}" style="${getWordCloudTermStyle(term, index)}">${term.word}</span>`;
 }
 
-function splitWordCloudBands(terms) {
-  const topTerms = [];
-  const bottomTerms = [];
-  let topScore = 0;
-  let bottomScore = 0;
+function getWordCloudTermStyle(term, index) {
+  const size = (0.78 + Math.pow(term.level, 1.14) * 0.23).toFixed(2);
+  const opacity = (0.68 + term.level * 0.05).toFixed(2);
+  return `--size:${size}rem;--opacity:${opacity};--z:${term.level};`;
+}
 
+function scheduleWordCloudLayout() {
+  if (wordCloudLayoutFrame) cancelAnimationFrame(wordCloudLayoutFrame);
+  wordCloudLayoutFrame = requestAnimationFrame(() => {
+    wordCloudLayoutFrame = null;
+    layoutWordClouds();
+  });
+}
+
+function layoutWordClouds() {
+  document.querySelectorAll(".word-cloud-terms").forEach(layoutWordCloud);
+}
+
+function layoutWordCloud(container) {
+  const containerRect = container.getBoundingClientRect();
+  if (containerRect.width < 80 || containerRect.height < 80) return;
+
+  const terms = Array.from(container.querySelectorAll(".word-cloud-term"));
+  if (!terms.length) return;
+
+  container.classList.add("is-layout-ready");
   terms.forEach((term) => {
-    const footprint = term.level * Math.max(2, cleanRoleTerm(term.word).length * 0.8);
-    if (topScore <= bottomScore) {
-      topTerms.push(term);
-      topScore += footprint;
-    } else {
-      bottomTerms.push(term);
-      bottomScore += footprint;
-    }
+    term.hidden = false;
+    term.style.left = "50%";
+    term.style.top = "50%";
   });
 
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+  const padding = width < 420 ? 14 : 18;
+  const centerX = width / 2;
+  const centerY = height / 2;
+  const primary = terms.find((term) => term.classList.contains("is-primary")) || terms[0];
+  const placed = [];
+
+  placeWordCloudTerm(primary, centerX, centerY, placed, padding, width, height);
+
+  const orderedTerms = terms
+    .filter((term) => term !== primary)
+    .sort((a, b) => Number(b.style.getPropertyValue("--z")) - Number(a.style.getPropertyValue("--z")));
+
+  orderedTerms.forEach((term, index) => {
+    const position = findCloudPosition(term, index, placed, width, height, padding);
+    placeWordCloudTerm(term, position.x, position.y, placed, padding, width, height);
+  });
+
+  pruneWordCloudOverlaps(container);
+}
+
+function placeWordCloudTerm(term, x, y, placed, padding, width, height) {
+  term.style.left = `${Math.round(x)}px`;
+  term.style.top = `${Math.round(y)}px`;
+  const box = getWordCloudBox(term, x, y);
+  box.left = Math.max(padding, Math.min(box.left, width - padding - box.width));
+  box.top = Math.max(padding, Math.min(box.top, height - padding - box.height));
+  box.right = box.left + box.width;
+  box.bottom = box.top + box.height;
+  term.style.left = `${Math.round(box.left + box.width / 2)}px`;
+  term.style.top = `${Math.round(box.top + box.height / 2)}px`;
+  placed.push(box);
+}
+
+function findCloudPosition(term, index, placed, width, height, padding) {
+  const centerX = width / 2;
+  const centerY = height / 2;
+  const maxRadius = Math.min(width, height) * 0.48;
+  const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+  const startAngle = index * goldenAngle;
+
+  for (let step = 0; step < 900; step += 1) {
+    const radius = 14 + Math.sqrt(step) * (maxRadius / 7);
+    const angle = startAngle + step * 0.42;
+    const x = centerX + Math.cos(angle) * radius * 1.05;
+    const y = centerY + Math.sin(angle) * radius * 0.72;
+    const box = getWordCloudBox(term, x, y);
+
+    if (box.left < padding || box.top < padding || box.right > width - padding || box.bottom > height - padding) continue;
+    if (!isBoxInsideCloud(box, width, height, padding)) continue;
+    if (hasWordCloudCollision(box, placed)) continue;
+    return { x, y };
+  }
+
+  return findFallbackCloudPosition(term, placed, width, height, padding);
+}
+
+function findFallbackCloudPosition(term, placed, width, height, padding) {
+  const step = 6;
+  for (let y = padding; y < height - padding; y += step) {
+    for (let x = padding; x < width - padding; x += step) {
+      const box = getWordCloudBox(term, x, y);
+      if (box.left < padding || box.top < padding || box.right > width - padding || box.bottom > height - padding) continue;
+      if (isBoxInsideCloud(box, width, height, padding) && !hasWordCloudCollision(box, placed)) {
+        return { x: box.left + box.width / 2, y: box.top + box.height / 2 };
+      }
+    }
+  }
+
+  return { x: width / 2, y: height / 2 };
+}
+
+function getWordCloudBox(term, x, y) {
+  const width = term.offsetWidth;
+  const height = term.offsetHeight;
   return {
-    topTerms: arrangeWordCloudTerms(topTerms),
-    bottomTerms: arrangeWordCloudTerms(bottomTerms)
+    left: x - width / 2,
+    top: y - height / 2,
+    right: x + width / 2,
+    bottom: y + height / 2,
+    width,
+    height
   };
 }
 
-function arrangeWordCloudTerms(terms) {
-  const pattern = [6, 1, 10, 3, 14, 0, 8, 5, 18, 2, 12, 7, 22, 4, 16, 9, 20, 11, 24, 13, 15, 17, 26, 19, 21, 23, 25, 27, 28, 29, 30];
-  const used = new Set();
-  const arranged = [];
-
-  pattern.forEach((index) => {
-    if (terms[index]) {
-      arranged.push(terms[index]);
-      used.add(index);
-    }
-  });
-  terms.forEach((term, index) => {
-    if (!used.has(index)) arranged.push(term);
-  });
-  return arranged;
+function hasWordCloudCollision(box, placed) {
+  const gap = 5;
+  return placed.some((other) => (
+    box.left < other.right + gap
+    && box.right > other.left - gap
+    && box.top < other.bottom + gap
+    && box.bottom > other.top - gap
+  ));
 }
 
-function getWordCloudTermStyle(term, index) {
-  const size = (0.84 + Math.pow(term.level, 1.18) * 0.27).toFixed(2);
-  const opacity = (0.68 + term.level * 0.05).toFixed(2);
-  return `--size:${size}rem;--opacity:${opacity};--z:${term.level};`;
+function pruneWordCloudOverlaps(container) {
+  const visibleBoxes = [];
+  Array.from(container.querySelectorAll(".word-cloud-term")).forEach((term) => {
+    const rect = term.getBoundingClientRect();
+    const box = {
+      left: rect.left,
+      top: rect.top,
+      right: rect.right,
+      bottom: rect.bottom,
+      width: rect.width,
+      height: rect.height
+    };
+
+    if (hasWordCloudCollision(box, visibleBoxes)) {
+      term.hidden = true;
+      return;
+    }
+    visibleBoxes.push(box);
+  });
+}
+
+function isBoxInsideCloud(box, width, height, padding) {
+  const points = [
+    [box.left, box.top],
+    [box.right, box.top],
+    [box.left, box.bottom],
+    [box.right, box.bottom],
+    [box.left + box.width / 2, box.top + box.height / 2]
+  ];
+  return points.every(([x, y]) => isPointInsideWordCloud(x, y, width, height, padding));
+}
+
+function isPointInsideWordCloud(x, y, width, height, padding) {
+  const px = x / width;
+  const py = y / height;
+  const ellipseX = (x - width / 2) / ((width - padding * 2) * 0.48);
+  const ellipseY = (y - height / 2) / ((height - padding * 2) * 0.39);
+  if (ellipseX * ellipseX + ellipseY * ellipseY <= 1) return true;
+
+  const lobes = [
+    [0.28, 0.47, 0.24],
+    [0.41, 0.34, 0.25],
+    [0.57, 0.33, 0.27],
+    [0.72, 0.49, 0.24],
+    [0.38, 0.66, 0.24],
+    [0.61, 0.67, 0.25]
+  ];
+  return lobes.some(([cx, cy, radius]) => {
+    const dx = (px - cx) / radius;
+    const dy = (py - cy) / (radius * 0.78);
+    return dx * dx + dy * dy <= 1;
+  });
 }
 
 function renderRoleFitPanel(track, role) {
@@ -3709,6 +3839,71 @@ function renderRoleFitPanel(track, role) {
       ${roleFitBlock("산출물 예시", getRoleArtifactExamples(track, role))}
     </div>
   `;
+}
+
+function renderExpertReviewPanel(track, role) {
+  const reviewItems = getExpertReviewItems(track, role);
+  return `
+    <details class="expert-review-panel" open>
+      <summary>
+        <span>
+          <em class="eyebrow">직무 전문가 검토</em>
+          <strong>${role.title} 내용·교육과정 연결성</strong>
+        </span>
+      </summary>
+      <div class="expert-review-grid">
+        ${reviewItems.map((item) => `
+          <div class="expert-review-item">
+            <strong>${item.title}</strong>
+            <p>${item.body}</p>
+          </div>
+        `).join("")}
+      </div>
+    </details>
+  `;
+}
+
+function getExpertReviewItems(track, role) {
+  const diagnosticItems = roleDiagnostics[role.id] || diagnostics[track.id] || [];
+  const linkedResources = getRoleLinkedResources(role);
+  const primaryResource = linkedResources.find((resource) => getRoleKeywordMatches(resource, role).length)
+    || linkedResources.find((resource) => resource.core)
+    || linkedResources[0];
+  const directResourceCount = linkedResources.filter((resource) => !/search|results\?|query=|courses\/free\/?$/i.test(resource.url || "")).length;
+  const output = getRoleCurriculumOutput(track, role);
+  const expertSkillText = diagnosticItems.slice(0, 3).map(([skill]) => skill).join(", ");
+  const keywordText = role.postingKeywords.slice(0, 3).join(", ");
+
+  return [
+    {
+      title: "직무 내용",
+      body: `${role.responsibilities[0]} 업무를 반복 업무의 중심으로 봅니다. 공고에서 ${keywordText} 같은 키워드가 실제 업무·자격요건에 같이 나오면 이 직무와의 연결성이 높습니다.`
+    },
+    {
+      title: "필수 역량",
+      body: `전문가 관점에서는 ${expertSkillText} 항목을 말로만 설명하는 것보다 ${output}처럼 제출 가능한 산출물로 남기는지가 중요합니다.`
+    },
+    {
+      title: "교육과정",
+      body: `${linkedResources.length}개 후보 중 ${directResourceCount}개는 바로 열 수 있는 자료입니다. ${primaryResource ? `${primaryResource.title}부터 보고` : "공식·검토 자료부터 보고"} 보유 역량 체크에서 빠진 항목만 로드맵에 남기도록 구성했습니다.`
+    }
+  ];
+}
+
+function getRoleLinkedResources(role) {
+  const linkedIds = getRoleLinkedResourceIds(role);
+  return linkedIds
+    .map((id) => resources.find((resource) => resource.id === id))
+    .filter(Boolean);
+}
+
+function getRoleCurriculumOutput(track, role) {
+  if (role.title.includes("검증") || role.title.includes("시험")) return "시험계획서와 Pass/Fail 검증 리포트";
+  if (role.title.includes("품질") || role.title.includes("공정")) return "조건 변경 검토표와 개선 보고서";
+  if (role.title.includes("설계") || role.title.includes("하드웨어")) return "요구사항표, 설계 검토표, 측정 리포트";
+  if (role.title.includes("데이터") || role.title.includes("수율")) return "분석 노트북과 원인 가설 리포트";
+  if (role.title.includes("펌웨어") || role.title.includes("소프트웨어") || role.title.includes("제어")) return "동작 로그, 테스트 케이스, README";
+  return track.outputs[0] || "직무 산출물";
 }
 
 function renderMajorConnectionPanel(track, role) {
@@ -4141,6 +4336,85 @@ function renderRoadmapGuidance(context, tasks) {
 }
 
 function getCurriculumTasks(trackId) {
+  const track = tracks.find((item) => item.id === trackId);
+  const role = track ? getSelectedRole(track.id) : null;
+  if (track && role) return getRoleSpecificCurriculumTasks(track, role);
+  if (curriculumTasks[trackId]) return curriculumTasks[trackId];
+  return (roadmaps[trackId] || []).map(([title, objective, deliverable]) => ({
+    title,
+    objective,
+    time: "2시간",
+    steps: [objective],
+    deliverable,
+    rubric: ["산출물이 제출 가능하다", "직무 역량과 연결된다", "다음 행동이 보인다"]
+  }));
+}
+
+function getRoleSpecificCurriculumTasks(track, role) {
+  const baseTasks = getBaseCurriculumTasks(track.id);
+  const diagnosticsForRole = roleDiagnostics[role.id] || diagnostics[track.id] || [];
+  const primarySkill = diagnosticsForRole[0]?.[0] || role.postingKeywords[0];
+  const secondarySkill = diagnosticsForRole[1]?.[0] || role.postingKeywords[1] || primarySkill;
+  const output = getRoleCurriculumOutput(track, role);
+  const keywords = role.postingKeywords.slice(0, 4).join(", ");
+
+  return [
+    {
+      title: `${role.title} 직무상세 분해`,
+      baseTitle: baseTasks[0]?.title || "직무 이해",
+      objective: `${role.focus}를 실제 공고의 업무, 자격요건, 우대사항으로 나누어 지원 직무와 맞는지 판단합니다.`,
+      time: "90분",
+      steps: [
+        `${role.responsibilities[0]} 업무가 공고에 실제로 있는지 표시합니다.`,
+        `자격요건을 보유 역량, 보완 역량, 증명 산출물로 나눕니다: ${role.requirements[0]}`,
+        `${keywords} 키워드가 회사 공고에서 어떤 문장으로 쓰였는지 기록합니다.`
+      ],
+      deliverable: `${role.title} 업무-역량 매핑표`,
+      rubric: ["공고 문장과 앱 직무 설명이 연결된다", "보유 역량과 부족 역량이 분리된다", "지원 여부 판단 근거가 남는다"]
+    },
+    {
+      title: `${primarySkill} 핵심 역량 보완`,
+      baseTitle: baseTasks[1]?.title || "전공·도구 보완",
+      objective: `${role.title}에서 반복되는 ${primarySkill}, ${secondarySkill} 역량을 교육자료와 작은 예제로 보완합니다.`,
+      time: "2시간",
+      steps: [
+        `보유 역량 체크에서 ${primarySkill} 관련 미체크 항목을 확인합니다.`,
+        "추천 교육자료 중 직접 링크와 검토 자료를 먼저 열어 핵심 개념을 정리합니다.",
+        `다음 역량을 설명할 수 있는 예제나 계산, 표, 로그를 남깁니다: ${role.requirements[1] || role.requirements[0]}`
+      ],
+      deliverable: `${primarySkill} 보완 노트와 예제`,
+      rubric: ["미체크 역량과 교육자료가 연결된다", "개념 설명과 작은 예제가 함께 있다", "지원 직무 용어로 다시 설명할 수 있다"]
+    },
+    {
+      title: `${role.postingKeywords[0]} 산출물 작성`,
+      baseTitle: baseTasks[2]?.title || "해석 적용",
+      objective: `전문가가 보는 핵심은 학습 완료가 아니라 ${output}입니다. 교육자료를 보고 이번 직무의 산출물 초안을 만듭니다.`,
+      time: "2시간",
+      steps: [
+        `${role.responsibilities[1] || role.responsibilities[0]}에 필요한 입력값과 판단 기준을 정합니다.`,
+        "추천 자료에서 본 방법을 표, 그래프, 체크리스트, 테스트 케이스 중 하나로 적용합니다.",
+        "결과가 공고의 업무 또는 자격요건 중 어떤 문장과 연결되는지 적습니다."
+      ],
+      deliverable: output,
+      rubric: ["산출물 형식이 직무와 맞다", "입력값과 판단 기준이 보인다", "공고 문장과 직접 연결된다"]
+    },
+    {
+      title: "지원 회사 맞춤 검증",
+      baseTitle: baseTasks[3]?.title || "포트폴리오 정리",
+      objective: "일반 직무 로드맵을 지원 회사 공고 기준으로 다시 좁혀 면접에서 설명 가능한 근거로 정리합니다.",
+      time: "2시간",
+      steps: [
+        "지원 회사 공고의 업무·자격요건·우대사항 문장을 3개 이상 가져옵니다.",
+        "이번 로드맵 산출물 중 공고와 직접 맞는 것과 맞지 않는 것을 표시합니다.",
+        "부족한 항목 1개를 다음 주 보완 과제로 정합니다."
+      ],
+      deliverable: "회사 공고 맞춤 보완 체크리스트",
+      rubric: ["회사 공고 원문 기준으로 판단한다", "일반 추천과 회사 요구의 차이를 적는다", "다음 보완 행동이 구체적이다"]
+    }
+  ];
+}
+
+function getBaseCurriculumTasks(trackId) {
   if (curriculumTasks[trackId]) return curriculumTasks[trackId];
   return (roadmaps[trackId] || []).map(([title, objective, deliverable]) => ({
     title,
@@ -4155,7 +4429,7 @@ function getCurriculumTasks(trackId) {
 function getVisibleRoadmapTasks(trackId) {
   const coreTasks = getCurriculumTasks(trackId).map((task, index) => ({
     ...task,
-    baseTitle: task.title,
+    baseTitle: task.baseTitle || task.title,
     baseIndex: index,
     planWeek: index + 1,
     weekLabel: `${index + 1}주차`,
