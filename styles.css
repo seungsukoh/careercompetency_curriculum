@@ -307,6 +307,35 @@ input::placeholder {
   border-radius: var(--radius);
 }
 
+.company-detail-notice {
+  margin: -4px 0 14px;
+  padding: 11px 12px;
+  color: #334155;
+  background: #fff8e6;
+  border: 1px solid #ead393;
+  border-radius: 7px;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.company-detail-notice strong,
+.company-detail-inline {
+  color: #7a4a12;
+  font-weight: 900;
+}
+
+.company-detail-notice strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.company-detail-inline {
+  padding: 9px 10px;
+  background: #fff8e6;
+  border: 1px solid #ead393;
+  border-radius: 7px;
+}
+
 .role-search {
   min-width: 0;
 }
@@ -671,7 +700,7 @@ input::placeholder {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  max-width: min(46%, 260px);
+  max-width: min(62%, 420px);
   color: #26343f;
   font-size: var(--size);
   font-weight: 800;
@@ -679,6 +708,7 @@ input::placeholder {
   opacity: var(--opacity);
   overflow-wrap: anywhere;
   text-align: center;
+  text-shadow: 0 1px 0 #ffffff, 0 0 8px rgba(255, 255, 255, 0.78);
   transform: translate(-50%, -50%) rotate(var(--rotate));
   white-space: normal;
 }
@@ -701,10 +731,12 @@ input::placeholder {
 
 .word-cloud-term.weight-5 {
   color: #96502e;
+  font-weight: 900;
 }
 
 .word-cloud-term.weight-6 {
   color: #22303a;
+  font-weight: 900;
 }
 
 .word-cloud-panel img {
@@ -1464,7 +1496,7 @@ li {
   }
 
   .word-cloud-term {
-    max-width: 48%;
-    font-size: calc(var(--size) * 0.76);
+    max-width: 58%;
+    font-size: calc(var(--size) * 0.68);
   }
 }

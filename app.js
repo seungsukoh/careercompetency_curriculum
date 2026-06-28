@@ -3284,6 +3284,10 @@ function renderTrackDetail() {
     <div class="recommendation-note">
       <strong>${majorPathwayLabel}:</strong> ${majorPathwayReason} ${majorPathwayFocus}
     </div>
+    <div class="company-detail-notice">
+      <strong>회사별 직무상세 확인 필요</strong>
+      이 제안은 일반적인 직무내용 기반이므로 지원 회사의 실제 직무상세와 다를 수 있습니다. 공고의 업무, 자격요건, 우대사항을 반드시 확인하고 그 내용에 맞춰 보유 역량 체크와 로드맵을 조정하세요.
+    </div>
     <section class="role-panel" aria-label="채용공고 기준 세부 직무">
       <div>
         <p class="eyebrow">채용공고 기준 세부 직무</p>
@@ -3362,18 +3366,18 @@ function renderRoleWordCloud(track, role, modifier = "") {
 }
 
 const wordCloudPlacements = [
-  [50, 49, 0], [32, 43, 0], [68, 55, 0], [52, 31, 0], [45, 67, 0],
-  [73, 36, 0], [27, 60, 0], [59, 74, 0], [39, 24, 0], [80, 68, 0],
-  [19, 34, 0], [64, 20, 0], [23, 77, 0], [83, 25, 0], [13, 52, -90],
-  [88, 48, 90], [35, 82, 0], [55, 84, 0], [72, 82, 0], [18, 20, 0],
-  [47, 14, 0], [82, 14, 0], [12, 70, 0], [92, 74, 0], [30, 12, 0],
-  [66, 11, 0]
+  [50, 50, 0], [43, 47, 0], [57, 53, 0], [51, 38, 0], [47, 62, 0],
+  [62, 43, 0], [36, 57, 0], [58, 67, 0], [40, 34, 0], [68, 61, 0],
+  [29, 45, 0], [66, 30, 0], [28, 70, 0], [75, 39, 0], [19, 55, -90],
+  [83, 52, 90], [37, 77, 0], [55, 80, 0], [70, 77, 0], [21, 29, 0],
+  [47, 20, 0], [77, 22, 0], [15, 72, 0], [88, 71, 0], [31, 17, 0],
+  [66, 15, 0]
 ];
 
 function getWordCloudTermStyle(term, index) {
   const placement = wordCloudPlacements[index % wordCloudPlacements.length];
-  const size = (0.72 + Math.pow(term.level, 1.18) * 0.31).toFixed(2);
-  const opacity = (0.64 + term.level * 0.055).toFixed(2);
+  const size = (0.82 + Math.pow(term.level, 1.32) * 0.34).toFixed(2);
+  const opacity = (0.68 + term.level * 0.05).toFixed(2);
   return `--x:${placement[0]}%;--y:${placement[1]}%;--rotate:${placement[2]}deg;--size:${size}rem;--opacity:${opacity};--z:${term.level};`;
 }
 
@@ -3781,6 +3785,7 @@ function renderRoadmapGuidance(context, tasks) {
   elements.roadmapGuidance.innerHTML = `
     <h3>${selectedText}</h3>
     <p>${durationStrategy.summary} ${context.role?.title || context.track.title}에서 이미 체크한 보유 역량은 뒤로 두고, 체크하지 않은 보완 역량(${gapText})을 우선해 과제와 교육자료를 배치합니다.</p>
+    <p class="company-detail-inline">이 로드맵은 일반적인 직무내용 기반 추천입니다. 지원 회사의 직무상세에 나온 업무·자격요건·우대사항을 확인한 뒤, 공고와 직접 맞닿은 역량과 산출물을 우선 준비하세요.</p>
     <p>내 계획은 이 구성 결과를 완성된 로드맵 형태로 모아 보고 엑셀로 내보내는 화면입니다.</p>
     <div class="badge-row">
       <span class="badge">기간: ${getDurationLabel()}</span>
