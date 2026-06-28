@@ -2597,56 +2597,56 @@ delete curriculumTasks["chemical-process-role-options"];
 
 const learningGoals = {
   explore: {
-    label: "직무 탐색",
-    summary: "실제 업무, 필요 역량, 흔한 오해를 먼저 확인합니다.",
+    label: "직무가 맞는지 판단",
+    summary: "반복 업무, 자격조건, 산출물을 먼저 확인해 지원 직무가 맞는지 판단합니다.",
     preferredDifficulties: ["입문"],
     prioritySkills: ["직무 이해", "문서화"]
   },
   foundation: {
-    label: "전공 보완",
+    label: "부족 역량 보완",
     summary: "역량 체크에서 비어 있는 전공·도구 역량을 먼저 메웁니다.",
     preferredDifficulties: ["입문", "기초실습"],
     prioritySkills: ["전공지식", "통계", "회로이론", "재료역학", "공정 흐름", "물질수지", "열역학", "C언어"]
   },
   portfolio: {
-    label: "포트폴리오",
+    label: "실습 산출물 만들기",
     summary: "실습 시간과 산출물이 분명한 교육자료를 우선 봅니다.",
     preferredDifficulties: ["기초실습", "적용"],
     prioritySkills: ["문서화", "검증", "문제해결", "도구역량"]
   },
   interview: {
-    label: "면접 준비",
-    summary: "직무 언어로 설명할 수 있는 개념과 산출물 근거를 정리합니다.",
+    label: "공고·면접 근거 정리",
+    summary: "지원 회사 공고 문장과 직무 언어로 설명할 수 있는 산출물 근거를 정리합니다.",
     preferredDifficulties: ["입문", "적용"],
     prioritySkills: ["직무 이해", "문서화", "검증"]
   }
 };
 
 const goalRecommendationLabels = {
-  explore: "직무 이해와 용어 확인 우선",
+  explore: "반복 업무와 자격조건 판단 우선",
   foundation: "역량 체크 공백 보완 우선",
-  portfolio: "실습 산출물과 포트폴리오 근거 우선",
-  interview: "면접 설명 근거와 직무 키워드 우선"
+  portfolio: "실습 산출물과 제출 근거 우선",
+  interview: "공고 문장과 면접 설명 근거 우선"
 };
 
 const goalScoringRules = {
   explore: {
-    label: "직무 탐색",
+    label: "직무 판단",
     resource: "입문, 직무 용어, 한국어·공식 자료, 짧은 학습시간",
     roadmap: "업무 흐름과 핵심 용어를 먼저 확인하는 과제"
   },
   foundation: {
-    label: "전공 보완",
+    label: "부족 역량 보완",
     resource: "역량 체크에서 비어 있는 전공·도구 역량",
     roadmap: "보완 필요 역량과 직접 맞닿은 기초 과제"
   },
   portfolio: {
-    label: "포트폴리오",
+    label: "실습 산출물",
     resource: "실습시간, 보고서, README, 검증 결과물",
     roadmap: "산출물을 남기고 반복 보강할 수 있는 과제"
   },
   interview: {
-    label: "면접 준비",
+    label: "공고·면접 근거",
     resource: "채용공고 키워드, 공식 자료, 설명 가능한 근거",
     roadmap: "직무 언어로 말할 수 있는 검증·비교 과제"
   }
@@ -3726,7 +3726,8 @@ const storageKey = "careerCompetencyPilot";
 const primaryViews = ["tracks", "diagnosis", "roadmap", "references", "saved"];
 
 const defaultState = {
-  selectedTrackId: "production-quality",
+  selectedTrackId: null,
+  hasSelectedRoleSelection: false,
   profile: { major: "mechanical", industry: "all", goal: "foundation", durationWeeks: "4" },
   roleSearch: "",
   roleGroupFilter: "all",
@@ -3739,8 +3740,6 @@ const defaultState = {
 };
 
 let state = loadState();
-let deferredInstallPrompt = null;
-let serviceWorkerRefreshing = false;
 let wordCloudLayoutFrame = null;
 
 const elements = {};
@@ -3749,7 +3748,7 @@ document.addEventListener("DOMContentLoaded", () => {
   bindElements();
   bindEvents();
   render();
-  registerServiceWorker();
+  disableServiceWorkerCache();
 });
 
 function bindElements() {
@@ -3786,8 +3785,7 @@ function bindElements() {
     "savedGuidance",
     "savedList",
     "clearSavedButton",
-    "exportPlanButton",
-    "installButton"
+    "exportPlanButton"
   ].forEach((id) => {
     elements[id] = document.getElementById(id);
   });
@@ -3849,27 +3847,12 @@ function bindEvents() {
   elements.clearSavedButton.addEventListener("click", () => {
     state.saved = [];
     state.completed = [];
+    state.completedRoadmap = [];
     saveState();
     render();
   });
 
   elements.exportPlanButton.addEventListener("click", exportPlanAsExcel);
-
-  if (elements.installButton) {
-    window.addEventListener("beforeinstallprompt", (event) => {
-      event.preventDefault();
-      deferredInstallPrompt = event;
-      elements.installButton.hidden = false;
-    });
-
-    elements.installButton.addEventListener("click", async () => {
-      if (!deferredInstallPrompt) return;
-      deferredInstallPrompt.prompt();
-      await deferredInstallPrompt.userChoice;
-      deferredInstallPrompt = null;
-      elements.installButton.hidden = true;
-    });
-  }
 
   window.addEventListener("resize", scheduleWordCloudLayout);
 }
@@ -3886,6 +3869,8 @@ function loadState() {
       ...defaultState,
       ...(stored || {}),
       profile,
+      selectedTrackId: stored?.selectedTrackId || defaultState.selectedTrackId,
+      hasSelectedRoleSelection: Boolean(stored?.hasSelectedRoleSelection),
       roleSearch: typeof stored?.roleSearch === "string" ? stored.roleSearch : defaultState.roleSearch,
       roleGroupFilter: stored?.roleGroupFilter || defaultState.roleGroupFilter,
       view: defaultState.view,
@@ -3947,6 +3932,26 @@ function renderViews() {
 function renderWorkflowStatus() {
   if (!elements.workflowStatus || !elements.nextActionPanel) return;
 
+  if (!hasActiveRoleSelection()) {
+    const steps = getWorkflowSteps({ track: null, role: null, checkedCount: 0, score: 0, gapCount: 0, savedCount: 0 });
+    elements.workflowStatus.innerHTML = steps.map((step, index) => `
+      <button class="workflow-step ${index === 0 ? "is-active" : ""}" type="button" data-view-target="${step.view}">
+        <span class="workflow-step-number">${index + 1}</span>
+        <span>
+          <strong>${step.title}</strong>
+          <em>${step.status}</em>
+        </span>
+      </button>
+    `).join("");
+    elements.nextActionPanel.innerHTML = `
+      <p class="eyebrow">다음 행동</p>
+      <h3>지원하려는 직무를 먼저 선택하세요</h3>
+      <p>직무를 선택하면 워드클라우드, 반복 업무, 자격조건, 우대역량, 전공 연결성이 바로 아래에 열립니다.</p>
+      <button class="primary-button full-width" type="button" data-view-target="tracks">직무 선택</button>
+    `;
+    return;
+  }
+
   const track = getSelectedTrack();
   const role = getSelectedRole(track.id);
   const diagnosticItems = getDiagnosticItems(track);
@@ -3981,8 +3986,8 @@ function getWorkflowSteps({ track, role, checkedCount, score, gapCount, savedCou
     {
       view: "tracks",
       title: "직무 선택",
-      status: role ? `${role.title}` : track.title,
-      complete: Boolean(role)
+      status: role ? `${role.title}` : "선택 전",
+      complete: hasActiveRoleSelection() && Boolean(role)
     },
     {
       view: "diagnosis",
@@ -3994,24 +3999,34 @@ function getWorkflowSteps({ track, role, checkedCount, score, gapCount, savedCou
       view: "roadmap",
       title: "부족 역량 로드맵",
       status: gapCount ? `보완 ${gapCount}개 기준` : "보완 공백 낮음",
-      complete: true
+      complete: hasActiveRoleSelection() && checkedCount > 0
     },
     {
       view: "references",
       title: "참고자료",
       status: `${resources.length}개 자료`,
-      complete: true
+      complete: hasActiveRoleSelection()
     },
     {
       view: "saved",
       title: "계획서",
-      status: savedCount ? `${savedCount}개 자료 저장` : "자동 구성 확인",
-      complete: savedCount > 0
+      status: hasActiveRoleSelection() ? (savedCount ? `${savedCount}개 추가 자료` : "자동 계획서 생성") : "직무 선택 후",
+      complete: hasActiveRoleSelection()
     }
   ];
 }
 
 function getNextWorkflowStep(steps, activeIndex) {
+  if (!hasActiveRoleSelection()) {
+    return {
+      view: "tracks",
+      title: "직무를 선택해야 시작됩니다",
+      body: "전공과 관심 산업에 맞는 추천순 목록에서 실제 지원하려는 세부 직무를 고르세요.",
+      action: "직무 선택",
+      primary: true
+    };
+  }
+
   const diagnosisStep = steps.find((step) => step.view === "diagnosis");
   const savedStep = steps.find((step) => step.view === "saved");
 
@@ -4056,6 +4071,24 @@ function getNextWorkflowStep(steps, activeIndex) {
 
 function renderRoleContextBar() {
   if (!elements.roleContextBar) return;
+  if (!hasActiveRoleSelection()) {
+    elements.roleContextBar.innerHTML = `
+      <div class="role-context-main">
+        <span>현재 기준</span>
+        <strong>선택한 직무 없음</strong>
+        <em>${getMajorLabel()} · ${getIndustryLabel()} 기준 추천 목록을 보고 있습니다.</em>
+      </div>
+      <div class="role-context-summary">
+        <strong>먼저 할 일</strong>
+        <span>지원하려는 세부 직무를 선택하면 직무상세와 부족 역량 로드맵이 생성됩니다.</span>
+      </div>
+      <div class="role-context-actions">
+        <button class="primary-button" type="button" data-view-target="tracks">직무 선택</button>
+      </div>
+    `;
+    return;
+  }
+
   const track = getSelectedTrack();
   const role = getSelectedRole(track.id);
   const diagnosticItems = getDiagnosticItems(track);
@@ -4095,18 +4128,18 @@ function renderRoleContextBar() {
 
 function renderProfileImpact() {
   if (!elements.profileImpactPanel) return;
-  const track = getSelectedTrack();
-  const role = getSelectedRole(track.id);
   const catalog = getRoleCatalog({ applyRoleFilters: false });
   const directCount = catalog.filter(({ track: itemTrack, role: itemRole }) => getMajorPathway(itemTrack, itemRole) === "direct").length;
   const bridgeCount = catalog.filter(({ track: itemTrack, role: itemRole }) => getMajorPathway(itemTrack, itemRole) === "bridge").length;
   const topRoles = catalog.slice(0, 3).map(({ role: itemRole }) => itemRole.title);
   const goalRule = goalScoringRules[state.profile.goal] || goalScoringRules.foundation;
-  const majorLabel = getMajorPathwayLabel(track, role);
+  const selectedText = hasActiveRoleSelection()
+    ? `${getSelectedRole(getSelectedTrack().id)?.title || "선택 직무"} 기준`
+    : "직무 선택 전 추천 기준";
 
   elements.profileImpactPanel.innerHTML = `
     <div>
-      <strong>${getMajorLabel()} 기준: ${majorLabel}</strong>
+      <strong>${getMajorLabel()} 기준: ${selectedText}</strong>
       <span>직결 ${directCount}개 · 확장 ${bridgeCount}개를 먼저 올립니다.</span>
       <em>${topRoles.join(" / ")}</em>
     </div>
@@ -4122,6 +4155,10 @@ function getSelectedTrack() {
   return tracks.find((track) => track.id === state.selectedTrackId) || tracks[0];
 }
 
+function hasActiveRoleSelection() {
+  return Boolean(state.hasSelectedRoleSelection && state.selectedTrackId);
+}
+
 function getFilteredTracks() {
   return tracks.filter((track) => {
     const industryMatch = state.profile.industry === "all" || track.industries.includes(state.profile.industry);
@@ -4134,6 +4171,8 @@ function syncSelectedTrackWithProfile() {
   if (!filtered.length) return false;
   let changed = false;
 
+  if (!hasActiveRoleSelection()) return false;
+
   const roleCatalog = getRoleCatalog();
   let selectedRole = getSelectedRole(state.selectedTrackId);
   const selectedRoleId = selectedRole?.id;
@@ -4145,6 +4184,7 @@ function syncSelectedTrackWithProfile() {
     const firstMatch = roleCatalog[0];
     state.selectedTrackId = firstMatch.track.id;
     state.selectedRoles = { ...state.selectedRoles, [firstMatch.track.id]: firstMatch.role.id };
+    state.hasSelectedRoleSelection = true;
     return true;
   }
 
@@ -4173,6 +4213,7 @@ function getAvailableRoles(track) {
 }
 
 function getSelectedRole(trackId = state.selectedTrackId) {
+  if (!trackId) return null;
   const track = tracks.find((item) => item.id === trackId);
   const roles = getAvailableRoles(track);
   if (!roles.length) return null;
@@ -4276,8 +4317,14 @@ function getMajorPathwayFocus(track, role = null, major = state.profile.major) {
 
 function renderTracks() {
   const roleCatalog = getRoleCatalog();
-  elements.trackCount.textContent = `${roleCatalog.length}개 채용공고 직무 · 전공은 추천순위 기준`;
-  if (elements.selectedRoleOverview) elements.selectedRoleOverview.innerHTML = "";
+  const selectedTrack = getSelectedTrack();
+  const selectedRole = getSelectedRole(selectedTrack.id);
+  elements.trackCount.textContent = `${roleCatalog.length}개 세부 직무 · ${getMajorLabel()} 추천순`;
+  if (elements.selectedRoleOverview) {
+    elements.selectedRoleOverview.innerHTML = hasActiveRoleSelection()
+      ? renderSelectedRoleOverview(selectedTrack, selectedRole)
+      : renderRoleSelectionPrompt(roleCatalog);
+  }
 
   if (!roleCatalog.length) {
     elements.trackList.innerHTML = `
@@ -4305,26 +4352,44 @@ function renderTracks() {
       </span>
     </button>
   `;
-    return isSelected ? `${roleCard}${renderSelectedRoleOverview(track, role)}` : roleCard;
+    return roleCard;
   }).join("");
 
   elements.trackList.querySelectorAll("[data-track-id][data-role-id]").forEach((button) => {
     button.addEventListener("click", () => {
       state.selectedTrackId = button.dataset.trackId;
       state.selectedRoles = { ...state.selectedRoles, [button.dataset.trackId]: button.dataset.roleId };
+      state.hasSelectedRoleSelection = true;
       state.view = "tracks";
       saveState();
       render();
       focusSelectedRoleOverview();
     });
   });
+  bindResourceActions(elements.selectedRoleOverview);
+}
+
+function renderRoleSelectionPrompt(roleCatalog) {
+  const topRoles = roleCatalog.slice(0, 3).map(({ role }) => role.title);
+  return `
+    <article class="selection-prompt-panel">
+      <div>
+        <p class="eyebrow">아직 선택 전</p>
+        <h3>아래 추천 직무 중 실제 지원하려는 직무를 먼저 고르세요</h3>
+        <p>선택 후에는 같은 위치에 워드클라우드, 반복 업무, 자격조건, 우대역량, 전공 연결성, 바로 참고할 자료가 열립니다.</p>
+      </div>
+      ${topRoles.length ? `
+        <div class="badge-row">
+          ${topRoles.map((roleTitle) => `<span class="badge">${roleTitle}</span>`).join("")}
+        </div>
+      ` : ""}
+    </article>
+  `;
 }
 
 function focusSelectedRoleOverview() {
   requestAnimationFrame(() => {
-    const selectedCard = elements.trackList?.querySelector(".track-card.is-selected");
-    const selectedDetail = elements.trackList?.querySelector(".selected-role-overview");
-    (selectedCard || selectedDetail || elements.selectedRoleOverview)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    elements.selectedRoleOverview?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 }
 
@@ -4337,15 +4402,19 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
     ...getRoleLinkedResources(role),
     ...getRecommendedResources(track, context)
   ]).slice(0, 3);
+  const diagnosticItems = getDiagnosticItems(track);
+  const checkedCount = diagnosticItems.filter((item) => state.checked[item.id]).length;
+  const gapItems = getGapItems(track.id);
+  const output = getRoleCurriculumOutput(track, role);
 
   return `
     <article class="selected-role-overview" aria-live="polite" aria-label="${role.title} 선택 직무 요약">
       <div class="selected-role-anchor">
-        <span>선택한 직무 정보</span>
+        <span>선택 직무 판단 보드</span>
         <strong>${role.title}</strong>
       </div>
+      ${renderRoleDecisionDashboard(track, role, checkedCount, diagnosticItems.length, gapItems, output)}
       <div class="selected-role-top">
-        ${renderRoleWordCloud(track, role, "is-featured")}
         <div class="selected-role-summary">
           <p class="eyebrow">선택한 직무를 먼저 판단하세요</p>
           <h3>${role.title}</h3>
@@ -4370,6 +4439,10 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
                 <span>
                   <em>${resource.title}</em>
                   <small>${resource.provider} · ${resource.type}</small>
+                  <small>
+                    <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
+                    ${renderSaveActionButton(resource, "계획 추가")}
+                  </small>
                 </span>
               `).join("")}
             </div>
@@ -4380,6 +4453,7 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
             <button class="ghost-button" type="button" data-view-target="references">참고자료 보기</button>
           </div>
         </div>
+        ${renderRoleWordCloud(track, role, "is-featured")}
       </div>
       <section class="selected-role-detail-panel" aria-label="${role.title} 선택직무 상세">
         <div class="selected-role-detail-head">
@@ -4409,6 +4483,38 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
   `;
 }
 
+function renderRoleDecisionDashboard(track, role, checkedCount, totalCount, gapItems, output) {
+  const majorLabel = getMajorPathwayLabel(track, role);
+  const gapText = gapItems.length
+    ? gapItems.slice(0, 3).map((item) => item.skill).join(", ")
+    : "큰 공백 없음";
+  const aiProfile = getRoleAiCompetencyProfile(role);
+  return `
+    <section class="role-decision-dashboard" aria-label="${role.title} 지원 판단 요약">
+      <div class="role-decision-card is-strong">
+        <span>전공 연결</span>
+        <strong>${majorLabel}</strong>
+        <em>${getMajorPathwayReason(track, role)}</em>
+      </div>
+      <div class="role-decision-card">
+        <span>역량 체크</span>
+        <strong>${checkedCount}/${totalCount}개 확인</strong>
+        <em>보완 우선: ${gapText}</em>
+      </div>
+      <div class="role-decision-card">
+        <span>준비 결과물</span>
+        <strong>${output}</strong>
+        <em>교육자료보다 산출물이 최종 판단 기준입니다.</em>
+      </div>
+      <div class="role-decision-card">
+        <span>AI·데이터</span>
+        <strong>${aiProfile ? aiProfile.level : "직무별 필요 시 반영"}</strong>
+        <em>${aiProfile ? aiProfile.summary : "공고에 데이터·자동화 표현이 있을 때만 우선순위에 올립니다."}</em>
+      </div>
+    </section>
+  `;
+}
+
 function renderRoleAiCompetencyPanel(role) {
   const profile = getRoleAiCompetencyProfile(role);
   if (!profile) return "";
@@ -4429,7 +4535,35 @@ function renderRoleAiCompetencyPanel(role) {
 }
 
 function getRoleAiCompetencyProfile(role) {
-  return role?.aiCompetency || null;
+  if (!role) return null;
+  if (role.aiCompetency) return role.aiCompetency;
+  return createFallbackAiCompetencyProfile(role);
+}
+
+function createFallbackAiCompetencyProfile(role) {
+  const text = getRoleSearchText({ title: "", summary: "" }, role);
+  if (/(CAD|도면|공차|기구|차체|섀시|구동계|열관리|CFD|FEA|해석|시험|검증|DVP|계측|품질|공정|장비|회로|PCB|펌웨어|ECU|CAN|HIL|SIL|ADAS|센서|로그|데이터|수율|불량|MES|SPC|Python|MATLAB)/i.test(text)) {
+    const isDataHeavy = /(데이터|로그|수율|불량|MES|SPC|Python|MATLAB|CAN|HIL|SIL|ADAS|센서|계측|검증|시험)/i.test(text);
+    return {
+      level: isDataHeavy ? "도움 큼" : "보조 역량",
+      summary: isDataHeavy
+        ? "공고에 로그, 시험, 계측, 데이터 정리 표현이 있으면 분석 자동화와 이상 구간 표시가 준비 차별점이 됩니다."
+        : "반복 설계·검토 업무에서 표준 체크리스트, 비교표, 간단한 자동화 스크립트가 준비 근거가 됩니다.",
+      keywords: isDataHeavy ? ["데이터 분석", "자동화", "이상탐지"] : ["자동화", "AI 활용", "비교표"],
+      requirements: [isDataHeavy ? "직무 데이터를 입력, 기준, 결과 지표로 나누어 설명하는 역량" : "반복 검토 기준을 표와 체크리스트로 구조화하는 역량"],
+      preferred: [isDataHeavy ? "Python/MATLAB/Excel 기반 로그·계측 데이터 후처리 경험" : "AI 도구를 활용해 검토표, 요구사항표, 비교표를 정리한 경험"],
+      diagnostics: [[isDataHeavy ? "데이터 기반 판단" : "AI 활용 정리", isDataHeavy ? "직무 로그나 시험 데이터를 기준값과 비교해 이상 구간을 표시할 수 있다." : "직무 요구사항을 체크리스트와 산출물 기준으로 구조화할 수 있다."]]
+    };
+  }
+
+  return null;
+}
+
+function getRoleAiDataExercise(role) {
+  const profile = getRoleAiCompetencyProfile(role);
+  if (!profile) return "";
+  const keyword = profile.keywords?.[0] || "데이터 분석";
+  return `${keyword} 관점에서 샘플 로그·측정값·공고 문장을 입력, 판단 기준, 결과 지표로 나누어 5줄 표로 정리합니다.`;
 }
 
 function renderInlineRoleWordCloud(track, role) {
@@ -4508,6 +4642,11 @@ function normalizeRoleSearch(value) {
 }
 
 function renderTrackDetail() {
+  if (!hasActiveRoleSelection()) {
+    elements.trackDetail.innerHTML = "";
+    return;
+  }
+
   const track = getSelectedTrack();
   const selectedRole = getSelectedRole(track.id);
 
@@ -4556,7 +4695,7 @@ function renderRoleWordCloud(track, role, modifier = "") {
       <div class="word-cloud-terms">
         ${terms.map((term, index) => renderWordCloudTerm(term, index, index === 0)).join("")}
       </div>
-      <figcaption>${role.title} 직무상세의 주요 업무, 자격요건, 우대역량, 역량 체크 문항에서 반복되는 단어일수록 크게 표시합니다.</figcaption>
+      <figcaption>${role.title} 직무상세의 주요 업무, 자격요건, 우대역량에서 반복되는 단어일수록 크게 표시합니다.</figcaption>
     </figure>
   `;
 }
@@ -4613,6 +4752,10 @@ function layoutWordCloud(container) {
 
   orderedTerms.forEach((term, index) => {
     const position = findCloudPosition(term, index, placed, width, height, padding);
+    if (!position) {
+      term.hidden = true;
+      return;
+    }
     placeWordCloudTerm(term, position.x, position.y, placed, padding, width, height);
   });
 
@@ -4667,7 +4810,7 @@ function findFallbackCloudPosition(term, placed, width, height, padding) {
     }
   }
 
-  return { x: width / 2, y: height / 2 };
+  return null;
 }
 
 function getWordCloudBox(term, x, y) {
@@ -4684,7 +4827,7 @@ function getWordCloudBox(term, x, y) {
 }
 
 function hasWordCloudCollision(box, placed) {
-  const gap = 5;
+  const gap = 2;
   return placed.some((other) => (
     box.left < other.right + gap
     && box.right > other.left - gap
@@ -4861,13 +5004,11 @@ function roleFitBlock(title, items) {
 
 function getRoleWordCloudTerms(track, role) {
   const weightedTerms = [];
-  addWeightedRoleTerms(weightedTerms, role.postingKeywords, 18);
-  addWeightedRoleTerms(weightedTerms, (roleDiagnostics[role.id] || []).map(([skill]) => skill), 17);
-  addWeightedRoleTerms(weightedTerms, track.skills, 8);
-  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.responsibilities), 15);
-  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.requirements), 14);
-  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.focus), 13);
-  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.preferred), 10);
+  addWeightedRoleTerms(weightedTerms, role.postingKeywords, 24);
+  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.responsibilities), 19);
+  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.requirements), 17);
+  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.focus), 15);
+  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.preferred), 12);
 
   const scoreMap = new Map();
   weightedTerms.forEach(({ word, weight }) => {
@@ -5032,6 +5173,18 @@ function detailBlock(title, items) {
 }
 
 function renderDiagnostics() {
+  if (!hasActiveRoleSelection()) {
+    elements.diagnosisTitle.textContent = "직무를 먼저 선택하세요";
+    elements.diagnosisGuide.innerHTML = `
+      <div class="empty-state">지원하려는 세부 직무를 선택하면 그 직무의 반복 업무, 자격조건, 우대역량 기준으로 역량 체크가 열립니다.</div>
+    `;
+    elements.diagnosticList.innerHTML = "";
+    elements.gapList.innerHTML = "";
+    elements.scoreBadge.textContent = "0%";
+    elements.scoreBar.style.width = "0%";
+    return;
+  }
+
   const track = getSelectedTrack();
   const role = getSelectedRole(track.id);
   const questions = getDiagnosticItems(track);
@@ -5065,8 +5218,20 @@ function renderDiagnostics() {
         <p>${item.question}</p>
         <p class="gap-action">이 항목은 로드맵과 교육자료 추천에서 우선 보완 대상으로 사용됩니다.</p>
       </article>
-    `).join("")
-    : `<div class="empty-state">현재 체크리스트 기준으로 큰 공백이 없습니다. 산출물 정리 단계로 넘어가세요.</div>`;
+    `).join("") + renderDiagnosisNextAction(gaps.length)
+    : `<div class="empty-state">현재 체크리스트 기준으로 큰 공백이 없습니다. 산출물 정리 단계로 넘어가세요.</div>${renderDiagnosisNextAction(0)}`;
+}
+
+function renderDiagnosisNextAction(gapCount) {
+  return `
+    <div class="diagnosis-next-panel">
+      <div>
+        <strong>${gapCount ? `${gapCount}개 부족 역량 기준으로 로드맵을 구성합니다` : "보완 공백이 낮아 산출물 정리 중심으로 넘어갑니다"}</strong>
+        <span>체크한 보유 역량은 뒤로 두고, 미체크 항목과 선택 직무 산출물을 우선 배치합니다.</span>
+      </div>
+      <button class="primary-button" type="button" data-view-target="roadmap">부족 역량 기준 로드맵 보기</button>
+    </div>
+  `;
 }
 
 function renderDiagnosticGroups(questions) {
@@ -5219,6 +5384,15 @@ function getDiagnosticItems(track) {
 }
 
 function renderRoadmap() {
+  if (!hasActiveRoleSelection()) {
+    elements.roadmapTitle.textContent = "직무 선택 후 로드맵 생성";
+    elements.roadmapGuidance.innerHTML = `
+      <div class="empty-state">세부 직무를 먼저 선택하세요. 선택 직무와 역량 체크 결과를 기준으로 주차별 과제와 교육자료가 자동 배치됩니다.</div>
+    `;
+    elements.roadmapList.innerHTML = "";
+    return;
+  }
+
   const track = getSelectedTrack();
   const role = getSelectedRole(track.id);
   const tasks = getVisibleRoadmapTasks(track.id);
@@ -5305,6 +5479,13 @@ function renderRoadmapGuidance(context, tasks) {
       <span class="badge">추가 자료: ${selectedResources.length}개</span>
     </div>
     ${renderHandsOnResourcePanel(context)}
+    <div class="roadmap-final-cta">
+      <div>
+        <strong>이 로드맵을 계획서로 정리</strong>
+        <span>자동 배치된 주차별 과제, 교육자료, 회사 공고 대조표를 계획서 화면과 엑셀 파일에서 확인합니다.</span>
+      </div>
+      <button class="primary-button" type="button" data-view-target="saved">계획서 보기</button>
+    </div>
     <details class="roadmap-detail-disclosure">
       <summary>추천 기준 자세히 보기</summary>
       <div class="duration-strategy-grid">
@@ -5358,6 +5539,16 @@ function renderRoadmapDecisionPanel(context, tasks) {
 function renderReferences() {
   if (!elements.referenceList || !elements.referenceGuidance || !elements.referenceCount) return;
 
+  if (!hasActiveRoleSelection()) {
+    elements.referenceCount.textContent = `${resources.length}개 자료`;
+    elements.referenceGuidance.innerHTML = `
+      <h3>직무를 선택하면 자료 우선순위가 정렬됩니다</h3>
+      <p>참고자료는 공식·시뮬레이션, 직접 실습·부트캠프, 기초 개념, 직무·채용공고 확인용으로 나뉩니다. 세부 직무 선택 후 필요한 자료만 계획에 추가하세요.</p>
+    `;
+    elements.referenceList.innerHTML = `<div class="empty-state">먼저 직무 탭에서 지원하려는 세부 직무를 선택하세요.</div>`;
+    return;
+  }
+
   const track = getSelectedTrack();
   const role = getSelectedRole(track.id);
   const tasks = getVisibleRoadmapTasks(track.id);
@@ -5404,20 +5595,58 @@ function renderReferences() {
 }
 
 function getReferenceSections(activeContext) {
-  return tracks.map((track) => {
-    const sectionTasks = getVisibleRoadmapTasks(track.id);
-    const sectionContext = track.id === activeContext.track.id
-      ? activeContext
-      : getRecommendationContext(track, getGapSkills(track.id), sectionTasks);
+  const categories = [
+    {
+      id: "official-simulation",
+      title: "공식·시뮬레이션 예제",
+      summary: "MathWorks, Ansys, NI, 공식 문서처럼 실습 환경과 예제가 명확한 자료입니다.",
+      match: (resource) => /MathWorks|Ansys|NI|Texas Instruments|STMicroelectronics|Arm|KiCad|Linux Kernel|Yocto|ROS/.test(resource.provider)
+        || /Simulink|Simscape|Stateflow|시뮬레이션|HIL|SIL|모델링|모델/.test(getResourceBadgeText(resource))
+    },
+    {
+      id: "hands-on",
+      title: "직접 실습·부트캠프",
+      summary: "과제, 멘토링, 부트캠프, 현장실습처럼 산출물을 만들기 좋은 자료입니다.",
+      match: (resource) => isHandsOnResource(resource)
+        || /코멘토|렛유인|STEP|HRD-Net|KDT|현장실습|부트캠프|멘토링/.test(`${resource.provider} ${resource.type}`)
+    },
+    {
+      id: "foundation",
+      title: "기초 개념·무료 강의",
+      summary: "직무 용어와 전공 기초를 빠르게 보완하기 위한 입문·기초 자료입니다.",
+      match: (resource) => ["입문", "기초", "기초실습"].includes(resource.difficulty)
+        || /KOCW|K-MOOC|YouTube|Coursera|edX|freeCodeCamp|Khan|Boostcourse|인프런|Udemy/.test(resource.provider)
+    },
+    {
+      id: "job-evidence",
+      title: "직무·채용공고 확인",
+      summary: "직무명, NCS, 공고 키워드, 면접 설명 근거를 확인할 때 쓰는 자료입니다.",
+      match: (resource) => /직무|NCS|채용|면접|공고|커리어|Job|Career/i.test(getResourceBadgeText(resource))
+    }
+  ];
+  const assigned = new Set();
+  const sections = categories.map((category) => {
     const sectionResources = resources
-      .filter((resource) => resource.tracks.includes(track.id))
-      .sort((a, b) => sortReferenceResources(a, b, sectionContext));
-    return {
-      track,
-      context: sectionContext,
-      resources: sectionResources
-    };
-  }).filter((section) => section.resources.length);
+      .filter((resource) => !assigned.has(resource.id) && category.match(resource))
+      .sort((a, b) => sortReferenceResources(a, b, activeContext));
+    sectionResources.forEach((resource) => assigned.add(resource.id));
+    return { ...category, context: activeContext, resources: sectionResources };
+  });
+  const otherResources = resources
+    .filter((resource) => !assigned.has(resource.id))
+    .sort((a, b) => sortReferenceResources(a, b, activeContext));
+
+  if (otherResources.length) {
+    sections.push({
+      id: "other",
+      title: "추가 참고자료",
+      summary: "선택 직무와 직접 연결되면 계획에 추가해도 되는 보조 자료입니다.",
+      context: activeContext,
+      resources: otherResources
+    });
+  }
+
+  return sections.filter((section) => section.resources.length);
 }
 
 function sortReferenceResources(a, b, context) {
@@ -5439,13 +5668,12 @@ function sortReferenceResources(a, b, context) {
 }
 
 function renderReferenceSection(section, activeContext) {
-  const isActiveTrack = section.track.id === activeContext.track.id;
   return `
-    <details class="reference-section" ${isActiveTrack ? "open" : ""}>
+    <details class="reference-section" ${section.id === "official-simulation" || section.id === "hands-on" ? "open" : ""}>
       <summary>
         <span>
-          <strong>${section.track.title}</strong>
-          <em>${section.track.summary}</em>
+          <strong>${section.title}</strong>
+          <em>${section.summary}</em>
         </span>
         <span class="status-pill">${section.resources.length}개</span>
       </summary>
@@ -5505,6 +5733,11 @@ function getRoleSpecificCurriculumTasks(track, role) {
   const secondarySkill = diagnosticsForRole[1]?.[0] || role.postingKeywords[1] || primarySkill;
   const output = getRoleCurriculumOutput(track, role);
   const keywords = role.postingKeywords.slice(0, 4).join(", ");
+  const aiDataExercise = getRoleAiDataExercise(role);
+
+  if (track.id === "automotive-mobility") {
+    return getAutomotiveRoleSpecificCurriculumTasks(track, role, primarySkill, secondarySkill, output, keywords, aiDataExercise);
+  }
 
   return [
     {
@@ -5541,7 +5774,8 @@ function getRoleSpecificCurriculumTasks(track, role) {
       steps: [
         `${role.responsibilities[1] || role.responsibilities[0]}에 필요한 입력값과 판단 기준을 정합니다.`,
         "추천 자료에서 본 방법을 표, 그래프, 체크리스트, 테스트 케이스 중 하나로 적용합니다.",
-        "결과가 공고의 업무 또는 자격요건 중 어떤 문장과 연결되는지 적습니다."
+        "결과가 공고의 업무 또는 자격요건 중 어떤 문장과 연결되는지 적습니다.",
+        ...(aiDataExercise ? [aiDataExercise] : [])
       ],
       deliverable: output,
       rubric: ["산출물 형식이 직무와 맞다", "입력값과 판단 기준이 보인다", "공고 문장과 직접 연결된다"]
@@ -5572,6 +5806,202 @@ function getBaseCurriculumTasks(trackId) {
     deliverable,
     rubric: ["산출물이 제출 가능하다", "직무 역량과 연결된다", "다음 행동이 보인다"]
   }));
+}
+
+function getAutomotiveRoleSpecificCurriculumTasks(track, role, primarySkill, secondarySkill, output, keywords, aiDataExercise) {
+  const profile = getAutomotiveRolePracticeProfile(role);
+  return [
+    {
+      title: `${role.title} 공고·DVP&R 분해`,
+      baseTitle: "자동차 직무상세 분해",
+      objective: `${role.focus}를 실제 공고의 반복 업무, 자격조건, 우대사항, 검증 산출물로 나누어 지원 직무와 맞는지 판단합니다.`,
+      time: "90분",
+      steps: [
+        `${role.responsibilities[0]} 업무가 지원 회사 공고에 실제로 있는지 표시합니다.`,
+        `DVP&R 관점으로 입력 요구사항, 시험 조건, 판정 기준, 남길 산출물을 나눕니다.`,
+        `${keywords} 키워드가 공고에서 업무 문장인지 우대사항인지 구분합니다.`
+      ],
+      deliverable: `${role.title} 공고-DVP&R 매핑표`,
+      rubric: ["공고 원문과 앱 직무 설명이 연결된다", "업무·자격·우대가 분리된다", "지원 여부 판단 근거가 남는다"]
+    },
+    {
+      title: `${profile.system} 핵심 역량 실습`,
+      baseTitle: "자동차 핵심 역량 실습",
+      objective: `${role.title}에서 반복되는 ${primarySkill}, ${secondarySkill} 역량을 작은 실습 산출물로 증명합니다.`,
+      time: "2시간",
+      steps: [
+        `${profile.input}를 입력 조건으로 정리합니다.`,
+        `${profile.method}를 적용해 비교표, 모델, 로그, 체크리스트 중 하나를 만듭니다.`,
+        `결과를 ${role.requirements[0]} 자격조건과 연결해 설명합니다.`
+      ],
+      deliverable: profile.coreDeliverable,
+      rubric: ["입력 조건이 명확하다", "판단 기준과 결과가 함께 있다", "공고 자격조건과 직접 연결된다"]
+    },
+    {
+      title: `${profile.dataTheme} 데이터·시뮬레이션 산출물`,
+      baseTitle: "자동차 데이터·시뮬레이션 적용",
+      objective: `공식 예제, MathWorks/시뮬레이션 자료, 로그 분석 중 가능한 방법을 골라 ${output} 초안을 만듭니다.`,
+      time: "2시간",
+      steps: [
+        `${profile.dataInput}를 시간, 조건, 기준값으로 정리합니다.`,
+        `${profile.analysis}를 수행해 정상/이상 또는 변경 전/후 차이를 표시합니다.`,
+        aiDataExercise || "분석 결과를 입력, 판단 기준, 결과 지표로 나누어 5줄 표로 정리합니다."
+      ],
+      deliverable: profile.dataDeliverable,
+      rubric: ["데이터 또는 모델 입력이 보인다", "비교 기준이 있다", "시험·검증 리포트로 확장 가능하다"]
+    },
+    {
+      title: "지원 회사 맞춤 검증 계획서",
+      baseTitle: "자동차 회사 공고 맞춤 검증",
+      objective: "일반 직무 로드맵을 지원 회사 공고 기준으로 줄이고, 면접에서 설명 가능한 검증 계획으로 정리합니다.",
+      time: "2시간",
+      steps: [
+        "지원 회사 공고의 업무·자격요건·우대사항 문장을 3개 이상 붙여 넣습니다.",
+        `이번 산출물 중 ${profile.finalCheck}와 직접 맞는 항목을 표시합니다.`,
+        "공고와 맞지 않는 일반 자료는 후순위로 내리고, 부족한 항목 1개를 다음 보완 과제로 정합니다."
+      ],
+      deliverable: "회사 공고 맞춤 자동차 직무 준비 체크리스트",
+      rubric: ["회사 공고 원문 기준으로 판단한다", "일반 추천과 회사 요구의 차이를 적는다", "다음 보완 행동이 구체적이다"]
+    }
+  ];
+}
+
+function getAutomotiveRolePracticeProfile(role) {
+  const profiles = {
+    "vehicle-body-design-engineer": {
+      system: "차체·BIW",
+      input: "패키지 제약, 하중 경로, 체결점, 공차 조건",
+      method: "간섭 검토와 제조성 체크",
+      dataTheme: "차체 시험·설계 변경",
+      dataInput: "강성, 중량, 충돌/NVH 요구와 시험 결과",
+      analysis: "요구사항 대비 부족 항목과 설계 변경 후보를 비교",
+      coreDeliverable: "BIW 설계 검토표",
+      dataDeliverable: "차체 요구사항-시험 결과 비교표",
+      finalCheck: "패키지, 충돌안전, 제조성, 도면·공차 요구"
+    },
+    "chassis-suspension-engineer": {
+      system: "섀시·현가·제동",
+      input: "조향, 제동, 현가 하중 케이스와 승차감 지표",
+      method: "차량동역학 지표와 시험 조건 비교",
+      dataTheme: "실차 주행·내구 데이터",
+      dataInput: "속도, 조향각, 제동, 진동, 변위 로그",
+      analysis: "기준값 대비 응답 차이와 개선 후보를 표시",
+      coreDeliverable: "섀시 성능·내구 조건표",
+      dataDeliverable: "주행시험 응답 비교 리포트",
+      finalCheck: "조향·제동·현가 성능과 내구 시험 조건"
+    },
+    "powertrain-mechanical-engineer": {
+      system: "파워트레인·구동계",
+      input: "토크, 회전수, 기어비, 베어링 하중, NVH 조건",
+      method: "토크 전달 경로와 파손 모드 정리",
+      dataTheme: "NVH·내구 시험 데이터",
+      dataInput: "진동, 온도, 토크, 회전수, 파손 위치 기록",
+      analysis: "파손 모드별 원인 후보와 재시험 조건을 분류",
+      coreDeliverable: "구동계 요구사항·하중 경로표",
+      dataDeliverable: "NVH·내구 원인 가설 리포트",
+      finalCheck: "토크 전달, NVH, 내구, 양산 이슈"
+    },
+    "vehicle-thermal-management-engineer": {
+      system: "차량 열관리",
+      input: "배터리, 모터, 인버터, HVAC 열부하와 냉각수 조건",
+      method: "열원-냉각경로-목표온도 연결",
+      dataTheme: "열 모델·온도 로그",
+      dataInput: "유량, 온도, 외기 조건, 급속충전 조건",
+      analysis: "고온/저온 조건별 목표 온도 초과 구간을 표시",
+      coreDeliverable: "열부하·냉각회로 조건표",
+      dataDeliverable: "온도 로그 기반 열관리 검증 리포트",
+      finalCheck: "냉각회로, 열모델, 환경시험, 실차 온도"
+    },
+    "ev-battery-pack-engineer": {
+      system: "EV 배터리팩",
+      input: "셀·모듈·팩 구조, BMS 신호, 절연, 열폭주 안전 조건",
+      method: "팩 구조와 전기안전 검증 항목 매핑",
+      dataTheme: "BMS·온도·전압 로그",
+      dataInput: "CAN 전압, 전류, 온도, 인터락, 절연 상태",
+      analysis: "고장 후보와 안전 검증 항목을 연결",
+      coreDeliverable: "배터리팩 안전 요구사항표",
+      dataDeliverable: "BMS 로그 기반 고장 가설표",
+      finalCheck: "BMS, HV 안전, 열폭주, 절연, 시험조건"
+    },
+    "vehicle-ee-architecture-engineer": {
+      system: "차량 E/E 아키텍처",
+      input: "ECU, 센서, 액추에이터, 전원, CAN/LIN/Ethernet 신호",
+      method: "기능 요구사항을 네트워크·전원 인터페이스로 분해",
+      dataTheme: "DBC·진단 신호",
+      dataInput: "CAN 메시지, DTC, 전원 분배, 인터페이스 변경 이력",
+      analysis: "변경 영향과 진단 요구사항을 신호 단위로 표시",
+      coreDeliverable: "E/E 인터페이스 정의서",
+      dataDeliverable: "CAN·진단 신호 영향 분석표",
+      finalCheck: "ECU, 네트워크, 전원분배, UDS/DTC"
+    },
+    "automotive-embedded-sw-engineer": {
+      system: "ECU 임베디드 SW",
+      input: "센서 입력, 상태머신, 제어 출력, CAN 진단 요구",
+      method: "요구사항을 테스트 케이스와 로그 확인 조건으로 변환",
+      dataTheme: "ECU 로그·CAN 진단",
+      dataInput: "CAN 메시지, DBC, UDS 응답, fault 로그",
+      analysis: "재현 조건과 원인 후보를 SW/통신/센서로 분리",
+      coreDeliverable: "ECU 요구사항-테스트 케이스표",
+      dataDeliverable: "CAN 로그 디버깅 리포트",
+      finalCheck: "C/C++, CAN, AUTOSAR, 진단, 디버깅"
+    },
+    "hil-sil-validation-engineer": {
+      system: "HIL·SIL 검증",
+      input: "요구사항, 테스트 케이스, HIL I/O, CAN 신호, fault 조건",
+      method: "정상·고장·경계 조건 테스트 설계",
+      dataTheme: "HIL 테스트 로그",
+      dataInput: "테스트 시퀀스, CAN 로그, fault injection 결과",
+      analysis: "Pass/Fail과 실패 원인을 SW/모델/장비로 분류",
+      coreDeliverable: "HIL 테스트 케이스 매트릭스",
+      dataDeliverable: "HIL 실패 로그 분류 리포트",
+      finalCheck: "요구사항 검증, Test Case, CANoe, HIL/SIL"
+    },
+    "adas-validation-engineer": {
+      system: "ADAS·자율주행 검증",
+      input: "AEB/LKA/ACC 기능, 센서, 시나리오, 안전 판정 기준",
+      method: "주행 시나리오와 Pass/Fail 기준 작성",
+      dataTheme: "센서융합·인지 결과",
+      dataInput: "카메라, 레이더, 라이다, GPS/IMU, CAN 로그",
+      analysis: "false positive/negative와 시나리오 조건을 연결",
+      coreDeliverable: "ADAS 시나리오 검증표",
+      dataDeliverable: "센서/CAN 로그 동기화 평가표",
+      finalCheck: "ADAS 기능, 센서융합, 시나리오, 실차검증"
+    },
+    "ev-power-electronics-engineer": {
+      system: "EV 전력전자",
+      input: "인버터, OBC, DC-DC, 전류 센싱, 게이트 드라이브 조건",
+      method: "효율, 리플, 발열, EMI 검증 항목 정리",
+      dataTheme: "전력전자 계측 데이터",
+      dataInput: "전압, 전류, 리플, 온도, 효율, 스위칭 파형",
+      analysis: "측정 조건별 손실·발열·EMI 리스크를 비교",
+      coreDeliverable: "전력전자 검증 체크리스트",
+      dataDeliverable: "인버터 계측 결과 리포트",
+      finalCheck: "전력전자, EMI, HV 안전, 계측, 보호회로"
+    },
+    "vehicle-test-validation-engineer": {
+      system: "실차 시험·차량 검증",
+      input: "DVP&R, 시험 조건, 계측 채널, 판정 기준",
+      method: "요구사항을 시험 항목과 Pass/Fail 기준으로 변환",
+      dataTheme: "실차 계측 로그",
+      dataInput: "온도, 진동, 전류, 위치, CAN, 환경 조건 로그",
+      analysis: "불합격 구간과 관련 채널을 연결해 재시험 조건을 제안",
+      coreDeliverable: "DVP&R 시험계획서",
+      dataDeliverable: "실차 로그 기반 검증 리포트",
+      finalCheck: "DVP&R, 실차시험, 계측채널, 결과정리"
+    }
+  };
+
+  return profiles[role.id] || {
+    system: "자동차 시스템",
+    input: "차량 요구사항, 인터페이스, 시험 조건",
+    method: "요구사항을 검증 가능한 산출물로 변환",
+    dataTheme: "차량 로그·시험 데이터",
+    dataInput: "CAN, 센서, 시험 결과 로그",
+    analysis: "기준값 대비 차이와 원인 후보를 표시",
+    coreDeliverable: "자동차 직무 요구사항 매핑표",
+    dataDeliverable: "차량 시험 데이터 검증 리포트",
+    finalCheck: "차량 요구사항과 검증 산출물"
+  };
 }
 
 function getVisibleRoadmapTasks(trackId) {
@@ -6432,6 +6862,15 @@ function getTaskResourceConnectionReason(resource, task, context) {
 }
 
 function renderSaved() {
+  if (!hasActiveRoleSelection()) {
+    elements.savedGuidance.innerHTML = `
+      <h3>직무 선택 후 계획서가 생성됩니다</h3>
+      <p>선택 직무 상세, 부족 역량, 주차별 과제, 추천 교육자료, 회사 공고 대조표가 계획서로 정리됩니다.</p>
+    `;
+    elements.savedList.innerHTML = `<div class="empty-state">직무 탭에서 세부 직무를 선택하세요.</div>`;
+    return;
+  }
+
   const track = getSelectedTrack();
   const tasks = getVisibleRoadmapTasks(track.id);
   const context = getRecommendationContext(track, getGapSkills(track.id), tasks);
@@ -6710,10 +7149,13 @@ function bindResourceActions(container) {
     button.addEventListener("click", () => {
       toggleListValue("saved", button.dataset.saveId);
       saveState();
+      renderTracks();
       renderRoadmap();
       renderReferences();
       renderSaved();
       renderMetrics();
+      renderWorkflowStatus();
+      renderRoleContextBar();
     });
   });
 
@@ -6722,10 +7164,13 @@ function bindResourceActions(container) {
       toggleListValue("completed", button.dataset.completeId);
       if (!state.saved.includes(button.dataset.completeId)) state.saved.push(button.dataset.completeId);
       saveState();
+      renderTracks();
       renderRoadmap();
       renderReferences();
       renderSaved();
       renderMetrics();
+      renderWorkflowStatus();
+      renderRoleContextBar();
     });
   });
 }
@@ -6737,6 +7182,13 @@ function toggleListValue(key, value) {
 }
 
 function renderMetrics() {
+  if (!hasActiveRoleSelection()) {
+    elements.selectedTrackMetric.textContent = "0";
+    elements.diagnosticMetric.textContent = "0%";
+    elements.savedMetric.textContent = "0";
+    return;
+  }
+
   const track = getSelectedTrack();
   elements.selectedTrackMetric.textContent = track ? "1" : "0";
   elements.diagnosticMetric.textContent = `${getDiagnosticScore(track.id)}%`;
@@ -6744,6 +7196,14 @@ function renderMetrics() {
 }
 
 function exportPlanAsExcel() {
+  if (!hasActiveRoleSelection()) {
+    elements.exportPlanButton.textContent = "직무 선택 필요";
+    setTimeout(() => {
+      elements.exportPlanButton.textContent = "엑셀 계획서 다운로드";
+    }, 1800);
+    return;
+  }
+
   try {
     const track = getSelectedTrack();
     const workbook = buildPlanExportWorkbook();
@@ -6765,6 +7225,7 @@ function buildPlanExportWorkbook() {
     { name: "요약", rows: buildSummaryExportRows() },
     { name: "실행계획", rows: buildRoadmapExportRows() },
     { name: "선택직무상세", rows: buildRoleDetailExportRows() },
+    { name: "회사공고대조", rows: buildCompanyPostingExportRows() },
     { name: "교육자료", rows: buildSavedResourceExportRows() },
     { name: "역량체크", rows: buildDiagnosisExportRows() }
   ];
@@ -6804,6 +7265,27 @@ function buildSummaryExportRows() {
   ];
 }
 
+function buildCompanyPostingExportRows() {
+  const track = getSelectedTrack();
+  const role = getSelectedRole(track.id);
+  if (!role) return [["구분", "앱 기준", "지원 회사 공고 문장", "준비 상태"], ["선택 직무", "미선택", "", ""]];
+
+  const rows = [
+    ["구분", "앱 기준", "지원 회사 공고 문장", "준비 상태"],
+    ["안내", "이 계획서는 일반적인 직무내용 기반 추천입니다. 지원 회사의 직무상세 내용과 다를 수 있으므로 반드시 실제 공고 문장을 붙여 넣고 비교하세요.", "", "필수 확인"],
+    ["선택 직무", role.title, "", ""],
+    ["직무 설명", role.focus, "", ""],
+    ["전공 연결성", `${getMajorPathwayLabel(track, role)} - ${getMajorPathwayReason(track, role)}`, "", ""]
+  ];
+
+  role.responsibilities.forEach((item, index) => rows.push([`반복 업무 ${index + 1}`, item, "", "공고에 있으면 우선 준비"]));
+  role.requirements.forEach((item, index) => rows.push([`자격조건 ${index + 1}`, item, "", "보유/보완 표시"]));
+  role.preferred.forEach((item, index) => rows.push([`우대·차별화 ${index + 1}`, item, "", "해당 시 차별화 근거"]));
+  getRoleArtifactExamples(track, role).forEach((item, index) => rows.push([`준비 산출물 ${index + 1}`, item, "", "제출 가능하게 정리"]));
+
+  return rows;
+}
+
 function buildRoleDetailExportRows() {
   const track = getSelectedTrack();
   const role = getSelectedRole(track.id);
@@ -6834,9 +7316,22 @@ function buildRoleDetailExportRows() {
 function buildSavedResourceExportRows() {
   const track = getSelectedTrack();
   const visibleTasks = getVisibleRoadmapTasks(track.id);
-  const savedResources = getSavedResources();
+  const context = getRecommendationContext(track, getGapSkills(track.id), visibleTasks);
+  const resourceUseCounts = new Map();
+  const autoResources = visibleTasks.flatMap((task) => {
+    const linkedResources = getRoadmapResourcesForTask(track, task, context, resourceUseCounts);
+    linkedResources.forEach((resource) => {
+      resourceUseCounts.set(resource.id, (resourceUseCounts.get(resource.id) || 0) + 1);
+    });
+    return linkedResources.map((resource) => ({ resource, task }));
+  });
+  const plannedResources = uniqueResources([
+    ...autoResources.map((item) => item.resource),
+    ...getSavedResources()
+  ]);
   const rows = [[
     "상태",
+    "계획 반영",
     "교육자료",
     "제공처",
     "유형",
@@ -6851,14 +7346,19 @@ function buildSavedResourceExportRows() {
     "URL"
   ]];
 
-  if (!savedResources.length) {
-    rows.push(["선택한 교육자료가 없습니다.", "", "", "", "", "", "", "", "", "", "", "", ""]);
+  if (!plannedResources.length) {
+    rows.push(["교육자료가 없습니다.", "", "", "", "", "", "", "", "", "", "", "", "", ""]);
     return rows;
   }
 
-  savedResources.forEach((resource) => {
+  plannedResources.forEach((resource) => {
+    const linkedAutoTasks = autoResources
+      .filter((item) => item.resource.id === resource.id)
+      .map((item) => item.task.title);
+    const saved = state.saved.includes(resource.id);
     rows.push([
       state.completed.includes(resource.id) ? "완료" : "진행",
+      saved ? "사용자 추가" : "로드맵 자동 배치",
       resource.title,
       resource.provider,
       resource.type,
@@ -6868,7 +7368,7 @@ function buildSavedResourceExportRows() {
       formatMinutes(resource.estimatedMinutes),
       formatMinutes(resource.practiceMinutes),
       resource.prerequisites.length ? resource.prerequisites.join(", ") : "없음",
-      getResourceLinkedTasks(resource.id, visibleTasks).join(", ") || "직무 공통",
+      linkedAutoTasks.join(", ") || getResourceLinkedTasks(resource.id, visibleTasks).join(", ") || "직무 공통",
       resource.expectedOutput,
       resource.url
     ]);
@@ -7006,29 +7506,18 @@ function getSelectLabel(select) {
   return select.options[select.selectedIndex]?.textContent || select.value;
 }
 
-function registerServiceWorker() {
+function disableServiceWorkerCache() {
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.addEventListener("controllerchange", () => {
-      if (serviceWorkerRefreshing) return;
-      serviceWorkerRefreshing = true;
-      window.location.reload();
-    });
+    navigator.serviceWorker.getRegistrations()
+      .then((registrations) => Promise.all(registrations.map((registration) => registration.unregister())))
+      .catch(() => {});
+  }
 
-    navigator.serviceWorker.register("/sw.js", { updateViaCache: "none" })
-      .then((registration) => {
-        registration.update();
-        if (registration.waiting) {
-          registration.waiting.postMessage({ type: "SKIP_WAITING" });
-        }
-        registration.addEventListener("updatefound", () => {
-          const nextWorker = registration.installing;
-          nextWorker?.addEventListener("statechange", () => {
-            if (nextWorker.state === "installed" && navigator.serviceWorker.controller) {
-              nextWorker.postMessage({ type: "SKIP_WAITING" });
-            }
-          });
-        });
-      })
+  if ("caches" in window) {
+    caches.keys()
+      .then((keys) => Promise.all(keys
+        .filter((key) => key.startsWith("career-competency"))
+        .map((key) => caches.delete(key))))
       .catch(() => {});
   }
 }

@@ -641,7 +641,6 @@ input::placeholder {
 }
 
 .track-card.is-selected {
-  grid-column: 1 / -1;
   outline: 3px solid rgba(21, 94, 117, 0.18);
   border-color: var(--primary);
 }
@@ -803,6 +802,15 @@ input::placeholder {
   margin: 0 0 14px;
 }
 
+.selected-role-overview-slot .selected-role-overview {
+  margin: 0 0 16px;
+  padding: 14px;
+  background: #f8fcfd;
+  border: 1px solid #b8dce6;
+  border-radius: var(--radius);
+  box-shadow: 0 16px 36px rgba(15, 81, 97, 0.1);
+}
+
 .track-grid .selected-role-overview {
   margin: -2px 0 16px;
   padding: 14px;
@@ -836,11 +844,72 @@ input::placeholder {
   color: var(--ink);
 }
 
+.role-decision-dashboard {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.role-decision-card {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 11px;
+  background: #ffffff;
+  border: 1px solid #c8e5ec;
+  border-radius: 7px;
+}
+
+.role-decision-card.is-strong {
+  background: #eef8f6;
+  border-color: #8ed0c4;
+}
+
+.role-decision-card span {
+  color: var(--accent);
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.role-decision-card strong {
+  color: var(--ink);
+  font-size: 0.94rem;
+  line-height: 1.35;
+}
+
+.role-decision-card em {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-style: normal;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
 .selected-role-top {
   display: grid;
-  grid-template-columns: minmax(0, 1.12fr) minmax(280px, 0.88fr);
+  grid-template-columns: minmax(280px, 0.92fr) minmax(0, 1.08fr);
   gap: 14px;
   align-items: stretch;
+}
+
+.selection-prompt-panel {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 14px;
+  background: #f8fcfd;
+  border: 1px solid #b8dce6;
+  border-radius: var(--radius);
+}
+
+.selection-prompt-panel h3,
+.selection-prompt-panel p {
+  margin: 0;
+}
+
+.selection-prompt-panel p {
+  color: var(--muted);
+  line-height: 1.5;
 }
 
 .selected-role-summary {
@@ -921,6 +990,13 @@ input::placeholder {
   font-size: 0.78rem;
 }
 
+.selected-role-resources small:has(.resource-action) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
 .selected-role-detail-panel {
   display: grid;
   gap: 10px;
@@ -991,6 +1067,36 @@ input::placeholder {
   background: #ffffff;
   border: 1px solid #d8def2;
   border-radius: 7px;
+}
+
+.diagnosis-next-panel,
+.roadmap-final-cta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 12px;
+  background: #eef8f6;
+  border: 1px solid #8ed0c4;
+  border-radius: var(--radius);
+}
+
+.diagnosis-next-panel {
+  grid-column: 1 / -1;
+}
+
+.diagnosis-next-panel strong,
+.roadmap-final-cta strong {
+  display: block;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+
+.diagnosis-next-panel span,
+.roadmap-final-cta span {
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.45;
 }
 
 .selected-role-overview > .major-connection-panel,
@@ -2448,6 +2554,7 @@ li {
   .inline-wordcloud-panel,
   .selected-role-overview,
   .selected-role-top,
+  .role-decision-dashboard,
   .selected-role-keypoints,
   .selected-role-detail-head,
   .role-list,
@@ -2460,6 +2567,8 @@ li {
   .diagnosis-focus-panel,
   .diagnosis-guide-grid,
   .roadmap-decision-panel,
+  .diagnosis-next-panel,
+  .roadmap-final-cta,
   .duration-strategy-grid,
   .goal-rule-grid,
   .reference-resource-grid,
