@@ -7537,7 +7537,7 @@ function getResourceOpenLabel(resource) {
     return "과정 페이지 열기";
   }
   if (/MathWorks|Ansys|NI|Google|Texas Instruments|STMicroelectronics|Arm|KiCad|Linux Kernel|Yocto|ROS|공식|문서|예제|자료/i.test(text)) {
-    return "자료 페이지 열기";
+    return "교육페이지 열기";
   }
   return "페이지 열기";
 }

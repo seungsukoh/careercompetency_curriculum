@@ -1399,6 +1399,13 @@ input::placeholder {
   border-radius: var(--radius);
 }
 
+.selected-role-top.is-summary-only {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
 .role-result-panel .role-decision-dashboard {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
