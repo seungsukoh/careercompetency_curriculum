@@ -5003,9 +5003,9 @@ function renderRoleDecisionDashboard(track, role, checkedCount, totalCount, gapI
         <em>보완 우선: ${gapText}</em>
       </div>
       <div class="role-decision-card">
-        <span>준비 결과물</span>
+        <span>완성할 산출물</span>
         <strong>${output}</strong>
-        <em>선택한 교육자료는 이 결과물을 만들기 위한 참고자료입니다.</em>
+        <em>선택한 교육자료는 이 산출물을 만들기 위한 참고자료입니다.</em>
       </div>
     </section>
   `;
@@ -6218,7 +6218,7 @@ function renderEducationSummaryCard(resource, index, context, tasks) {
         <p><strong>교육 소개</strong>${introText}</p>
         <p><strong>추천 이유</strong>${reason}</p>
         <p><strong>내 커리큘럼 연결</strong>${taskText}</p>
-        <p><strong>남길 결과물</strong>${outputText}</p>
+        <p><strong>완성할 산출물</strong>${outputText}</p>
       </div>
       <div class="education-summary-actions">
         <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
@@ -6843,7 +6843,7 @@ function createExtendedRoadmapTask(task, phase, planWeek) {
     weekLabel: `${planWeek}주차`,
     phase,
     priorityReason: isPortfolioPhase
-      ? "준비 기간이 길어 산출물을 채용 설명형 결과물로 다듬는 주차입니다."
+      ? "준비 기간이 길어 산출물을 채용 설명형 산출물로 다듬는 주차입니다."
       : "반복 수행으로 실제 직무 판단 기준을 굳히는 주차입니다."
   };
 }
@@ -6956,7 +6956,7 @@ function renderCompetencyActionPlan(context, tasks) {
             <div>
               <strong>${item.title}</strong>
               <p>${item.body}</p>
-              <em>남길 것: ${item.deliverable}</em>
+              <em>완성할 산출물: ${item.deliverable}</em>
               ${item.resources.length ? `
                 <div class="competency-example-resources">
                   <span>예시 자료</span>
@@ -6965,7 +6965,7 @@ function renderCompetencyActionPlan(context, tasks) {
                       <div class="competency-example-main">
                         <strong>${resource.title}</strong>
                         <p><strong>교육 소개</strong>${getResourceIntroText(resource)}</p>
-                        <p><strong>남길 결과물</strong>${resource.expectedOutput || item.deliverable}</p>
+                        <p><strong>완성할 산출물</strong>${resource.expectedOutput || item.deliverable}</p>
                       </div>
                       <div>
                         <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
@@ -6992,7 +6992,7 @@ function getCompetencyActionItems(context, tasks) {
       "지원 회사 공고의 업무·자격요건 문장과 앱의 직무 설명을 맞춰보고, 이 직무가 실제로 내가 준비하려는 업무인지 판단합니다.",
       "체크하지 못한 역량 중 하나를 골라 개념 설명이 아니라 계산, 표, 모델, 로그 중 하나로 증명합니다.",
       "시뮬레이션, 데이터 분석, 현장실습, 부트캠프 중 현재 환경에서 가능한 방식을 골라 작은 산출물을 만듭니다.",
-      "일반 커리큘럼 결과물을 지원 회사 공고 문장에 맞춰 줄이고, 면접에서 설명할 근거만 남깁니다."
+      "일반 커리큘럼 산출물을 지원 회사 공고 문장에 맞춰 줄이고, 면접에서 설명할 근거만 남깁니다."
     ];
     return {
       title: task.title,
@@ -7775,7 +7775,7 @@ function getGoalGuide(goalKey, resource, track) {
   return {
     explore: `30분 안에 ${track.title}의 업무 3개와 모르는 용어 5개를 적으면 충분합니다.`,
     foundation: `체크하지 못한 역량 중 하나를 골라 ${output}까지 남기는 것을 최소 완료 기준으로 두세요.`,
-    portfolio: `${output} 결과물을 면접에서 설명할 수 있도록 문제, 방법, 결과, 배운 점 순서로 정리하세요.`,
+    portfolio: `${output}을 면접에서 설명할 수 있도록 문제, 방법, 결과, 배운 점 순서로 정리하세요.`,
     interview: `${track.title} 직무에서 이 교육자료가 왜 필요한지 3문장으로 설명할 수 있으면 다음 교육자료로 넘어가세요.`
   }[goalKey] || `교육자료를 본 뒤 ${output}을 남기세요.`;
 }
