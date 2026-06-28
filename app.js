@@ -4157,6 +4157,12 @@ function bindEvents() {
   });
 
   document.addEventListener("click", (event) => {
+    const resetTarget = event.target.closest("[data-reset-plan]");
+    if (resetTarget) {
+      confirmAndResetState();
+      return;
+    }
+
     const target = event.target.closest("[data-view-target]");
     if (!target) return;
     state.view = normalizeView(target.dataset.viewTarget);
@@ -4172,12 +4178,7 @@ function bindEvents() {
     render();
   });
 
-  elements.resetPlanButton.addEventListener("click", () => {
-    const confirmed = window.confirm("전공, 관심 산업, 직무 선택, 역량 체크, 선택 교육을 모두 초기화할까요?");
-    if (!confirmed) return;
-    resetState();
-    render();
-  });
+  elements.resetPlanButton.addEventListener("click", confirmAndResetState);
 
   elements.exportPlanButton.addEventListener("click", exportPlanAsExcel);
 
@@ -4215,6 +4216,13 @@ function loadState() {
 
 function saveState() {
   localStorage.setItem(storageKey, JSON.stringify(state));
+}
+
+function confirmAndResetState() {
+  const confirmed = window.confirm("전공, 관심 산업, 직무 선택, 역량 체크, 선택 교육을 모두 초기화할까요?");
+  if (!confirmed) return;
+  resetState();
+  render();
 }
 
 function resetState() {
@@ -6002,7 +6010,7 @@ function renderRoadmap() {
       </div>
       <div class="roadmap-resource-block">
         <h4>추천 교육·실습자료</h4>
-        <p class="roadmap-resource-guide">체크하지 않은 역량과 이번 주 산출물에 맞춘 자료입니다. 제목을 누르면 연결 이유와 교육·실습 링크가 열립니다.</p>
+        <p class="roadmap-resource-guide">체크하지 않은 역량과 이번 주 산출물에 맞춘 자료입니다. 교육내용 상세보기를 열어 소개를 확인한 뒤 필요한 자료만 추가하세요.</p>
         ${linkedResources.length
           ? `<div class="roadmap-resource-list">${linkedResources.map((resource) => renderRoadmapResourceItem(resource, task, context)).join("")}</div>`
           : `<div class="empty-state compact">이 과제에 연결된 교육자료 후보가 아직 없습니다.</div>`}
@@ -6172,8 +6180,8 @@ function renderEducationSummaryCard(resource, index, context, tasks) {
   const saved = state.saved.includes(resource.id);
   const linkedTask = getPrimaryTaskForResource(resource, tasks, context);
   const reason = getEducationSummaryReason(resource, linkedTask, context);
-  const learningText = truncateText(resource.reason, 96);
-  const outputText = truncateText(resource.expectedOutput, 88);
+  const introText = getResourceIntroText(resource);
+  const outputText = resource.expectedOutput || "직무 산출물";
   const taskText = linkedTask ? `${linkedTask.weekLabel || `${index + 1}주차`} · ${linkedTask.title}` : "연결 과제";
 
   return `
@@ -6185,11 +6193,15 @@ function renderEducationSummaryCard(resource, index, context, tasks) {
           <p>${resource.provider} · ${resource.type} · ${formatMinutes(resource.totalMinutes)}</p>
         </div>
       </div>
-      <div class="education-summary-body">
-        <p><strong>내용</strong>${learningText}</p>
-        <p><strong>추천 이유</strong>${reason}</p>
-        <p><strong>내 커리큘럼 연결</strong>${taskText} / ${outputText}</p>
-      </div>
+      <details class="education-detail-disclosure">
+        <summary>교육내용 상세보기</summary>
+        <div class="education-summary-body">
+          <p><strong>교육 소개</strong>${introText}</p>
+          <p><strong>추천 이유</strong>${reason}</p>
+          <p><strong>내 커리큘럼 연결</strong>${taskText}</p>
+          <p><strong>남길 결과물</strong>${outputText}</p>
+        </div>
+      </details>
       <div class="education-summary-actions">
         <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
         ${renderSaveActionButton(resource, "내 커리큘럼에 추가")}
@@ -6215,6 +6227,16 @@ function getEducationSummaryReason(resource, task, context) {
     : "선택 직무와 부족 역량에 연결되는 교육입니다.";
   const text = signals.length ? `${signals.join(" · ")} · ${connectionReason}` : connectionReason;
   return truncateText(text, 100);
+}
+
+function getResourceIntroText(resource) {
+  const skillText = (resource.skills || []).slice(0, 4).join(", ");
+  const prerequisiteText = (resource.prerequisites || []).slice(0, 3).join(", ");
+  return [
+    resource.reason,
+    skillText ? `다루는 역량: ${skillText}` : "",
+    prerequisiteText ? `선수지식: ${prerequisiteText}` : ""
+  ].filter(Boolean).join(" ");
 }
 
 function truncateText(text, maxLength) {
@@ -7436,10 +7458,17 @@ function renderRoadmapResourceItem(resource, task, context) {
           <em>${resource.provider} · ${resource.type} · ${formatMinutes(resource.totalMinutes)}</em>
           ${renderResourceTrustBadges(resource)}
         </span>
-        <span class="roadmap-resource-status">${coreLabel}추천 ${score}점</span>
+        <span class="roadmap-resource-side">
+          <span class="roadmap-resource-status">${coreLabel}추천 ${score}점</span>
+          <span class="roadmap-resource-toggle">
+            <span class="show-open">교육내용 상세보기</span>
+            <span class="show-close">상세 접기</span>
+          </span>
+        </span>
       </summary>
       <div class="roadmap-resource-detail">
         <p>${resource.provider} · ${resource.difficulty} · ${formatMinutes(resource.totalMinutes)}</p>
+        <p><strong>교육 소개:</strong> ${getResourceIntroText(resource)}</p>
         <p><strong>추천 이유:</strong> ${connectionReason}</p>
         <p><strong>연결 산출물:</strong> ${resource.expectedOutput}</p>
         ${signals.length ? `<p>${signals.join(" · ")}</p>` : `<p>${task.deliverable}에 바로 연결됩니다.</p>`}
@@ -7488,9 +7517,7 @@ function getResourceBadgeText(resource) {
 }
 
 function getResourceOpenLabel(resource) {
-  return /코멘토|렛유인|부트캠프|현장실습|KDT|멘토링|인턴체험/i.test(getResourceBadgeText(resource))
-    ? "과정 확인"
-    : "교육 열기";
+  return "교육 열기";
 }
 
 function renderSaveActionButton(resource, label = "내 커리큘럼에 추가") {

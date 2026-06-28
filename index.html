@@ -8,8 +8,8 @@
     <title>지원 직무 판단 및 역량 커리큘럼</title>
     <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/assets/icon.svg">
-    <link rel="stylesheet" href="/styles.css?v=20260628-flow-reset">
-    <script type="module" src="/app.js?v=20260628-flow-reset"></script>
+    <link rel="stylesheet" href="/styles.css?v=20260628-education-detail">
+    <script type="module" src="/app.js?v=20260628-education-detail"></script>
   </head>
   <body>
     <div class="app-shell">
@@ -75,6 +75,7 @@
             </div>
           </div>
           <div class="next-action-card" id="nextActionPanel" aria-live="polite"></div>
+          <button class="ghost-button danger-button full-width reset-start-button" id="resetPlanButton" type="button">처음부터 다시</button>
         </aside>
 
         <section class="workspace">
@@ -181,7 +182,7 @@
               <div class="section-actions">
                 <button class="primary-button" id="exportPlanButton" type="button">엑셀 커리큘럼 다운로드</button>
                 <button class="ghost-button" id="clearSavedButton" type="button">선택 자료 비우기</button>
-                <button class="ghost-button danger-button" id="resetPlanButton" type="button">처음부터 다시</button>
+                <button class="ghost-button danger-button" type="button" data-reset-plan>처음부터 다시</button>
               </div>
             </div>
             <div class="plan-guidance" id="savedGuidance"></div>

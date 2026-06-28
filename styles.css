@@ -332,6 +332,10 @@ input::placeholder {
   border-color: #e38b84;
 }
 
+.reset-start-button {
+  min-height: 38px;
+}
+
 .section-actions {
   display: flex;
   flex-wrap: wrap;
@@ -361,6 +365,57 @@ input::placeholder {
 
 .workspace {
   min-width: 0;
+  overflow: hidden;
+}
+
+:where(
+  .metric-strip div,
+  .next-action-card,
+  .profile-impact-card,
+  .workflow-step,
+  .snapshot-card,
+  .track-card,
+  .detail-panel,
+  .role-screen-note,
+  .role-picker-panel,
+  .role-result-panel,
+  .workbench-panel-head,
+  .inline-wordcloud-panel,
+  .inline-wordcloud-summary,
+  .selected-role-anchor,
+  .role-decision-card,
+  .selected-role-summary,
+  .role-action-strip,
+  .role-core-work,
+  .selected-role-keypoints > div,
+  .selected-role-search,
+  .selected-role-resources,
+  .selected-role-detail-panel,
+  .role-ai-panel,
+  .diagnosis-next-panel,
+  .roadmap-final-cta,
+  .role-fit-block,
+  .education-summary-card,
+  .education-detail-disclosure,
+  .roadmap-decision-panel > div,
+  .diagnosis-focus-panel > div,
+  .reference-section,
+  .reference-resource-card,
+  .competency-action-item,
+  .competency-example-resource,
+  .hands-on-resource-link,
+  .diagnosis-guide,
+  .check-item,
+  .gap-item,
+  .week-card,
+  .roadmap-resource-item,
+  .resource-card,
+  .resource-learning-meta span,
+  .plan-week-card,
+  .plan-resource-item,
+  .empty-state
+) {
+  max-width: 100%;
   overflow: hidden;
 }
 
@@ -2248,6 +2303,36 @@ li {
   gap: 6px;
 }
 
+.education-detail-disclosure {
+  min-width: 0;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.education-detail-disclosure summary {
+  cursor: pointer;
+  padding: 9px 10px;
+  color: var(--primary-dark);
+  background: var(--primary-soft);
+  font-size: 0.84rem;
+  font-weight: 900;
+  list-style: none;
+}
+
+.education-detail-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.education-detail-disclosure[open] summary {
+  border-bottom: 1px solid #c9d9e8;
+}
+
+.education-detail-disclosure .education-summary-body {
+  padding: 10px;
+}
+
 .education-summary-body strong {
   display: block;
   color: var(--ink);
@@ -2997,19 +3082,11 @@ li {
 }
 
 .roadmap-resource-item summary::after {
-  content: "보기";
-  flex: 0 0 auto;
-  color: var(--primary);
-  font-size: 0.78rem;
-  font-weight: 800;
+  content: none;
 }
 
 .roadmap-resource-item summary > *:first-child {
   min-width: 0;
-}
-
-.roadmap-resource-item[open] summary::after {
-  content: "접기";
 }
 
 .roadmap-resource-item summary strong {
@@ -3055,11 +3132,47 @@ li {
 }
 
 .roadmap-resource-status {
-  flex: 0 0 auto;
+  display: block;
   color: var(--muted);
   font-size: 0.78rem;
   font-weight: 700;
   line-height: 1.35;
+}
+
+.roadmap-resource-side {
+  display: grid;
+  justify-items: end;
+  gap: 5px;
+  flex: 0 1 170px;
+  min-width: 0;
+}
+
+.roadmap-resource-toggle {
+  display: inline-flex;
+  justify-content: center;
+  max-width: 100%;
+  min-height: 28px;
+  padding: 5px 8px;
+  color: var(--primary-dark);
+  background: var(--primary-soft);
+  border: 1px solid #c9d9e8;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  font-weight: 900;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.roadmap-resource-toggle .show-close {
+  display: none;
+}
+
+.roadmap-resource-item[open] .roadmap-resource-toggle .show-open {
+  display: none;
+}
+
+.roadmap-resource-item[open] .roadmap-resource-toggle .show-close {
+  display: inline;
 }
 
 .roadmap-resource-detail {
@@ -3403,13 +3516,13 @@ li {
   }
 
   .tabs {
-    overflow-x: auto;
-    grid-template-columns: repeat(5, minmax(72px, 1fr));
+    overflow-x: visible;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .workflow-status {
-    overflow-x: auto;
-    grid-template-columns: repeat(4, minmax(180px, 1fr));
+    overflow-x: visible;
+    grid-template-columns: 1fr;
   }
 
   .tab {
@@ -3450,7 +3563,7 @@ li {
 
   .resource-actions {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
 
   .education-summary-headline {
@@ -3489,6 +3602,16 @@ li {
     display: grid;
     grid-template-columns: 1fr;
     justify-content: stretch;
+  }
+
+  .roadmap-resource-item summary {
+    display: grid;
+    align-items: start;
+  }
+
+  .roadmap-resource-side {
+    justify-items: stretch;
+    width: 100%;
   }
 
   .reference-section-head,
