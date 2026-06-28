@@ -79,6 +79,20 @@ const tracks = [
   }
 ];
 
+tracks.splice(1, 0, {
+  id: "automotive-mobility",
+  title: "자동차·모빌리티",
+  majors: ["mechanical", "electrical", "both"],
+  industries: ["mobility", "manufacturing", "electronics"],
+  difficulty: "중",
+  summary: "차량 시스템 요구사항을 차체·섀시·파워트레인·전장·제어·검증 산출물로 나누어 개발하는 직무군입니다.",
+  tasks: ["차량 요구사항 분해", "차체·섀시·열관리 설계", "전장·제어 시스템 검증", "실차·HIL 시험과 양산 이관"],
+  skills: ["차량동역학", "차체·섀시", "전장 아키텍처", "CAN/LIN", "HIL·실차검증"],
+  tools: ["CATIA/Creo", "MATLAB/Simulink", "CANoe/CANalyzer", "HIL", "Excel/Python"],
+  outputs: ["차량 시스템 요구사항표", "부품·제어 인터페이스 정의서", "시험계획서", "검증 리포트"],
+  misconceptions: ["자동차 직무는 기구설계 하나로 끝나지 않고 차체, 섀시, 전장, 제어, 검증으로 세분화됩니다.", "전공과 맞는지 보려면 부품명보다 반복 업무와 시험 산출물을 함께 봐야 합니다."]
+});
+
 function normalizeResource(resource) {
   const estimatedMinutes = resource.estimatedMinutes ?? Math.max(30, (resource.hours || 1) * 60);
   const practiceMinutes = resource.practiceMinutes ?? getDefaultPracticeMinutes(resource.difficulty, estimatedMinutes);
@@ -172,6 +186,14 @@ const diagnostics = {
     ["공정안전", "MSDS, HAZOP, PSM 관점에서 주요 위험과 방지 대책을 정리할 수 있다."]
   ]
 };
+
+diagnostics["automotive-mobility"] = [
+  ["차량 시스템", "차량 기능을 차체, 섀시, 전장, 제어기, 시험 조건으로 나누어 설명할 수 있다."],
+  ["차량동역학", "조향, 제동, 현가, 구동 조건이 주행 안정성과 승차감에 미치는 영향을 말할 수 있다."],
+  ["전장 네트워크", "CAN/LIN/Ethernet 신호와 ECU 간 인터페이스의 기본 흐름을 설명할 수 있다."],
+  ["검증", "실차, 벤치, HIL 시험의 차이와 Pass/Fail 기준을 정리할 수 있다."],
+  ["양산 품질", "APQP, PPAP, FMEA, Control Plan이 자동차 개발에서 왜 필요한지 설명할 수 있다."]
+];
 
 const resources = [
   {
@@ -1497,6 +1519,51 @@ const resources = [
   }
 ].map(normalizeResource);
 
+const automotiveResourceIds = new Set([
+  "matlab-onramp",
+  "statistics-onramp",
+  "simulink-onramp",
+  "stateflow-onramp",
+  "control-design-onramp",
+  "signal-processing-onramp",
+  "mathworks-predictive-maintenance",
+  "simscape-onramp",
+  "mathworks-simscape-electrical",
+  "sensor-fusion-onramp",
+  "optimization-onramp",
+  "mit-design-manufacturing",
+  "mit-mechanics-materials",
+  "mit-fea-solids",
+  "mit-numerical-me",
+  "kocw-mechanical-design",
+  "kocw-electronics-circuit",
+  "mit-circuits",
+  "machine-learning-onramp",
+  "allaboutcircuits-textbook",
+  "kicad-pcb-docs",
+  "ti-precision-labs",
+  "analog-dialogue",
+  "stm32-education",
+  "stm32-mooc-gpio-timer-uart",
+  "arm-embedded-systems",
+  "coursera-embedded-control",
+  "coursera-engineering-data",
+  "edx-engineering-systems",
+  "khan-math-physics-basics",
+  "freecodecamp-python-data",
+  "inflearn-free-it-practice",
+  "step-engineering",
+  "hrd-net-job-training",
+  "ncs",
+  "youtube-official-engineering"
+]);
+
+resources.forEach((resource) => {
+  if (automotiveResourceIds.has(resource.id)) {
+    resource.tracks = [...new Set([...resource.tracks, "automotive-mobility"])];
+  }
+});
+
 const roadmaps = {
   "mechanical-cae": [
     ["직무 이해", "설계 업무와 산출물을 정리하고 관심 제품을 하나 고릅니다.", "제품 구조와 요구사항 1쪽 요약"],
@@ -1535,6 +1602,13 @@ const roadmaps = {
     ["포트폴리오 정리", "코드, 실험 조건, 디버깅 과정을 정리합니다.", "펌웨어 프로젝트 노트"]
   ]
 };
+
+roadmaps["automotive-mobility"] = [
+  ["직무 이해", "차량 개발 직무를 차체·섀시·전장·제어·검증으로 나누고 관심 직무의 반복 업무를 고릅니다.", "자동차 세부 직무 비교표"],
+  ["요구사항 분해", "차량 기능 요구사항을 부품, 센서, 제어기, 시험 조건으로 나누어 봅니다.", "차량 시스템 요구사항표"],
+  ["도구·검증 보완", "CAN 신호, MATLAB/Simulink, CAD 또는 HIL 중 선택 직무에 필요한 도구를 작은 예제로 확인합니다.", "인터페이스·시험 조건 노트"],
+  ["포트폴리오 정리", "선택 직무의 설계 변경안 또는 검증 결과를 한 장 리포트로 정리합니다.", "자동차 직무 검증 리포트"]
+];
 
 const curriculumTasks = {
   "mechanical-cae": [
@@ -2096,7 +2170,39 @@ const majorRoleFitProfiles = {
   }
 };
 
+majorRoleFitProfiles.mechanical.direct.push(
+  "vehicle-body-design-engineer",
+  "chassis-suspension-engineer",
+  "powertrain-mechanical-engineer",
+  "vehicle-thermal-management-engineer",
+  "ev-battery-pack-engineer",
+  "vehicle-test-validation-engineer"
+);
+majorRoleFitProfiles.mechanical.bridge.push(
+  "vehicle-ee-architecture-engineer",
+  "automotive-embedded-sw-engineer",
+  "hil-sil-validation-engineer",
+  "adas-validation-engineer",
+  "ev-power-electronics-engineer"
+);
+majorRoleFitProfiles.electrical.direct.push(
+  "vehicle-ee-architecture-engineer",
+  "automotive-embedded-sw-engineer",
+  "hil-sil-validation-engineer",
+  "adas-validation-engineer",
+  "ev-power-electronics-engineer"
+);
+majorRoleFitProfiles.electrical.bridge.push(
+  "vehicle-body-design-engineer",
+  "chassis-suspension-engineer",
+  "powertrain-mechanical-engineer",
+  "vehicle-thermal-management-engineer",
+  "ev-battery-pack-engineer",
+  "vehicle-test-validation-engineer"
+);
+
 const starterKeywords = {
+  "automotive-mobility": "자동차 차체 섀시 전장 ECU CAN HIL ADAS 검증",
   "mechanical-cae": "재료역학 기계요소설계 구조해석 CAD",
   "production-quality": "품질관리 SPC 관리도 FMEA 공정능력",
   "semiconductor-equipment": "반도체 공정 소자 진공 플라즈마 계측",
@@ -2369,6 +2475,119 @@ const jobRoles = {
   ]
 };
 
+jobRoles["automotive-mobility"] = [
+  {
+    id: "vehicle-body-design-engineer",
+    title: "차체·BIW 설계 엔지니어",
+    postingKeywords: ["BIW", "차체설계", "패키지", "충돌안전", "경량화"],
+    industries: ["mobility", "all"],
+    focus: "차량 패키지, 차체 구조, 체결점, 충돌 안전, 제조성을 함께 고려해 BIW와 외장·내장 장착 구조를 설계하는 직무",
+    responsibilities: ["차량 패키지와 주변 부품 간 간섭 검토", "BIW, 브라켓, 마운팅 포인트, 체결 구조 설계", "강성, 중량, 충돌 안전, NVH 요구사항을 설계 조건으로 변환", "프레스, 용접, 조립 공정성을 고려한 도면·공차 검토"],
+    requirements: ["기계공학, 재료역학, 기계요소설계 기초", "CATIA/Creo 기반 3D CAD와 2D 도면 해석", "차체 구조, 하중 경로, 체결 방식 이해", "설계 변경 사유를 시험 결과와 제조 조건으로 설명"],
+    preferred: ["자동차 패키지 레이아웃 또는 BIW 프로젝트 경험", "GD&T, 공차 누적, DFM/DFA 이해", "충돌·강성·NVH 해석 결과를 설계 변경으로 연결"]
+  },
+  {
+    id: "chassis-suspension-engineer",
+    title: "섀시·현가·제동 엔지니어",
+    postingKeywords: ["섀시", "현가", "조향", "제동", "차량동역학"],
+    industries: ["mobility", "all"],
+    focus: "조향, 제동, 현가, 타이어 접지 조건을 차량동역학 관점에서 해석하고 승차감·조종안정성·내구 요구를 맞추는 직무",
+    responsibilities: ["현가 링크, 너클, 서브프레임, 부싱 등 섀시 부품 요구사항 정의", "조향 응답, 제동 안정성, 승차감 지표 검토", "내구 시험 조건과 하중 케이스를 설계 기준으로 변환", "실차 시험 데이터와 해석 결과를 비교해 개선안 도출"],
+    requirements: ["동역학, 재료역학, 진동 기초", "차량동역학 지표와 섀시 구조 이해", "시험 조건, 하중, 변위, 진동 데이터를 해석", "설계 변경안을 성능·내구·제조성 관점으로 설명"],
+    preferred: ["ADAMS/Car, Simulink, CAE 후처리 경험", "실차 주행시험 또는 내구 시험 데이터 분석", "제동·조향·현가 부품 개발 프로세스 이해"]
+  },
+  {
+    id: "powertrain-mechanical-engineer",
+    title: "파워트레인·구동계 기계 엔지니어",
+    postingKeywords: ["파워트레인", "구동계", "감속기", "NVH", "내구"],
+    industries: ["mobility", "all"],
+    focus: "엔진·모터·감속기·드라이브샤프트 같은 구동계 부품의 토크 전달, 내구, 소음진동, 윤활 조건을 설계·검증하는 직무",
+    responsibilities: ["토크, 회전수, 기어비, 베어링 하중 조건 정의", "감속기, 하우징, 샤프트, 마운트 구조 설계 검토", "NVH, 열, 윤활, 내구 시험 결과를 설계 변경과 연결", "협력사 부품 사양과 조립 품질 이슈 추적"],
+    requirements: ["기계요소, 동역학, 진동, 열전달 기초", "구동계 부품 구조와 토크 전달 경로 이해", "시험 데이터와 파손 모드를 원인 가설로 정리", "도면, 공차, 재료, 표면처리 조건 해석"],
+    preferred: ["전동화 구동계 또는 감속기 프로젝트 경험", "NVH 분석, 내구 시험, 윤활 조건 검토", "양산 이슈를 설계 변경 요구사항으로 정리"]
+  },
+  {
+    id: "vehicle-thermal-management-engineer",
+    title: "차량 열관리·냉각 시스템 엔지니어",
+    postingKeywords: ["열관리", "냉각회로", "HVAC", "배터리온도", "CFD"],
+    industries: ["mobility", "battery", "all"],
+    focus: "배터리, 인버터, 모터, HVAC, 냉각수 회로의 열 부하와 온도 조건을 모델링해 성능과 신뢰성을 검증하는 직무",
+    responsibilities: ["열원, 냉각 경로, 유량, 압력손실, 목표 온도 정의", "배터리·전력전자·모터 냉각 시스템 요구사항 검토", "CFD 또는 1D thermal 모델과 실차 온도 데이터를 비교", "고온·저온·급속충전 조건의 리스크와 개선안 정리"],
+    requirements: ["열전달, 유체역학, 열역학 기초", "냉각수 회로, 라디에이터, 펌프, 팬, HVAC 구성 이해", "온도 센서 데이터와 해석 결과 비교", "경계조건과 물성값 설정 근거 문서화"],
+    preferred: ["배터리 열관리, 전력전자 냉각, HVAC 프로젝트 경험", "CFD/Simscape/GT-SUITE 등 열 모델링 경험", "실차 환경시험 데이터 후처리"]
+  },
+  {
+    id: "ev-battery-pack-engineer",
+    title: "EV 배터리팩 설계·검증 엔지니어",
+    postingKeywords: ["배터리팩", "BMS", "열폭주", "절연", "안전"],
+    industries: ["mobility", "battery", "all"],
+    focus: "셀·모듈·팩 구조, BMS 인터페이스, 냉각, 절연, 안전 요구사항을 통합해 전기차 배터리팩을 설계·검증하는 직무",
+    responsibilities: ["셀 배치, 모듈 구조, 팩 하우징, 냉각 구조 요구사항 정의", "BMS, 전류 센서, 온도 센서, HV 인터페이스 연동 검토", "절연, 충돌, 진동, 열폭주, 방수 시험 조건 정리", "시험 결과와 고장 모드를 설계 변경안으로 문서화"],
+    requirements: ["기계 구조와 전기 안전 기본 이해", "배터리 셀 특성, 팩 구조, 냉각 방식 이해", "HV 안전, 절연, 접지, 인터락 요구사항 파악", "시험 계획서와 검증 리포트 작성"],
+    preferred: ["배터리팩 구조 설계 또는 BMS 연동 프로젝트", "UN R100, ISO 26262, 열폭주 안전 개념 이해", "CAN 데이터와 온도·전압 로그 분석"]
+  },
+  {
+    id: "vehicle-ee-architecture-engineer",
+    title: "차량 전장 E/E 아키텍처 엔지니어",
+    postingKeywords: ["E/E Architecture", "ECU", "CAN", "LIN", "Ethernet"],
+    industries: ["mobility", "electronics", "all"],
+    focus: "차량 기능을 ECU, 센서, 액추에이터, 전원, 통신 네트워크로 나누고 E/E 아키텍처와 인터페이스를 정의하는 직무",
+    responsibilities: ["기능 요구사항을 ECU, 센서, 액추에이터, 네트워크 신호로 분해", "CAN/LIN/Ethernet 메시지와 전원·접지 인터페이스 검토", "와이어링, 퓨즈, 릴레이, 커넥터, 진단 요구사항 정리", "시스템 변경이 다른 제어기와 기능에 미치는 영향 분석"],
+    requirements: ["회로이론, 전자회로, 차량 네트워크 기초", "ECU, 센서, 액추에이터, 전원 분배 구조 이해", "CAN DBC, 신호 정의, 진단 코드 기본 이해", "시스템 요구사항과 인터페이스 문서화"],
+    preferred: ["AUTOSAR, UDS, CANoe/CANalyzer 사용 경험", "와이어링 하네스 또는 전장품 검증 경험", "기능안전 ISO 26262 기본 개념"]
+  },
+  {
+    id: "automotive-embedded-sw-engineer",
+    title: "차량 임베디드 SW·ECU 엔지니어",
+    postingKeywords: ["ECU", "AUTOSAR", "C/C++", "CAN", "진단"],
+    industries: ["mobility", "electronics", "all"],
+    focus: "ECU 펌웨어에서 센서 입력, 제어 로직, CAN 통신, 진단, 오류 처리를 구현하고 실차·벤치에서 디버깅하는 직무",
+    responsibilities: ["C/C++ 기반 ECU 소프트웨어 기능 구현", "CAN 신호 송수신, 진단 서비스, fault handling 개발", "센서 입력, 상태머신, 제어 출력 로직 검증", "벤치·실차 로그로 재현 조건을 찾고 수정 내역 문서화"],
+    requirements: ["C언어, 자료구조, MCU, 인터럽트 기본 이해", "CAN 통신, DBC, UDS 진단 기초", "컴파일, 디버깅, Git 기반 변경 이력 관리", "테스트 케이스와 로그 분석으로 문제 원인 분리"],
+    preferred: ["AUTOSAR Classic/Adaptive 또는 RTOS 경험", "CANoe, CANalyzer, Lauterbach, Vector 도구 경험", "기능안전 요구사항과 SW 검증 프로세스 이해"]
+  },
+  {
+    id: "hil-sil-validation-engineer",
+    title: "HIL·SIL 검증 엔지니어",
+    postingKeywords: ["HIL", "SIL", "Test Case", "CANoe", "요구사항검증"],
+    industries: ["mobility", "electronics", "all"],
+    focus: "제어기 요구사항을 테스트 케이스로 바꾸고 SIL/HIL 환경에서 CAN 신호, fault injection, Pass/Fail 결과를 검증하는 직무",
+    responsibilities: ["요구사항 기반 테스트 케이스와 판정 기준 작성", "HIL 장비, I/O, CAN/LIN 신호, 시뮬레이션 모델 설정", "정상·고장·경계 조건 테스트 수행", "실패 로그를 분석해 SW, 모델, 장비 원인을 분리"],
+    requirements: ["제어기 입출력과 차량 네트워크 기본 이해", "테스트 설계, 요구사항 추적성, Pass/Fail 기준 작성", "MATLAB/Simulink 또는 Python 기반 결과 분석", "로그, 파형, CAN 메시지를 근거로 리포트 작성"],
+    preferred: ["dSPACE, NI, Vector CANoe/CAPL 경험", "SIL/MIL/HIL 검증 프로세스 이해", "자동화 테스트 스크립트 작성 경험"]
+  },
+  {
+    id: "adas-validation-engineer",
+    title: "ADAS·자율주행 검증 엔지니어",
+    postingKeywords: ["ADAS", "센서융합", "시나리오", "인지", "실차검증"],
+    industries: ["mobility", "electronics", "all"],
+    focus: "카메라, 레이더, 라이다, GPS/IMU 데이터를 기반으로 ADAS 기능의 시나리오, 인지·판단 성능, 실차 검증 결과를 평가하는 직무",
+    responsibilities: ["AEB, LKA, ACC, BSD 등 ADAS 기능 요구사항 분석", "센서 데이터, 객체 인식 결과, 차량 CAN 로그 동기화", "시나리오별 Pass/Fail 기준과 안전 조건 정의", "실차·시뮬레이션 결과를 비교해 개선 포인트 도출"],
+    requirements: ["센서, 신호처리, 통계, 차량 네트워크 기초", "주행 시나리오와 평가 지표를 이해하고 설명", "로그 데이터 정리와 시각화", "기능 실패 조건을 재현 가능한 테스트로 정리"],
+    preferred: ["ROS, Python, MATLAB, CarMaker, PreScan 경험", "카메라·레이다·라이다 데이터 처리 경험", "ISO 26262 또는 SOTIF 기본 개념"]
+  },
+  {
+    id: "ev-power-electronics-engineer",
+    title: "EV 전력전자·인버터 엔지니어",
+    postingKeywords: ["인버터", "OBC", "DC-DC", "전력전자", "게이트드라이브"],
+    industries: ["mobility", "electronics", "battery", "all"],
+    focus: "인버터, OBC, DC-DC 컨버터, 게이트 드라이브, 전류 센싱, 열 설계를 검토하고 효율·EMI·안전 조건을 검증하는 직무",
+    responsibilities: ["전압·전류·전력·효율 요구사항 정의", "스위칭 소자, 게이트 드라이버, 센싱 회로, 보호 회로 검토", "리플, 손실, 발열, EMI 측정 결과 분석", "모터·배터리·제어기 인터페이스와 안전 요구사항 검토"],
+    requirements: ["전력전자, 회로이론, 전자회로 기초", "MOSFET/IGBT/SiC 소자와 스위칭 동작 이해", "오실로스코프, 전류 프로브, 전력분석기 계측", "열·EMI·보호 로직을 검증 리포트로 정리"],
+    preferred: ["SPICE/PLECS/Simulink 기반 전력전자 모델링", "자동차 EMC, HV 안전, 절연 요구사항 이해", "인버터 또는 전원회로 Bring-up 경험"]
+  },
+  {
+    id: "vehicle-test-validation-engineer",
+    title: "실차 시험·차량 검증 엔지니어",
+    postingKeywords: ["실차시험", "DVP&R", "내구", "환경시험", "계측"],
+    industries: ["mobility", "all"],
+    focus: "차량 요구사항을 DVP&R, 시험 조건, 계측 채널, 판정 기준으로 바꾸고 실차·벤치 시험 결과를 검증하는 직무",
+    responsibilities: ["DVP&R 기반 시험 항목, 조건, 일정, 판정 기준 정의", "온도, 진동, 전류, CAN, 위치 등 계측 채널 구성", "내구, 환경, 기능, 신뢰성 시험 결과 정리", "불합격 항목의 원인 가설과 재시험 조건 수립"],
+    requirements: ["시험계획서와 요구사항 추적성 이해", "센서, 데이터 로거, CAN 계측 기본 사용", "시험 결과를 그래프와 표로 정리", "Pass/Fail 기준과 개선 요청을 명확히 문서화"],
+    preferred: ["실차 주행시험, 환경챔버, NVH, 내구 시험 경험", "Python/MATLAB 데이터 후처리", "개발·품질·생산 부서와 이슈 트래킹 경험"]
+  }
+];
+
 const roleDiagnostics = {
   "mechanical-design-engineer": [["3D CAD", "부품의 기능 요구사항을 기준으로 3D 모델의 기준면과 주요 치수를 잡을 수 있다."], ["도면·공차", "2D 도면에 기준 치수, 공차, 재질, 표면처리 정보를 빠뜨리지 않고 표시할 수 있다."], ["조립성", "간섭, 체결, 분해 방향, 작업 공간을 고려해 설계 리스크를 설명할 수 있다."], ["제조공정", "가공, 사출, 판금 중 어떤 공정이 적합한지 설계 형상과 연결해 판단할 수 있다."], ["설계변경", "시제품 문제를 치수·재료·공차 변경안으로 정리하고 변경 근거를 쓸 수 있다."]],
   "cae-analysis-engineer": [["해석 목적", "구조·열·진동 중 어떤 해석이 필요한지 실패 모드 기준으로 고를 수 있다."], ["경계조건", "하중, 구속, 접촉, 재료 물성이 결과에 미치는 영향을 설명할 수 있다."], ["메시·수렴", "메시 크기나 요소 품질 변화가 결과 신뢰도에 미치는 영향을 비교할 수 있다."], ["상관검증", "손계산 또는 시험 조건으로 해석 결과를 검증할 계획을 세울 수 있다."], ["해석리포트", "해석 결과를 설계 변경 우선순위와 안전율 판단으로 연결해 문서화할 수 있다."]],
@@ -2401,6 +2620,20 @@ const roleDiagnostics = {
   "process-safety-engineer": [["MSDS", "화학물질 위험성과 보호구, 저장 조건을 MSDS에서 찾을 수 있다."], ["HAZOP", "공정 변수의 이상 조건과 원인·결과·대책을 표로 만들 수 있다."], ["PSM", "공정안전자료, 운전절차, 변경관리의 관계를 설명할 수 있다."], ["환경관리", "배출, 폐수, 폐기물 관리 항목을 공정 흐름과 연결할 수 있다."], ["사고사례", "사고 원인을 공정 조건, 설비, 절차 문제로 분류할 수 있다."]],
   "bioprocess-engineer": [["GMP", "SOP, batch record, deviation의 역할을 설명할 수 있다."], ["배양공정", "pH, 온도, DO, 배지 조건이 배양 결과에 미치는 영향을 설명할 수 있다."], ["정제공정", "여과, 크로마토그래피, 농축 단계의 목적을 구분할 수 있다."], ["Validation", "공정 밸리데이션에서 확인해야 할 지표와 기록을 정리할 수 있다."], ["오염관리", "오염 리스크와 예방 조치를 공정 단계별로 설명할 수 있다."]]
 };
+
+Object.assign(roleDiagnostics, {
+  "vehicle-body-design-engineer": [["차체 구조", "BIW, 브라켓, 마운팅 포인트가 하중 경로와 조립성에 어떤 영향을 주는지 설명할 수 있다."], ["패키지", "주변 부품 간 간섭과 장착 공간을 기준으로 설계 제약을 정리할 수 있다."], ["충돌·강성", "충돌 안전, 강성, NVH 요구사항을 설계 조건으로 바꿀 수 있다."], ["도면·공차", "도면, 공차, 용접·체결 조건을 제조성 관점에서 검토할 수 있다."], ["설계변경", "시험 또는 양산 이슈를 설계 변경 근거로 문서화할 수 있다."]],
+  "chassis-suspension-engineer": [["차량동역학", "조향, 제동, 현가 변화가 차량 응답에 미치는 영향을 설명할 수 있다."], ["하중 케이스", "내구 시험 조건을 부품 하중과 변위 조건으로 바꿀 수 있다."], ["승차감·조종안정성", "승차감과 조종안정성 지표를 구분해 말할 수 있다."], ["시험데이터", "실차 시험 데이터를 그래프와 기준값으로 비교할 수 있다."], ["개선안", "부싱, 링크, 마운트 변경이 성능과 내구에 미치는 영향을 정리할 수 있다."]],
+  "powertrain-mechanical-engineer": [["토크 전달", "토크, 회전수, 기어비가 구동계 부품 요구사항에 미치는 영향을 설명할 수 있다."], ["기계요소", "기어, 베어링, 샤프트, 하우징의 역할을 구분할 수 있다."], ["NVH", "소음·진동 문제가 어떤 부품 또는 조립 조건과 연결되는지 가설을 세울 수 있다."], ["내구", "파손 모드와 시험 조건을 연결해 개선 우선순위를 정할 수 있다."], ["양산 이슈", "협력사 부품 사양과 조립 품질 문제를 설계 요구사항으로 정리할 수 있다."]],
+  "vehicle-thermal-management-engineer": [["열부하", "배터리, 모터, 인버터, HVAC의 열원을 구분하고 목표 온도를 정할 수 있다."], ["냉각회로", "펌프, 팬, 라디에이터, 냉각수 유량이 온도에 미치는 영향을 설명할 수 있다."], ["경계조건", "CFD 또는 열 모델의 경계조건과 물성값 설정 근거를 쓸 수 있다."], ["실차 온도", "온도 센서 데이터와 해석 결과 차이를 비교할 수 있다."], ["환경조건", "고온, 저온, 급속충전 조건에서 발생할 리스크를 정리할 수 있다."]],
+  "ev-battery-pack-engineer": [["팩 구조", "셀, 모듈, 팩 하우징, 냉각 구조를 하나의 시스템으로 설명할 수 있다."], ["BMS 인터페이스", "전압, 전류, 온도, 인터락 신호가 BMS와 어떻게 연결되는지 말할 수 있다."], ["전기안전", "절연, 접지, HV 안전, 열폭주 위험을 검증 항목으로 바꿀 수 있다."], ["시험조건", "진동, 충돌, 방수, 열 시험 조건과 판정 기준을 정리할 수 있다."], ["로그분석", "CAN 로그와 온도·전압 데이터를 기반으로 고장 가설을 세울 수 있다."]],
+  "vehicle-ee-architecture-engineer": [["E/E 구조", "차량 기능을 ECU, 센서, 액추에이터, 네트워크 신호로 분해할 수 있다."], ["CAN/LIN", "CAN/LIN/Ethernet 신호 흐름과 DBC의 역할을 설명할 수 있다."], ["전원분배", "퓨즈, 릴레이, 전원, 접지, 하네스 조건을 인터페이스로 정리할 수 있다."], ["진단", "UDS, DTC 같은 진단 요구사항의 목적을 말할 수 있다."], ["변경영향", "한 ECU 변경이 다른 기능과 네트워크에 미치는 영향을 검토할 수 있다."]],
+  "automotive-embedded-sw-engineer": [["ECU SW", "센서 입력, 상태머신, 제어 출력, 통신을 ECU 소프트웨어 흐름으로 설명할 수 있다."], ["C/C++", "포인터, 비트 연산, 구조체를 임베디드 코드 문제와 연결할 수 있다."], ["CAN 진단", "CAN 메시지, DBC, UDS 진단 서비스의 기본 역할을 구분할 수 있다."], ["디버깅", "벤치 또는 실차 로그로 문제 재현 조건을 좁힐 수 있다."], ["검증", "요구사항과 테스트 케이스를 연결해 Pass/Fail을 판단할 수 있다."]],
+  "hil-sil-validation-engineer": [["요구사항 검증", "요구사항을 테스트 케이스와 판정 기준으로 바꿀 수 있다."], ["HIL 구성", "HIL 장비, I/O, CAN 신호, 시뮬레이션 모델의 연결을 설명할 수 있다."], ["Fault Injection", "정상, 고장, 경계 조건 테스트를 구분할 수 있다."], ["로그분석", "실패 로그를 SW, 모델, 장비 원인으로 분리할 수 있다."], ["자동화", "반복 테스트를 스크립트나 테스트 시퀀스로 구성할 수 있다."]],
+  "adas-validation-engineer": [["ADAS 기능", "AEB, LKA, ACC 같은 기능의 입력 센서와 출력 동작을 설명할 수 있다."], ["시나리오", "주행 시나리오와 Pass/Fail 기준을 테스트 조건으로 작성할 수 있다."], ["센서융합", "카메라, 레이더, 라이다, GPS/IMU 데이터의 차이를 말할 수 있다."], ["로그동기화", "객체 인식 결과와 CAN 로그를 시간 기준으로 비교할 수 있다."], ["안전", "기능 실패 조건과 안전 리스크를 검증 리포트로 정리할 수 있다."]],
+  "ev-power-electronics-engineer": [["전력전자", "인버터, OBC, DC-DC의 역할과 전압·전류 요구사항을 설명할 수 있다."], ["스위칭", "MOSFET/IGBT/SiC 스위칭과 손실, 발열의 관계를 말할 수 있다."], ["계측", "리플, 효율, 전류, 온도를 계측 장비로 확인할 계획을 세울 수 있다."], ["EMI", "스위칭 노이즈와 필터, 접지, 레이아웃의 관계를 설명할 수 있다."], ["보호회로", "과전류, 과전압, 절연, 온도 보호 로직을 검증 항목으로 정리할 수 있다."]],
+  "vehicle-test-validation-engineer": [["DVP&R", "요구사항을 시험 항목, 조건, 일정, 판정 기준으로 바꿀 수 있다."], ["계측채널", "온도, 진동, 전류, CAN, 위치 등 필요한 계측 채널을 고를 수 있다."], ["실차시험", "실차, 벤치, 환경 시험의 목적 차이를 설명할 수 있다."], ["결과정리", "시험 결과를 그래프, 표, Pass/Fail 문장으로 정리할 수 있다."], ["재시험", "불합격 항목의 원인 가설과 재시험 조건을 세울 수 있다."]]
+});
 
 const industryDiagnostics = {
   mobility: [["차량신뢰성", "온도, 진동, 안전 요구가 설계·검증 조건에 미치는 영향을 설명할 수 있다."], ["양산검증", "시제품 검증과 양산 검증의 차이를 말할 수 있다."]],
@@ -2481,6 +2714,27 @@ const resourceTaskLinks = {
   "youtube-official-engineering": ["제품 요구사항 분해", "공정 문제 정의", "공정 흐름 매핑", "화학공정 흐름도", "전원 요구사항 정의", "MCU 주변장치 설계"]
 };
 
+[
+  ["matlab-onramp", ["차량 시스템 요구사항표", "인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
+  ["simulink-onramp", ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
+  ["stateflow-onramp", ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
+  ["control-design-onramp", ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
+  ["sensor-fusion-onramp", ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
+  ["mathworks-simscape-electrical", ["차량 시스템 요구사항표", "인터페이스·시험 조건 노트"]],
+  ["mit-mechanics-materials", ["차량 시스템 요구사항표"]],
+  ["mit-fea-solids", ["차량 시스템 요구사항표", "자동차 직무 검증 리포트"]],
+  ["kocw-mechanical-design", ["차량 시스템 요구사항표"]],
+  ["kocw-electronics-circuit", ["차량 시스템 요구사항표", "인터페이스·시험 조건 노트"]],
+  ["stm32-mooc-gpio-timer-uart", ["인터페이스·시험 조건 노트"]],
+  ["arm-embedded-systems", ["인터페이스·시험 조건 노트"]],
+  ["ti-precision-labs", ["자동차 직무 검증 리포트"]],
+  ["step-engineering", ["자동차 세부 직무 비교표", "자동차 직무 검증 리포트"]],
+  ["hrd-net-job-training", ["자동차 세부 직무 비교표", "자동차 직무 검증 리포트"]],
+  ["youtube-official-engineering", ["자동차 세부 직무 비교표"]]
+].forEach(([resourceId, taskTitles]) => {
+  resourceTaskLinks[resourceId] = [...new Set([...(resourceTaskLinks[resourceId] || []), ...taskTitles])];
+});
+
 const roleResourceLinks = {
   "mechanical-design-engineer": ["mit-mechanics-materials", "kocw-mechanical-design", "mit-design-manufacturing", "step-engineering", "optimization-onramp", "khan-math-physics-basics", "udemy-free-practical-tools"],
   "cae-analysis-engineer": ["mit-fea-solids", "matlab-onramp", "simscape-onramp", "mit-numerical-me", "kocw-mechanical-design", "signal-processing-onramp", "coursera-engineering-data", "edx-engineering-systems"],
@@ -2513,6 +2767,20 @@ const roleResourceLinks = {
   "embedded-linux-engineer": ["kocw-embedded-control", "stm32-education", "ros-tutorials", "step-engineering", "freecodecamp-python-data", "inflearn-free-it-practice"],
   "motor-control-engineer": ["control-design-onramp", "simulink-onramp", "mathworks-simscape-electrical", "simscape-onramp", "stateflow-onramp", "matlab-onramp", "coursera-embedded-control", "edx-engineering-systems"]
 };
+
+Object.assign(roleResourceLinks, {
+  "vehicle-body-design-engineer": ["mit-mechanics-materials", "kocw-mechanical-design", "mit-design-manufacturing", "mit-fea-solids", "optimization-onramp", "step-engineering", "hrd-net-job-training"],
+  "chassis-suspension-engineer": ["mit-mechanics-materials", "mit-fea-solids", "matlab-onramp", "simulink-onramp", "signal-processing-onramp", "optimization-onramp", "coursera-engineering-data"],
+  "powertrain-mechanical-engineer": ["mit-mechanics-materials", "mit-fea-solids", "simscape-onramp", "matlab-onramp", "signal-processing-onramp", "mathworks-predictive-maintenance", "edx-engineering-systems"],
+  "vehicle-thermal-management-engineer": ["mit-fea-solids", "mit-numerical-me", "matlab-onramp", "simscape-onramp", "signal-processing-onramp", "coursera-engineering-data", "edx-engineering-systems"],
+  "ev-battery-pack-engineer": ["simscape-onramp", "mathworks-simscape-electrical", "matlab-onramp", "signal-processing-onramp", "statistics-onramp", "kocw-electronics-circuit", "hrd-net-job-training"],
+  "vehicle-ee-architecture-engineer": ["allaboutcircuits-textbook", "mit-circuits", "kocw-electronics-circuit", "ti-precision-labs", "analog-dialogue", "simulink-onramp", "edx-engineering-systems"],
+  "automotive-embedded-sw-engineer": ["stm32-mooc-gpio-timer-uart", "arm-embedded-systems", "stm32-education", "kocw-embedded-control", "stateflow-onramp", "simulink-onramp", "freecodecamp-python-data", "inflearn-free-it-practice"],
+  "hil-sil-validation-engineer": ["simulink-onramp", "stateflow-onramp", "control-design-onramp", "matlab-onramp", "signal-processing-onramp", "coursera-embedded-control", "freecodecamp-python-data"],
+  "adas-validation-engineer": ["sensor-fusion-onramp", "signal-processing-onramp", "matlab-onramp", "simulink-onramp", "machine-learning-onramp", "coursera-embedded-control", "freecodecamp-python-data"],
+  "ev-power-electronics-engineer": ["mathworks-simscape-electrical", "simscape-onramp", "ti-precision-labs", "kocw-electronics-circuit", "analog-dialogue", "simulink-onramp", "edx-engineering-systems"],
+  "vehicle-test-validation-engineer": ["matlab-onramp", "signal-processing-onramp", "mathworks-predictive-maintenance", "statistics-onramp", "step-engineering", "hrd-net-job-training", "youtube-official-engineering"]
+});
 
 const storageKey = "careerCompetencyPilot";
 const primaryViews = ["tracks", "diagnosis", "roadmap", "saved"];
@@ -3088,7 +3356,7 @@ function renderRoleWordCloud(track, role, modifier = "") {
       <div class="word-cloud-terms">
         ${terms.map((term, index) => `<span class="word-cloud-term weight-${term.level}" style="${getWordCloudTermStyle(term, index)}">${term.word}</span>`).join("")}
       </div>
-      <figcaption>${role.title} 채용공고 키워드, 직무확보 문항, 업무·자격요건에서 반복되는 구체 단어를 즉시 계산해 표시합니다.</figcaption>
+      <figcaption>${role.title} 직무상세의 주요 업무, 자격요건, 우대역량, 직무확보 문항에서 반복되는 단어일수록 크게 표시합니다.</figcaption>
     </figure>
   `;
 }
@@ -3104,8 +3372,8 @@ const wordCloudPlacements = [
 
 function getWordCloudTermStyle(term, index) {
   const placement = wordCloudPlacements[index % wordCloudPlacements.length];
-  const size = (0.68 + term.level * 0.29).toFixed(2);
-  const opacity = (0.74 + term.level * 0.04).toFixed(2);
+  const size = (0.72 + Math.pow(term.level, 1.18) * 0.31).toFixed(2);
+  const opacity = (0.64 + term.level * 0.055).toFixed(2);
   return `--x:${placement[0]}%;--y:${placement[1]}%;--rotate:${placement[2]}deg;--size:${size}rem;--opacity:${opacity};--z:${term.level};`;
 }
 
@@ -3158,13 +3426,13 @@ function roleFitBlock(title, items) {
 
 function getRoleWordCloudTerms(track, role) {
   const weightedTerms = [];
-  addWeightedRoleTerms(weightedTerms, role.postingKeywords, 28);
-  addWeightedRoleTerms(weightedTerms, (roleDiagnostics[role.id] || []).map(([skill]) => skill), 22);
-  addWeightedRoleTerms(weightedTerms, track.skills, 10);
-  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.responsibilities), 9);
-  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.requirements), 8);
-  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.preferred), 6);
-  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.focus), 5);
+  addWeightedRoleTerms(weightedTerms, role.postingKeywords, 18);
+  addWeightedRoleTerms(weightedTerms, (roleDiagnostics[role.id] || []).map(([skill]) => skill), 17);
+  addWeightedRoleTerms(weightedTerms, track.skills, 8);
+  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.responsibilities), 15);
+  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.requirements), 14);
+  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.focus), 13);
+  addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.preferred), 10);
 
   const scoreMap = new Map();
   weightedTerms.forEach(({ word, weight }) => {
@@ -3279,6 +3547,7 @@ function getRoleArtifactExamples(track, role) {
   if (/(반도체|웨이퍼|Defect|CD|식각|플라즈마|계측|장비)/i.test(text)) examples.push("Recipe 변경 이력, 계측 지표, 장비 로그 기반 원인 가설");
   if (/(PCB|회로|전원|리플|EMC|오실로스코프|부품선정)/i.test(text)) examples.push("회로 블록도, 부품 선정표, 측정 포인트와 검증 결과");
   if (/(MCU|펌웨어|UART|SPI|I2C|CAN|PWM|ADC)/i.test(text)) examples.push("주변장치 매핑표, 통신 로그, 디버깅 재현 절차");
+  if (/(차량|차체|BIW|섀시|현가|조향|제동|파워트레인|구동계|배터리팩|BMS|E\/E|ECU|ADAS|HIL|SIL|DVP&R|실차|CANoe|AUTOSAR)/i.test(text)) examples.push("차량 요구사항표, 인터페이스 정의서, 시험계획서와 검증 리포트");
   if (/(Linux|Device Driver|Kernel|Yocto|BSP|부팅)/i.test(text)) examples.push("device tree·드라이버 로그 분석 메모와 이미지 빌드 흐름도");
   if (/(ROS|Navigation|SLAM|로봇|센서)/i.test(text)) examples.push("ROS 노드·토픽 구성도와 센서 데이터 흐름 로그");
   if (/(HAZOP|PSM|MSDS|안전|환경|위험)/i.test(text)) examples.push("HAZOP 체크리스트와 변경관리 위험 검토표");
@@ -4763,6 +5032,13 @@ function getSelectLabel(select) {
 
 function registerServiceWorker() {
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/sw.js").catch(() => {});
+    navigator.serviceWorker.register("/sw.js", { updateViaCache: "none" })
+      .then((registration) => {
+        registration.update();
+        if (registration.waiting) {
+          registration.waiting.postMessage({ type: "SKIP_WAITING" });
+        }
+      })
+      .catch(() => {});
   }
 }

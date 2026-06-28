@@ -671,7 +671,7 @@ input::placeholder {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  max-width: min(42%, 220px);
+  max-width: min(46%, 260px);
   color: #26343f;
   font-size: var(--size);
   font-weight: 800;
@@ -1465,6 +1465,6 @@ li {
 
   .word-cloud-term {
     max-width: 48%;
-    font-size: calc(var(--size) * 0.82);
+    font-size: calc(var(--size) * 0.76);
   }
 }
