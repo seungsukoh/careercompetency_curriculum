@@ -1606,6 +1606,92 @@ const resources = [
     url: "https://www.udemy.com/courses/free/"
   },
   {
+    id: "ansys-innovation-courses",
+    title: "Ansys Innovation Courses 구조·열·유동 해석",
+    provider: "Ansys",
+    type: "공식 무료 시뮬레이션 교육",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 120,
+    practiceMinutes: 120,
+    sequenceLevel: 3,
+    core: true,
+    tracks: ["mechanical-cae", "automotive-mobility", "electronics-pcb"],
+    skills: ["FEA", "CFD", "열해석", "경계조건", "시뮬레이션", "검증"],
+    prerequisites: ["재료역학 또는 열유체 기초"],
+    reason: "구조, 열, 유동 해석을 공식 무료 강좌와 예제로 확인할 수 있습니다. CAE·차량 열관리·검증 직무에서 해석 조건과 결과 판단을 산출물로 남기기 좋습니다.",
+    expectedOutput: "해석 조건표, 결과 캡처, 경계조건 검토 메모",
+    qualityStatus: "reviewed",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://courses.ansys.com/"
+  },
+  {
+    id: "ni-learn-test-measurement",
+    title: "NI Learn 계측·시험 자동화 자료",
+    provider: "NI",
+    type: "공식 실습자료",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 90,
+    practiceMinutes: 90,
+    sequenceLevel: 3,
+    core: true,
+    tracks: ["mechanical-cae", "automotive-mobility", "electronics-pcb", "embedded-control"],
+    skills: ["계측", "DAQ", "LabVIEW", "시험계획", "HIL", "검증"],
+    prerequisites: ["기초 전기계측", "데이터 기록 이해"],
+    reason: "시험·검증 직무에서 센서, DAQ, 자동화, HIL 흐름을 공식 학습 자료로 확인할 수 있습니다. 측정 조건과 Pass/Fail 기준을 세우는 과제에 연결됩니다.",
+    expectedOutput: "계측 채널 정의표와 시험 자동화 흐름도",
+    qualityStatus: "reviewed",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://learn.ni.com/"
+  },
+  {
+    id: "google-ml-crash-course",
+    title: "Google Machine Learning Crash Course",
+    provider: "Google",
+    type: "공식 무료교육",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 120,
+    practiceMinutes: 90,
+    sequenceLevel: 3,
+    tracks: ["production-quality", "semiconductor-equipment", "chemical-process", "automotive-mobility"],
+    skills: ["AI 기초", "데이터 분석", "이상탐지", "수율분석", "모델검증"],
+    prerequisites: ["기초 통계", "Python 기초"],
+    reason: "공정, 수율, 시험 데이터에서 예측·분류·검증 개념을 빠르게 잡는 공식 무료 과정입니다. AI를 과장하지 않고 데이터 기반 개선 가설을 만드는 데 적합합니다.",
+    expectedOutput: "데이터 문제 정의, 입력 변수, 모델 검증 기준 메모",
+    qualityStatus: "verified",
+    url: "https://developers.google.com/machine-learning/crash-course"
+  },
+  {
+    id: "boostcourse-data-ai-basic",
+    title: "Boostcourse 데이터·AI 기초 실습 후보",
+    provider: "Boostcourse",
+    type: "무료교육",
+    language: "한국어",
+    difficulty: "입문",
+    estimatedMinutes: 90,
+    practiceMinutes: 60,
+    sequenceLevel: 2,
+    tracks: ["production-quality", "semiconductor-equipment", "chemical-process", "electronics-pcb", "embedded-control"],
+    skills: ["Python/SQL", "데이터 분석", "AI 기초", "Git", "문서화"],
+    prerequisites: ["기초 프로그래밍"],
+    reason: "한국어로 데이터 분석과 AI 기초를 보완할 때 사용할 수 있는 무료 학습 후보입니다. 공정·품질·임베디드 로그 분석을 처음 시작하는 학생에게 진입 장벽이 낮습니다.",
+    expectedOutput: "직무 데이터 예제 1개와 분석 절차 README 초안",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.boostcourse.org/"
+  },
+  {
     id: "youtube-nptel-vehicle-dynamics",
     title: "NPTEL Introduction to Vehicle Dynamics",
     provider: "NPTEL YouTube",
@@ -2013,6 +2099,10 @@ const automotiveResourceIds = new Set([
   "inflearn-free-it-practice",
   "step-engineering",
   "hrd-net-job-training",
+  "ansys-innovation-courses",
+  "ni-learn-test-measurement",
+  "google-ml-crash-course",
+  "boostcourse-data-ai-basic",
   "ncs",
   "youtube-nptel-vehicle-dynamics",
   "youtube-css-can-bus",
@@ -3174,6 +3264,10 @@ const resourceTaskLinks = {
   "freecodecamp-python-data": ["관리도와 Cpk 계산", "수율 Pareto 분석", "물질수지와 수율 계산", "디버깅 노트와 README"],
   "inflearn-free-it-practice": ["UART 센서 프로토콜", "디버깅 노트와 README", "검증 리포트"],
   "udemy-free-practical-tools": ["손계산과 CAD 초안", "PCB 리뷰 체크리스트", "8D 개선 보고서", "디버깅 노트와 README"],
+  "ansys-innovation-courses": ["해석 조건 검증", "설계 변경 제안", "차량 시스템 요구사항표", "자동차 직무 검증 리포트"],
+  "ni-learn-test-measurement": ["검증 리포트", "UART 센서 프로토콜", "인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"],
+  "google-ml-crash-course": ["관리도와 Cpk 계산", "수율 Pareto 분석", "조건 변경 검토표", "자동차 직무 검증 리포트"],
+  "boostcourse-data-ai-basic": ["공정 문제 정의", "수율 Pareto 분석", "디버깅 노트와 README", "검증 리포트"],
   "youtube-nptel-vehicle-dynamics": ["제품 요구사항 분해", "해석 조건 검증", "자동차 세부 직무 비교표", "차량 시스템 요구사항표", "자동차 직무 검증 리포트"],
   "youtube-css-can-bus": ["MCU 주변장치 설계", "UART 센서 프로토콜", "전원 요구사항 정의", "인터페이스·시험 조건 노트", "자동차 세부 직무 비교표"],
   "youtube-skilllync-ev-crash-course": ["자동차 세부 직무 비교표", "차량 시스템 요구사항표", "인터페이스·시험 조건 노트"],
@@ -3307,8 +3401,30 @@ Object.entries({
   roleResourceLinks[roleId] = [...new Set([...(roleResourceLinks[roleId] || []), ...resourceIds])];
 });
 
+Object.entries({
+  "mechanical-design-engineer": ["ansys-innovation-courses"],
+  "cae-analysis-engineer": ["ansys-innovation-courses"],
+  "thermal-cfd-engineer": ["ansys-innovation-courses"],
+  "mechanical-test-engineer": ["ni-learn-test-measurement", "ansys-innovation-courses"],
+  "process-engineer": ["google-ml-crash-course", "boostcourse-data-ai-basic"],
+  "quality-engineer": ["boostcourse-data-ai-basic"],
+  "production-data-engineer": ["google-ml-crash-course", "boostcourse-data-ai-basic"],
+  "semiconductor-yield-engineer": ["google-ml-crash-course", "boostcourse-data-ai-basic"],
+  "metrology-engineer": ["ni-learn-test-measurement", "google-ml-crash-course"],
+  "validation-engineer": ["ni-learn-test-measurement"],
+  "emc-test-engineer": ["ni-learn-test-measurement"],
+  "embedded-firmware-engineer": ["ni-learn-test-measurement", "boostcourse-data-ai-basic"],
+  "hil-sil-validation-engineer": ["ni-learn-test-measurement"],
+  "adas-validation-engineer": ["google-ml-crash-course", "ni-learn-test-measurement"],
+  "vehicle-test-validation-engineer": ["ni-learn-test-measurement", "ansys-innovation-courses"],
+  "vehicle-thermal-management-engineer": ["ansys-innovation-courses"],
+  "chassis-suspension-engineer": ["ansys-innovation-courses", "ni-learn-test-measurement"]
+}).forEach(([roleId, resourceIds]) => {
+  roleResourceLinks[roleId] = [...new Set([...(roleResourceLinks[roleId] || []), ...resourceIds])];
+});
+
 const storageKey = "careerCompetencyPilot";
-const primaryViews = ["tracks", "diagnosis", "roadmap", "saved"];
+const primaryViews = ["tracks", "diagnosis", "roadmap", "references", "saved"];
 
 const defaultState = {
   selectedTrackId: "production-quality",
@@ -3351,6 +3467,7 @@ function bindElements() {
     "trackCount",
     "roleSearchInput",
     "roleGroupFilter",
+    "selectedRoleOverview",
     "trackList",
     "trackDetail",
     "diagnosisGuide",
@@ -3362,6 +3479,9 @@ function bindElements() {
     "roadmapTitle",
     "roadmapGuidance",
     "roadmapList",
+    "referenceCount",
+    "referenceGuidance",
+    "referenceList",
     "savedGuidance",
     "savedList",
     "clearSavedButton",
@@ -3484,7 +3604,7 @@ function saveState() {
 }
 
 function normalizeView(view, fallback = "roadmap") {
-  if (view === "library" || view === "education") return "roadmap";
+  if (view === "library" || view === "education") return "references";
   if (primaryViews.includes(view)) return view;
   return fallback;
 }
@@ -3503,6 +3623,7 @@ function render() {
   renderTrackDetail();
   renderDiagnostics();
   renderRoadmap();
+  renderReferences();
   renderSaved();
   renderMetrics();
   scheduleWordCloudLayout();
@@ -3573,6 +3694,12 @@ function getWorkflowSteps({ track, role, checkedCount, score, gapCount, savedCou
       complete: true
     },
     {
+      view: "references",
+      title: "참고자료",
+      status: `${resources.length}개 자료`,
+      complete: true
+    },
+    {
       view: "saved",
       title: "내 계획",
       status: savedCount ? `${savedCount}개 자료 저장` : "자동 구성 확인",
@@ -3595,7 +3722,7 @@ function getNextWorkflowStep(steps, activeIndex) {
     };
   }
 
-  if (state.view !== "roadmap" && state.view !== "saved") {
+  if (state.view !== "roadmap" && state.view !== "references" && state.view !== "saved") {
     return {
       view: "roadmap",
       title: "부족 역량 로드맵을 확인하세요",
@@ -3783,6 +3910,7 @@ function getMajorPathwayFocus(track, role = null, major = state.profile.major) {
 function renderTracks() {
   const roleCatalog = getRoleCatalog();
   elements.trackCount.textContent = `${roleCatalog.length}개 채용공고 직무 · 전공은 추천순위 기준`;
+  renderSelectedRoleOverview();
 
   if (!roleCatalog.length) {
     elements.trackList.innerHTML = `
@@ -3809,7 +3937,6 @@ function renderTracks() {
         ${role.postingKeywords.slice(0, 5).map((keyword) => `<span class="badge">${keyword}</span>`).join("")}
       </span>
     </button>
-    ${isSelected ? renderInlineRoleWordCloud(track, role) : ""}
   `;
   }).join("");
 
@@ -3820,8 +3947,82 @@ function renderTracks() {
       state.view = "tracks";
       saveState();
       render();
+      focusSelectedRoleOverview();
     });
   });
+}
+
+function focusSelectedRoleOverview() {
+  requestAnimationFrame(() => {
+    elements.selectedRoleOverview?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
+function renderSelectedRoleOverview() {
+  if (!elements.selectedRoleOverview) return;
+  const track = getSelectedTrack();
+  const role = getSelectedRole(track.id);
+  if (!role) {
+    elements.selectedRoleOverview.innerHTML = "";
+    return;
+  }
+
+  const evidence = getHiringEvidence(track, role);
+  const context = getRecommendationContext(track, getGapSkills(track.id), getVisibleRoadmapTasks(track.id));
+  const quickResources = uniqueResources([
+    ...getRoleLinkedResources(role),
+    ...getRecommendedResources(track, context)
+  ]).slice(0, 3);
+
+  elements.selectedRoleOverview.innerHTML = `
+    <article class="selected-role-overview" aria-live="polite" aria-label="${role.title} 선택 직무 요약">
+      ${renderRoleWordCloud(track, role, "is-featured")}
+      <div class="selected-role-summary">
+        <p class="eyebrow">선택한 직무를 먼저 판단하세요</p>
+        <h3>${role.title}</h3>
+        <p>${role.focus}</p>
+        <div class="selected-role-keypoints">
+          <div>
+            <strong>주요 업무</strong>
+            <ul>${role.responsibilities.slice(0, 3).map((item) => `<li>${item}</li>`).join("")}</ul>
+          </div>
+          <div>
+            <strong>필요 역량</strong>
+            <ul>${role.requirements.slice(0, 3).map((item) => `<li>${item}</li>`).join("")}</ul>
+          </div>
+        </div>
+        <div class="role-decision-mini">
+          <strong>지원 전 확인 질문</strong>
+          <ul>
+            ${getRoleDecisionQuestions(track, role).slice(0, 2).map((item) => `<li>${item}</li>`).join("")}
+          </ul>
+        </div>
+        <div class="selected-role-search">
+          <strong>채용 사이트에서는 직접 검색</strong>
+          <span>검색어 예시: ${evidence.query}</span>
+          <div class="evidence-links">
+            ${evidence.links.map((link) => `<a class="resource-action" href="${link.url}" target="_blank" rel="noreferrer">${link.label}</a>`).join("")}
+          </div>
+        </div>
+        ${quickResources.length ? `
+          <div class="selected-role-resources">
+            <strong>바로 참고할 자료</strong>
+            ${quickResources.map((resource) => `
+              <span>
+                <em>${resource.title}</em>
+                <small>${resource.provider} · ${resource.type}</small>
+              </span>
+            `).join("")}
+          </div>
+        ` : ""}
+        <div class="flow-actions">
+          <button class="primary-button" type="button" data-view-target="diagnosis">보유 역량 체크하기</button>
+          <button class="ghost-button" type="button" data-view-target="roadmap">로드맵 보기</button>
+          <button class="ghost-button" type="button" data-view-target="references">참고자료 보기</button>
+        </div>
+      </div>
+    </article>
+  `;
 }
 
 function renderInlineRoleWordCloud(track, role) {
@@ -3976,6 +4177,7 @@ function renderTrackDetail() {
       state.selectedRoles = { ...state.selectedRoles, [track.id]: button.dataset.roleId };
       saveState();
       render();
+      focusSelectedRoleOverview();
     });
   });
 }
@@ -3987,8 +4189,8 @@ function getHiringEvidence(track, role) {
   return {
     query,
     links: [
-      { label: "잡코리아 검색", url: `https://www.jobkorea.co.kr/Search/?stext=${encodedQuery}` },
-      { label: "사람인 검색", url: `https://www.saramin.co.kr/zf_user/search?searchType=search&searchword=${encodedQuery}` },
+      { label: "잡코리아 열기", url: "https://www.jobkorea.co.kr/" },
+      { label: "사람인 열기", url: "https://www.saramin.co.kr/" },
       { label: "웹 검색", url: `https://duckduckgo.com/?q=${encodedQuery}` }
     ]
   };
@@ -4705,6 +4907,136 @@ function renderRoadmapGuidance(context, tasks) {
   `;
 }
 
+function renderReferences() {
+  if (!elements.referenceList || !elements.referenceGuidance || !elements.referenceCount) return;
+
+  const track = getSelectedTrack();
+  const role = getSelectedRole(track.id);
+  const tasks = getVisibleRoadmapTasks(track.id);
+  const context = getRecommendationContext(track, getGapSkills(track.id), tasks);
+  const roleResources = uniqueResources([
+    ...getRoleLinkedResources(role),
+    ...getRecommendedResources(track, context)
+  ]).slice(0, 8);
+  const sections = getReferenceSections(context);
+
+  elements.referenceCount.textContent = `${resources.length}개 자료`;
+  elements.referenceGuidance.innerHTML = `
+    <h3>자료는 참고자료에서 찾고, 계획에는 필요한 것만 넣으세요</h3>
+    <p>로드맵은 선택 직무와 부족 역량에 맞는 자료만 자동 배치합니다. 이 탭은 전체 교육·실습자료 보관함이며, 분야별로 열어보고 관심 자료만 내 계획에 추가하면 됩니다.</p>
+    <div class="badge-row">
+      <span class="badge">선택 직무: ${role?.title || track.title}</span>
+      <span class="badge">전체 자료: ${resources.length}개</span>
+      <span class="badge">분야: ${sections.length}개</span>
+      <span class="badge">MathWorks·OCW·공식문서·실습형 과정 포함</span>
+    </div>
+  `;
+
+  elements.referenceList.innerHTML = `
+    ${roleResources.length ? `
+      <section class="reference-priority-panel" aria-label="선택 직무 우선 참고자료">
+        <div class="reference-section-head">
+          <div>
+            <p class="eyebrow">선택 직무 우선</p>
+            <h3>${role?.title || track.title} 관련 자료</h3>
+          </div>
+          <span class="status-pill">${roleResources.length}개</span>
+        </div>
+        <div class="reference-resource-grid">
+          ${roleResources.map((resource) => renderReferenceResourceItem(resource, context)).join("")}
+        </div>
+      </section>
+    ` : ""}
+    <div class="reference-section-list">
+      ${sections.map((section) => renderReferenceSection(section, context)).join("")}
+    </div>
+  `;
+
+  bindResourceActions(elements.referenceList);
+}
+
+function getReferenceSections(activeContext) {
+  return tracks.map((track) => {
+    const sectionTasks = getVisibleRoadmapTasks(track.id);
+    const sectionContext = track.id === activeContext.track.id
+      ? activeContext
+      : getRecommendationContext(track, getGapSkills(track.id), sectionTasks);
+    const sectionResources = resources
+      .filter((resource) => resource.tracks.includes(track.id))
+      .sort((a, b) => sortReferenceResources(a, b, sectionContext));
+    return {
+      track,
+      context: sectionContext,
+      resources: sectionResources
+    };
+  }).filter((section) => section.resources.length);
+}
+
+function sortReferenceResources(a, b, context) {
+  const score = (resource) => {
+    const roleLinked = getRoleLinkedResourceIds(context.role).includes(resource.id) ? 1 : 0;
+    const saved = state.saved.includes(resource.id) ? 1 : 0;
+    const qualityScore = resource.qualityStatus === "verified" ? 3 : resource.qualityStatus === "reviewed" ? 2 : 1;
+    return saved * 600
+      + roleLinked * 320
+      + (resource.core ? 120 : 0)
+      + getResourcePriorityScore(resource, context)
+      + (isHandsOnResource(resource) ? 35 : 0)
+      + qualityScore * 16
+      - resource.sequenceLevel * 2;
+  };
+  const scoreDiff = score(b) - score(a);
+  if (scoreDiff !== 0) return scoreDiff;
+  return sortResourcesForLearning(a, b, context);
+}
+
+function renderReferenceSection(section, activeContext) {
+  const isActiveTrack = section.track.id === activeContext.track.id;
+  return `
+    <details class="reference-section" ${isActiveTrack ? "open" : ""}>
+      <summary>
+        <span>
+          <strong>${section.track.title}</strong>
+          <em>${section.track.summary}</em>
+        </span>
+        <span class="status-pill">${section.resources.length}개</span>
+      </summary>
+      <div class="reference-section-body">
+        ${section.resources.map((resource) => renderReferenceResourceItem(resource, section.context)).join("")}
+      </div>
+    </details>
+  `;
+}
+
+function renderReferenceResourceItem(resource, context) {
+  const saved = state.saved.includes(resource.id);
+  const signals = context ? getResourceSignals(resource, context).slice(0, 3) : [];
+  const skillText = (resource.skills || []).slice(0, 5).join(", ");
+  return `
+    <details class="reference-resource-card ${saved ? "is-saved" : ""}">
+      <summary>
+        <span>
+          <strong>${resource.title}</strong>
+          <em>${resource.provider} · ${resource.type} · ${resource.language} · ${formatMinutes(resource.totalMinutes)}</em>
+        </span>
+        ${renderResourceTrustBadges(resource)}
+      </summary>
+      <div class="reference-resource-detail">
+        <p>${resource.reason}</p>
+        ${signals.length ? `<p><strong>추천 신호:</strong> ${signals.join(" · ")}</p>` : ""}
+        <p><strong>역량:</strong> ${skillText}</p>
+        <p><strong>남길 산출물:</strong> ${resource.expectedOutput}</p>
+        <div class="roadmap-resource-actions">
+          <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
+          <button class="resource-action ${saved ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
+            ${saved ? "내 계획에 추가됨" : "내 계획에 추가"}
+          </button>
+        </div>
+      </div>
+    </details>
+  `;
+}
+
 function getCurriculumTasks(trackId) {
   const track = tracks.find((item) => item.id === trackId);
   const role = track ? getSelectedRole(track.id) : null;
@@ -5138,7 +5470,7 @@ function getHandsOnResourceCandidates(context) {
 
 function getHandsOnResourceScore(resource, context) {
   const roleLinked = getRoleLinkedResourceIds(context.role).includes(resource.id) ? 1 : 0;
-  const externalCourse = /코멘토|렛유인/.test(resource.provider) ? 1 : 0;
+  const externalCourse = /코멘토|렛유인|STEP|HRD-Net|K-MOOC|KOCW|Coursera|edX|인프런|Udemy|Boostcourse|Ansys|NI|Google/.test(resource.provider) ? 1 : 0;
   const simulation = /Simulink|Simscape|Stateflow|시뮬레이션|HIL|SIL|모델링|모델/.test(getResourceBadgeText(resource)) ? 1 : 0;
   return getEducationResourceScore(resource, context)
     + roleLinked * 90
@@ -5198,7 +5530,7 @@ function getGoalResourceScore(resource, context) {
     "근거",
     "메모"
   ]);
-  const officialSource = /공식|정부|협회|대학|ocw|무료교육|무료청강|mathworks|ncs|nist|asq|coursera|edx|khan|freecodecamp|hrd-net|gseek|인프런|udemy|youtube/.test(text) ? 1 : 0;
+  const officialSource = /공식|정부|협회|대학|ocw|무료교육|무료청강|mathworks|ncs|nist|asq|coursera|edx|khan|freecodecamp|hrd-net|gseek|인프런|udemy|youtube|ansys|ni|google|boostcourse/.test(text) ? 1 : 0;
   let score = 0;
 
   if (goalKey === "explore") {
@@ -5582,7 +5914,8 @@ function renderResourceTrustBadges(resource) {
 
   if (/Simulink|Simscape|Stateflow|시뮬레이션|HIL|SIL|모델링|모델/.test(resourceText)) badges.push("시뮬레이션");
   if (isHandsOnResource(resource)) badges.push("실습형");
-  if (/코멘토|렛유인/.test(resource.provider)) badges.push("외부 과정");
+  if (/코멘토|렛유인|Coursera|edX|K-MOOC|KOCW|STEP|HRD-Net|인프런|Udemy|Boostcourse/.test(resource.provider)) badges.push("외부 과정");
+  if (/MathWorks|Ansys|NI|Google|Texas Instruments|STMicroelectronics|Arm|KiCad|Linux Kernel|Yocto|ROS/.test(resource.provider)) badges.push("공식 자료");
   if (directUrl) badges.push("직접 링크");
   if (/youtube|영상/i.test(`${resource.provider} ${resource.type}`)) badges.push("동영상");
   if (resource.qualityStatus === "verified") badges.push("검증 자료");
@@ -5829,7 +6162,7 @@ function getResourceSignals(resource, context) {
   const signals = [];
   const linkedTasks = getResourceLinkedTasks(resource.id, context.visibleTasks);
   const matchedGaps = getResourceGapMatches(resource, context);
-  const matchedGoal = resource.skills.filter((skill) => context.goal.prioritySkills.includes(skill));
+  const matchedGoal = (resource.skills || []).filter((skill) => context.goal.prioritySkills.includes(skill));
   const matchedRoleKeywords = getRoleKeywordMatches(resource, context.role);
   const competencyFitSignal = getCompetencyFitSignal(resource, context);
   const goalFitSignal = getGoalFitSignal(resource, context);
@@ -5848,7 +6181,7 @@ function getResourcePriorityScore(resource, context) {
   const coreResource = resource.core ? 1 : 0;
   const linkedTaskMatches = getResourceLinkedTasks(resource.id, context.visibleTasks).length;
   const gapMatches = getResourceGapMatches(resource, context).length;
-  const goalMatches = resource.skills.filter((skill) => context.goal.prioritySkills.includes(skill)).length;
+  const goalMatches = (resource.skills || []).filter((skill) => context.goal.prioritySkills.includes(skill)).length;
   const roleKeywordMatches = getRoleKeywordMatches(resource, context.role).length;
   const difficultyMatch = context.goal.preferredDifficulties.includes(resource.difficulty) ? 1 : 0;
   const languageMatch = resource.languageCode === "ko" ? 1 : 0;
@@ -5923,6 +6256,7 @@ function bindResourceActions(container) {
       toggleListValue("saved", button.dataset.saveId);
       saveState();
       renderRoadmap();
+      renderReferences();
       renderSaved();
       renderMetrics();
     });
@@ -5934,6 +6268,7 @@ function bindResourceActions(container) {
       if (!state.saved.includes(button.dataset.completeId)) state.saved.push(button.dataset.completeId);
       saveState();
       renderRoadmap();
+      renderReferences();
       renderSaved();
       renderMetrics();
     });

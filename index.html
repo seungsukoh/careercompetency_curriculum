@@ -90,6 +90,7 @@
             <button class="tab is-active" type="button" data-view="tracks">직무</button>
             <button class="tab" type="button" data-view="diagnosis">직무확보</button>
             <button class="tab" type="button" data-view="roadmap">로드맵 구성</button>
+            <button class="tab" type="button" data-view="references">참고자료</button>
             <button class="tab" type="button" data-view="saved">내 계획</button>
           </nav>
           <div class="workflow-status" id="workflowStatus" aria-label="진행 단계"></div>
@@ -125,6 +126,7 @@
                 </select>
               </label>
             </div>
+            <div class="selected-role-overview-slot" id="selectedRoleOverview"></div>
             <div class="track-grid" id="trackList"></div>
             <article class="detail-panel" id="trackDetail"></article>
           </section>
@@ -155,6 +157,18 @@
             </div>
             <div class="roadmap-guidance" id="roadmapGuidance"></div>
             <div class="roadmap" id="roadmapList"></div>
+          </section>
+
+          <section class="view" id="referencesView">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">참고자료 모음</p>
+                <h2>분야별 교육·실습자료</h2>
+              </div>
+              <span class="status-pill" id="referenceCount">0개 자료</span>
+            </div>
+            <div class="reference-guidance" id="referenceGuidance"></div>
+            <div class="reference-list" id="referenceList"></div>
           </section>
 
           <section class="view" id="savedView">

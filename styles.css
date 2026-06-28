@@ -264,7 +264,7 @@ input::placeholder {
 
 .tabs {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 0;
   border-bottom: 1px solid var(--line);
   background: #f8faf7;
@@ -288,7 +288,7 @@ input::placeholder {
 
 .workflow-status {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 8px;
   padding: 12px;
   background: #ffffff;
@@ -611,7 +611,7 @@ input::placeholder {
   grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
   gap: 14px;
   align-items: stretch;
-  margin-top: 14px;
+  margin: 0 0 14px;
 }
 
 .selected-role-summary {
@@ -624,9 +624,72 @@ input::placeholder {
   border-radius: var(--radius);
 }
 
+.selected-role-summary h3 {
+  margin: 0;
+  font-size: 1.08rem;
+  line-height: 1.3;
+}
+
 .selected-role-summary h4 {
   margin: 0;
   font-size: 1rem;
+}
+
+.selected-role-summary p,
+.selected-role-summary li,
+.selected-role-summary span,
+.selected-role-summary small {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.selected-role-keypoints {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.selected-role-keypoints > div,
+.selected-role-search,
+.selected-role-resources {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  background: #fbfcfa;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
+
+.selected-role-keypoints strong,
+.selected-role-search strong,
+.selected-role-resources strong {
+  color: var(--ink);
+  font-size: 0.86rem;
+}
+
+.selected-role-keypoints ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.selected-role-search span {
+  overflow-wrap: anywhere;
+  font-size: 0.82rem;
+}
+
+.selected-role-resources > span {
+  display: grid;
+  gap: 2px;
+}
+
+.selected-role-resources em {
+  color: var(--ink);
+  font-style: normal;
+  font-weight: 800;
+}
+
+.selected-role-resources small {
+  font-size: 0.78rem;
 }
 
 .role-panel {
@@ -1013,6 +1076,7 @@ li {
 
 .checklist,
 .resource-list,
+.reference-list,
 .roadmap,
 .gap-list {
   display: grid;
@@ -1020,6 +1084,7 @@ li {
 }
 
 .resource-guidance,
+.reference-guidance,
 .roadmap-guidance,
 .plan-guidance {
   display: grid;
@@ -1032,6 +1097,7 @@ li {
 }
 
 .resource-guidance h3,
+.reference-guidance h3,
 .roadmap-guidance h3,
 .plan-guidance h3 {
   margin: 0;
@@ -1039,6 +1105,7 @@ li {
 }
 
 .resource-guidance p,
+.reference-guidance p,
 .roadmap-guidance p,
 .plan-guidance p {
   margin: 0;
@@ -1048,6 +1115,120 @@ li {
 
 .roadmap-guidance .company-detail-inline {
   color: #5f4a25;
+}
+
+.reference-priority-panel,
+.reference-section {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.reference-priority-panel {
+  border-color: #b8dce6;
+  background: #f8fcfd;
+}
+
+.reference-section-list {
+  display: grid;
+  gap: 10px;
+}
+
+.reference-section-head,
+.reference-section > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.reference-section > summary {
+  cursor: pointer;
+}
+
+.reference-section > summary span:first-child {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.reference-section > summary strong,
+.reference-section-head h3 {
+  margin: 0;
+  color: var(--ink);
+}
+
+.reference-section > summary em {
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-style: normal;
+  line-height: 1.45;
+}
+
+.reference-section-body,
+.reference-resource-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.reference-resource-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.reference-resource-card {
+  min-width: 0;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
+
+.reference-resource-card.is-saved {
+  border-color: #9bc7ad;
+  background: #f5fbf7;
+}
+
+.reference-resource-card > summary {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 58px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.reference-resource-card > summary > span:first-child {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.reference-resource-card strong,
+.reference-resource-card em {
+  overflow-wrap: anywhere;
+}
+
+.reference-resource-card em {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-style: normal;
+  line-height: 1.35;
+}
+
+.reference-resource-detail {
+  display: grid;
+  gap: 8px;
+  padding: 0 10px 10px;
+}
+
+.reference-resource-detail p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.5;
 }
 
 .competency-action-panel {
@@ -1872,6 +2053,7 @@ li {
   .role-filter-bar,
   .inline-wordcloud-panel,
   .selected-role-overview,
+  .selected-role-keypoints,
   .role-list,
   .role-detail-grid,
   .role-fit-panel,
@@ -1881,6 +2063,7 @@ li {
   .diagnosis-guide-grid,
   .duration-strategy-grid,
   .goal-rule-grid,
+  .reference-resource-grid,
   .resource-learning-meta,
   .workflow-status,
   .roadmap {
@@ -1895,12 +2078,12 @@ li {
 
   .tabs {
     overflow-x: auto;
-    grid-template-columns: repeat(4, minmax(72px, 1fr));
+    grid-template-columns: repeat(5, minmax(72px, 1fr));
   }
 
   .workflow-status {
     overflow-x: auto;
-    grid-template-columns: repeat(4, minmax(180px, 1fr));
+    grid-template-columns: repeat(5, minmax(180px, 1fr));
   }
 
   .tab {
@@ -1963,6 +2146,13 @@ li {
     display: grid;
     grid-template-columns: 1fr;
     justify-content: stretch;
+  }
+
+  .reference-section-head,
+  .reference-section > summary,
+  .reference-resource-card > summary {
+    display: grid;
+    align-items: start;
   }
 
   .resource-learning-meta {
