@@ -390,7 +390,117 @@ const resources = [
     reason: "모터제어 채용공고에서 자주 나오는 PWM, ADC 샘플링, FOC, 보호 로직을 모델 기반 실습과 검증 산출물로 연결합니다.",
     expectedOutput: "PWM/ADC 타이밍과 제어 응답 비교 그래프",
     qualityStatus: "verified",
-    url: "https://www.mathworks.com/help/mcb/"
+    url: "https://www.mathworks.com/help/mcb/examples.html"
+  },
+  {
+    id: "mathworks-simulink-examples",
+    title: "MathWorks Simulink 공식 예제",
+    provider: "MathWorks",
+    type: "공식 예제/영상 실습 후보",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 120,
+    practiceMinutes: 120,
+    sequenceLevel: 3,
+    tracks: ["embedded-control", "automotive-mobility", "electronics-pcb", "mechanical-cae", "production-quality"],
+    skills: ["Simulink", "시뮬레이션", "모델링", "검증", "제어"],
+    prerequisites: ["Simulink 기초"],
+    reason: "블록 기반 모델을 직접 열어보고 입출력, 파라미터, 결과 그래프를 확인하는 공식 예제 모음입니다. 직무 산출물을 만들 때 예제 구조를 참고하기 좋습니다.",
+    expectedOutput: "직무 문제에 맞춘 Simulink 모델 구조와 시뮬레이션 결과 캡처",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.mathworks.com/help/simulink/examples.html"
+  },
+  {
+    id: "mathworks-simscape-examples",
+    title: "MathWorks Simscape 공식 예제",
+    provider: "MathWorks",
+    type: "공식 예제/물리 시뮬레이션",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 150,
+    practiceMinutes: 150,
+    sequenceLevel: 4,
+    tracks: ["mechanical-cae", "automotive-mobility", "electronics-pcb", "embedded-control"],
+    skills: ["Simscape", "물리 모델링", "열관리", "전원회로", "검증"],
+    prerequisites: ["Simulink 기초", "Simscape 기초"],
+    reason: "기계, 전기, 열 시스템을 물리 모델로 만들어 변수 변화가 결과에 미치는 영향을 확인하는 공식 예제 후보입니다.",
+    expectedOutput: "물리 시스템 모델, 변수 변화 결과, 직무 요구사항 연결 메모",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.mathworks.com/help/simscape/examples.html"
+  },
+  {
+    id: "mathworks-vehicle-dynamics-examples",
+    title: "MathWorks Vehicle Dynamics Blockset 예제",
+    provider: "MathWorks",
+    type: "공식 예제/차량 시뮬레이션",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 150,
+    practiceMinutes: 150,
+    sequenceLevel: 4,
+    tracks: ["automotive-mobility", "mechanical-cae"],
+    skills: ["차량동역학", "조향", "제동", "현가", "시뮬레이션"],
+    prerequisites: ["차량동역학 기초", "Simulink 기초"],
+    reason: "조향, 제동, 현가, 차량 거동을 예제 모델로 확인하는 공식 예제 후보입니다. 자동차 섀시·시험·검증 직무의 판단 기준을 만들 때 참고할 수 있습니다.",
+    expectedOutput: "차량 거동 시뮬레이션 조건표와 응답 결과 비교",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.mathworks.com/help/vdynblks/examples.html"
+  },
+  {
+    id: "mathworks-automated-driving-examples",
+    title: "MathWorks Automated Driving Toolbox 예제",
+    provider: "MathWorks",
+    type: "공식 예제/ADAS 시뮬레이션",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 150,
+    practiceMinutes: 150,
+    sequenceLevel: 4,
+    tracks: ["automotive-mobility", "embedded-control"],
+    skills: ["ADAS", "센서융합", "시나리오", "검증", "시뮬레이션"],
+    prerequisites: ["MATLAB 기초", "센서·제어 기초"],
+    reason: "주행 시나리오, 센서, 인지·검증 흐름을 예제 기반으로 확인할 수 있는 공식 후보입니다. ADAS 검증 직무에서 테스트 조건을 잡는 데 도움이 됩니다.",
+    expectedOutput: "주행 시나리오, 센서 입력, Pass/Fail 검증 기준 초안",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.mathworks.com/help/driving/examples.html"
+  },
+  {
+    id: "mathworks-official-videos",
+    title: "MathWorks 공식 비디오 라이브러리",
+    provider: "MathWorks",
+    type: "공식 비디오/예제 탐색",
+    language: "영어",
+    difficulty: "입문",
+    estimatedMinutes: 60,
+    practiceMinutes: 60,
+    sequenceLevel: 2,
+    tracks: ["mechanical-cae", "automotive-mobility", "electronics-pcb", "embedded-control", "production-quality", "semiconductor-equipment", "chemical-process"],
+    skills: ["영상 실습", "예제 탐색", "모델링", "검증", "문제정의"],
+    prerequisites: ["지원 직무 키워드 2개"],
+    reason: "직무 키워드로 공식 비디오와 예제를 찾아보는 진입점입니다. 바로 매핑하기 어려운 세부 직무는 먼저 필요한 행동을 정하고 관련 영상을 예시로 고르는 데 사용합니다.",
+    expectedOutput: "지원 직무 키워드로 찾은 영상 1개와 적용할 산출물 메모",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.mathworks.com/videos.html"
   },
   {
     id: "sensor-fusion-onramp",
@@ -3071,6 +3181,11 @@ const resourceTaskLinks = {
   "youtube-emc-emi-basics": ["전원 요구사항 정의", "PCB 리뷰 체크리스트", "검증 리포트", "자동차 직무 검증 리포트"],
   "youtube-nptel-hazop": ["HAZOP 안전 체크", "화학공정 흐름도", "조건 변경 검토표"],
   "youtube-cqe-quality-tools": ["공정 문제 정의", "관리도와 Cpk 계산", "원인 가설과 FMEA", "8D 개선 보고서"],
+  "mathworks-simulink-examples": ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트", "PID 응답 실험", "검증 리포트"],
+  "mathworks-simscape-examples": ["차량 시스템 요구사항표", "인터페이스·시험 조건 노트", "전원 요구사항 정의", "해석 조건 검증"],
+  "mathworks-vehicle-dynamics-examples": ["자동차 세부 직무 비교표", "차량 시스템 요구사항표", "자동차 직무 검증 리포트"],
+  "mathworks-automated-driving-examples": ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"],
+  "mathworks-official-videos": ["제품 요구사항 분해", "공정 문제 정의", "자동차 세부 직무 비교표", "인터페이스·시험 조건 노트", "검증 리포트"],
   "comento-production-tech-internship": ["공정 문제 정의", "설계 변경 제안", "조건 변경 검토표", "자동차 세부 직무 비교표", "자동차 직무 검증 리포트"],
   "comento-semiconductor-equipment-bootcamp": ["공정 흐름 매핑", "식각 장비 변수 정리", "수율 Pareto 분석", "조건 변경 검토표"],
   "comento-plc-control-practice": ["MCU 주변장치 설계", "PID 응답 실험", "디버깅 노트와 README", "인터페이스·시험 조건 노트"],
@@ -3088,6 +3203,11 @@ const resourceTaskLinks = {
   ["stateflow-onramp", ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
   ["control-design-onramp", ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
   ["sensor-fusion-onramp", ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
+  ["mathworks-simulink-examples", ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
+  ["mathworks-simscape-examples", ["차량 시스템 요구사항표", "인터페이스·시험 조건 노트"]],
+  ["mathworks-vehicle-dynamics-examples", ["자동차 세부 직무 비교표", "차량 시스템 요구사항표", "자동차 직무 검증 리포트"]],
+  ["mathworks-automated-driving-examples", ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
+  ["mathworks-official-videos", ["자동차 세부 직무 비교표", "인터페이스·시험 조건 노트"]],
   ["mathworks-simscape-electrical", ["차량 시스템 요구사항표", "인터페이스·시험 조건 노트"]],
   ["mit-mechanics-materials", ["차량 시스템 요구사항표"]],
   ["mit-fea-solids", ["차량 시스템 요구사항표", "자동차 직무 검증 리포트"]],
@@ -3156,7 +3276,7 @@ Object.assign(roleResourceLinks, {
 
 Object.entries({
   "manufacturing-design-engineer": ["comento-production-tech-internship", "comento-production-management-core"],
-  "mechanical-test-engineer": ["comento-production-tech-internship"],
+  "mechanical-test-engineer": ["comento-production-tech-internship", "mathworks-simulink-examples"],
   "process-engineer": ["comento-production-management-core", "comento-production-tech-internship"],
   "quality-engineer": ["comento-production-management-core"],
   "production-data-engineer": ["letuin-spotfire-defect-analysis", "letuin-semiconductor-process-data-kdt"],
@@ -3166,19 +3286,23 @@ Object.entries({
   "semiconductor-yield-engineer": ["letuin-spotfire-defect-analysis", "letuin-semiconductor-process-data-kdt"],
   "etch-process-engineer": ["letuin-semiconductor-field-practice", "letuin-cvd-maintenance-mentoring", "letuin-semiconductor-process-data-kdt"],
   "metrology-engineer": ["letuin-spotfire-defect-analysis", "letuin-semiconductor-process-data-kdt"],
-  "hardware-design-engineer": ["letuin-low-power-design-validation"],
-  "pcb-design-engineer": ["letuin-low-power-design-validation"],
-  "validation-engineer": ["letuin-low-power-design-validation"],
-  "power-hardware-engineer": ["letuin-low-power-design-validation"],
-  "embedded-firmware-engineer": ["comento-plc-control-practice"],
-  "control-engineer": ["comento-plc-control-practice"],
-  "motor-control-engineer": ["comento-plc-control-practice"],
-  "vehicle-body-design-engineer": ["comento-production-tech-internship"],
-  "powertrain-mechanical-engineer": ["comento-production-tech-internship"],
-  "ev-battery-pack-engineer": ["comento-production-tech-internship"],
-  "automotive-embedded-sw-engineer": ["comento-plc-control-practice"],
-  "hil-sil-validation-engineer": ["comento-plc-control-practice", "letuin-low-power-design-validation"],
-  "vehicle-test-validation-engineer": ["comento-production-tech-internship", "comento-plc-control-practice"]
+  "hardware-design-engineer": ["letuin-low-power-design-validation", "mathworks-simscape-examples", "mathworks-official-videos"],
+  "pcb-design-engineer": ["letuin-low-power-design-validation", "mathworks-official-videos"],
+  "validation-engineer": ["letuin-low-power-design-validation", "mathworks-simulink-examples", "mathworks-official-videos"],
+  "power-hardware-engineer": ["letuin-low-power-design-validation", "mathworks-simscape-examples"],
+  "embedded-firmware-engineer": ["comento-plc-control-practice", "mathworks-simulink-examples"],
+  "control-engineer": ["comento-plc-control-practice", "mathworks-simulink-examples"],
+  "motor-control-engineer": ["comento-plc-control-practice", "mathworks-simulink-examples"],
+  "vehicle-body-design-engineer": ["comento-production-tech-internship", "mathworks-vehicle-dynamics-examples"],
+  "chassis-suspension-engineer": ["mathworks-vehicle-dynamics-examples", "mathworks-simulink-examples"],
+  "powertrain-mechanical-engineer": ["comento-production-tech-internship", "mathworks-simscape-examples"],
+  "vehicle-thermal-management-engineer": ["mathworks-simscape-examples"],
+  "ev-battery-pack-engineer": ["comento-production-tech-internship", "mathworks-simscape-examples"],
+  "automotive-embedded-sw-engineer": ["comento-plc-control-practice", "mathworks-simulink-examples"],
+  "hil-sil-validation-engineer": ["comento-plc-control-practice", "letuin-low-power-design-validation", "mathworks-simulink-examples"],
+  "adas-validation-engineer": ["mathworks-automated-driving-examples", "mathworks-simulink-examples"],
+  "ev-power-electronics-engineer": ["mathworks-simscape-examples"],
+  "vehicle-test-validation-engineer": ["comento-production-tech-internship", "comento-plc-control-practice", "mathworks-vehicle-dynamics-examples", "mathworks-simulink-examples"]
 }).forEach(([roleId, resourceIds]) => {
   roleResourceLinks[roleId] = [...new Set([...(roleResourceLinks[roleId] || []), ...resourceIds])];
 });
@@ -4527,6 +4651,7 @@ function renderRoadmap() {
   `;
   }).join("");
 
+  bindResourceActions(elements.roadmapGuidance);
   bindResourceActions(elements.roadmapList);
 }
 
@@ -4548,6 +4673,7 @@ function renderRoadmapGuidance(context, tasks) {
   elements.roadmapGuidance.innerHTML = `
     <h3>${selectedText}</h3>
     <p>${durationStrategy.summary} ${context.role?.title || context.track.title}에서 이미 체크한 보유 역량은 뒤로 두고, 체크하지 않은 보완 역량(${gapText})을 우선해 과제와 교육자료를 배치합니다.</p>
+    ${renderCompetencyActionPlan(context, tasks)}
     ${checkedCount ? "" : `
       <div class="workflow-warning">
         <strong>보유 역량 체크 전입니다</strong>
@@ -4894,6 +5020,86 @@ function renderGoalRuleGrid(activeGoalKey) {
   `;
 }
 
+function renderCompetencyActionPlan(context, tasks) {
+  const actionItems = getCompetencyActionItems(context, tasks).slice(0, 4);
+  return `
+    <section class="competency-action-panel" aria-label="역량 확보 우선순위">
+      <div class="competency-action-head">
+        <strong>역량 확보 우선순위</strong>
+        <span>먼저 할 일을 정한 뒤, 예시 자료 중 필요한 것만 내 계획에 넣으세요.</span>
+      </div>
+      <div class="competency-action-list">
+        ${actionItems.map((item, index) => `
+          <article class="competency-action-item">
+            <span class="competency-action-number">${index + 1}</span>
+            <div>
+              <strong>${item.title}</strong>
+              <p>${item.body}</p>
+              <em>남길 것: ${item.deliverable}</em>
+              ${item.resources.length ? `
+                <div class="competency-example-resources">
+                  <span>예시 자료</span>
+                  ${item.resources.map((resource) => `
+                    <div class="competency-example-resource">
+                      <strong>${resource.title}</strong>
+                      <div>
+                        <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
+                        <button class="resource-action ${state.saved.includes(resource.id) ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
+                          ${state.saved.includes(resource.id) ? "추가됨" : "내 계획 추가"}
+                        </button>
+                      </div>
+                    </div>
+                  `).join("")}
+                </div>
+              ` : ""}
+            </div>
+          </article>
+        `).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function getCompetencyActionItems(context, tasks) {
+  const usedResourceIds = new Set();
+  return tasks.map((task, index) => {
+    const resourcesForTask = getCompetencyActionResources(context, task, usedResourceIds);
+    resourcesForTask.forEach((resource) => usedResourceIds.add(resource.id));
+    const defaultBodies = [
+      "지원 회사 공고의 업무·자격요건 문장과 앱의 직무 설명을 맞춰보고, 이 직무가 실제로 내가 준비하려는 업무인지 판단합니다.",
+      "체크하지 못한 역량 중 하나를 골라 개념 설명이 아니라 계산, 표, 모델, 로그 중 하나로 증명합니다.",
+      "시뮬레이션, 데이터 분석, 현장실습, 부트캠프 중 현재 환경에서 가능한 방식을 골라 작은 산출물을 만듭니다.",
+      "일반 로드맵 결과물을 지원 회사 공고 문장에 맞춰 줄이고, 면접에서 설명할 근거만 남깁니다."
+    ];
+    return {
+      title: task.title,
+      body: defaultBodies[index] || task.objective,
+      deliverable: task.deliverable,
+      resources: resourcesForTask
+    };
+  });
+}
+
+function getCompetencyActionResources(context, task, usedResourceIds = new Set()) {
+  const rankedResources = resources
+    .filter((resource) => resource.tracks.includes(context.track.id))
+    .map((resource) => ({
+      resource,
+      score: getTaskResourceScore(resource, task, context) + (isHandsOnResource(resource) ? 70 : 0)
+    }))
+    .sort((a, b) => b.score - a.score);
+  const freshResources = rankedResources.filter((item) => !usedResourceIds.has(item.resource.id));
+  const selectedResources = freshResources.slice(0, 2);
+  if (selectedResources.length < 2) {
+    const selectedIds = new Set(selectedResources.map((item) => item.resource.id));
+    selectedResources.push(...rankedResources
+      .filter((item) => !selectedIds.has(item.resource.id))
+      .slice(0, 2 - selectedResources.length));
+  }
+  return selectedResources
+    .map((item) => item.resource);
+}
+
 function renderHandsOnResourcePanel(context) {
   const resourcesForPractice = getHandsOnResourceCandidates(context).slice(0, 3);
   if (!resourcesForPractice.length) return "";
@@ -4906,13 +5112,18 @@ function renderHandsOnResourcePanel(context) {
       </div>
       <div class="hands-on-resource-list">
         ${resourcesForPractice.map((resource) => `
-          <a class="hands-on-resource-link" href="${resource.url}" target="_blank" rel="noreferrer">
+          <div class="hands-on-resource-link">
             <span>
               <strong>${resource.title}</strong>
               <em>${resource.provider} · ${resource.type} · ${formatMinutes(resource.totalMinutes)}</em>
             </span>
-            <span>${getResourceOpenLabel(resource)}</span>
-          </a>
+            <span>
+              <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
+              <button class="resource-action ${state.saved.includes(resource.id) ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
+                ${state.saved.includes(resource.id) ? "추가됨" : "내 계획 추가"}
+              </button>
+            </span>
+          </div>
         `).join("")}
       </div>
     </div>
