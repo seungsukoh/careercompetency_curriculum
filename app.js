@@ -1667,6 +1667,204 @@ const resources = [
       nextReviewAt: "2026-07-28"
     },
     url: "https://www.youtube.com/watch?v=yuH35ottILU"
+  },
+  {
+    id: "comento-production-tech-internship",
+    title: "코멘토 생산기술·공정설계 5주 인턴체험",
+    provider: "코멘토",
+    type: "직무부트캠프/과제형",
+    language: "한국어",
+    difficulty: "적용",
+    estimatedMinutes: 300,
+    practiceMinutes: 600,
+    sequenceLevel: 5,
+    tracks: ["production-quality", "mechanical-cae", "automotive-mobility"],
+    skills: ["생산기술", "공정설계", "신차개발", "문제해결", "포트폴리오"],
+    prerequisites: ["관심 산업 공고 1개", "기초 품질·공정 용어"],
+    reason: "현직자와 5주 동안 생산기술, 공정설계, 신차 개발 프로세스를 과제형으로 경험하는 외부 부트캠프입니다. 강의 수강보다 직무 산출물을 남기는 목적에 맞습니다.",
+    expectedOutput: "공정설계 실습 과제, 신차 개발 프로세스 정리, 포트폴리오 초안",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://comento.kr/edu/learn/%EC%83%9D%EC%82%B0%EC%A0%9C%EC%A1%B0/%EC%83%9D%EC%82%B0%EA%B8%B0%EC%88%A0-G1194"
+  },
+  {
+    id: "comento-semiconductor-equipment-bootcamp",
+    title: "코멘토 반도체 장비 엔지니어 A to Z",
+    provider: "코멘토",
+    type: "직무부트캠프/현직자 과제",
+    language: "한국어",
+    difficulty: "적용",
+    estimatedMinutes: 300,
+    practiceMinutes: 600,
+    sequenceLevel: 5,
+    tracks: ["semiconductor-equipment", "production-quality"],
+    skills: ["반도체 장비", "설비기술", "Trouble Shooting", "현직자 과제", "포트폴리오"],
+    prerequisites: ["반도체 8대 공정 흐름", "장비 기본 용어"],
+    reason: "대기업·외국계 현직자의 반도체 장비 직무 경험을 과제형으로 따라가며 장비 엔지니어의 반복 업무와 문제해결 방식을 익히는 후보입니다.",
+    expectedOutput: "장비 직무 업무 분해표와 설비 이슈 대응 포트폴리오 초안",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://comento.kr/edu/learn/%EC%83%9D%EC%82%B0%EC%A0%9C%EC%A1%B0/%EC%84%A4%EB%B9%84%EA%B8%B0%EC%88%A0-G1470"
+  },
+  {
+    id: "comento-plc-control-practice",
+    title: "코멘토 전기·계장제어 PLC 설계·유지관리 실무",
+    provider: "코멘토",
+    type: "직무부트캠프/실무 과제",
+    language: "한국어",
+    difficulty: "적용",
+    estimatedMinutes: 300,
+    practiceMinutes: 540,
+    sequenceLevel: 5,
+    tracks: ["embedded-control", "electronics-pcb", "production-quality", "automotive-mobility"],
+    skills: ["PLC", "계장제어", "설비 유지관리", "제어", "Trouble Shooting"],
+    prerequisites: ["전기회로 기초", "제어 입문"],
+    reason: "설비 자동화, 제어, 유지관리 직무에서 실제 업무 흐름을 과제형으로 확인할 수 있는 외부 실무 과정 후보입니다.",
+    expectedOutput: "PLC 입출력 정의, 제어 시나리오, 설비 유지관리 체크리스트",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://comento.kr/edu/learn/%EA%B1%B4%EC%84%A4%EA%B8%B0%EA%B3%84%EA%B8%B0%EC%88%A0/%EC%A0%84%EA%B8%B0-G655"
+  },
+  {
+    id: "comento-production-management-core",
+    title: "코멘토 생산기술·생산관리 핵심 실무",
+    provider: "코멘토",
+    type: "직무부트캠프/현직자 과제",
+    language: "한국어",
+    difficulty: "기초실습",
+    estimatedMinutes: 240,
+    practiceMinutes: 480,
+    sequenceLevel: 4,
+    tracks: ["production-quality", "automotive-mobility"],
+    skills: ["생산관리", "생산기술", "공정조건", "품질지표", "문제해결"],
+    prerequisites: ["생산·품질 직무 차이 이해"],
+    reason: "생산기술과 생산관리의 핵심 업무를 현직자 관점에서 과제로 확인하는 후보입니다. 직무 선택 단계에서 생산/품질/공정의 차이를 좁히는 데 좋습니다.",
+    expectedOutput: "생산기술·생산관리 업무 비교표와 개선 과제 초안",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://comento.kr/edu/learn/%EC%83%9D%EC%82%B0%EC%A0%9C%EC%A1%B0/%EC%83%9D%EC%82%B0%EA%B8%B0%EC%88%A0-G191"
+  },
+  {
+    id: "letuin-semiconductor-process-data-kdt",
+    title: "렛유인 반도체 공정·설비 데이터 분석 과정",
+    provider: "렛유인",
+    type: "KDT/실무 프로젝트",
+    language: "한국어",
+    difficulty: "적용",
+    estimatedMinutes: 420,
+    practiceMinutes: 900,
+    sequenceLevel: 5,
+    tracks: ["semiconductor-equipment", "production-quality"],
+    skills: ["반도체 공정", "설비 데이터", "수율분석", "결함분석", "프로젝트"],
+    prerequisites: ["반도체 공정 기초", "Excel 또는 Python 기초"],
+    reason: "반도체 공정·설비 데이터를 분석해 실무 프로젝트 산출물을 만드는 국비지원 장기훈련 후보입니다. 수율, 설비, 결함 데이터를 다루는 직무에 직접 연결됩니다.",
+    expectedOutput: "공정·설비 데이터 분석 리포트와 개선 가설",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.letuin.com/promotion/SmcPrcEqpDtAnlKDT"
+  },
+  {
+    id: "letuin-spotfire-defect-analysis",
+    title: "렛유인 Spotfire 반도체 공정·결함 상관관계 분석",
+    provider: "렛유인",
+    type: "데이터분석 실무",
+    language: "한국어",
+    difficulty: "적용",
+    estimatedMinutes: 300,
+    practiceMinutes: 540,
+    sequenceLevel: 4,
+    tracks: ["semiconductor-equipment", "production-quality"],
+    skills: ["Spotfire", "공정 데이터", "결함 상관관계", "시각화", "수율분석"],
+    prerequisites: ["반도체 공정 기초", "데이터 표 해석"],
+    reason: "반도체 현장 데이터의 공정·결함 상관관계를 시각화하고 분석하는 실무형 후보입니다. 수율/품질/공정 데이터 직무의 산출물로 연결하기 좋습니다.",
+    expectedOutput: "Spotfire 기반 공정·결함 상관관계 분석 화면과 해석 메모",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://naeildo-letuinedu.com/Lecture/lecView?no=144"
+  },
+  {
+    id: "letuin-semiconductor-field-practice",
+    title: "렛유인 반도체 공정 현장실습 후보",
+    provider: "렛유인",
+    type: "오프라인 현장실습",
+    language: "한국어",
+    difficulty: "적용",
+    estimatedMinutes: 360,
+    practiceMinutes: 1080,
+    sequenceLevel: 5,
+    tracks: ["semiconductor-equipment"],
+    skills: ["Photo", "Etch", "Deposition", "장비실습", "공정 관찰"],
+    prerequisites: ["반도체 8대 공정 기초", "오프라인 일정 확인"],
+    reason: "포토·식각·증착 장비를 직접 다뤄보는 오프라인 공정실습 후보입니다. 실제 장비 감각이 필요한 공정·장비 직무에서 강의만으로 채우기 어려운 부분을 보완합니다.",
+    expectedOutput: "공정실습 수료 기록, 장비별 관찰 노트, 공정 조건 체크리스트",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.letuin.com/search/list?field=all&utm_medium=top_select&searchgo=Y&top_keyword=%EA%B3%B5%EC%A0%95%EC%8B%A4%EC%8A%B5"
+  },
+  {
+    id: "letuin-cvd-maintenance-mentoring",
+    title: "렛유인 CVD 공정 설비 Maintenance 멘토링 실무과정",
+    provider: "렛유인",
+    type: "직무부트캠프/멘토링",
+    language: "한국어",
+    difficulty: "적용",
+    estimatedMinutes: 300,
+    practiceMinutes: 720,
+    sequenceLevel: 5,
+    tracks: ["semiconductor-equipment"],
+    skills: ["CVD", "설비 Maintenance", "Trouble Shooting", "공정설비", "현직자 멘토링"],
+    prerequisites: ["증착 공정 기초", "장비 구성 이해"],
+    reason: "CVD 설비 유지보수와 트러블슈팅을 현직자 멘토링 기반 과제로 다루는 후보입니다. 장비 엔지니어의 문제해결 스토리를 만들 때 적합합니다.",
+    expectedOutput: "CVD 설비 이상 시나리오, 원인 가설, 유지보수 대응표",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.letuin.com/lecture/view?no=11663"
+  },
+  {
+    id: "letuin-low-power-design-validation",
+    title: "렛유인 저전력 반도체 설계와 검증 실무과정",
+    provider: "렛유인",
+    type: "설계 검증 실무",
+    language: "한국어",
+    difficulty: "적용",
+    estimatedMinutes: 360,
+    practiceMinutes: 720,
+    sequenceLevel: 5,
+    tracks: ["electronics-pcb", "semiconductor-equipment", "embedded-control"],
+    skills: ["저전력 설계", "검증", "회로설계", "RTL/검증", "포트폴리오"],
+    prerequisites: ["디지털 회로 기초", "반도체 설계 흐름 이해"],
+    reason: "저전력 설계 기법과 검증 방법론을 실무 과정으로 다루는 후보입니다. 회로·반도체 설계 검증 직무의 산출물형 준비에 연결됩니다.",
+    expectedOutput: "저전력 설계 요구사항, 검증 항목, 결과 해석 체크리스트",
+    qualityStatus: "candidate",
+    engagement: {
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.letuin.com/lecture/view?no=11520"
   }
 ].map(normalizeResource);
 
@@ -2872,7 +3070,16 @@ const resourceTaskLinks = {
   "youtube-mathworks-hil-testing": ["검증 리포트", "PID 응답 실험", "인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"],
   "youtube-emc-emi-basics": ["전원 요구사항 정의", "PCB 리뷰 체크리스트", "검증 리포트", "자동차 직무 검증 리포트"],
   "youtube-nptel-hazop": ["HAZOP 안전 체크", "화학공정 흐름도", "조건 변경 검토표"],
-  "youtube-cqe-quality-tools": ["공정 문제 정의", "관리도와 Cpk 계산", "원인 가설과 FMEA", "8D 개선 보고서"]
+  "youtube-cqe-quality-tools": ["공정 문제 정의", "관리도와 Cpk 계산", "원인 가설과 FMEA", "8D 개선 보고서"],
+  "comento-production-tech-internship": ["공정 문제 정의", "설계 변경 제안", "조건 변경 검토표", "자동차 세부 직무 비교표", "자동차 직무 검증 리포트"],
+  "comento-semiconductor-equipment-bootcamp": ["공정 흐름 매핑", "식각 장비 변수 정리", "수율 Pareto 분석", "조건 변경 검토표"],
+  "comento-plc-control-practice": ["MCU 주변장치 설계", "PID 응답 실험", "디버깅 노트와 README", "인터페이스·시험 조건 노트"],
+  "comento-production-management-core": ["공정 문제 정의", "관리도와 Cpk 계산", "원인 가설과 FMEA", "8D 개선 보고서"],
+  "letuin-semiconductor-process-data-kdt": ["공정 흐름 매핑", "식각 장비 변수 정리", "수율 Pareto 분석", "조건 변경 검토표"],
+  "letuin-spotfire-defect-analysis": ["수율 Pareto 분석", "관리도와 Cpk 계산", "조건 변경 검토표"],
+  "letuin-semiconductor-field-practice": ["공정 흐름 매핑", "식각 장비 변수 정리", "조건 변경 검토표"],
+  "letuin-cvd-maintenance-mentoring": ["식각 장비 변수 정리", "공정 흐름 매핑", "조건 변경 검토표"],
+  "letuin-low-power-design-validation": ["전원 요구사항 정의", "검증 리포트", "인터페이스·시험 조건 노트"]
 };
 
 [
@@ -2945,6 +3152,35 @@ Object.assign(roleResourceLinks, {
   "adas-validation-engineer": ["sensor-fusion-onramp", "signal-processing-onramp", "matlab-onramp", "simulink-onramp", "machine-learning-onramp", "coursera-embedded-control", "freecodecamp-python-data", "youtube-mathworks-hil-testing"],
   "ev-power-electronics-engineer": ["mathworks-simscape-electrical", "simscape-onramp", "ti-precision-labs", "kocw-electronics-circuit", "analog-dialogue", "simulink-onramp", "edx-engineering-systems", "youtube-skilllync-ev-crash-course", "youtube-emc-emi-basics"],
   "vehicle-test-validation-engineer": ["matlab-onramp", "signal-processing-onramp", "mathworks-predictive-maintenance", "statistics-onramp", "step-engineering", "hrd-net-job-training", "youtube-nptel-vehicle-dynamics", "youtube-mathworks-hil-testing"]
+});
+
+Object.entries({
+  "manufacturing-design-engineer": ["comento-production-tech-internship", "comento-production-management-core"],
+  "mechanical-test-engineer": ["comento-production-tech-internship"],
+  "process-engineer": ["comento-production-management-core", "comento-production-tech-internship"],
+  "quality-engineer": ["comento-production-management-core"],
+  "production-data-engineer": ["letuin-spotfire-defect-analysis", "letuin-semiconductor-process-data-kdt"],
+  "production-technology-engineer": ["comento-production-tech-internship", "comento-production-management-core", "comento-plc-control-practice"],
+  "semiconductor-process-engineer": ["letuin-semiconductor-process-data-kdt", "letuin-semiconductor-field-practice", "letuin-spotfire-defect-analysis"],
+  "semiconductor-equipment-engineer": ["comento-semiconductor-equipment-bootcamp", "letuin-cvd-maintenance-mentoring", "letuin-semiconductor-field-practice", "letuin-semiconductor-process-data-kdt"],
+  "semiconductor-yield-engineer": ["letuin-spotfire-defect-analysis", "letuin-semiconductor-process-data-kdt"],
+  "etch-process-engineer": ["letuin-semiconductor-field-practice", "letuin-cvd-maintenance-mentoring", "letuin-semiconductor-process-data-kdt"],
+  "metrology-engineer": ["letuin-spotfire-defect-analysis", "letuin-semiconductor-process-data-kdt"],
+  "hardware-design-engineer": ["letuin-low-power-design-validation"],
+  "pcb-design-engineer": ["letuin-low-power-design-validation"],
+  "validation-engineer": ["letuin-low-power-design-validation"],
+  "power-hardware-engineer": ["letuin-low-power-design-validation"],
+  "embedded-firmware-engineer": ["comento-plc-control-practice"],
+  "control-engineer": ["comento-plc-control-practice"],
+  "motor-control-engineer": ["comento-plc-control-practice"],
+  "vehicle-body-design-engineer": ["comento-production-tech-internship"],
+  "powertrain-mechanical-engineer": ["comento-production-tech-internship"],
+  "ev-battery-pack-engineer": ["comento-production-tech-internship"],
+  "automotive-embedded-sw-engineer": ["comento-plc-control-practice"],
+  "hil-sil-validation-engineer": ["comento-plc-control-practice", "letuin-low-power-design-validation"],
+  "vehicle-test-validation-engineer": ["comento-production-tech-internship", "comento-plc-control-practice"]
+}).forEach(([roleId, resourceIds]) => {
+  roleResourceLinks[roleId] = [...new Set([...(roleResourceLinks[roleId] || []), ...resourceIds])];
 });
 
 const storageKey = "careerCompetencyPilot";
@@ -4281,8 +4517,8 @@ function renderRoadmap() {
         <ul class="rubric-list">${task.rubric.map((item) => `<li>${item}</li>`).join("")}</ul>
       </div>
       <div class="roadmap-resource-block">
-        <h4>추천 교육자료</h4>
-        <p class="roadmap-resource-guide">체크하지 않은 역량과 이번 주 산출물에 맞춘 자료입니다. 교육 제목을 누르면 연결 이유와 교육 링크가 열립니다.</p>
+        <h4>추천 교육·실습자료</h4>
+        <p class="roadmap-resource-guide">체크하지 않은 역량과 이번 주 산출물에 맞춘 자료입니다. 제목을 누르면 연결 이유와 교육·실습 링크가 열립니다.</p>
         ${linkedResources.length
           ? `<div class="roadmap-resource-list">${linkedResources.map((resource) => renderRoadmapResourceItem(resource, task, context)).join("")}</div>`
           : `<div class="empty-state compact">이 과제에 연결된 교육자료 후보가 아직 없습니다.</div>`}
@@ -4302,6 +4538,9 @@ function renderRoadmapGuidance(context, tasks) {
   const checkedCount = context.acquiredSkills.length;
   const goalLabel = getGoalRecommendationLabel(context.goalKey);
   const durationStrategy = getDurationStrategy();
+  const practiceResourceCount = getRecommendedResources(context.track, context)
+    .filter(isHandsOnResource)
+    .length;
   const selectedText = selectedResources.length
     ? `${selectedResources.length}개 추가 자료를 우선 반영해 ${getDurationLabel()} 로드맵을 자동 구성했습니다.`
     : `교육자료를 직접 고르지 않아도 ${getDurationLabel()} 기준으로 자동 로드맵을 구성했습니다.`;
@@ -4317,15 +4556,18 @@ function renderRoadmapGuidance(context, tasks) {
       </div>
     `}
     <p class="company-detail-inline"><strong>지원 전 필수 확인</strong> 이 로드맵은 일반적인 직무내용 기반 추천입니다. 지원 회사의 직무상세에 나온 업무·자격요건·우대사항을 확인한 뒤, 공고와 직접 맞닿은 역량과 산출물을 우선 준비하세요.</p>
-    <p>주차별 과제에서 교육자료를 열고, 필요한 자료만 내 계획에 추가해 진행하세요.</p>
+    <p class="company-detail-inline"><strong>실습 자료 안내</strong> 시뮬레이션, 현장실습, 직무부트캠프, KDT 과정은 일정·비용·선발 여부가 바뀔 수 있습니다. 앱에서는 직무 산출물과 연결되는 후보로 제시하고, 신청 전 과정 상세를 확인하세요.</p>
+    <p>주차별 과제에서 교육·실습자료를 열고, 필요한 자료만 내 계획에 추가해 진행하세요.</p>
     <div class="badge-row">
       <span class="badge">기간: ${getDurationLabel()}</span>
       <span class="badge">목표 반영: ${context.goal.label} · ${goalLabel}</span>
       <span class="badge">로드맵 주차: ${tasks.length}개</span>
-      <span class="badge">직무 연결 교육: ${roleResourceCount}개</span>
+      <span class="badge">직무 연결 자료: ${roleResourceCount}개</span>
+      <span class="badge">실습형 후보: ${practiceResourceCount}개</span>
       <span class="badge">자료 배치: 부족 역량 우선</span>
       <span class="badge">추가 자료: ${selectedResources.length}개</span>
     </div>
+    ${renderHandsOnResourcePanel(context)}
     <details class="roadmap-detail-disclosure">
       <summary>추천 기준 자세히 보기</summary>
       <div class="duration-strategy-grid">
@@ -4480,7 +4722,7 @@ function getTaskPriorityScore(task, trackId) {
   const role = getSelectedRole(trackId);
   const roleMatches = role ? role.postingKeywords.filter((keyword) => text.includes(keyword)).length : 0;
   const introSignal = /입문|개념|용어|기초|흐름|요구사항|블록도|정리/.test(text) ? 1 : 0;
-  const practiceSignal = /실습|그래프|표|모델|데이터|분석|초안|측정/.test(text) ? 1 : 0;
+  const practiceSignal = /실습|시뮬레이션|부트캠프|프로젝트|멘토링|현장실습|KDT|그래프|표|모델|데이터|분석|초안|측정/.test(text) ? 1 : 0;
   const portfolioSignal = /보고서|리포트|README|검증|제안|개선|체크리스트/.test(text) ? 1 : 0;
   const foundationSignal = task.baseIndex <= 1 ? 1 : 0;
   const goal = state.profile.goal;
@@ -4626,7 +4868,7 @@ function getRoadmapResourcesForTask(track, task, context, resourceUseCounts = ne
 
 function getRoadmapResourceLimit(context) {
   if (context.durationWeeks <= 2) return 2;
-  if (context.durationWeeks <= 4) return 2;
+  if (context.durationWeeks <= 4) return 3;
   return 3;
 }
 
@@ -4652,6 +4894,48 @@ function renderGoalRuleGrid(activeGoalKey) {
   `;
 }
 
+function renderHandsOnResourcePanel(context) {
+  const resourcesForPractice = getHandsOnResourceCandidates(context).slice(0, 3);
+  if (!resourcesForPractice.length) return "";
+
+  return `
+    <div class="hands-on-resource-panel">
+      <div>
+        <strong>직접 실습 후보</strong>
+        <span>시뮬레이션, 현장실습, 직무부트캠프처럼 산출물을 남기기 좋은 자료입니다.</span>
+      </div>
+      <div class="hands-on-resource-list">
+        ${resourcesForPractice.map((resource) => `
+          <a class="hands-on-resource-link" href="${resource.url}" target="_blank" rel="noreferrer">
+            <span>
+              <strong>${resource.title}</strong>
+              <em>${resource.provider} · ${resource.type} · ${formatMinutes(resource.totalMinutes)}</em>
+            </span>
+            <span>${getResourceOpenLabel(resource)}</span>
+          </a>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function getHandsOnResourceCandidates(context) {
+  return getRecommendedResources(context.track, context)
+    .filter(isHandsOnResource)
+    .sort((a, b) => getHandsOnResourceScore(b, context) - getHandsOnResourceScore(a, context));
+}
+
+function getHandsOnResourceScore(resource, context) {
+  const roleLinked = getRoleLinkedResourceIds(context.role).includes(resource.id) ? 1 : 0;
+  const externalCourse = /코멘토|렛유인/.test(resource.provider) ? 1 : 0;
+  const simulation = /Simulink|Simscape|Stateflow|시뮬레이션|HIL|SIL|모델링|모델/.test(getResourceBadgeText(resource)) ? 1 : 0;
+  return getEducationResourceScore(resource, context)
+    + roleLinked * 90
+    + externalCourse * 180
+    + simulation * 30
+    + Math.min(resource.practiceMinutes, 720) * 0.04;
+}
+
 function countKeywordMatches(text, keywords) {
   return keywords.filter((keyword) => text.includes(String(keyword).toLowerCase())).length;
 }
@@ -4667,7 +4951,7 @@ function getCompetencyFitScore(resource, context) {
   const acquiredMatches = getResourceAcquiredMatches(resource, context).length;
   const roleKeywordMatches = getRoleKeywordMatches(resource, context.role).length;
   const linkedTaskMatches = getResourceLinkedTasks(resource.id, context.visibleTasks).length;
-  const practiceEvidence = countKeywordMatches(text, ["실습", "보고서", "리포트", "README", "검증", "그래프", "표", "체크리스트"]);
+  const practiceEvidence = countKeywordMatches(text, ["실습", "시뮬레이션", "부트캠프", "프로젝트", "멘토링", "현장실습", "KDT", "보고서", "리포트", "README", "검증", "그래프", "표", "체크리스트"]);
   const shortDurationFit = context.durationWeeks <= 2 && resource.totalMinutes <= 180 ? 1 : 0;
   let score = 0;
 
@@ -4864,6 +5148,7 @@ function getTaskResourceScore(resource, task, context, resourceUseCounts = new M
   const competencyScore = getCompetencyFitScore(resource, context);
   const goalScore = getGoalResourceScore(resource, context);
   const selectedMatch = state.saved.includes(resource.id) ? 1 : 0;
+  const handsOnMatch = isHandsOnResource(resource) ? 1 : 0;
   const alreadyUsedPenalty = getRoadmapResourceUseCount(resourceUseCounts, resource.id) * 220;
   const durationPenalty = getDurationResourcePenalty(resource, context);
   const acquiredOnlyPenalty = context.gapSkills.length && acquiredMatches && !resourceGapMatches ? 160 : 0;
@@ -4881,6 +5166,7 @@ function getTaskResourceScore(resource, task, context, resourceUseCounts = new M
     + gapMatches * 45
     + roleKeywordMatches * 18
     + outputMatches * 14
+    + handsOnMatch * 36
     + competencyScore * 0.45
     + goalScore * 0.45
     + getResourcePriorityScore(resource, context) * 0.15
@@ -5068,7 +5354,7 @@ function renderRoadmapResourceItem(resource, task, context) {
         <p><strong>연결 산출물:</strong> ${resource.expectedOutput}</p>
         ${signals.length ? `<p>${signals.join(" · ")}</p>` : `<p>${task.deliverable}에 바로 연결됩니다.</p>`}
         <div class="roadmap-resource-actions">
-          <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">교육 열기</a>
+          <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
           <button class="resource-action ${saved ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
             ${saved ? "내 계획에 추가됨" : "내 계획에 추가"}
           </button>
@@ -5081,15 +5367,41 @@ function renderRoadmapResourceItem(resource, task, context) {
 function renderResourceTrustBadges(resource) {
   const badges = [];
   const directUrl = !/search|results\?|query=|courses\/free\/?$/i.test(resource.url || "");
+  const resourceText = getResourceBadgeText(resource);
 
+  if (/Simulink|Simscape|Stateflow|시뮬레이션|HIL|SIL|모델링|모델/.test(resourceText)) badges.push("시뮬레이션");
+  if (isHandsOnResource(resource)) badges.push("실습형");
+  if (/코멘토|렛유인/.test(resource.provider)) badges.push("외부 과정");
   if (directUrl) badges.push("직접 링크");
   if (/youtube|영상/i.test(`${resource.provider} ${resource.type}`)) badges.push("동영상");
   if (resource.qualityStatus === "verified") badges.push("검증 자료");
   if (resource.qualityStatus === "reviewed") badges.push("검토 자료");
 
-  return badges.length
-    ? `<span class="resource-trust-badges">${badges.slice(0, 3).map((badge) => `<span>${badge}</span>`).join("")}</span>`
+  const uniqueBadges = [...new Set(badges)];
+  return uniqueBadges.length
+    ? `<span class="resource-trust-badges">${uniqueBadges.slice(0, 4).map((badge) => `<span>${badge}</span>`).join("")}</span>`
     : "";
+}
+
+function isHandsOnResource(resource) {
+  return /실습|시뮬레이션|부트캠프|프로젝트|멘토링|현장실습|KDT|인턴체험|과제형|Maintenance|Trouble Shooting/i.test(getResourceBadgeText(resource));
+}
+
+function getResourceBadgeText(resource) {
+  return [
+    resource.title,
+    resource.provider,
+    resource.type,
+    resource.reason,
+    resource.expectedOutput,
+    ...(resource.skills || [])
+  ].join(" ");
+}
+
+function getResourceOpenLabel(resource) {
+  return /코멘토|렛유인|부트캠프|현장실습|KDT|멘토링|인턴체험/i.test(getResourceBadgeText(resource))
+    ? "과정 확인"
+    : "교육 열기";
 }
 
 function getTaskResourceConnectionReason(resource, task, context) {
@@ -5192,7 +5504,7 @@ function renderPlanResourceItem(resource, task, context) {
         <p>${signals.join(" · ") || `${task.deliverable}에 연결되는 자료입니다.`}</p>
         <p><strong>산출물:</strong> ${resource.expectedOutput}</p>
         <div class="roadmap-resource-actions">
-          <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">교육 열기</a>
+          <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
           <button class="resource-action ${saved ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
             ${saved ? "내 계획에 추가됨" : "내 계획에 추가"}
           </button>
@@ -5266,7 +5578,7 @@ function renderResourceCard(resource, context = null, priorityIndex = null, show
       </div>
       <p><strong>산출물:</strong> ${resource.expectedOutput}</p>
       <div class="resource-actions">
-        <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">열기</a>
+        <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
         <button class="resource-action ${saved ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
           ${saved ? "내 계획에 추가됨" : "내 계획에 추가"}
         </button>
