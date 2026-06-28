@@ -8,7 +8,7 @@
   --navy-dark: #0e2750;
   --navy-muted: #52677a;
   --navy-soft: #e9edf0;
-  --gold: #b8872d;
+  --gold: #c9a86a;
   --gold-dark: #7a5417;
   --bg: var(--cream);
   --surface: var(--cream-surface);
@@ -21,7 +21,8 @@
   --primary: var(--navy);
   --primary-dark: var(--navy-dark);
   --primary-soft: var(--navy-soft);
-  --accent: var(--gold-dark);
+  --accent: var(--gold);
+  --accent-ink: var(--gold-dark);
   --teal: var(--navy);
   --teal-soft: var(--cream-muted);
   --green: var(--navy);
@@ -198,7 +199,7 @@ a:focus-visible {
 
 .eyebrow {
   margin: 0 0 6px;
-  color: var(--accent);
+  color: var(--accent-ink);
   font-size: 1rem;
   font-weight: 900;
   letter-spacing: 1.8px;
@@ -753,21 +754,21 @@ input::placeholder {
 }
 
 .snapshot-card span {
-  color: var(--accent);
+  color: var(--accent-ink);
   font-size: 1rem;
   font-weight: 900;
 }
 
 .snapshot-card:nth-child(2) span {
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .snapshot-card:nth-child(3) span {
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .snapshot-card:nth-child(4) span {
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .snapshot-card strong {
@@ -1193,25 +1194,25 @@ input::placeholder {
 }
 
 .badge-row .badge:nth-child(4n + 1) {
-  color: var(--accent);
+  color: var(--accent-ink);
   background: var(--surface-raised);
   border-color: var(--line);
 }
 
 .badge-row .badge:nth-child(4n + 2) {
-  color: var(--accent);
+  color: var(--accent-ink);
   background: var(--surface-raised);
   border-color: var(--line);
 }
 
 .badge-row .badge:nth-child(4n + 3) {
-  color: var(--accent);
+  color: var(--accent-ink);
   background: var(--surface-raised);
   border-color: var(--line);
 }
 
 .badge-row .badge:nth-child(4n) {
-  color: var(--accent);
+  color: var(--accent-ink);
   background: var(--surface-raised);
   border-color: var(--line);
 }
@@ -1361,7 +1362,7 @@ input::placeholder {
 }
 
 .role-decision-card span {
-  color: var(--accent);
+  color: var(--accent-ink);
   font-size: 1rem;
   font-weight: 900;
 }
@@ -2006,7 +2007,7 @@ input::placeholder {
 }
 
 .word-cloud-head span {
-  color: var(--accent);
+  color: var(--accent-ink);
   font-size: 1rem;
   font-weight: 900;
 }
@@ -2126,7 +2127,7 @@ input::placeholder {
 }
 
 .word-cloud-term.weight-5 {
-  color: var(--accent);
+  color: var(--accent-ink);
   font-weight: 900;
 }
 
@@ -2324,6 +2325,7 @@ li {
 }
 
 .curriculum-flow-list li.is-current::before {
+  color: var(--primary);
   background: var(--accent);
 }
 
@@ -2720,7 +2722,7 @@ li {
 }
 
 .competency-action-item em {
-  color: var(--accent);
+  color: var(--accent-ink);
   font-style: normal;
   font-weight: 700;
 }
@@ -3166,7 +3168,7 @@ li {
   align-items: center;
   padding: 4px 8px;
   margin-bottom: 10px;
-  color: var(--accent);
+  color: var(--accent-ink);
   background: var(--surface-raised);
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -3276,7 +3278,7 @@ li {
   min-width: 0;
   max-width: 100%;
   padding: 3px 6px;
-  color: var(--accent);
+  color: var(--accent-ink);
   background: var(--surface-raised);
   border: 1px solid var(--line);
   border-radius: 999px;
