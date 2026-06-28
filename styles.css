@@ -435,7 +435,7 @@ input::placeholder {
 }
 
 .company-detail-notice strong,
-.company-detail-inline {
+.company-detail-inline strong {
   color: #7a4a12;
   font-weight: 900;
 }
@@ -447,9 +447,17 @@ input::placeholder {
 
 .company-detail-inline {
   padding: 9px 10px;
+  color: #5f4a25;
   background: #fff8e6;
   border: 1px solid #ead393;
   border-radius: 7px;
+  font-weight: 700;
+}
+
+.company-detail-inline strong {
+  display: block;
+  margin-bottom: 2px;
+  color: #5e3509;
 }
 
 .role-search {
@@ -489,7 +497,7 @@ input::placeholder {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
   gap: 14px;
-  align-items: stretch;
+  align-items: start;
   padding: 16px;
   background: linear-gradient(135deg, #f4fbfd 0%, #ffffff 56%, #f7faf2 100%);
   border: 1px solid #b8dce6;
@@ -795,37 +803,38 @@ input::placeholder {
 }
 
 .word-cloud-terms {
-  position: relative;
-  min-height: 300px;
-  padding: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2px 7px;
+  min-height: 260px;
+  padding: 12px 10px;
   background: #ffffff;
   border: 1px solid #dbe7e5;
   border-radius: 7px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .word-cloud-panel.is-inline .word-cloud-terms {
-  min-height: 320px;
+  min-height: 280px;
 }
 
 .word-cloud-term {
-  position: absolute;
   z-index: var(--z);
-  left: var(--x);
-  top: var(--y);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  max-width: min(62%, 420px);
+  max-width: min(100%, 22ch);
   color: #26343f;
   font-size: var(--size);
   font-weight: 800;
-  line-height: 1.05;
+  line-height: 1.08;
   opacity: var(--opacity);
   overflow-wrap: anywhere;
   text-align: center;
   text-shadow: 0 1px 0 #ffffff, 0 0 8px rgba(255, 255, 255, 0.78);
-  transform: translate(-50%, -50%) rotate(var(--rotate));
   white-space: normal;
 }
 
@@ -946,6 +955,10 @@ li {
   line-height: 1.5;
 }
 
+.roadmap-guidance .company-detail-inline {
+  color: #5f4a25;
+}
+
 .duration-strategy-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -967,6 +980,26 @@ li {
   display: block;
   margin-bottom: 3px;
   color: var(--ink);
+}
+
+.roadmap-detail-disclosure {
+  display: grid;
+  gap: 9px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid #d8e7de;
+  border-radius: 7px;
+}
+
+.roadmap-detail-disclosure summary {
+  cursor: pointer;
+  color: var(--primary-dark);
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.roadmap-detail-disclosure[open] summary {
+  margin-bottom: 8px;
 }
 
 .diagnosis-guide {
@@ -1379,20 +1412,6 @@ li {
   line-height: 1.45;
 }
 
-.resource-engagement-note {
-  padding: 9px 10px;
-  color: #3f4f2f;
-  background: #f5f8ec;
-  border: 1px solid #d7e0bb;
-  border-radius: 7px;
-  font-size: 0.84rem;
-  line-height: 1.45;
-}
-
-.roadmap-resource-detail .resource-engagement-note {
-  color: #3f4f2f;
-}
-
 .goal-rule-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1669,12 +1688,12 @@ li {
 
   .word-cloud-terms,
   .word-cloud-panel.is-inline .word-cloud-terms {
-    min-height: 260px;
-    padding: 10px;
+    min-height: 230px;
+    padding: 10px 8px;
   }
 
   .word-cloud-term {
-    max-width: 58%;
-    font-size: calc(var(--size) * 0.68);
+    max-width: min(100%, 18ch);
+    font-size: calc(var(--size) * 0.72);
   }
 }

@@ -1509,7 +1509,7 @@ const resources = [
     tracks: ["mechanical-cae", "automotive-mobility"],
     skills: ["차량동역학", "하중이동", "현가", "시험조건", "직무 이해"],
     prerequisites: ["물리 기초", "재료역학 기초"],
-    reason: "NPTEL/IIT 공식 차량동역학 첫 강의입니다. 2026-06-28 기준 약 44만 조회이며 상위 댓글에서 clear, brilliant, insightful 같은 학습 도움 반응을 확인했습니다.",
+    reason: "NPTEL/IIT 공식 차량동역학 첫 강의입니다. 차량동역학의 기본 변수와 시험·설계 직무 연결을 잡는 데 적합합니다.",
     expectedOutput: "차량 동역학 핵심 변수 5개와 지원 직무 연결 메모",
     qualityStatus: "reviewed",
     engagement: {
@@ -1534,7 +1534,7 @@ const resources = [
     tracks: ["electronics-pcb", "embedded-control", "automotive-mobility"],
     skills: ["CAN", "차량통신", "ECU", "진단", "인터페이스"],
     prerequisites: [],
-    reason: "차량 ECU 통신을 처음 보는 학생에게 적합한 CAN 입문 영상입니다. 2026-06-28 기준 약 126만 조회이며 댓글에서 simple, well explained 반응을 확인했습니다.",
+    reason: "차량 ECU 통신을 처음 보는 학생에게 적합한 CAN 입문 영상입니다. 노드, 메시지, 차량 네트워크 흐름을 빠르게 파악할 수 있습니다.",
     expectedOutput: "CAN 노드, 프레임, 오류 처리 흐름을 직무 과제에 맞춘 1쪽 메모",
     qualityStatus: "reviewed",
     engagement: {
@@ -1558,7 +1558,7 @@ const resources = [
     tracks: ["mechanical-cae", "electronics-pcb", "embedded-control", "automotive-mobility"],
     skills: ["EV 시스템", "배터리", "모터", "열관리", "회생제동", "직무 이해"],
     prerequisites: [],
-    reason: "EV 구조, 배터리, 모터, 열관리, 회생제동을 한 번에 훑는 장시간 공개강의입니다. 2026-06-28 기준 약 279만 조회이며 댓글에서 simple/easy to understand 반응을 확인했습니다.",
+    reason: "EV 구조, 배터리, 모터, 열관리, 회생제동을 한 번에 훑는 공개강의입니다. 전동화 직무의 세부 담당 영역을 나누어 보는 데 적합합니다.",
     expectedOutput: "EV 파워트레인 구성요소와 세부 직무 담당 영역 매핑표",
     qualityStatus: "reviewed",
     engagement: {
@@ -1583,7 +1583,7 @@ const resources = [
     tracks: ["mechanical-cae", "electronics-pcb", "embedded-control", "automotive-mobility"],
     skills: ["HIL", "SIL", "Simulink", "시험계획", "검증리포트"],
     prerequisites: ["Simulink 기초"],
-    reason: "제어 알고리즘을 실제 장비 없이 검증하는 HIL 개념을 MathWorks 공식 영상으로 연결합니다. 2026-06-28 기준 약 6.6만 조회이며 댓글에서 good information 반응을 확인했습니다.",
+    reason: "제어 알고리즘을 실제 장비 없이 검증하는 HIL 개념을 MathWorks 공식 영상으로 연결합니다. 시험계획과 Pass/Fail 기준을 잡는 데 도움이 됩니다.",
     expectedOutput: "HIL/SIL 시험 목적, 입출력, Pass/Fail 기준 초안",
     qualityStatus: "reviewed",
     engagement: {
@@ -1607,7 +1607,7 @@ const resources = [
     tracks: ["electronics-pcb", "embedded-control", "automotive-mobility"],
     skills: ["EMC", "EMI", "노이즈", "시험계획", "인증"],
     prerequisites: ["회로 기초"],
-    reason: "EMC/EMI 시험과 노이즈 경로를 빠르게 잡는 영상입니다. 2026-06-28 기준 약 14.5만 조회이며 댓글에서 useful, well explained, great work 반응을 확인했습니다.",
+    reason: "EMC/EMI 시험과 노이즈 경로를 빠르게 잡는 영상입니다. 회로·차량 전장 직무에서 인증과 사전 점검 흐름을 이해하는 데 적합합니다.",
     expectedOutput: "전도·방사 노이즈 경로와 사전 점검 체크리스트",
     qualityStatus: "reviewed",
     engagement: {
@@ -1632,7 +1632,7 @@ const resources = [
     tracks: ["chemical-process", "semiconductor-equipment"],
     skills: ["HAZOP", "공정안전", "위험성평가", "변경관리", "문서화"],
     prerequisites: ["공정 흐름 이해"],
-    reason: "공정안전 직무에서 반복적으로 쓰이는 HAZOP 방법을 대학 공개강의로 설명합니다. 2026-06-28 기준 약 4.1만 조회이며 댓글에서 helpful and clear 반응을 확인했습니다.",
+    reason: "공정안전 직무에서 반복적으로 쓰이는 HAZOP 방법을 대학 공개강의로 설명합니다. 위험성평가 표를 직접 작성하기 전 개념을 잡는 데 적합합니다.",
     expectedOutput: "공정 변수별 deviation, cause, consequence, safeguard 표",
     qualityStatus: "reviewed",
     engagement: {
@@ -1657,7 +1657,7 @@ const resources = [
     tracks: ["production-quality"],
     skills: ["품질도구", "Pareto", "Ishikawa", "관리도", "문제해결"],
     prerequisites: [],
-    reason: "품질 직무에서 바로 쓰는 7 QC tools를 예제로 설명합니다. 2026-06-28 기준 약 96만 조회이며 댓글에서 onboarding tool로 쓰겠다는 실무 반응과 best 16 mins 반응을 확인했습니다.",
+    reason: "품질 직무에서 바로 쓰는 7 QC tools를 예제로 설명합니다. 문제 정의부터 원인 분석까지 산출물로 연결하기 쉽습니다.",
     expectedOutput: "지원 직무 문제 1개에 적용할 7 QC tools 선택표",
     qualityStatus: "reviewed",
     engagement: {
@@ -3626,7 +3626,7 @@ function getHiringEvidence(track, role) {
 }
 
 function renderRoleWordCloud(track, role, modifier = "") {
-  const terms = getRoleWordCloudTerms(track, role).slice(0, 26);
+  const terms = arrangeWordCloudTerms(getRoleWordCloudTerms(track, role).slice(0, 32));
   return `
     <figure class="word-cloud-panel ${modifier}" aria-label="${role.title} 직무 키워드 워드클라우드">
       <div class="word-cloud-terms">
@@ -3637,20 +3637,27 @@ function renderRoleWordCloud(track, role, modifier = "") {
   `;
 }
 
-const wordCloudPlacements = [
-  [50, 50, 0], [43, 47, 0], [57, 53, 0], [51, 38, 0], [47, 62, 0],
-  [62, 43, 0], [36, 57, 0], [58, 67, 0], [40, 34, 0], [68, 61, 0],
-  [29, 45, 0], [66, 30, 0], [28, 70, 0], [75, 39, 0], [19, 55, -90],
-  [83, 52, 90], [37, 77, 0], [55, 80, 0], [70, 77, 0], [21, 29, 0],
-  [47, 20, 0], [77, 22, 0], [15, 72, 0], [88, 71, 0], [31, 17, 0],
-  [66, 15, 0]
-];
+function arrangeWordCloudTerms(terms) {
+  const pattern = [0, 7, 2, 11, 4, 1, 14, 6, 3, 17, 8, 5, 20, 10, 13, 9, 22, 12, 15, 16, 24, 18, 21, 19, 26, 23, 25, 27, 28, 29, 30, 31];
+  const used = new Set();
+  const arranged = [];
+
+  pattern.forEach((index) => {
+    if (terms[index]) {
+      arranged.push(terms[index]);
+      used.add(index);
+    }
+  });
+  terms.forEach((term, index) => {
+    if (!used.has(index)) arranged.push(term);
+  });
+  return arranged;
+}
 
 function getWordCloudTermStyle(term, index) {
-  const placement = wordCloudPlacements[index % wordCloudPlacements.length];
-  const size = (0.82 + Math.pow(term.level, 1.32) * 0.34).toFixed(2);
+  const size = (0.84 + Math.pow(term.level, 1.18) * 0.27).toFixed(2);
   const opacity = (0.68 + term.level * 0.05).toFixed(2);
-  return `--x:${placement[0]}%;--y:${placement[1]}%;--rotate:${placement[2]}deg;--size:${size}rem;--opacity:${opacity};--z:${term.level};`;
+  return `--size:${size}rem;--opacity:${opacity};--z:${term.level};`;
 }
 
 function renderRoleFitPanel(track, role) {
@@ -4072,8 +4079,8 @@ function renderRoadmapGuidance(context, tasks) {
         <button class="ghost-button" type="button" data-view-target="diagnosis">보유 역량 체크하기</button>
       </div>
     `}
-    <p class="company-detail-inline">이 로드맵은 일반적인 직무내용 기반 추천입니다. 지원 회사의 직무상세에 나온 업무·자격요건·우대사항을 확인한 뒤, 공고와 직접 맞닿은 역량과 산출물을 우선 준비하세요.</p>
-    <p>내 계획은 이 구성 결과를 완성된 로드맵 형태로 모아 보고 엑셀로 내보내는 화면입니다.</p>
+    <p class="company-detail-inline"><strong>지원 전 필수 확인</strong> 이 로드맵은 일반적인 직무내용 기반 추천입니다. 지원 회사의 직무상세에 나온 업무·자격요건·우대사항을 확인한 뒤, 공고와 직접 맞닿은 역량과 산출물을 우선 준비하세요.</p>
+    <p>주차별 과제에서 교육자료를 열고, 필요한 자료만 내 계획에 추가해 진행하세요.</p>
     <div class="badge-row">
       <span class="badge">기간: ${getDurationLabel()}</span>
       <span class="badge">목표 반영: ${context.goal.label} · ${goalLabel}</span>
@@ -4082,11 +4089,14 @@ function renderRoadmapGuidance(context, tasks) {
       <span class="badge">자료 배치: 부족 역량 우선</span>
       <span class="badge">추가 자료: ${selectedResources.length}개</span>
     </div>
-    <div class="duration-strategy-grid">
-      <span><strong>자료 기준</strong>${durationStrategy.resourceRule}</span>
-      <span><strong>과제 기준</strong>${durationStrategy.taskRule}</span>
-    </div>
-    ${renderGoalRuleGrid(context.goalKey)}
+    <details class="roadmap-detail-disclosure">
+      <summary>추천 기준 자세히 보기</summary>
+      <div class="duration-strategy-grid">
+        <span><strong>자료 기준</strong>${durationStrategy.resourceRule}</span>
+        <span><strong>과제 기준</strong>${durationStrategy.taskRule}</span>
+      </div>
+      ${renderGoalRuleGrid(context.goalKey)}
+    </details>
   `;
 }
 
@@ -4725,7 +4735,6 @@ function renderRoadmapResourceItem(resource, task, context) {
   const score = Math.round(getTaskResourceScore(resource, task, context));
   const coreLabel = resource.core ? "핵심 교육 · " : "";
   const connectionReason = getTaskResourceConnectionReason(resource, task, context);
-  const engagementSummary = getResourceEngagementSummary(resource);
 
   return `
     <details class="roadmap-resource-item">
@@ -4739,7 +4748,6 @@ function renderRoadmapResourceItem(resource, task, context) {
       </summary>
       <div class="roadmap-resource-detail">
         <p>${resource.provider} · ${resource.difficulty} · ${formatMinutes(resource.totalMinutes)}</p>
-        ${engagementSummary ? `<p class="resource-engagement-note"><strong>검수 근거:</strong> ${engagementSummary}</p>` : ""}
         <p><strong>자동 배치 근거:</strong> ${connectionReason}</p>
         <p><strong>연결 산출물:</strong> ${resource.expectedOutput}</p>
         ${signals.length ? `<p>${signals.join(" · ")}</p>` : `<p>${task.deliverable}에 바로 연결됩니다.</p>`}
@@ -4759,23 +4767,13 @@ function renderResourceTrustBadges(resource) {
   const directUrl = !/search|results\?|query=|courses\/free\/?$/i.test(resource.url || "");
 
   if (directUrl) badges.push("직접 링크");
-  if (resource.engagement?.views) badges.push(`조회 ${resource.engagement.views.replace(/\s*views/i, "")}`);
-  if (resource.engagement?.comments) badges.push("댓글 검수");
+  if (/youtube|영상/i.test(`${resource.provider} ${resource.type}`)) badges.push("동영상");
+  if (resource.qualityStatus === "verified") badges.push("검증 자료");
+  if (resource.qualityStatus === "reviewed") badges.push("검토 자료");
 
   return badges.length
     ? `<span class="resource-trust-badges">${badges.slice(0, 3).map((badge) => `<span>${badge}</span>`).join("")}</span>`
     : "";
-}
-
-function getResourceEngagementSummary(resource) {
-  const engagement = resource.engagement || {};
-  const parts = [];
-
-  if (engagement.views) parts.push(`조회 ${engagement.views}`);
-  if (engagement.comments) parts.push(`댓글 반응: ${engagement.comments}`);
-  if (engagement.likes) parts.push(`좋아요 ${engagement.likes}`);
-
-  return parts.join(" · ");
 }
 
 function getTaskResourceConnectionReason(resource, task, context) {
@@ -4917,12 +4915,10 @@ function renderResourceCard(resource, context = null, priorityIndex = null, show
   const saved = state.saved.includes(resource.id);
   const completed = state.completed.includes(resource.id);
   const prerequisites = resource.prerequisites.length ? resource.prerequisites.join(", ") : "없음";
-  const checkedAt = resource.engagement?.checkedAt ? `확인 ${resource.engagement.checkedAt}` : "확인 예정";
   const signals = context ? getEducationResourceSignals(resource, context) : [];
   const linkedTasks = context ? getResourceLinkedTasks(resource.id, context.visibleTasks) : [];
   const priority = signals.length > 0 || priorityIndex !== null;
   const recommendationScore = context ? Math.round(getEducationResourceScore(resource, context)) : null;
-  const engagementSummary = getResourceEngagementSummary(resource);
   return `
     <article class="resource-card ${completed ? "is-completed" : ""} ${priority ? "is-priority" : ""}">
       ${priorityIndex !== null ? `
@@ -4941,11 +4937,9 @@ function renderResourceCard(resource, context = null, priorityIndex = null, show
         <span class="badge">${resource.difficulty}</span>
         <span class="badge">총 ${formatMinutes(resource.totalMinutes)}</span>
         <span class="badge">${formatQualityStatus(resource.qualityStatus)}</span>
-        <span class="badge">${checkedAt}</span>
       </div>
       <h3>${resource.title}</h3>
       <p>${resource.reason}</p>
-      ${engagementSummary ? `<div class="resource-engagement-note"><strong>검수 근거:</strong> ${engagementSummary}</div>` : ""}
       ${linkedTasks.length ? `<p><strong>연결 과제:</strong> ${linkedTasks.join(", ")}</p>` : ""}
       ${signals.length ? `<div class="recommendation-note">${signals.join(" · ")}</div>` : ""}
       <div class="resource-learning-meta" aria-label="학습 정보">
