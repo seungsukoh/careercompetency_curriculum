@@ -2622,36 +2622,6 @@ const learningGoals = {
   }
 };
 
-const goalRecommendationLabels = {
-  explore: "반복 업무와 자격조건 확인 우선",
-  foundation: "역량 체크 공백 보완 우선",
-  portfolio: "실습 산출물과 제출 근거 우선",
-  interview: "공고 문장과 답변 근거 우선"
-};
-
-const goalScoringRules = {
-  explore: {
-    label: "직무 적합성 확인",
-    resource: "입문, 직무 용어, 한국어·공식 자료, 짧은 학습시간",
-    roadmap: "업무 흐름과 핵심 용어를 먼저 확인하는 과제"
-  },
-  foundation: {
-    label: "기본 역량 보완",
-    resource: "역량 체크에서 비어 있는 전공·도구 역량",
-    roadmap: "보완 필요 역량과 직접 맞닿은 기초 과제"
-  },
-  portfolio: {
-    label: "실습 산출물",
-    resource: "실습시간, 보고서, README, 검증 결과물",
-    roadmap: "산출물을 남기고 반복 보강할 수 있는 과제"
-  },
-  interview: {
-    label: "답변 근거 정리",
-    resource: "채용공고 키워드, 공식 자료, 설명 가능한 근거",
-    roadmap: "직무 언어로 말할 수 있는 검증·비교 과제"
-  }
-};
-
 const durationLabels = {
   "2": "2주 집중",
   "4": "4주 기본",
@@ -4111,7 +4081,6 @@ function bindElements() {
   [
     "majorSelect",
     "industrySelect",
-    "goalSelect",
     "durationSelect",
     "selectedTrackMetric",
     "diagnosticMetric",
@@ -4156,12 +4125,6 @@ function bindEvents() {
 
   elements.industrySelect.addEventListener("change", (event) => {
     state.profile.industry = event.target.value;
-    saveState();
-    render();
-  });
-
-  elements.goalSelect.addEventListener("change", (event) => {
-    state.profile.goal = event.target.value;
     saveState();
     render();
   });
@@ -4221,6 +4184,7 @@ function loadState() {
     if (!["mechanical", "electrical", "chemical"].includes(profile.major)) {
       profile.major = defaultState.profile.major;
     }
+    profile.goal = defaultState.profile.goal;
     return {
       ...defaultState,
       ...(stored || {}),
@@ -4254,7 +4218,7 @@ function normalizeView(view, fallback = "roadmap") {
 function render() {
   elements.majorSelect.value = state.profile.major;
   elements.industrySelect.value = state.profile.industry;
-  elements.goalSelect.value = state.profile.goal;
+  state.profile.goal = defaultState.profile.goal;
   elements.durationSelect.value = state.profile.durationWeeks;
   elements.roleSearchInput.value = state.roleSearch || "";
   const changedRoleGroupFilter = syncRoleGroupFilterWithProfile();
@@ -4319,7 +4283,8 @@ function renderWorkflowStatus() {
   const savedCount = getSavedResources().length;
   const taskCount = getVisibleRoadmapTasks(track.id).length;
   const steps = getWorkflowSteps({ track, role, checkedCount, score, gapCount, savedCount, taskCount });
-  const activeIndex = Math.max(steps.findIndex((step) => step.view === state.view), 0);
+  const matchedStepIndex = steps.findIndex((step) => step.view === state.view);
+  const activeIndex = state.view === "references" ? steps.length - 1 : Math.max(matchedStepIndex, 0);
 
   elements.workflowStatus.innerHTML = steps.map((step, index) => `
     <button class="workflow-step ${index === activeIndex ? "is-active" : ""} ${step.complete ? "is-complete" : ""} ${step.optional ? "is-optional" : ""}" type="button" data-view-target="${step.view}">
@@ -4365,13 +4330,6 @@ function getWorkflowSteps({ track, role, checkedCount, score, gapCount, savedCou
       title: "내 커리큘럼",
       status: hasActiveRoleSelection() ? `${taskCount || 0}주 구성 · 선택 ${savedCount}개` : "직무 선택 후",
       complete: hasActiveRoleSelection()
-    },
-    {
-      view: "references",
-      title: "참고자료",
-      status: "필요할 때만 보기",
-      complete: false,
-      optional: true
     }
   ];
 }
@@ -4420,10 +4378,10 @@ function getNextWorkflowStep(steps, activeIndex) {
 
   if (state.view === "saved") {
     return {
-      view: "references",
-      title: "더 필요한 자료만 참고하세요",
-      body: "전체 자료 보관함은 보조 영역입니다. 내 커리큘럼에 부족한 유형이 있을 때만 분야별로 추가 확인하세요.",
-      action: "참고자료 보기",
+      view: "roadmap",
+      title: "지원 회사 공고와 대조하세요",
+      body: "내 커리큘럼을 만든 뒤에는 지원 회사의 직무상세, 자격요건, 우대사항과 맞는 교육만 남기세요.",
+      action: "교육 다시 확인",
       primary: false
     };
   }
@@ -4439,19 +4397,31 @@ function getNextWorkflowStep(steps, activeIndex) {
 
 function renderRoleContextBar() {
   if (!elements.roleContextBar) return;
+  const profileSummary = `${getMajorLabel()} · ${getIndustryLabel()} · ${getDurationLabel()}`;
   if (!hasActiveRoleSelection()) {
+    const nextStep = getNextWorkflowStep([], 0);
+    const visibleCount = getRoleCatalog().length;
     elements.roleContextBar.innerHTML = `
-      <div class="role-context-main">
-        <span>현재 기준</span>
-        <strong>선택한 직무 없음</strong>
-        <em>${getMajorLabel()} · ${getIndustryLabel()} 기준 직무 목록을 보고 있습니다.</em>
+      <div class="snapshot-card is-action">
+        <span>해야 할 일</span>
+        <strong>${nextStep.title}</strong>
+        <em>${nextStep.body}</em>
+        <button class="primary-button" type="button" data-view-target="${nextStep.view}">${nextStep.action}</button>
       </div>
-      <div class="role-context-summary">
-        <strong>먼저 할 일</strong>
-        <span>지원하려는 세부 직무를 선택하면 직무상세와 부족 역량 커리큘럼이 생성됩니다.</span>
+      <div class="snapshot-card">
+        <span>선택 기준</span>
+        <strong>${profileSummary}</strong>
+        <em>${visibleCount}개 세부 직무가 표시됩니다.</em>
       </div>
-      <div class="role-context-actions">
-        <button class="primary-button" type="button" data-view-target="tracks">직무 선택</button>
+      <div class="snapshot-card">
+        <span>선택한 것</span>
+        <strong>직무 미선택</strong>
+        <em>왼쪽 목록에서 실제 지원할 세부 직무를 고르세요.</em>
+      </div>
+      <div class="snapshot-card">
+        <span>최종 결과</span>
+        <strong>내 커리큘럼</strong>
+        <em>직무상세, 부족 역량, 교육자료, 주차별 과제로 정리됩니다.</em>
       </div>
     `;
     return;
@@ -4462,35 +4432,46 @@ function renderRoleContextBar() {
   const diagnosticItems = getDiagnosticItems(track);
   const checkedCount = diagnosticItems.filter((item) => state.checked[item.id]).length;
   const gapItems = getGapItems(track.id);
-  const aiProfile = getRoleAiCompetencyProfile(role);
   const output = role ? getRoleCurriculumOutput(track, role) : track.outputs[0];
   const majorLabel = getMajorPathwayLabel(track, role);
   const gapPreview = gapItems.length
-    ? gapItems.slice(0, 3).map((item) => item.skill).join(", ")
+    ? gapItems.slice(0, 2).map((item) => item.skill).join(", ")
     : "큰 공백 없음";
+  const outputPreview = truncateText(output, 70);
+  const steps = getWorkflowSteps({
+    track,
+    role,
+    checkedCount,
+    score: getDiagnosticScore(track.id),
+    gapCount: gapItems.length,
+    savedCount: getSavedResources().length,
+    taskCount: getVisibleRoadmapTasks(track.id).length
+  });
+  const matchedStepIndex = steps.findIndex((step) => step.view === state.view);
+  const activeIndex = state.view === "references" ? steps.length - 1 : Math.max(matchedStepIndex, 0);
+  const nextStep = getNextWorkflowStep(steps, activeIndex);
 
   elements.roleContextBar.innerHTML = `
-    <div class="role-context-main">
-      <span>현재 기준</span>
+    <div class="snapshot-card is-action">
+      <span>해야 할 일</span>
+      <strong>${nextStep.title}</strong>
+      <em>${nextStep.body}</em>
+      <button class="${nextStep.primary ? "primary-button" : "ghost-button"}" type="button" data-view-target="${nextStep.view}">${nextStep.action}</button>
+    </div>
+    <div class="snapshot-card">
+      <span>선택 기준</span>
+      <strong>${profileSummary}</strong>
+      <em>${majorLabel}</em>
+    </div>
+    <div class="snapshot-card">
+      <span>선택한 것</span>
       <strong>${role?.title || track.title}</strong>
-      <em>${track.title} · ${getMajorLabel()} ${majorLabel}</em>
+      <em>${track.title} · 확보 체크 ${checkedCount}/${diagnosticItems.length}</em>
     </div>
-    <div class="role-context-stats" aria-label="선택 직무 준비 현황">
-      <span><strong>${checkedCount}/${diagnosticItems.length}</strong>확보 체크</span>
-      <span><strong>${gapItems.length}개</strong>보완 역량</span>
-      <span><strong>${getDurationLabel()}</strong>${learningGoals[state.profile.goal]?.label || "준비"}</span>
-      ${aiProfile ? `<span><strong>${aiProfile.level}</strong>AI·데이터</span>` : ""}
-    </div>
-    <div class="role-context-summary">
-      <strong>이번 계획의 결과물</strong>
-      <span>${output}</span>
-      <em>우선 보완: ${gapPreview}</em>
-    </div>
-    <div class="role-context-actions">
-      <button class="ghost-button" type="button" data-view-target="tracks">직무 상세</button>
-      <button class="primary-button" type="button" data-view-target="diagnosis">역량 체크</button>
-      <button class="ghost-button" type="button" data-view-target="roadmap">교육 선택</button>
-      <button class="ghost-button" type="button" data-view-target="saved">내 커리큘럼</button>
+    <div class="snapshot-card">
+      <span>최종 결과</span>
+      <strong>${outputPreview}</strong>
+      <em>보완: ${gapPreview}</em>
     </div>
   `;
 }
@@ -4501,21 +4482,20 @@ function renderProfileImpact() {
   const directCount = catalog.filter(({ track: itemTrack, role: itemRole }) => getMajorPathway(itemTrack, itemRole) === "direct").length;
   const bridgeCount = catalog.filter(({ track: itemTrack, role: itemRole }) => getMajorPathway(itemTrack, itemRole) === "bridge").length;
   const topRoles = catalog.slice(0, 3).map(({ role: itemRole }) => itemRole.title);
-  const goalRule = goalScoringRules[state.profile.goal] || goalScoringRules.foundation;
   const selectedText = hasActiveRoleSelection()
     ? `${getSelectedRole(getSelectedTrack().id)?.title || "선택 직무"} 기준`
     : "직무 선택 전 기준";
 
   elements.profileImpactPanel.innerHTML = `
     <div>
-      <strong>${getMajorLabel()} 기준: ${selectedText}</strong>
-      <span>직결 ${directCount}개 · 확장 ${bridgeCount}개를 먼저 올립니다.</span>
-      <em>${topRoles.join(" / ")}</em>
+      <strong>입력한 값</strong>
+      <span>${getMajorLabel()} · ${getIndustryLabel()} · ${getDurationLabel()}</span>
+      <em>${selectedText}</em>
     </div>
     <div>
-      <strong>${goalRule.label} 완료 기준</strong>
-      <span>${goalRule.roadmap}</span>
-      <em>${goalRule.resource}</em>
+      <strong>선택 가능한 직무</strong>
+      <span>관련 세부 직무 ${catalog.length}개 · 직결 ${directCount}개 · 확장 ${bridgeCount}개</span>
+      <em>${topRoles.join(" / ") || "조건에 맞는 직무 없음"}</em>
     </div>
   `;
 }
@@ -5997,7 +5977,6 @@ function renderRoadmapGuidance(context, tasks) {
   const roleResourceCount = getRoleLinkedResourceIds(context.role).length;
   const gapText = context.gapSkills.length ? context.gapSkills.slice(0, 4).join(", ") : "큰 공백 없음";
   const checkedCount = context.acquiredSkills.length;
-  const goalLabel = getGoalRecommendationLabel(context.goalKey);
   const durationStrategy = getDurationStrategy();
   const practiceResourceCount = getRecommendedResources(context.track, context)
     .filter(isHandsOnResource)
@@ -6036,7 +6015,6 @@ function renderRoadmapGuidance(context, tasks) {
     </details>
     <div class="badge-row">
       <span class="badge">기간: ${getDurationLabel()}</span>
-      <span class="badge">목표 반영: ${context.goal.label} · ${goalLabel}</span>
       <span class="badge">커리큘럼 주차: ${tasks.length}개</span>
       <span class="badge">직무 연결 자료: ${roleResourceCount}개</span>
       <span class="badge">실습형 후보: ${practiceResourceCount}개</span>
@@ -6057,7 +6035,6 @@ function renderRoadmapGuidance(context, tasks) {
         <span><strong>자료 기준</strong>${durationStrategy.resourceRule}</span>
         <span><strong>과제 기준</strong>${durationStrategy.taskRule}</span>
       </div>
-      ${renderGoalRuleGrid(context.goalKey)}
     </details>
   `;
 }
@@ -6191,7 +6168,7 @@ function getEducationSummaryReason(resource, task, context) {
     .slice(0, 2);
   const connectionReason = task
     ? getTaskResourceConnectionReason(resource, task, context)
-    : "선택 직무와 준비 목표에 연결되는 교육입니다.";
+    : "선택 직무와 부족 역량에 연결되는 교육입니다.";
   const text = signals.length ? `${signals.join(" · ")} · ${connectionReason}` : connectionReason;
   return truncateText(text, 100);
 }
@@ -6751,7 +6728,7 @@ function getTaskPriorityReason(task, trackId) {
   if (gapMatch) return `현재 역량 체크에서 비어 있는 ${gapMatch} 역량을 직접 보완합니다.`;
   if (roleKeyword) return `${role.title} 채용공고 키워드인 ${roleKeyword}와 바로 연결됩니다.`;
   if (state.profile.goal === "portfolio" || state.profile.goal === "interview") return "짧은 기간 안에 설명 가능한 산출물을 남기는 과제입니다.";
-  if (state.profile.goal === "explore") return "직무 탐색 목표에 맞춰 업무 흐름과 핵심 용어를 확인하는 과제입니다.";
+  if (state.profile.goal === "explore") return "업무 흐름과 핵심 용어를 확인하는 과제입니다.";
   return "짧은 기간에서 직무 이해와 기본 산출물을 빠르게 만드는 과제입니다.";
 }
 
@@ -6878,24 +6855,6 @@ function getRoadmapResourceLimit(context) {
 
 function uniqueResources(resourceList) {
   return [...new Map(resourceList.map((resource) => [resource.id, resource])).values()];
-}
-
-function getGoalRecommendationLabel(goalKey) {
-  return goalRecommendationLabels[goalKey] || goalRecommendationLabels.foundation;
-}
-
-function renderGoalRuleGrid(activeGoalKey) {
-  return `
-    <div class="goal-rule-grid" aria-label="학습목표별 추천 기준">
-      ${Object.entries(goalScoringRules).map(([key, rule]) => `
-        <div class="goal-rule ${key === activeGoalKey ? "is-active" : ""}">
-          <strong>${rule.label}</strong>
-          <span>자료: ${rule.resource}</span>
-          <span>커리큘럼: ${rule.roadmap}</span>
-        </div>
-      `).join("")}
-    </div>
-  `;
 }
 
 function renderCompetencyActionPlan(context, tasks) {
@@ -7119,9 +7078,7 @@ function getCompetencyFitSignal(resource, context) {
 }
 
 function getGoalFitSignal(resource, context) {
-  const score = getGoalResourceScore(resource, context);
-  if (score < 24) return "";
-  return `목표 반영: ${context.goal.label} · ${getGoalRecommendationLabel(context.goalKey)}`;
+  return "";
 }
 
 function getEducationResourceScore(resource, context) {
@@ -7735,7 +7692,7 @@ function getResourceSignals(resource, context) {
   if (competencyFitSignal) signals.push(competencyFitSignal);
   if (goalFitSignal) signals.push(goalFitSignal);
   if (matchedGaps.length) signals.push(`역량 체크 보완: ${matchedGaps.slice(0, 3).join(", ")}`);
-  if (matchedGoal.length) signals.push(`목표 적합: ${matchedGoal.slice(0, 2).join(", ")}`);
+  if (matchedGoal.length) signals.push(`핵심역량 연결: ${matchedGoal.slice(0, 2).join(", ")}`);
   if (matchedRoleKeywords.length) signals.push(`세부 직무 키워드: ${matchedRoleKeywords.slice(0, 2).join(", ")}`);
   if (context.goalKey === "portfolio" && resource.practiceMinutes >= 60) signals.push("실습 산출물 우선");
   return signals;
@@ -7919,8 +7876,6 @@ function buildSummaryExportRows() {
     ["내보낸 날짜", formatExportDate()],
     ["전공", getSelectLabel(elements.majorSelect)],
     ["관심 산업", getSelectLabel(elements.industrySelect)],
-    ["준비 목적", learningGoals[state.profile.goal]?.label || state.profile.goal],
-    ["목표 추천 기준", getGoalRecommendationLabel(state.profile.goal)],
     ["준비 기간", getDurationLabel()],
     ["직무군", track.title],
     ["선택 직무", role?.title || "미선택"],

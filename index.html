@@ -8,8 +8,8 @@
     <title>지원 직무 판단 및 역량 커리큘럼</title>
     <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/assets/icon.svg">
-    <link rel="stylesheet" href="/styles.css?v=20260628-role-layout">
-    <script type="module" src="/app.js?v=20260628-role-layout"></script>
+    <link rel="stylesheet" href="/styles.css?v=20260628-simple-flow">
+    <script type="module" src="/app.js?v=20260628-simple-flow"></script>
   </head>
   <body>
     <div class="app-shell">
@@ -21,10 +21,10 @@
       </header>
 
       <main class="layout">
-        <aside class="panel profile-panel" aria-label="프로필 설정">
+        <aside class="panel profile-panel" aria-label="내 선택">
           <div class="panel-heading">
-            <p class="eyebrow">내 기준</p>
-            <h2>지원 준비 기준</h2>
+            <p class="eyebrow">내 선택</p>
+            <h2>입력은 3개만</h2>
           </div>
           <label>
             전공
@@ -46,15 +46,6 @@
               <option value="chemical">화학·정유</option>
               <option value="battery">배터리·소재</option>
               <option value="bio">바이오·제약</option>
-            </select>
-          </label>
-          <label>
-            현재 준비 목적
-            <select id="goalSelect">
-              <option value="explore">지원 직무 적합성 확인</option>
-              <option value="foundation" selected>부족한 기본 역량 보완</option>
-              <option value="portfolio">실습 산출물 만들기</option>
-              <option value="interview">공고·면접 답변 근거 정리</option>
             </select>
           </label>
           <label>
