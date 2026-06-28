@@ -987,7 +987,7 @@ const resources = [
   },
   {
     id: "mit-chemical-engineering",
-    title: "MIT OCW Chemical Engineering 후보",
+    title: "MIT OCW Chemical Engineering Thermodynamics",
     provider: "MIT OpenCourseWare",
     type: "대학 OCW",
     language: "영어",
@@ -998,14 +998,14 @@ const resources = [
     tracks: ["chemical-process"],
     skills: ["열역학", "반응공학", "분리공정", "공정모델링"],
     prerequisites: ["물질수지", "열역학 기초"],
-    reason: "화학공정 심화 개념을 글로벌 대학 강의로 확인하고 면접용 설명 근거를 만들 때 사용합니다.",
-    expectedOutput: "화학공학 핵심 단원 2개 요약과 직무 적용 메모",
-    qualityStatus: "candidate",
+    reason: "화학공정 심화 개념을 MIT OCW의 실제 화학공학 열역학 강좌로 확인하고 면접용 설명 근거를 만들 때 사용합니다.",
+    expectedOutput: "화학공학 열역학 핵심 단원 2개 요약과 직무 적용 메모",
+    qualityStatus: "reviewed",
     engagement: {
       checkedAt: "2026-06-26",
       nextReviewAt: "2026-07-26"
     },
-    url: "https://ocw.mit.edu/search/?d=Chemical%20Engineering"
+    url: "https://ocw.mit.edu/courses/10-40-chemical-engineering-thermodynamics-fall-2003/"
   },
   {
     id: "kocw-chemical-process",
@@ -1073,7 +1073,7 @@ const resources = [
   },
   {
     id: "coursera-chemical-engineering",
-    title: "Coursera 화학공정·소재 무료청강 후보",
+    title: "Coursera Chemical Engineering Thermodynamics I",
     provider: "Coursera",
     type: "글로벌 무료청강",
     language: "영어",
@@ -1084,14 +1084,14 @@ const resources = [
     tracks: ["chemical-process"],
     skills: ["반응공학", "분리공정", "공정모델링", "소재"],
     prerequisites: ["물질수지", "열역학 기초"],
-    reason: "화학공정, 소재, 배터리 관련 글로벌 강좌를 무료청강으로 확인하고 포트폴리오 근거로 연결합니다.",
-    expectedOutput: "화학공정·소재 강좌 1개와 적용할 직무 과제 기록",
-    qualityStatus: "candidate",
+    reason: "화학공정, 소재, 배터리 직무에서 필요한 열역학 개념을 Coursera의 실제 화학공학 강좌로 보완합니다.",
+    expectedOutput: "열역학 개념 2개와 적용할 직무 과제 기록",
+    qualityStatus: "reviewed",
     engagement: {
       checkedAt: "2026-06-26",
       nextReviewAt: "2026-07-26"
     },
-    url: "https://www.coursera.org/search?query=chemical%20engineering"
+    url: "https://www.coursera.org/learn/chemtherm1"
   },
   {
     id: "nptel-chemical-engineering",
@@ -1329,7 +1329,7 @@ const resources = [
   },
   {
     id: "coursera-six-sigma-quality",
-    title: "Coursera Six Sigma·품질관리 무료청강 후보",
+    title: "Coursera Six Sigma Principles",
     provider: "Coursera",
     type: "글로벌 무료청강",
     language: "영어",
@@ -1340,18 +1340,18 @@ const resources = [
     tracks: ["production-quality", "semiconductor-equipment", "chemical-process"],
     skills: ["품질", "SPC", "FMEA", "DOE", "문제해결"],
     prerequisites: ["기초 통계"],
-    reason: "품질·공정개선 직무에서 Six Sigma, SPC, FMEA, DOE를 채용공고 언어로 설명할 수 있게 보완합니다.",
+    reason: "품질·공정개선 직무에서 Six Sigma 원리와 개선 흐름을 실제 Coursera 과정으로 보완합니다.",
     expectedOutput: "품질 개선 과제에 적용할 Six Sigma 도구 1개와 적용 메모",
-    qualityStatus: "candidate",
+    qualityStatus: "reviewed",
     engagement: {
       checkedAt: "2026-06-26",
       nextReviewAt: "2026-07-26"
     },
-    url: "https://www.coursera.org/search?query=six%20sigma%20quality%20management"
+    url: "https://www.coursera.org/learn/six-sigma-principles2"
   },
   {
     id: "coursera-engineering-data",
-    title: "Coursera 공학 데이터·분석 무료청강 후보",
+    title: "Coursera Data Analysis with Python",
     provider: "Coursera",
     type: "글로벌 무료청강",
     language: "영어",
@@ -1362,18 +1362,18 @@ const resources = [
     tracks: ["production-quality", "semiconductor-equipment", "chemical-process", "mechanical-cae"],
     skills: ["데이터 분석", "통계", "Python/SQL", "수율분석"],
     prerequisites: ["기초 통계", "스프레드시트 또는 Python 기초"],
-    reason: "공정·수율·시험 데이터를 다루는 직무에서 글로벌 강좌를 무료청강으로 보완할 때 적합합니다.",
+    reason: "공정·수율·시험 데이터를 다루는 직무에서 Python 기반 데이터 분석 흐름을 실제 Coursera 과정으로 보완합니다.",
     expectedOutput: "공정 또는 시험 데이터 분석 강좌 1개와 적용할 데이터 과제",
-    qualityStatus: "candidate",
+    qualityStatus: "reviewed",
     engagement: {
       checkedAt: "2026-06-26",
       nextReviewAt: "2026-07-26"
     },
-    url: "https://www.coursera.org/search?query=engineering%20data%20analysis"
+    url: "https://www.coursera.org/learn/data-analysis-with-python"
   },
   {
     id: "coursera-embedded-control",
-    title: "Coursera 임베디드·제어 무료청강 후보",
+    title: "Coursera Introduction to Embedded Systems Software",
     provider: "Coursera",
     type: "글로벌 무료청강",
     language: "영어",
@@ -1384,14 +1384,14 @@ const resources = [
     tracks: ["embedded-control", "electronics-pcb"],
     skills: ["C언어", "제어", "센서", "검증"],
     prerequisites: ["C언어 기초", "제어공학 기초"],
-    reason: "제어, 센서, 임베디드 시스템 강좌를 면접 설명용 산출물과 연결할 때 사용합니다.",
+    reason: "펌웨어·제어 직무에서 C 기반 임베디드 개발환경과 디버깅 흐름을 실제 Coursera 과정으로 보완합니다.",
     expectedOutput: "임베디드·제어 강좌 1개와 PID/센서 과제 적용 메모",
-    qualityStatus: "candidate",
+    qualityStatus: "reviewed",
     engagement: {
       checkedAt: "2026-06-26",
       nextReviewAt: "2026-07-26"
     },
-    url: "https://www.coursera.org/search?query=embedded%20systems%20control"
+    url: "https://www.coursera.org/learn/introduction-embedded-systems"
   },
   {
     id: "edx-engineering-systems",
@@ -1496,26 +1496,177 @@ const resources = [
     url: "https://www.udemy.com/courses/free/"
   },
   {
-    id: "youtube-official-engineering",
-    title: "YouTube 대학·기업 공식강의 후보",
-    provider: "YouTube",
-    type: "공개강의 후보",
-    language: "한국어/영어",
+    id: "youtube-nptel-vehicle-dynamics",
+    title: "NPTEL Introduction to Vehicle Dynamics",
+    provider: "NPTEL YouTube",
+    type: "공개강의 직접영상",
+    language: "영어",
     difficulty: "입문",
-    estimatedMinutes: 45,
+    estimatedMinutes: 50,
     practiceMinutes: 45,
     sequenceLevel: 1,
-    tracks: ["mechanical-cae", "production-quality", "semiconductor-equipment", "chemical-process", "electronics-pcb", "embedded-control"],
-    skills: ["직무 이해", "전공지식", "도구역량"],
-    prerequisites: [],
-    reason: "대학·기업 공식 채널의 짧은 강의만 후보로 보고, 출처가 불명확한 영상은 저장하지 않습니다.",
-    expectedOutput: "공식 영상 1개와 이번 주 과제에 연결되는 개념 3개",
-    qualityStatus: "candidate",
+    core: true,
+    tracks: ["mechanical-cae", "automotive-mobility"],
+    skills: ["차량동역학", "하중이동", "현가", "시험조건", "직무 이해"],
+    prerequisites: ["물리 기초", "재료역학 기초"],
+    reason: "NPTEL/IIT 공식 차량동역학 첫 강의입니다. 2026-06-28 기준 약 44만 조회이며 상위 댓글에서 clear, brilliant, insightful 같은 학습 도움 반응을 확인했습니다.",
+    expectedOutput: "차량 동역학 핵심 변수 5개와 지원 직무 연결 메모",
+    qualityStatus: "reviewed",
     engagement: {
-      checkedAt: "2026-06-26",
-      nextReviewAt: "2026-07-26"
+      views: "443,486 views",
+      comments: "상위 댓글에서 clear/brilliant/insightful 반응 확인",
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
     },
-    url: "https://www.youtube.com/results?search_query=engineering+lecture+mechanical+electronics"
+    url: "https://www.youtube.com/watch?v=LZ82iANWBL0"
+  },
+  {
+    id: "youtube-css-can-bus",
+    title: "CAN Bus Explained - A Simple Intro",
+    provider: "CSS Electronics YouTube",
+    type: "공개강의 직접영상",
+    language: "영어",
+    difficulty: "입문",
+    estimatedMinutes: 10,
+    practiceMinutes: 50,
+    sequenceLevel: 1,
+    core: true,
+    tracks: ["electronics-pcb", "embedded-control", "automotive-mobility"],
+    skills: ["CAN", "차량통신", "ECU", "진단", "인터페이스"],
+    prerequisites: [],
+    reason: "차량 ECU 통신을 처음 보는 학생에게 적합한 CAN 입문 영상입니다. 2026-06-28 기준 약 126만 조회이며 댓글에서 simple, well explained 반응을 확인했습니다.",
+    expectedOutput: "CAN 노드, 프레임, 오류 처리 흐름을 직무 과제에 맞춘 1쪽 메모",
+    qualityStatus: "reviewed",
+    engagement: {
+      views: "1,262,334 views",
+      comments: "상위 댓글에서 simple/well explained 반응 확인",
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.youtube.com/watch?v=FqLDpHsxvf8"
+  },
+  {
+    id: "youtube-skilllync-ev-crash-course",
+    title: "How Do Electric Vehicles Work? EV Crash Course",
+    provider: "Skill Lync YouTube",
+    type: "공개강의 직접영상",
+    language: "영어",
+    difficulty: "입문",
+    estimatedMinutes: 180,
+    practiceMinutes: 60,
+    sequenceLevel: 1,
+    tracks: ["mechanical-cae", "electronics-pcb", "embedded-control", "automotive-mobility"],
+    skills: ["EV 시스템", "배터리", "모터", "열관리", "회생제동", "직무 이해"],
+    prerequisites: [],
+    reason: "EV 구조, 배터리, 모터, 열관리, 회생제동을 한 번에 훑는 장시간 공개강의입니다. 2026-06-28 기준 약 279만 조회이며 댓글에서 simple/easy to understand 반응을 확인했습니다.",
+    expectedOutput: "EV 파워트레인 구성요소와 세부 직무 담당 영역 매핑표",
+    qualityStatus: "reviewed",
+    engagement: {
+      views: "2,791,345 views",
+      comments: "상위 댓글에서 simple/easy to understand 반응 확인",
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.youtube.com/watch?v=qIfjibyt6pY"
+  },
+  {
+    id: "youtube-mathworks-hil-testing",
+    title: "Hardware in the Loop Testing",
+    provider: "MathWorks YouTube",
+    type: "공식 튜토리얼 직접영상",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 15,
+    practiceMinutes: 60,
+    sequenceLevel: 2,
+    core: true,
+    tracks: ["mechanical-cae", "electronics-pcb", "embedded-control", "automotive-mobility"],
+    skills: ["HIL", "SIL", "Simulink", "시험계획", "검증리포트"],
+    prerequisites: ["Simulink 기초"],
+    reason: "제어 알고리즘을 실제 장비 없이 검증하는 HIL 개념을 MathWorks 공식 영상으로 연결합니다. 2026-06-28 기준 약 6.6만 조회이며 댓글에서 good information 반응을 확인했습니다.",
+    expectedOutput: "HIL/SIL 시험 목적, 입출력, Pass/Fail 기준 초안",
+    qualityStatus: "reviewed",
+    engagement: {
+      views: "66,510 views",
+      comments: "댓글에서 good information 반응 확인",
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.youtube.com/watch?v=8vbf9MZMOCY"
+  },
+  {
+    id: "youtube-emc-emi-basics",
+    title: "EMC and EMI",
+    provider: "POWER ELECTRONICS BASICS YouTube",
+    type: "공개강의 직접영상",
+    language: "영어",
+    difficulty: "입문",
+    estimatedMinutes: 20,
+    practiceMinutes: 45,
+    sequenceLevel: 1,
+    tracks: ["electronics-pcb", "embedded-control", "automotive-mobility"],
+    skills: ["EMC", "EMI", "노이즈", "시험계획", "인증"],
+    prerequisites: ["회로 기초"],
+    reason: "EMC/EMI 시험과 노이즈 경로를 빠르게 잡는 영상입니다. 2026-06-28 기준 약 14.5만 조회이며 댓글에서 useful, well explained, great work 반응을 확인했습니다.",
+    expectedOutput: "전도·방사 노이즈 경로와 사전 점검 체크리스트",
+    qualityStatus: "reviewed",
+    engagement: {
+      views: "145,812 views",
+      comments: "상위 댓글에서 useful/well explained/great work 반응 확인",
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.youtube.com/watch?v=C2UDpUAgoSQ"
+  },
+  {
+    id: "youtube-nptel-hazop",
+    title: "NPTEL Hazard and Operability Study",
+    provider: "NPTEL YouTube",
+    type: "공개강의 직접영상",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 45,
+    practiceMinutes: 60,
+    sequenceLevel: 2,
+    core: true,
+    tracks: ["chemical-process", "semiconductor-equipment"],
+    skills: ["HAZOP", "공정안전", "위험성평가", "변경관리", "문서화"],
+    prerequisites: ["공정 흐름 이해"],
+    reason: "공정안전 직무에서 반복적으로 쓰이는 HAZOP 방법을 대학 공개강의로 설명합니다. 2026-06-28 기준 약 4.1만 조회이며 댓글에서 helpful and clear 반응을 확인했습니다.",
+    expectedOutput: "공정 변수별 deviation, cause, consequence, safeguard 표",
+    qualityStatus: "reviewed",
+    engagement: {
+      views: "41,950 views",
+      comments: "상위 댓글에서 helpful and clear 반응 확인",
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.youtube.com/watch?v=n1s1UB80JgA"
+  },
+  {
+    id: "youtube-cqe-quality-tools",
+    title: "The 7 Quality Control Tools Explained with an Example",
+    provider: "CQE Academy YouTube",
+    type: "공개강의 직접영상",
+    language: "영어",
+    difficulty: "입문",
+    estimatedMinutes: 20,
+    practiceMinutes: 60,
+    sequenceLevel: 1,
+    core: true,
+    tracks: ["production-quality"],
+    skills: ["품질도구", "Pareto", "Ishikawa", "관리도", "문제해결"],
+    prerequisites: [],
+    reason: "품질 직무에서 바로 쓰는 7 QC tools를 예제로 설명합니다. 2026-06-28 기준 약 96만 조회이며 댓글에서 onboarding tool로 쓰겠다는 실무 반응과 best 16 mins 반응을 확인했습니다.",
+    expectedOutput: "지원 직무 문제 1개에 적용할 7 QC tools 선택표",
+    qualityStatus: "reviewed",
+    engagement: {
+      views: "962,731 views",
+      comments: "상위 댓글에서 onboarding tool/best 16 mins 반응 확인",
+      checkedAt: "2026-06-28",
+      nextReviewAt: "2026-07-28"
+    },
+    url: "https://www.youtube.com/watch?v=yuH35ottILU"
   }
 ].map(normalizeResource);
 
@@ -1555,7 +1706,11 @@ const automotiveResourceIds = new Set([
   "step-engineering",
   "hrd-net-job-training",
   "ncs",
-  "youtube-official-engineering"
+  "youtube-nptel-vehicle-dynamics",
+  "youtube-css-can-bus",
+  "youtube-skilllync-ev-crash-course",
+  "youtube-mathworks-hil-testing",
+  "youtube-emc-emi-basics"
 ]);
 
 resources.forEach((resource) => {
@@ -2711,7 +2866,13 @@ const resourceTaskLinks = {
   "freecodecamp-python-data": ["관리도와 Cpk 계산", "수율 Pareto 분석", "물질수지와 수율 계산", "디버깅 노트와 README"],
   "inflearn-free-it-practice": ["UART 센서 프로토콜", "디버깅 노트와 README", "검증 리포트"],
   "udemy-free-practical-tools": ["손계산과 CAD 초안", "PCB 리뷰 체크리스트", "8D 개선 보고서", "디버깅 노트와 README"],
-  "youtube-official-engineering": ["제품 요구사항 분해", "공정 문제 정의", "공정 흐름 매핑", "화학공정 흐름도", "전원 요구사항 정의", "MCU 주변장치 설계"]
+  "youtube-nptel-vehicle-dynamics": ["제품 요구사항 분해", "해석 조건 검증", "자동차 세부 직무 비교표", "차량 시스템 요구사항표", "자동차 직무 검증 리포트"],
+  "youtube-css-can-bus": ["MCU 주변장치 설계", "UART 센서 프로토콜", "전원 요구사항 정의", "인터페이스·시험 조건 노트", "자동차 세부 직무 비교표"],
+  "youtube-skilllync-ev-crash-course": ["자동차 세부 직무 비교표", "차량 시스템 요구사항표", "인터페이스·시험 조건 노트"],
+  "youtube-mathworks-hil-testing": ["검증 리포트", "PID 응답 실험", "인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"],
+  "youtube-emc-emi-basics": ["전원 요구사항 정의", "PCB 리뷰 체크리스트", "검증 리포트", "자동차 직무 검증 리포트"],
+  "youtube-nptel-hazop": ["HAZOP 안전 체크", "화학공정 흐름도", "조건 변경 검토표"],
+  "youtube-cqe-quality-tools": ["공정 문제 정의", "관리도와 Cpk 계산", "원인 가설과 FMEA", "8D 개선 보고서"]
 };
 
 [
@@ -2730,7 +2891,11 @@ const resourceTaskLinks = {
   ["ti-precision-labs", ["자동차 직무 검증 리포트"]],
   ["step-engineering", ["자동차 세부 직무 비교표", "자동차 직무 검증 리포트"]],
   ["hrd-net-job-training", ["자동차 세부 직무 비교표", "자동차 직무 검증 리포트"]],
-  ["youtube-official-engineering", ["자동차 세부 직무 비교표"]]
+  ["youtube-nptel-vehicle-dynamics", ["자동차 세부 직무 비교표", "차량 시스템 요구사항표"]],
+  ["youtube-css-can-bus", ["자동차 세부 직무 비교표", "인터페이스·시험 조건 노트"]],
+  ["youtube-skilllync-ev-crash-course", ["자동차 세부 직무 비교표", "차량 시스템 요구사항표"]],
+  ["youtube-mathworks-hil-testing", ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"]],
+  ["youtube-emc-emi-basics", ["자동차 직무 검증 리포트"]]
 ].forEach(([resourceId, taskTitles]) => {
   resourceTaskLinks[resourceId] = [...new Set([...(resourceTaskLinks[resourceId] || []), ...taskTitles])];
 });
@@ -2740,7 +2905,7 @@ const roleResourceLinks = {
   "cae-analysis-engineer": ["mit-fea-solids", "matlab-onramp", "simscape-onramp", "mit-numerical-me", "kocw-mechanical-design", "signal-processing-onramp", "coursera-engineering-data", "edx-engineering-systems"],
   "manufacturing-design-engineer": ["mit-mechanics-materials", "mit-design-manufacturing", "kocw-mechanical-design", "step-engineering", "optimization-onramp", "hrd-net-job-training", "udemy-free-practical-tools"],
   "thermal-cfd-engineer": ["mit-fea-solids", "matlab-onramp", "simscape-onramp", "mit-numerical-me", "signal-processing-onramp", "edx-engineering-systems", "coursera-engineering-data"],
-  "mechanical-test-engineer": ["matlab-onramp", "signal-processing-onramp", "mathworks-predictive-maintenance", "step-engineering", "kocw-mechanical-design", "hrd-net-job-training", "youtube-official-engineering"],
+  "mechanical-test-engineer": ["matlab-onramp", "signal-processing-onramp", "mathworks-predictive-maintenance", "step-engineering", "kocw-mechanical-design", "hrd-net-job-training", "youtube-nptel-vehicle-dynamics", "youtube-mathworks-hil-testing"],
   "process-engineer": ["nist-control-charts", "nist-process-capability", "statistics-onramp", "moresteam-doe", "matlab-onramp", "optimization-onramp", "coursera-six-sigma-quality", "kocw-production-quality", "coursera-engineering-data", "hrd-net-job-training"],
   "quality-engineer": ["nist-control-charts", "nist-process-capability", "kocw-production-quality", "statistics-onramp", "coursera-six-sigma-quality", "asq-fmea", "asq-eight-d", "quality-one-fmea", "hrd-net-job-training", "gseek-career-certificate"],
   "production-data-engineer": ["nist-control-charts", "matlab-onramp", "statistics-onramp", "machine-learning-onramp", "mathworks-predictive-maintenance", "kocw-production-quality", "coursera-engineering-data", "freecodecamp-python-data", "digital-learning-ai-it-basics"],
@@ -2754,14 +2919,14 @@ const roleResourceLinks = {
   "chemical-process-engineer": ["learncheme-material-balances", "learncheme-separations", "learncheme-chemical-process", "kocw-chemical-process", "matlab-onramp", "statistics-onramp", "optimization-onramp", "coursera-chemical-engineering", "nptel-chemical-engineering"],
   "battery-process-engineer": ["learncheme-material-balances", "learncheme-separations", "statistics-onramp", "moresteam-doe", "matlab-onramp", "machine-learning-onramp", "coursera-chemical-engineering", "kosha-psm"],
   "materials-rnd-engineer": ["learncheme-material-balances", "learncheme-separations", "statistics-onramp", "mit-chemical-engineering", "coursera-chemical-engineering", "nptel-chemical-engineering", "khan-math-physics-basics", "coursera-engineering-data"],
-  "process-safety-engineer": ["kosha-psm", "kocw-chemical-process", "hrd-net-job-training", "ncs", "youtube-official-engineering"],
-  "bioprocess-engineer": ["kocw-chemical-process", "coursera-chemical-engineering", "hrd-net-job-training", "moresteam-doe", "youtube-official-engineering"],
+  "process-safety-engineer": ["kosha-psm", "kocw-chemical-process", "youtube-nptel-hazop", "hrd-net-job-training", "ncs"],
+  "bioprocess-engineer": ["kocw-chemical-process", "coursera-chemical-engineering", "fda-process-validation", "hrd-net-job-training", "moresteam-doe", "youtube-nptel-hazop"],
   "hardware-design-engineer": ["allaboutcircuits-textbook", "mit-circuits", "ti-precision-labs", "mathworks-simscape-electrical", "simscape-onramp", "analog-dialogue", "matlab-onramp", "edx-engineering-systems", "khan-math-physics-basics"],
   "pcb-design-engineer": ["kicad-pcb-docs", "allaboutcircuits-textbook", "kocw-electronics-circuit", "ti-precision-labs", "analog-dialogue", "step-engineering", "inflearn-free-it-practice", "udemy-free-practical-tools"],
-  "validation-engineer": ["signal-processing-onramp", "matlab-onramp", "ti-precision-labs", "analog-dialogue", "simulink-onramp", "freecodecamp-python-data", "youtube-official-engineering"],
+  "validation-engineer": ["signal-processing-onramp", "matlab-onramp", "ti-precision-labs", "analog-dialogue", "simulink-onramp", "freecodecamp-python-data", "youtube-mathworks-hil-testing"],
   "power-hardware-engineer": ["mathworks-simscape-electrical", "simscape-onramp", "ti-precision-labs", "kocw-electronics-circuit", "simulink-onramp", "edx-engineering-systems", "khan-math-physics-basics"],
-  "emc-test-engineer": ["signal-processing-onramp", "analog-dialogue", "ti-precision-labs", "kocw-electronics-circuit", "udemy-free-practical-tools", "youtube-official-engineering"],
-  "embedded-firmware-engineer": ["stm32-mooc-gpio-timer-uart", "arm-embedded-systems", "stm32-education", "kocw-embedded-control", "stateflow-onramp", "simulink-onramp", "freecodecamp-python-data", "inflearn-free-it-practice"],
+  "emc-test-engineer": ["signal-processing-onramp", "analog-dialogue", "ti-precision-labs", "kocw-electronics-circuit", "udemy-free-practical-tools", "youtube-emc-emi-basics"],
+  "embedded-firmware-engineer": ["stm32-mooc-gpio-timer-uart", "arm-embedded-systems", "stm32-education", "kocw-embedded-control", "stateflow-onramp", "simulink-onramp", "freecodecamp-python-data", "inflearn-free-it-practice", "youtube-css-can-bus"],
   "control-engineer": ["control-design-onramp", "simulink-onramp", "matlab-onramp", "signal-processing-onramp", "mathworks-simscape-electrical", "sensor-fusion-onramp", "coursera-embedded-control", "edx-engineering-systems"],
   "robotics-software-engineer": ["ros-tutorials", "sensor-fusion-onramp", "simulink-onramp", "matlab-onramp", "coursera-embedded-control", "freecodecamp-python-data"],
   "embedded-linux-engineer": ["kocw-embedded-control", "stm32-education", "ros-tutorials", "step-engineering", "freecodecamp-python-data", "inflearn-free-it-practice"],
@@ -2770,16 +2935,16 @@ const roleResourceLinks = {
 
 Object.assign(roleResourceLinks, {
   "vehicle-body-design-engineer": ["mit-mechanics-materials", "kocw-mechanical-design", "mit-design-manufacturing", "mit-fea-solids", "optimization-onramp", "step-engineering", "hrd-net-job-training"],
-  "chassis-suspension-engineer": ["mit-mechanics-materials", "mit-fea-solids", "matlab-onramp", "simulink-onramp", "signal-processing-onramp", "optimization-onramp", "coursera-engineering-data"],
-  "powertrain-mechanical-engineer": ["mit-mechanics-materials", "mit-fea-solids", "simscape-onramp", "matlab-onramp", "signal-processing-onramp", "mathworks-predictive-maintenance", "edx-engineering-systems"],
-  "vehicle-thermal-management-engineer": ["mit-fea-solids", "mit-numerical-me", "matlab-onramp", "simscape-onramp", "signal-processing-onramp", "coursera-engineering-data", "edx-engineering-systems"],
-  "ev-battery-pack-engineer": ["simscape-onramp", "mathworks-simscape-electrical", "matlab-onramp", "signal-processing-onramp", "statistics-onramp", "kocw-electronics-circuit", "hrd-net-job-training"],
-  "vehicle-ee-architecture-engineer": ["allaboutcircuits-textbook", "mit-circuits", "kocw-electronics-circuit", "ti-precision-labs", "analog-dialogue", "simulink-onramp", "edx-engineering-systems"],
-  "automotive-embedded-sw-engineer": ["stm32-mooc-gpio-timer-uart", "arm-embedded-systems", "stm32-education", "kocw-embedded-control", "stateflow-onramp", "simulink-onramp", "freecodecamp-python-data", "inflearn-free-it-practice"],
-  "hil-sil-validation-engineer": ["simulink-onramp", "stateflow-onramp", "control-design-onramp", "matlab-onramp", "signal-processing-onramp", "coursera-embedded-control", "freecodecamp-python-data"],
-  "adas-validation-engineer": ["sensor-fusion-onramp", "signal-processing-onramp", "matlab-onramp", "simulink-onramp", "machine-learning-onramp", "coursera-embedded-control", "freecodecamp-python-data"],
-  "ev-power-electronics-engineer": ["mathworks-simscape-electrical", "simscape-onramp", "ti-precision-labs", "kocw-electronics-circuit", "analog-dialogue", "simulink-onramp", "edx-engineering-systems"],
-  "vehicle-test-validation-engineer": ["matlab-onramp", "signal-processing-onramp", "mathworks-predictive-maintenance", "statistics-onramp", "step-engineering", "hrd-net-job-training", "youtube-official-engineering"]
+  "chassis-suspension-engineer": ["mit-mechanics-materials", "mit-fea-solids", "matlab-onramp", "simulink-onramp", "signal-processing-onramp", "optimization-onramp", "coursera-engineering-data", "youtube-nptel-vehicle-dynamics"],
+  "powertrain-mechanical-engineer": ["mit-mechanics-materials", "mit-fea-solids", "simscape-onramp", "matlab-onramp", "signal-processing-onramp", "mathworks-predictive-maintenance", "edx-engineering-systems", "youtube-skilllync-ev-crash-course"],
+  "vehicle-thermal-management-engineer": ["mit-fea-solids", "mit-numerical-me", "matlab-onramp", "simscape-onramp", "signal-processing-onramp", "coursera-engineering-data", "edx-engineering-systems", "youtube-skilllync-ev-crash-course"],
+  "ev-battery-pack-engineer": ["simscape-onramp", "mathworks-simscape-electrical", "matlab-onramp", "signal-processing-onramp", "statistics-onramp", "kocw-electronics-circuit", "hrd-net-job-training", "youtube-skilllync-ev-crash-course"],
+  "vehicle-ee-architecture-engineer": ["allaboutcircuits-textbook", "mit-circuits", "kocw-electronics-circuit", "ti-precision-labs", "analog-dialogue", "simulink-onramp", "edx-engineering-systems", "youtube-css-can-bus", "youtube-emc-emi-basics"],
+  "automotive-embedded-sw-engineer": ["stm32-mooc-gpio-timer-uart", "arm-embedded-systems", "stm32-education", "kocw-embedded-control", "stateflow-onramp", "simulink-onramp", "freecodecamp-python-data", "inflearn-free-it-practice", "youtube-css-can-bus"],
+  "hil-sil-validation-engineer": ["simulink-onramp", "stateflow-onramp", "control-design-onramp", "matlab-onramp", "signal-processing-onramp", "coursera-embedded-control", "freecodecamp-python-data", "youtube-mathworks-hil-testing", "youtube-css-can-bus"],
+  "adas-validation-engineer": ["sensor-fusion-onramp", "signal-processing-onramp", "matlab-onramp", "simulink-onramp", "machine-learning-onramp", "coursera-embedded-control", "freecodecamp-python-data", "youtube-mathworks-hil-testing"],
+  "ev-power-electronics-engineer": ["mathworks-simscape-electrical", "simscape-onramp", "ti-precision-labs", "kocw-electronics-circuit", "analog-dialogue", "simulink-onramp", "edx-engineering-systems", "youtube-skilllync-ev-crash-course", "youtube-emc-emi-basics"],
+  "vehicle-test-validation-engineer": ["matlab-onramp", "signal-processing-onramp", "mathworks-predictive-maintenance", "statistics-onramp", "step-engineering", "hrd-net-job-training", "youtube-nptel-vehicle-dynamics", "youtube-mathworks-hil-testing"]
 });
 
 const storageKey = "careerCompetencyPilot";
@@ -4438,6 +4603,7 @@ function renderRoadmapResourceItem(resource, task, context) {
   const score = Math.round(getTaskResourceScore(resource, task, context));
   const coreLabel = resource.core ? "핵심 교육 · " : "";
   const connectionReason = getTaskResourceConnectionReason(resource, task, context);
+  const engagementSummary = getResourceEngagementSummary(resource);
 
   return `
     <details class="roadmap-resource-item">
@@ -4450,6 +4616,7 @@ function renderRoadmapResourceItem(resource, task, context) {
       </summary>
       <div class="roadmap-resource-detail">
         <p>${resource.provider} · ${resource.difficulty} · ${formatMinutes(resource.totalMinutes)}</p>
+        ${engagementSummary ? `<p class="resource-engagement-note"><strong>검수 근거:</strong> ${engagementSummary}</p>` : ""}
         <p><strong>자동 배치 근거:</strong> ${connectionReason}</p>
         <p><strong>연결 산출물:</strong> ${resource.expectedOutput}</p>
         ${signals.length ? `<p>${signals.join(" · ")}</p>` : `<p>${task.deliverable}에 바로 연결됩니다.</p>`}
@@ -4462,6 +4629,17 @@ function renderRoadmapResourceItem(resource, task, context) {
       </div>
     </details>
   `;
+}
+
+function getResourceEngagementSummary(resource) {
+  const engagement = resource.engagement || {};
+  const parts = [];
+
+  if (engagement.views) parts.push(`조회 ${engagement.views}`);
+  if (engagement.comments) parts.push(`댓글 반응: ${engagement.comments}`);
+  if (engagement.likes) parts.push(`좋아요 ${engagement.likes}`);
+
+  return parts.join(" · ");
 }
 
 function getTaskResourceConnectionReason(resource, task, context) {
@@ -4608,6 +4786,7 @@ function renderResourceCard(resource, context = null, priorityIndex = null, show
   const linkedTasks = context ? getResourceLinkedTasks(resource.id, context.visibleTasks) : [];
   const priority = signals.length > 0 || priorityIndex !== null;
   const recommendationScore = context ? Math.round(getEducationResourceScore(resource, context)) : null;
+  const engagementSummary = getResourceEngagementSummary(resource);
   return `
     <article class="resource-card ${completed ? "is-completed" : ""} ${priority ? "is-priority" : ""}">
       ${priorityIndex !== null ? `
@@ -4630,6 +4809,7 @@ function renderResourceCard(resource, context = null, priorityIndex = null, show
       </div>
       <h3>${resource.title}</h3>
       <p>${resource.reason}</p>
+      ${engagementSummary ? `<div class="resource-engagement-note"><strong>검수 근거:</strong> ${engagementSummary}</div>` : ""}
       ${linkedTasks.length ? `<p><strong>연결 과제:</strong> ${linkedTasks.join(", ")}</p>` : ""}
       ${signals.length ? `<div class="recommendation-note">${signals.join(" · ")}</div>` : ""}
       <div class="resource-learning-meta" aria-label="학습 정보">

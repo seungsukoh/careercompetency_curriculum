@@ -1222,6 +1222,20 @@ li {
   line-height: 1.45;
 }
 
+.resource-engagement-note {
+  padding: 9px 10px;
+  color: #3f4f2f;
+  background: #f5f8ec;
+  border: 1px solid #d7e0bb;
+  border-radius: 7px;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.roadmap-resource-detail .resource-engagement-note {
+  color: #3f4f2f;
+}
+
 .goal-rule-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
