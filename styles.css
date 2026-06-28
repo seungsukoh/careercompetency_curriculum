@@ -1,8 +1,9 @@
 :root {
   color-scheme: light;
   /* Color ratio: Cream 60 / Navy 30 / Gold 10. Gold is reserved for emphasis only. */
-  --cream: #f4eadb;
-  --cream-surface: #f2f1ec;
+  --paper-cream: #f2f1ec;
+  --cream: var(--paper-cream);
+  --cream-surface: var(--paper-cream);
   --cream-muted: #f8f0e4;
   --heritage-navy: #0e2750;
   --signal-gold: #c9a86a;
