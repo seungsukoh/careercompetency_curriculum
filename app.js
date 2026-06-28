@@ -4034,7 +4034,7 @@ function getNextWorkflowStep(steps, activeIndex) {
     return {
       view: "diagnosis",
       title: "보유한 역량을 먼저 체크하세요",
-      body: "지원 직무에서 이미 갖춘 역량을 제외해야 로드맵이 부족 역량 중심으로 좁혀집니다.",
+      body: "지원 직무에서 이미 갖춘 역량을 제외해야 커리큘럼이 부족 역량 중심으로 좁혀집니다.",
       action: "역량 체크",
       primary: true
     };
@@ -4044,7 +4044,7 @@ function getNextWorkflowStep(steps, activeIndex) {
     return {
       view: "roadmap",
       title: "추천 교육을 확인하고 고르세요",
-      body: "부족 역량과 첫 산출물에 맞춰 자동 추천된 교육을 먼저 훑고, 필요한 자료만 내 커리큘럼에 추가하세요.",
+      body: "부족 역량과 첫 산출물에 맞춰 추천된 교육을 먼저 훑고, 필요한 자료만 내 커리큘럼에 추가하세요.",
       action: "교육 선택",
       primary: true
     };
@@ -4054,7 +4054,7 @@ function getNextWorkflowStep(steps, activeIndex) {
     return {
       view: "saved",
       title: "내 커리큘럼을 확인하세요",
-      body: "고른 교육과 자동 배치된 주차별 과제를 한 화면에서 확인하고, 엑셀 커리큘럼으로 내보낼 수 있습니다.",
+      body: "고른 교육과 추천된 주차별 과제를 한 화면에서 확인하고, 엑셀 커리큘럼으로 내보낼 수 있습니다.",
       action: "내 커리큘럼 확인",
       primary: true
     };
@@ -4090,7 +4090,7 @@ function renderRoleContextBar() {
       </div>
       <div class="role-context-summary">
         <strong>먼저 할 일</strong>
-        <span>지원하려는 세부 직무를 선택하면 직무상세와 부족 역량 로드맵이 생성됩니다.</span>
+        <span>지원하려는 세부 직무를 선택하면 직무상세와 부족 역량 커리큘럼이 생성됩니다.</span>
       </div>
       <div class="role-context-actions">
         <button class="primary-button" type="button" data-view-target="tracks">직무 선택</button>
@@ -4259,7 +4259,7 @@ function getMajorRoleFit(track, role, major = state.profile.major) {
     return {
       level: "direct",
       reason: "공학계열 전체 기준으로 직무 연결 가능성을 우선 보여줍니다.",
-      focus: "세부 전공보다 선택 직무의 보유 역량 체크 결과를 기준으로 로드맵을 구성합니다."
+      focus: "세부 전공보다 선택 직무의 보유 역량 체크 결과를 기준으로 커리큘럼을 구성합니다."
     };
   }
 
@@ -4269,7 +4269,7 @@ function getMajorRoleFit(track, role, major = state.profile.major) {
     return {
       level: "direct",
       reason: `${majorLabel} 전공지식이 ${role.title}의 반복 업무와 직접 맞닿아 있습니다.`,
-      focus: "체크하지 못한 역량 항목만 보완하면 바로 로드맵 우선순위에 반영됩니다."
+      focus: "체크하지 못한 역량 항목만 보완하면 바로 커리큘럼 우선순위에 반영됩니다."
     };
   }
   if (role && profile?.bridge.includes(role.id)) {
@@ -4284,7 +4284,7 @@ function getMajorRoleFit(track, role, major = state.profile.major) {
     return {
       level: "direct",
       reason: `${majorLabel} 전공과 직접 맞닿은 직무군입니다.`,
-      focus: "세부 직무를 고른 뒤 보유 역량을 체크하면 부족 항목만 로드맵에 우선 반영됩니다."
+      focus: "세부 직무를 고른 뒤 보유 역량을 체크하면 부족 항목만 커리큘럼에 우선 반영됩니다."
     };
   }
   if ((majorBridgeTracks[major] || []).includes(track.id)) {
@@ -4297,7 +4297,7 @@ function getMajorRoleFit(track, role, major = state.profile.major) {
   return {
     level: "explore",
     reason: `${majorLabel} 전공자는 이 직무의 필수 언어와 산출물을 먼저 확인해야 합니다.`,
-    focus: "역량 체크에서 모르는 항목이 많으면 탐색 단계 로드맵으로 시작하는 편이 좋습니다."
+    focus: "역량 체크에서 모르는 항목이 많으면 탐색 단계 커리큘럼으로 시작하는 편이 좋습니다."
   };
 }
 
@@ -4482,7 +4482,7 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
         ${renderRoleAiCompetencyPanel(role)}
         <div class="company-detail-inline">
           <strong>지원 회사 공고와 대조</strong>
-          위 반복업무·자격조건·우대역량 중 지원 회사 공고에 실제로 적힌 문장을 표시한 뒤, 없는 내용은 로드맵 우선순위에서 낮추세요.
+          위 반복업무·자격조건·우대역량 중 지원 회사 공고에 실제로 적힌 문장을 표시한 뒤, 없는 내용은 커리큘럼 우선순위에서 낮추세요.
         </div>
       </section>
       ${renderMajorConnectionPanel(track, role)}
@@ -4954,7 +4954,7 @@ function getExpertReviewItems(track, role) {
     },
     {
       title: "교육과정",
-      body: `${linkedResources.length}개 후보 중 ${directResourceCount}개는 바로 열 수 있는 자료입니다. ${primaryResource ? `${primaryResource.title}부터 보고` : "공식·검토 자료부터 보고"} 보유 역량 체크에서 빠진 항목만 로드맵에 남기도록 구성했습니다.`
+      body: `${linkedResources.length}개 후보 중 ${directResourceCount}개는 바로 열 수 있는 자료입니다. ${primaryResource ? `${primaryResource.title}부터 보고` : "공식·검토 자료부터 보고"} 보유 역량 체크에서 빠진 항목만 커리큘럼에 남기도록 구성했습니다.`
     }
   ];
 }
@@ -4998,7 +4998,7 @@ function getMajorConnectionBadges(track, role) {
   const pathway = getMajorPathway(track, role);
   const base = role.postingKeywords.slice(0, 3);
   if (pathway === "direct") return [...base, "미체크 역량만 보완"];
-  if (pathway === "bridge") return [...base.slice(0, 2), "전공 확장", "보완 로드맵 필요"];
+  if (pathway === "bridge") return [...base.slice(0, 2), "전공 확장", "보완 커리큘럼 필요"];
   return [...base.slice(0, 2), "직무 탐색", "기초 확인 우선"];
 }
 
@@ -5225,7 +5225,7 @@ function renderDiagnostics() {
       <article class="gap-item">
         <strong>${item.skill}</strong>
         <p>${item.question}</p>
-        <p class="gap-action">이 항목은 로드맵과 교육자료 추천에서 우선 보완 대상으로 사용됩니다.</p>
+        <p class="gap-action">이 항목은 커리큘럼과 교육자료 추천에서 우선 보완 대상으로 사용됩니다.</p>
       </article>
     `).join("") + renderDiagnosisNextAction(gaps.length)
     : `<div class="empty-state">현재 체크리스트 기준으로 큰 공백이 없습니다. 산출물 정리 단계로 넘어가세요.</div>${renderDiagnosisNextAction(0)}`;
@@ -5235,8 +5235,8 @@ function renderDiagnosisNextAction(gapCount) {
   return `
     <div class="diagnosis-next-panel">
       <div>
-        <strong>${gapCount ? `${gapCount}개 부족 역량 기준으로 로드맵을 구성합니다` : "보완 공백이 낮아 산출물 정리 중심으로 넘어갑니다"}</strong>
-        <span>체크한 보유 역량은 뒤로 두고, 미체크 항목과 선택 직무 산출물을 우선 배치합니다.</span>
+        <strong>${gapCount ? `${gapCount}개 부족 역량 기준으로 커리큘럼을 구성합니다` : "보완 공백이 낮아 산출물 정리 중심으로 넘어갑니다"}</strong>
+        <span>체크한 보유 역량은 뒤로 두고, 미체크 항목과 선택 직무 산출물을 우선 추천합니다.</span>
       </div>
       <button class="primary-button" type="button" data-view-target="roadmap">부족 역량 기준 교육 선택</button>
     </div>
@@ -5308,16 +5308,16 @@ function renderDiagnosisGuide(track, role, questions) {
     <div>
       <p class="eyebrow">선택 기준</p>
       <h3>채용공고에서 요구하는 역량 중 내가 확보한 내용만 체크</h3>
-      <p>${diagnosisScope} 기준으로 확보 여부를 확인합니다. 체크하지 않은 항목은 내 커리큘럼의 주차별 과제와 교육자료 배치에 바로 반영됩니다.</p>
+      <p>${diagnosisScope} 기준으로 확보 여부를 확인합니다. 체크하지 않은 항목은 내 커리큘럼의 주차별 과제와 교육자료 추천에 바로 반영됩니다.</p>
     </div>
     <div class="diagnosis-context-strip" aria-label="진단 현황">
       <span><strong>선택 직무</strong>${role?.title || track.title}</span>
       <span><strong>체크 완료</strong>${checkedCount}/${questions.length}개</span>
-      <span><strong>로드맵 반영</strong>${gapCount}개 보완 역량</span>
+      <span><strong>커리큘럼 반영</strong>${gapCount}개 보완 역량</span>
     </div>
     <div class="diagnosis-focus-panel">
       <div>
-        <strong>로드맵에서 우선 볼 역량</strong>
+        <strong>커리큘럼에서 우선 볼 역량</strong>
         <span>${gapPreview}</span>
       </div>
       <div>
@@ -5394,9 +5394,9 @@ function getDiagnosticItems(track) {
 
 function renderRoadmap() {
   if (!hasActiveRoleSelection()) {
-    elements.roadmapTitle.textContent = "직무 선택 후 로드맵 생성";
+    elements.roadmapTitle.textContent = "직무 선택 후 교육 추천";
     elements.roadmapGuidance.innerHTML = `
-      <div class="empty-state">세부 직무를 먼저 선택하세요. 선택 직무와 역량 체크 결과를 기준으로 주차별 과제와 교육자료가 자동 배치됩니다.</div>
+      <div class="empty-state">세부 직무를 먼저 선택하세요. 선택 직무와 역량 체크 결과를 기준으로 주차별 과제와 교육자료를 추천합니다.</div>
     `;
     elements.roadmapList.innerHTML = "";
     return;
@@ -5464,17 +5464,17 @@ function renderRoadmapGuidance(context, tasks) {
     : "추천 교육을 먼저 훑고 필요한 것만 내 커리큘럼에 담으세요.";
 
   elements.roadmapGuidance.innerHTML = `
-    <section class="curriculum-overview-panel" aria-label="교육 선택 큰그림">
-      <div>
-        <p class="eyebrow">큰그림</p>
-        <h3>${context.role?.title || context.track.title} 준비는 이렇게 진행됩니다</h3>
-        <p>${durationStrategy.summary} 이미 체크한 보유 역량은 뒤로 두고, 보완 역량(${gapText})과 첫 산출물 중심으로 교육을 추천합니다.</p>
+    <section class="curriculum-overview-panel" aria-label="추천 교육 선택 흐름">
+      <div class="curriculum-overview-copy">
+        <p class="eyebrow">추천 교육 선택</p>
+        <h3>지금은 부족 역량에 맞는 교육을 고르는 단계입니다</h3>
+        <p>${durationStrategy.summary} 보유 역량은 제외하고, 보완 역량(${gapText})과 첫 산출물 중심으로 추천합니다.</p>
       </div>
-      <ol class="curriculum-flow-list">
-        <li><strong>직무 확인</strong><span>반복 업무와 자격조건 이해</span></li>
-        <li><strong>부족 역량</strong><span>체크하지 못한 역량만 우선</span></li>
-        <li><strong>교육 선택</strong><span>필요한 교육만 커리큘럼에 추가</span></li>
-        <li><strong>내 커리큘럼</strong><span>주차별 과제와 산출물 확인</span></li>
+      <ol class="curriculum-flow-list" aria-label="직무 준비 진행 흐름">
+        <li class="is-done"><strong>직무 확인</strong><span>직무상세 확인</span></li>
+        <li class="is-done"><strong>부족 역량</strong><span>보유 역량 제외</span></li>
+        <li class="is-current"><strong>교육 선택</strong><span>현재 단계</span></li>
+        <li><strong>내 커리큘럼</strong><span>선택 후 확인</span></li>
       </ol>
     </section>
     ${renderRoadmapDecisionPanel(context, tasks)}
@@ -5497,7 +5497,7 @@ function renderRoadmapGuidance(context, tasks) {
       <span class="badge">커리큘럼 주차: ${tasks.length}개</span>
       <span class="badge">직무 연결 자료: ${roleResourceCount}개</span>
       <span class="badge">실습형 후보: ${practiceResourceCount}개</span>
-      <span class="badge">자료 배치: 부족 역량 우선</span>
+      <span class="badge">추천 기준: 부족 역량 우선</span>
       <span class="badge">내가 고른 교육: ${selectedResources.length}개</span>
     </div>
     ${renderHandsOnResourcePanel(context)}
@@ -5531,7 +5531,7 @@ function renderRoadmapDecisionPanel(context, tasks) {
   const firstTask = tasks[0]?.title || "직무상세 분해";
   const aiProfile = getRoleAiCompetencyProfile(role);
   return `
-    <div class="roadmap-decision-panel" aria-label="로드맵 구성 기준">
+    <div class="roadmap-decision-panel" aria-label="커리큘럼 구성 기준">
       <div>
         <strong>선택 직무</strong>
         <span>${role?.title || context.track.title}</span>
@@ -5610,7 +5610,7 @@ function renderEducationSummaryCard(resource, index, context, tasks) {
   const reason = getEducationSummaryReason(resource, linkedTask, context);
   const learningText = truncateText(resource.reason, 96);
   const outputText = truncateText(resource.expectedOutput, 88);
-  const taskText = linkedTask ? `${linkedTask.weekLabel || `${index + 1}주차`} · ${linkedTask.title}` : "자동 배치 과제";
+  const taskText = linkedTask ? `${linkedTask.weekLabel || `${index + 1}주차`} · ${linkedTask.title}` : "연결 과제";
 
   return `
     <article class="education-summary-card ${saved ? "is-saved" : ""}">
@@ -5664,8 +5664,8 @@ function renderReferences() {
   if (!hasActiveRoleSelection()) {
     elements.referenceCount.textContent = `${resources.length}개 자료`;
     elements.referenceGuidance.innerHTML = `
-      <h3>참고자료는 보조 화면입니다</h3>
-      <p>먼저 직무를 선택하고 교육 선택 화면에서 핵심 추천을 확인하세요. 이곳은 더 찾아보고 싶을 때 여는 전체 자료 보관함입니다.</p>
+      <h3>직무 선택 후 분류별로 볼 수 있습니다</h3>
+      <p>핵심 추천은 교육 선택 화면에서 먼저 확인하고, 참고자료는 더 찾아보고 싶을 때 분야별로 여세요.</p>
     `;
     elements.referenceList.innerHTML = `<div class="empty-state">먼저 직무 탭에서 지원하려는 세부 직무를 선택하세요.</div>`;
     return;
@@ -5679,35 +5679,16 @@ function renderReferences() {
     ...getRoleLinkedResources(role),
     ...getRecommendedResources(track, context)
   ]).slice(0, 8);
-  const sections = getReferenceSections(context);
+  const sections = getReferenceSections(context, roleResources);
 
   elements.referenceCount.textContent = `${resources.length}개 자료`;
   elements.referenceGuidance.innerHTML = `
-    <h3>전체 자료는 필요할 때만 참고하세요</h3>
-    <p>핵심 추천은 교육 선택 화면에 이미 요약되어 있습니다. 이 탭은 공식 예제, 실습형 과정, 기초 강의, 채용공고 확인 자료를 더 살펴보고 싶을 때 사용하는 보관함입니다.</p>
-    <div class="badge-row">
-      <span class="badge">선택 직무: ${role?.title || track.title}</span>
-      <span class="badge">전체 자료: ${resources.length}개</span>
-      <span class="badge">분야: ${sections.length}개</span>
-      <span class="badge">MathWorks·OCW·공식문서·실습형 과정 포함</span>
-    </div>
+    <h3>분류를 열어 필요한 자료만 확인하세요</h3>
+    <p>선택 직무 추천을 먼저 보고, 부족한 유형이 있으면 공식 예제·실습·기초·채용확인 분류만 추가로 열면 됩니다.</p>
+    ${renderReferenceCategoryStrip(sections, role?.title || track.title)}
   `;
 
   elements.referenceList.innerHTML = `
-    ${roleResources.length ? `
-      <section class="reference-priority-panel" aria-label="선택 직무 우선 참고자료">
-        <div class="reference-section-head">
-          <div>
-            <p class="eyebrow">선택 직무 우선</p>
-            <h3>${role?.title || track.title} 관련 자료</h3>
-          </div>
-          <span class="status-pill">${roleResources.length}개</span>
-        </div>
-        <div class="reference-resource-grid">
-          ${roleResources.map((resource) => renderReferenceResourceItem(resource, context)).join("")}
-        </div>
-      </section>
-    ` : ""}
     <div class="reference-section-list">
       ${sections.map((section) => renderReferenceSection(section, context)).join("")}
     </div>
@@ -5716,17 +5697,28 @@ function renderReferences() {
   bindResourceActions(elements.referenceList);
 }
 
-function getReferenceSections(activeContext) {
+function renderReferenceCategoryStrip(sections, roleTitle) {
+  return `
+    <div class="reference-category-strip" aria-label="참고자료 분류">
+      <span><strong>선택 직무</strong>${roleTitle}</span>
+      ${sections.map((section) => `<span><strong>${section.shortTitle || section.title}</strong>${section.resources.length}개</span>`).join("")}
+    </div>
+  `;
+}
+
+function getReferenceSections(activeContext, priorityResources = []) {
   const categories = [
     {
       id: "official-simulation",
+      shortTitle: "공식",
       title: "공식·시뮬레이션 예제",
-      summary: "MathWorks, Ansys, NI, 공식 문서처럼 실습 환경과 예제가 명확한 자료입니다.",
+      summary: "공식 문서와 시뮬레이션 예제처럼 실습 환경이 명확한 자료입니다.",
       match: (resource) => /MathWorks|Ansys|NI|Texas Instruments|STMicroelectronics|Arm|KiCad|Linux Kernel|Yocto|ROS/.test(resource.provider)
         || /Simulink|Simscape|Stateflow|시뮬레이션|HIL|SIL|모델링|모델/.test(getResourceBadgeText(resource))
     },
     {
       id: "hands-on",
+      shortTitle: "실습",
       title: "직접 실습·부트캠프",
       summary: "과제, 멘토링, 부트캠프, 현장실습처럼 산출물을 만들기 좋은 자료입니다.",
       match: (resource) => isHandsOnResource(resource)
@@ -5734,6 +5726,7 @@ function getReferenceSections(activeContext) {
     },
     {
       id: "foundation",
+      shortTitle: "기초",
       title: "기초 개념·무료 강의",
       summary: "직무 용어와 전공 기초를 빠르게 보완하기 위한 입문·기초 자료입니다.",
       match: (resource) => ["입문", "기초", "기초실습"].includes(resource.difficulty)
@@ -5741,19 +5734,31 @@ function getReferenceSections(activeContext) {
     },
     {
       id: "job-evidence",
+      shortTitle: "채용확인",
       title: "직무·채용공고 확인",
       summary: "직무명, NCS, 공고 키워드, 면접 설명 근거를 확인할 때 쓰는 자료입니다.",
       match: (resource) => /직무|NCS|채용|면접|공고|커리어|Job|Career/i.test(getResourceBadgeText(resource))
     }
   ];
-  const assigned = new Set();
-  const sections = categories.map((category) => {
+  const assigned = new Set(priorityResources.map((resource) => resource.id));
+  const sections = priorityResources.length
+    ? [{
+      id: "role-priority",
+      shortTitle: "추천",
+      title: "선택 직무 추천",
+      summary: "교육 선택 화면의 핵심 추천과 연결되는 자료입니다.",
+      context: activeContext,
+      open: true,
+      resources: priorityResources
+    }]
+    : [];
+  sections.push(...categories.map((category) => {
     const sectionResources = resources
       .filter((resource) => !assigned.has(resource.id) && category.match(resource))
       .sort((a, b) => sortReferenceResources(a, b, activeContext));
     sectionResources.forEach((resource) => assigned.add(resource.id));
     return { ...category, context: activeContext, resources: sectionResources };
-  });
+  }));
   const otherResources = resources
     .filter((resource) => !assigned.has(resource.id))
     .sort((a, b) => sortReferenceResources(a, b, activeContext));
@@ -5791,7 +5796,7 @@ function sortReferenceResources(a, b, context) {
 
 function renderReferenceSection(section, activeContext) {
   return `
-    <details class="reference-section" ${section.id === "official-simulation" || section.id === "hands-on" ? "open" : ""}>
+    <details class="reference-section" ${section.open ? "open" : ""}>
       <summary>
         <span>
           <strong>${section.title}</strong>
@@ -5821,7 +5826,7 @@ function renderReferenceResourceItem(resource, context) {
       </summary>
       <div class="reference-resource-detail">
         <p>${resource.reason}</p>
-        ${signals.length ? `<p><strong>추천 신호:</strong> ${signals.join(" · ")}</p>` : ""}
+        ${signals.length ? `<p><strong>추천 이유:</strong> ${signals.join(" · ")}</p>` : ""}
         <p><strong>역량:</strong> ${skillText}</p>
         <p><strong>남길 산출물:</strong> ${resource.expectedOutput}</p>
         <div class="roadmap-resource-actions">
@@ -5905,11 +5910,11 @@ function getRoleSpecificCurriculumTasks(track, role) {
     {
       title: "지원 회사 맞춤 검증",
       baseTitle: baseTasks[3]?.title || "포트폴리오 정리",
-      objective: "일반 직무 로드맵을 지원 회사 공고 기준으로 다시 좁혀 면접에서 설명 가능한 근거로 정리합니다.",
+      objective: "일반 직무 커리큘럼을 지원 회사 공고 기준으로 다시 좁혀 면접에서 설명 가능한 근거로 정리합니다.",
       time: "2시간",
       steps: [
         "지원 회사 공고의 업무·자격요건·우대사항 문장을 3개 이상 가져옵니다.",
-        "이번 로드맵 산출물 중 공고와 직접 맞는 것과 맞지 않는 것을 표시합니다.",
+        "이번 커리큘럼 산출물 중 공고와 직접 맞는 것과 맞지 않는 것을 표시합니다.",
         "부족한 항목 1개를 다음 주 보완 과제로 정합니다."
       ],
       deliverable: "회사 공고 맞춤 보완 체크리스트",
@@ -5975,7 +5980,7 @@ function getAutomotiveRoleSpecificCurriculumTasks(track, role, primarySkill, sec
     {
       title: "지원 회사 맞춤 검증 계획서",
       baseTitle: "자동차 회사 공고 맞춤 검증",
-      objective: "일반 직무 로드맵을 지원 회사 공고 기준으로 줄이고, 면접에서 설명 가능한 검증 계획으로 정리합니다.",
+      objective: "일반 직무 커리큘럼을 지원 회사 공고 기준으로 줄이고, 면접에서 설명 가능한 검증 계획으로 정리합니다.",
       time: "2시간",
       steps: [
         "지원 회사 공고의 업무·자격요건·우대사항 문장을 3개 이상 붙여 넣습니다.",
@@ -6343,7 +6348,7 @@ function renderGoalRuleGrid(activeGoalKey) {
         <div class="goal-rule ${key === activeGoalKey ? "is-active" : ""}">
           <strong>${rule.label}</strong>
           <span>자료: ${rule.resource}</span>
-          <span>로드맵: ${rule.roadmap}</span>
+          <span>커리큘럼: ${rule.roadmap}</span>
         </div>
       `).join("")}
     </div>
@@ -6397,7 +6402,7 @@ function getCompetencyActionItems(context, tasks) {
       "지원 회사 공고의 업무·자격요건 문장과 앱의 직무 설명을 맞춰보고, 이 직무가 실제로 내가 준비하려는 업무인지 판단합니다.",
       "체크하지 못한 역량 중 하나를 골라 개념 설명이 아니라 계산, 표, 모델, 로그 중 하나로 증명합니다.",
       "시뮬레이션, 데이터 분석, 현장실습, 부트캠프 중 현재 환경에서 가능한 방식을 골라 작은 산출물을 만듭니다.",
-      "일반 로드맵 결과물을 지원 회사 공고 문장에 맞춰 줄이고, 면접에서 설명할 근거만 남깁니다."
+      "일반 커리큘럼 결과물을 지원 회사 공고 문장에 맞춰 줄이고, 면접에서 설명할 근거만 남깁니다."
     ];
     return {
       title: task.title,
@@ -6629,7 +6634,7 @@ function getEducationResourceSignals(resource, context) {
   if (matchedGaps.length) signals.push(`역량 체크 보완: ${matchedGaps.slice(0, 2).join(", ")}`);
   if (mathWorksMatches.length) signals.push(`MathWorks 역량: ${mathWorksMatches.slice(0, 2).join(", ")}`);
   if (roleKeywordMatches.length) signals.push(`채용 키워드: ${roleKeywordMatches.slice(0, 2).join(", ")}`);
-  if (linkedTasks.length) signals.push(`로드맵 연결: ${linkedTasks.slice(0, 2).join(", ")}`);
+  if (linkedTasks.length) signals.push(`커리큘럼 연결: ${linkedTasks.slice(0, 2).join(", ")}`);
   if (state.saved.includes(resource.id)) signals.push("계획 선택됨");
 
   return signals;
@@ -6873,7 +6878,7 @@ function renderRoadmapResourceItem(resource, task, context) {
   const saved = state.saved.includes(resource.id);
   const taskSignals = getTaskResourceSignals(resource, task, context);
   const signals = [...new Set([...taskSignals, ...getResourceSignals(resource, context)])]
-    .filter((signal) => !signal.startsWith("로드맵 연결"))
+    .filter((signal) => !signal.startsWith("커리큘럼 연결"))
     .slice(0, 3);
   const score = Math.round(getTaskResourceScore(resource, task, context));
   const coreLabel = resource.core ? "핵심 교육 · " : "";
@@ -6887,11 +6892,11 @@ function renderRoadmapResourceItem(resource, task, context) {
           <em>${resource.provider} · ${resource.type} · ${formatMinutes(resource.totalMinutes)}</em>
           ${renderResourceTrustBadges(resource)}
         </span>
-        <span class="roadmap-resource-status">${coreLabel}자동추천 ${score}점</span>
+        <span class="roadmap-resource-status">${coreLabel}추천 ${score}점</span>
       </summary>
       <div class="roadmap-resource-detail">
         <p>${resource.provider} · ${resource.difficulty} · ${formatMinutes(resource.totalMinutes)}</p>
-        <p><strong>자동 배치 근거:</strong> ${connectionReason}</p>
+        <p><strong>추천 이유:</strong> ${connectionReason}</p>
         <p><strong>연결 산출물:</strong> ${resource.expectedOutput}</p>
         ${signals.length ? `<p>${signals.join(" · ")}</p>` : `<p>${task.deliverable}에 바로 연결됩니다.</p>`}
         <div class="roadmap-resource-actions">
@@ -7040,7 +7045,7 @@ function renderSaved() {
         </div>
         ${items.map((resource) => renderResourceCard(resource, null, null, true)).join("")}
       </section>
-    ` : `<div class="empty-state">추가한 교육자료가 없어도 위 자동 커리큘럼으로 바로 시작할 수 있습니다. 교육 선택 화면에서 필요한 자료만 내 커리큘럼에 추가하세요.</div>`}
+    ` : `<div class="empty-state">추가한 교육자료가 없어도 위 추천 커리큘럼으로 바로 시작할 수 있습니다. 교육 선택 화면에서 필요한 자료만 내 커리큘럼에 추가하세요.</div>`}
   `;
   elements.savedList.querySelectorAll("[data-roadmap-step-id]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -7067,7 +7072,7 @@ function renderPlanResourceItem(resource, task, context) {
         </span>
       </summary>
       <div class="plan-resource-detail">
-        <p><strong>자동 배치 근거:</strong> ${connectionReason}</p>
+        <p><strong>추천 이유:</strong> ${connectionReason}</p>
         <p>${signals.join(" · ") || `${task.deliverable}에 연결되는 자료입니다.`}</p>
         <p><strong>산출물:</strong> ${resource.expectedOutput}</p>
         <div class="roadmap-resource-actions">
@@ -7091,7 +7096,7 @@ function renderSavedGuidance(items, tasks) {
 
   elements.savedGuidance.innerHTML = `
     <h3>내 커리큘럼에서 실제 실행 순서를 확인합니다</h3>
-    <p>교육 선택에서 고른 자료와 자동 배치된 주차별 과제를 한 화면에 모았습니다. 자료를 직접 고르지 않아도 ${durationStrategy.label} 기준으로 시작할 수 있고, 추가한 교육은 각 주차 추천에 우선 반영됩니다.</p>
+    <p>교육 선택에서 고른 자료와 추천된 주차별 과제를 한 화면에 모았습니다. 자료를 직접 고르지 않아도 ${durationStrategy.label} 기준으로 시작할 수 있고, 추가한 교육은 각 주차 추천에 우선 반영됩니다.</p>
     <div class="badge-row">
       <span class="badge">커리큘럼 주차: ${tasks.length}개</span>
       <span class="badge">완료 주차: ${completedWeeks}/${tasks.length}</span>
@@ -7122,7 +7127,7 @@ function renderResourceCard(resource, context = null, priorityIndex = null, show
       ` : ""}
       <div class="resource-meta">
         ${resource.provider === "MathWorks" ? `<span class="badge">MathWorks 역량</span>` : ""}
-        ${priority && priorityIndex === null ? `<span class="badge">로드맵 추천</span>` : ""}
+        ${priority && priorityIndex === null ? `<span class="badge">커리큘럼 추천</span>` : ""}
         <span class="badge">추천 ${resource.sequenceLevel}단계</span>
         <span class="badge">${resource.provider}</span>
         <span class="badge">자료 형식: ${resource.type}</span>
@@ -7182,7 +7187,7 @@ function getResourceSignals(resource, context) {
   const matchedRoleKeywords = getRoleKeywordMatches(resource, context.role);
   const competencyFitSignal = getCompetencyFitSignal(resource, context);
   const goalFitSignal = getGoalFitSignal(resource, context);
-  if (linkedTasks.length) signals.push(`로드맵 연결: ${linkedTasks.slice(0, 2).join(", ")}`);
+  if (linkedTasks.length) signals.push(`커리큘럼 연결: ${linkedTasks.slice(0, 2).join(", ")}`);
   if (resource.core) signals.push("핵심 직무역량 교육");
   if (competencyFitSignal) signals.push(competencyFitSignal);
   if (goalFitSignal) signals.push(goalFitSignal);
@@ -7480,7 +7485,7 @@ function buildSavedResourceExportRows() {
     const saved = state.saved.includes(resource.id);
     rows.push([
       state.completed.includes(resource.id) ? "완료" : "진행",
-      saved ? "사용자 추가" : "로드맵 자동 배치",
+      saved ? "사용자 추가" : "커리큘럼 추천",
       resource.title,
       resource.provider,
       resource.type,
