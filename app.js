@@ -3074,19 +3074,21 @@ function bindEvents() {
 
   elements.exportPlanButton.addEventListener("click", exportPlanAsExcel);
 
-  window.addEventListener("beforeinstallprompt", (event) => {
-    event.preventDefault();
-    deferredInstallPrompt = event;
-    elements.installButton.hidden = false;
-  });
+  if (elements.installButton) {
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      elements.installButton.hidden = false;
+    });
 
-  elements.installButton.addEventListener("click", async () => {
-    if (!deferredInstallPrompt) return;
-    deferredInstallPrompt.prompt();
-    await deferredInstallPrompt.userChoice;
-    deferredInstallPrompt = null;
-    elements.installButton.hidden = true;
-  });
+    elements.installButton.addEventListener("click", async () => {
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      elements.installButton.hidden = true;
+    });
+  }
 
   window.addEventListener("resize", scheduleWordCloudLayout);
 }
@@ -3105,7 +3107,7 @@ function loadState() {
       profile,
       roleSearch: typeof stored?.roleSearch === "string" ? stored.roleSearch : defaultState.roleSearch,
       roleGroupFilter: stored?.roleGroupFilter || defaultState.roleGroupFilter,
-      view: normalizeView(stored?.view, defaultState.view),
+      view: defaultState.view,
       selectedRoles: { ...defaultState.selectedRoles, ...(stored?.selectedRoles || {}) },
       checked: stored?.checked || defaultState.checked,
       saved: Array.isArray(stored?.saved) ? stored.saved : defaultState.saved,
