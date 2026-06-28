@@ -8168,7 +8168,7 @@ function buildExcelXml(sheets) {
     <Style ss:ID="Header">
       <Alignment ss:Vertical="Center" ss:WrapText="1"/>
       <Font ss:FontName="맑은 고딕" ss:Size="12" ss:Bold="1" ss:Color="#FFFFFF"/>
-      <Interior ss:Color="#102A43" ss:Pattern="Solid"/>
+      <Interior ss:Color="#0E2750" ss:Pattern="Solid"/>
     </Style>
   </Styles>
   ${sheets.map((sheet) => buildExcelWorksheet(sheet.name, sheet.rows)).join("\n")}
