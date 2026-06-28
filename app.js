@@ -2597,14 +2597,14 @@ delete curriculumTasks["chemical-process-role-options"];
 
 const learningGoals = {
   explore: {
-    label: "직무가 맞는지 판단",
-    summary: "반복 업무, 자격조건, 산출물을 먼저 확인해 지원 직무가 맞는지 판단합니다.",
+    label: "지원 직무 적합성 확인",
+    summary: "반복 업무, 자격조건, 산출물을 먼저 확인해 내가 지원할 직무인지 판단합니다.",
     preferredDifficulties: ["입문"],
     prioritySkills: ["직무 이해", "문서화"]
   },
   foundation: {
-    label: "부족 역량 보완",
-    summary: "역량 체크에서 비어 있는 전공·도구 역량을 먼저 메웁니다.",
+    label: "부족한 기본 역량 보완",
+    summary: "역량 체크에서 비어 있는 전공·도구 기초를 먼저 메웁니다.",
     preferredDifficulties: ["입문", "기초실습"],
     prioritySkills: ["전공지식", "통계", "회로이론", "재료역학", "공정 흐름", "물질수지", "열역학", "C언어"]
   },
@@ -2615,28 +2615,28 @@ const learningGoals = {
     prioritySkills: ["문서화", "검증", "문제해결", "도구역량"]
   },
   interview: {
-    label: "공고·면접 근거 정리",
-    summary: "지원 회사 공고 문장과 직무 언어로 설명할 수 있는 산출물 근거를 정리합니다.",
+    label: "공고·면접 답변 근거 정리",
+    summary: "지원 회사 공고 문장과 직무 언어로 설명할 수 있는 답변·산출물 근거를 정리합니다.",
     preferredDifficulties: ["입문", "적용"],
     prioritySkills: ["직무 이해", "문서화", "검증"]
   }
 };
 
 const goalRecommendationLabels = {
-  explore: "반복 업무와 자격조건 판단 우선",
+  explore: "반복 업무와 자격조건 확인 우선",
   foundation: "역량 체크 공백 보완 우선",
   portfolio: "실습 산출물과 제출 근거 우선",
-  interview: "공고 문장과 면접 설명 근거 우선"
+  interview: "공고 문장과 답변 근거 우선"
 };
 
 const goalScoringRules = {
   explore: {
-    label: "직무 판단",
+    label: "직무 적합성 확인",
     resource: "입문, 직무 용어, 한국어·공식 자료, 짧은 학습시간",
     roadmap: "업무 흐름과 핵심 용어를 먼저 확인하는 과제"
   },
   foundation: {
-    label: "부족 역량 보완",
+    label: "기본 역량 보완",
     resource: "역량 체크에서 비어 있는 전공·도구 역량",
     roadmap: "보완 필요 역량과 직접 맞닿은 기초 과제"
   },
@@ -2646,7 +2646,7 @@ const goalScoringRules = {
     roadmap: "산출물을 남기고 반복 보강할 수 있는 과제"
   },
   interview: {
-    label: "공고·면접 근거",
+    label: "답변 근거 정리",
     resource: "채용공고 키워드, 공식 자료, 설명 가능한 근거",
     roadmap: "직무 언어로 말할 수 있는 검증·비교 과제"
   }
