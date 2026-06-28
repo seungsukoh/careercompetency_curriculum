@@ -2877,8 +2877,8 @@ li {
 
 .competency-example-resources {
   display: grid;
-  gap: 6px;
-  margin-top: 8px;
+  gap: 12px;
+  margin-top: 12px;
 }
 
 .competency-example-resources > span {
@@ -2893,10 +2893,15 @@ li {
   align-items: start;
   justify-content: space-between;
   gap: 12px;
-  padding: 10px;
-  background: var(--surface-muted);
-  border: 1px solid var(--line);
-  border-radius: 6px;
+  padding: 12px;
+  background: var(--surface-raised);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 18px rgb(14 39 80 / 0.08);
+}
+
+.competency-example-resource + .competency-example-resource {
+  margin-top: 2px;
 }
 
 .competency-example-main {
@@ -2906,7 +2911,13 @@ li {
 }
 
 .competency-example-label {
+  width: fit-content;
+  max-width: 100%;
+  padding: 4px 8px;
   color: var(--accent-ink);
+  background: var(--yellow-soft);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
   font-size: 1rem;
   font-weight: 900;
   line-height: 1.2;

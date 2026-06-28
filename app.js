@@ -4573,6 +4573,77 @@ Object.entries({
   roleResourceLinks[roleId] = [...new Set([...(roleResourceLinks[roleId] || []), ...resourceIds])];
 });
 
+Object.entries({
+  "hil-sil-validation-engineer": [
+    "mathworks-simulink-test-manager",
+    "mathworks-fault-tolerant-fuel-control",
+    "youtube-mathworks-hil-testing",
+    "ni-learn-test-measurement",
+    "simulink-onramp",
+    "stateflow-onramp",
+    "control-design-onramp",
+    "youtube-css-can-bus",
+    "google-ml-crash-course"
+  ],
+  "embedded-firmware-engineer": [
+    "stm32-mooc-gpio-timer-uart",
+    "arm-embedded-systems",
+    "stm32-education",
+    "stateflow-onramp",
+    "mathworks-fault-tolerant-fuel-control",
+    "youtube-css-can-bus",
+    "kocw-embedded-control",
+    "ni-learn-test-measurement",
+    "comento-plc-control-practice"
+  ],
+  "etch-process-engineer": [
+    "plasma-etch-core",
+    "letuin-semiconductor-field-practice",
+    "letuin-semiconductor-process-data-kdt",
+    "mit-semiconductor-devices",
+    "statistics-onramp",
+    "moresteam-doe",
+    "nist-control-charts",
+    "google-ml-crash-course"
+  ],
+  "automotive-manufacturing-engineer": [
+    "comento-production-tech-internship",
+    "comento-production-management-core",
+    "quality-one-fmea",
+    "asq-fmea",
+    "asq-eight-d",
+    "nist-process-capability",
+    "step-engineering",
+    "hrd-net-job-training",
+    "mathworks-predictive-maintenance"
+  ],
+  "pcb-design-engineer": [
+    "kicad-pcb-docs",
+    "ti-power-management-training",
+    "allaboutcircuits-textbook",
+    "ti-precision-labs",
+    "analog-dialogue",
+    "youtube-emc-emi-basics",
+    "kocw-electronics-circuit",
+    "letuin-low-power-design-validation"
+  ]
+}).forEach(([roleId, resourceIds]) => {
+  roleResourceLinks[roleId] = [...new Set([...resourceIds, ...(roleResourceLinks[roleId] || [])])];
+});
+
+Object.entries({
+  "ti-power-management-training": ["PCB 리뷰 체크리스트", "전원 요구사항 정의", "검증 리포트"],
+  "youtube-emc-emi-basics": ["PCB 리뷰 체크리스트", "검증 리포트"],
+  "quality-one-fmea": ["공정 문제 정의", "원인 가설과 FMEA", "자동차 직무 검증 리포트"],
+  "asq-fmea": ["공정 문제 정의", "원인 가설과 FMEA", "자동차 직무 검증 리포트"],
+  "asq-eight-d": ["8D 개선 보고서", "자동차 직무 검증 리포트"],
+  "nist-process-capability": ["관리도와 Cpk 계산", "자동차 직무 검증 리포트"],
+  "moresteam-doe": ["조건 변경 검토표", "식각 장비 변수 정리"],
+  "google-ml-crash-course": ["수율 Pareto 분석", "조건 변경 검토표", "자동차 직무 검증 리포트", "검증 리포트"]
+}).forEach(([resourceId, taskTitles]) => {
+  resourceTaskLinks[resourceId] = [...new Set([...(resourceTaskLinks[resourceId] || []), ...taskTitles])];
+});
+
 const storageKey = "careerCompetencyPilot";
 const primaryViews = ["tracks", "diagnosis", "roadmap", "saved", "references"];
 
@@ -8600,6 +8671,7 @@ function getResourceSignals(resource, context) {
 
 function getResourcePriorityScore(resource, context) {
   const coreResource = resource.core ? 1 : 0;
+  const roleOrderScore = getRoleResourceOrderScore(resource, context);
   const linkedTaskMatches = getResourceLinkedTasks(resource.id, context.visibleTasks).length;
   const gapMatches = getResourceGapMatches(resource, context).length;
   const goalMatches = (resource.skills || []).filter((skill) => context.goal.prioritySkills.includes(skill)).length;
@@ -8611,6 +8683,7 @@ function getResourcePriorityScore(resource, context) {
   const competencyScore = getCompetencyFitScore(resource, context);
   const goalScore = getGoalResourceScore(resource, context);
   return coreResource * 80
+    + roleOrderScore
     + linkedTaskMatches * 60
     + gapMatches * 40
     + goalMatches * 20
@@ -8621,6 +8694,12 @@ function getResourcePriorityScore(resource, context) {
     + shortDurationFit * 10
     + competencyScore * 0.35
     + goalScore * 0.35;
+}
+
+function getRoleResourceOrderScore(resource, context) {
+  const index = getRoleLinkedResourceIds(context.role).indexOf(resource.id);
+  if (index < 0) return 0;
+  return Math.max(20, 120 - index * 10);
 }
 
 function getResourceLinkedTasks(resourceId, visibleTasks = []) {
