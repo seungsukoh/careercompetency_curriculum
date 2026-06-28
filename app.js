@@ -6769,6 +6769,7 @@ function renderEducationSummaryCard(resource, index, context, tasks) {
       </div>
       <div class="education-summary-body">
         <div class="education-info-row"><strong>교육 소개</strong><span>${introText}</span></div>
+        <div class="education-info-row"><strong>다루는 역량</strong><span>${getResourceSkillSummary(resource)}</span></div>
         <div class="education-info-row"><strong>추천 이유</strong><span>${reason}</span></div>
         <div class="education-info-row"><strong>내 커리큘럼 연결</strong><span>${taskText}</span></div>
         <div class="education-info-row"><strong>완성할 산출물</strong><span>${outputText}</span></div>
@@ -6801,13 +6802,15 @@ function getEducationSummaryReason(resource, task, context) {
 }
 
 function getResourceIntroText(resource) {
-  const skillText = (resource.skills || []).slice(0, 4).join(", ");
   const prerequisiteText = (resource.prerequisites || []).slice(0, 3).join(", ");
   return [
     resource.reason,
-    skillText ? `다루는 역량: ${skillText}` : "",
     prerequisiteText ? `선수지식: ${prerequisiteText}` : ""
   ].filter(Boolean).join(" ");
+}
+
+function getResourceSkillSummary(resource, limit = 5) {
+  return (resource.skills || []).slice(0, limit).join(", ") || "직무 핵심역량";
 }
 
 function truncateText(text, maxLength) {
@@ -6971,7 +6974,6 @@ function renderReferenceSection(section, activeContext) {
 function renderReferenceResourceItem(resource, context) {
   const saved = state.saved.includes(resource.id);
   const signals = context ? getResourceSignals(resource, context).slice(0, 3) : [];
-  const skillText = (resource.skills || []).slice(0, 5).join(", ");
   return `
     <details class="reference-resource-card ${saved ? "is-saved" : ""}">
       <summary>
@@ -6982,10 +6984,10 @@ function renderReferenceResourceItem(resource, context) {
         ${renderResourceTrustBadges(resource)}
       </summary>
       <div class="reference-resource-detail">
-        <p>${resource.reason}</p>
-        ${signals.length ? `<p><strong>추천 이유:</strong> ${signals.join(" · ")}</p>` : ""}
-        <p><strong>역량:</strong> ${skillText}</p>
-        <p><strong>남길 산출물:</strong> ${resource.expectedOutput}</p>
+        <div class="education-info-row"><strong>교육 소개</strong><span>${getResourceIntroText(resource)}</span></div>
+        <div class="education-info-row"><strong>다루는 역량</strong><span>${getResourceSkillSummary(resource)}</span></div>
+        ${signals.length ? `<div class="education-info-row"><strong>추천 이유</strong><span>${signals.join(" · ")}</span></div>` : ""}
+        <div class="education-info-row"><strong>완성할 산출물</strong><span>${resource.expectedOutput}</span></div>
         <div class="roadmap-resource-actions">
           <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
           ${renderSaveActionButton(resource)}
@@ -7632,6 +7634,7 @@ function renderCompetencyActionPlan(context, tasks) {
                         <span class="competency-example-label">교육명</span>
                         <strong class="competency-example-title">${resource.title}</strong>
                         <div class="education-info-row"><strong>교육 소개</strong><span>${getResourceIntroText(resource)}</span></div>
+                        <div class="education-info-row"><strong>다루는 역량</strong><span>${getResourceSkillSummary(resource)}</span></div>
                         <div class="education-info-row"><strong>완성할 산출물</strong><span>${resource.expectedOutput || item.deliverable}</span></div>
                       </div>
                       <div>
@@ -8158,6 +8161,7 @@ function renderRoadmapResourceItem(resource, task, context) {
       <div class="roadmap-resource-detail">
         <div class="education-info-row is-meta"><strong>교육 정보</strong><span>${resource.provider} · ${resource.difficulty} · ${formatMinutes(resource.totalMinutes)}</span></div>
         <div class="education-info-row"><strong>교육 소개</strong><span>${getResourceIntroText(resource)}</span></div>
+        <div class="education-info-row"><strong>다루는 역량</strong><span>${getResourceSkillSummary(resource)}</span></div>
         <div class="education-info-row"><strong>추천 이유</strong><span>${connectionReason}</span></div>
         <div class="education-info-row"><strong>연결 산출물</strong><span>${resource.expectedOutput}</span></div>
         <div class="education-info-row"><strong>연결 신호</strong><span>${signals.length ? signals.join(" · ") : `${task.deliverable}에 바로 연결됩니다.`}</span></div>
@@ -8206,15 +8210,7 @@ function getResourceBadgeText(resource) {
 }
 
 function getResourceOpenLabel(resource) {
-  const text = getResourceBadgeText(resource);
-  if (/youtube|영상|동영상/i.test(text)) return "영상 페이지 열기";
-  if (/코멘토|렛유인|부트캠프|현장실습|KDT|멘토링|인턴체험|강좌|과정|course|Coursera|edX|K-MOOC|KOCW|STEP|HRD-Net|인프런|Udemy|Boostcourse/i.test(text)) {
-    return "과정 페이지 열기";
-  }
-  if (/MathWorks|Ansys|NI|Google|Texas Instruments|STMicroelectronics|Arm|KiCad|Linux Kernel|Yocto|ROS|공식|문서|예제|자료/i.test(text)) {
-    return "교육페이지 열기";
-  }
-  return "페이지 열기";
+  return "교육페이지 열기";
 }
 
 function renderSaveActionButton(resource, label = "내 커리큘럼에 추가") {
@@ -8340,6 +8336,8 @@ function renderPlanResourceItem(resource, task, context) {
         </span>
       </summary>
       <div class="plan-resource-detail">
+        <div class="education-info-row"><strong>교육 소개</strong><span>${getResourceIntroText(resource)}</span></div>
+        <div class="education-info-row"><strong>다루는 역량</strong><span>${getResourceSkillSummary(resource)}</span></div>
         <div class="education-info-row"><strong>추천 이유</strong><span>${connectionReason}</span></div>
         <div class="education-info-row"><strong>연결 신호</strong><span>${signals.join(" · ") || `${task.deliverable}에 연결되는 자료입니다.`}</span></div>
         <div class="education-info-row"><strong>산출물</strong><span>${resource.expectedOutput}</span></div>
