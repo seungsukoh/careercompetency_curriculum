@@ -56,9 +56,9 @@ a:focus-visible {
 }
 
 .app-shell {
-  width: min(1680px, 100%);
+  width: min(1920px, 100%);
   margin: 0 auto;
-  padding: 16px 24px 24px;
+  padding: 16px clamp(16px, 2vw, 34px) 28px;
 }
 
 .app-header {
@@ -96,8 +96,8 @@ a:focus-visible {
 
 .layout {
   display: grid;
-  grid-template-columns: 288px minmax(0, 1fr);
-  gap: 16px;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 18px;
 }
 
 .panel,
@@ -545,7 +545,7 @@ input::placeholder {
 
 .view {
   display: none;
-  padding: 18px;
+  padding: 20px clamp(18px, 1.6vw, 30px);
 }
 
 .view.is-active {
@@ -562,6 +562,7 @@ input::placeholder {
 
 .status-pill {
   flex: 0 0 auto;
+  max-width: 100%;
   padding: 6px 9px;
   color: var(--primary-dark);
   background: var(--primary-soft);
@@ -569,6 +570,9 @@ input::placeholder {
   border-radius: 999px;
   font-size: 0.78rem;
   font-weight: 900;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .track-grid {
@@ -636,11 +640,11 @@ input::placeholder {
 
 .role-workbench {
   display: grid;
-  grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
-  gap: 14px;
+  grid-template-columns: minmax(440px, clamp(480px, 32vw, 580px)) minmax(0, 1fr);
+  gap: 18px;
   align-items: start;
-  padding: 14px;
-  background: #edf1f5;
+  padding: 16px;
+  background: #f4f7fa;
   border: 1px solid #d2dae5;
   border-radius: var(--radius);
 }
@@ -651,13 +655,13 @@ input::placeholder {
   background: #ffffff;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius);
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 8px 18px rgba(23, 32, 46, 0.05);
 }
 
 .role-picker-panel {
   display: grid;
-  gap: 12px;
-  padding: 12px;
+  gap: 14px;
+  padding: 14px;
 }
 
 .role-picker-panel .role-filter-bar {
@@ -677,7 +681,7 @@ input::placeholder {
   top: 12px;
   max-height: calc(100vh - 24px);
   overflow: auto;
-  padding: 12px;
+  padding: 14px;
 }
 
 .selected-role-overview-slot:empty {
@@ -793,9 +797,10 @@ input::placeholder {
 .track-card {
   position: relative;
   display: grid;
-  gap: 7px;
-  min-height: 128px;
-  padding: 12px;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 9px;
+  min-height: 150px;
+  padding: 14px;
   text-align: left;
   transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 }
@@ -815,11 +820,11 @@ input::placeholder {
 }
 
 .track-grid .track-card.is-selected {
-  min-height: auto;
+  min-height: 150px;
 }
 
 .role-picker-panel .track-card {
-  min-height: 116px;
+  min-height: 156px;
 }
 
 .inline-wordcloud-panel {
@@ -884,6 +889,8 @@ input::placeholder {
   margin: 0;
   font-size: 0.98rem;
   line-height: 1.3;
+  overflow-wrap: anywhere;
+  word-break: keep-all;
 }
 
 .track-card p,
@@ -894,6 +901,8 @@ input::placeholder {
   margin: 0;
   color: var(--muted);
   line-height: 1.55;
+  overflow-wrap: anywhere;
+  word-break: keep-all;
 }
 
 .role-preview {
@@ -909,6 +918,7 @@ input::placeholder {
 .badge {
   display: inline-flex;
   align-items: center;
+  max-width: 100%;
   min-height: 24px;
   padding: 3px 8px;
   color: #3d4755;
@@ -917,6 +927,9 @@ input::placeholder {
   border-radius: 999px;
   font-size: 0.74rem;
   font-weight: 850;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .major-pathway-badge {
@@ -1088,11 +1101,14 @@ input::placeholder {
 }
 
 .role-result-panel .selected-role-detail-head,
+.role-result-panel .expert-review-grid {
+  grid-template-columns: 1fr;
+}
+
 .role-result-panel .role-detail-grid,
 .role-result-panel .role-ai-grid,
-.role-result-panel .expert-review-grid,
 .role-result-panel .role-fit-panel {
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .role-result-panel .selected-role-top {
@@ -3132,6 +3148,12 @@ li {
   .role-context-stats,
   .role-context-actions {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .role-result-panel .role-detail-grid,
+  .role-result-panel .role-ai-grid,
+  .role-result-panel .role-fit-panel {
+    grid-template-columns: 1fr;
   }
 
   .profile-panel {

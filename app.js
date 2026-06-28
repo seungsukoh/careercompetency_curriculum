@@ -4381,7 +4381,7 @@ function getNextWorkflowStep(steps, activeIndex) {
     return {
       view: "tracks",
       title: "직무를 선택해야 시작됩니다",
-      body: "전공과 관심 산업에 맞는 추천순 목록에서 실제 지원하려는 세부 직무를 고르세요.",
+      body: "전공과 관심 산업 기준으로 좁힌 목록에서 실제 지원하려는 세부 직무를 고르세요.",
       action: "직무 선택",
       primary: true
     };
@@ -4444,7 +4444,7 @@ function renderRoleContextBar() {
       <div class="role-context-main">
         <span>현재 기준</span>
         <strong>선택한 직무 없음</strong>
-        <em>${getMajorLabel()} · ${getIndustryLabel()} 기준 추천 목록을 보고 있습니다.</em>
+        <em>${getMajorLabel()} · ${getIndustryLabel()} 기준 직무 목록을 보고 있습니다.</em>
       </div>
       <div class="role-context-summary">
         <strong>먼저 할 일</strong>
@@ -4504,7 +4504,7 @@ function renderProfileImpact() {
   const goalRule = goalScoringRules[state.profile.goal] || goalScoringRules.foundation;
   const selectedText = hasActiveRoleSelection()
     ? `${getSelectedRole(getSelectedTrack().id)?.title || "선택 직무"} 기준`
-    : "직무 선택 전 추천 기준";
+    : "직무 선택 전 기준";
 
   elements.profileImpactPanel.innerHTML = `
     <div>
@@ -4688,7 +4688,7 @@ function renderTracks() {
   const roleCatalog = getRoleCatalog();
   const selectedTrack = getSelectedTrack();
   const selectedRole = getSelectedRole(selectedTrack.id);
-  elements.trackCount.textContent = `${roleCatalog.length}개 세부 직무 · ${getMajorLabel()} 추천순`;
+  elements.trackCount.textContent = `${roleCatalog.length}개 세부 직무 · ${getMajorLabel()} 기준`;
   if (elements.selectedRoleOverview) {
     elements.selectedRoleOverview.innerHTML = hasActiveRoleSelection()
       ? renderSelectedRoleOverview(selectedTrack, selectedRole)
@@ -4704,14 +4704,13 @@ function renderTracks() {
     return;
   }
 
-  elements.trackList.innerHTML = roleCatalog.map(({ track, role, score }, index) => {
+  elements.trackList.innerHTML = roleCatalog.map(({ track, role }) => {
     const selectedRole = getSelectedRole(track.id);
     const isSelected = track.id === state.selectedTrackId && selectedRole?.id === role.id;
-    const recommendationLabel = index < 3 && score > 0 ? `추천 ${index + 1} · ${track.title}` : track.title;
     const majorPathwayLabel = getMajorPathwayLabel(track, role);
     const roleCard = `
     <button class="track-card ${isSelected ? "is-selected" : ""}" type="button" data-track-id="${track.id}" data-role-id="${role.id}" aria-expanded="${isSelected ? "true" : "false"}">
-      <span class="status-pill">${recommendationLabel}</span>
+      <span class="status-pill">${track.title}</span>
       <h3>${role.title}</h3>
       <p>${role.focus}</p>
       <span class="badge-row">
@@ -4846,7 +4845,7 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
       <details class="role-detail-disclosure">
         <summary>
           <span>
-            <strong>추천 이유와 참고자료</strong>
+            <strong>선택 근거와 참고자료</strong>
             <small>전공 연결, AI 역량, 채용 검색, 교육 후보</small>
           </span>
         </summary>
@@ -6194,7 +6193,7 @@ function renderReferences() {
   elements.referenceCount.textContent = `${resources.length}개 자료`;
   elements.referenceGuidance.innerHTML = `
     <h3>분류를 열어 필요한 자료만 확인하세요</h3>
-    <p>선택 직무 추천을 먼저 보고, 부족한 유형이 있으면 공식 예제·실습·기초·채용확인 분류만 추가로 열면 됩니다.</p>
+    <p>선택 직무와 직접 연결된 자료를 먼저 보고, 부족한 유형이 있으면 공식 예제·실습·기초·채용확인 분류만 추가로 열면 됩니다.</p>
     ${renderReferenceCategoryStrip(sections, role?.title || track.title)}
   `;
 
@@ -6254,9 +6253,9 @@ function getReferenceSections(activeContext, priorityResources = []) {
   const sections = priorityResources.length
     ? [{
       id: "role-priority",
-      shortTitle: "추천",
-      title: "선택 직무 추천",
-      summary: "교육 선택 화면의 핵심 추천과 연결되는 자료입니다.",
+      shortTitle: "직무연결",
+      title: "선택 직무 연결 자료",
+      summary: "교육 선택 화면에서 먼저 확인한 자료와 같은 기준으로 연결된 자료입니다.",
       context: activeContext,
       open: true,
       resources: priorityResources
@@ -7136,7 +7135,7 @@ function getEducationResourceSignals(resource, context) {
   const competencyFitSignal = getCompetencyFitSignal(resource, context);
   const goalFitSignal = getGoalFitSignal(resource, context);
 
-  if (roleDirectMatch) signals.push("선택 직무 직접 추천");
+  if (roleDirectMatch) signals.push("선택 직무 직접 연결");
   if (resource.core) signals.push("핵심 직무역량 교육");
   if (competencyFitSignal) signals.push(competencyFitSignal);
   if (goalFitSignal) signals.push(goalFitSignal);
@@ -7270,7 +7269,7 @@ function getTaskResourceSignals(resource, task, context) {
   if (directTaskMatches.length) signals.push("이번 주 과제 직접 연결");
   if (resourceGapMatches.length) signals.push(`부족 역량 보완: ${resourceGapMatches.slice(0, 2).join(", ")}`);
   if (resource.core) signals.push("핵심 직무역량 교육");
-  if (roleDirectMatch) signals.push("선택 직무 직접 추천");
+  if (roleDirectMatch) signals.push("선택 직무 직접 연결");
   if (competencyFitSignal) signals.push(competencyFitSignal);
   if (goalFitSignal) signals.push(goalFitSignal);
   if (matchedSkills.length) signals.push(`과제 역량: ${matchedSkills.slice(0, 2).join(", ")}`);
