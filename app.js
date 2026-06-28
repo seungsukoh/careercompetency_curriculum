@@ -2789,9 +2789,7 @@ const majorRoleFitProfiles = {
       "production-technology-engineer",
       "semiconductor-equipment-engineer",
       "metrology-engineer",
-      "supplier-quality-engineer",
-      "validation-engineer",
-      "hardware-design-engineer"
+      "supplier-quality-engineer"
     ],
     bridgeFocus: "물질수지·반응·분리 강점을 수율, 계측, 데이터, 장비 조건 언어로 번역해야 합니다."
   }
@@ -4259,9 +4257,11 @@ function render() {
   elements.goalSelect.value = state.profile.goal;
   elements.durationSelect.value = state.profile.durationWeeks;
   elements.roleSearchInput.value = state.roleSearch || "";
+  const changedRoleGroupFilter = syncRoleGroupFilterWithProfile();
+  renderRoleGroupFilterOptions();
   elements.roleGroupFilter.value = state.roleGroupFilter || "all";
   const changedTrack = syncSelectedTrackWithProfile();
-  if (changedTrack) saveState();
+  if (changedTrack || changedRoleGroupFilter) saveState();
   renderViews();
   renderProfileImpact();
   renderTracks();
@@ -4529,10 +4529,50 @@ function hasActiveRoleSelection() {
 }
 
 function getFilteredTracks() {
-  return tracks.filter((track) => {
-    const industryMatch = state.profile.industry === "all" || track.industries.includes(state.profile.industry);
-    return industryMatch;
-  });
+  return tracks.filter((track) => getProfileRelevantRoles(track).length > 0);
+}
+
+function getProfileRelevantRoles(track) {
+  return getIndustryRelevantRoles(track)
+    .filter((role) => isRoleRelevantToSelectedProfile(track, role));
+}
+
+function getIndustryRelevantRoles(track) {
+  const roles = jobRoles[track?.id] || [];
+  if (!roles.length) return [];
+  if (state.profile.industry === "all") return roles;
+
+  if (!track.industries.includes(state.profile.industry)) return [];
+
+  const industryMatched = roles.filter((role) => role.industries.includes(state.profile.industry));
+  if (industryMatched.length) return industryMatched;
+  return roles.filter((role) => role.industries.includes("all"));
+}
+
+function isRoleRelevantToSelectedProfile(track, role) {
+  const profile = majorRoleFitProfiles[state.profile.major];
+  if (!profile) return track.majors.includes(state.profile.major);
+  return profile.direct.includes(role.id) || profile.bridge.includes(role.id);
+}
+
+function syncRoleGroupFilterWithProfile() {
+  const groupFilter = state.roleGroupFilter || "all";
+  if (groupFilter === "all") return false;
+  const hasGroup = getFilteredTracks().some((track) => track.id === groupFilter);
+  if (hasGroup) return false;
+  state.roleGroupFilter = "all";
+  return true;
+}
+
+function renderRoleGroupFilterOptions() {
+  const availableTracks = getFilteredTracks();
+  const options = [
+    { id: "all", title: "전체 관련 직무군" },
+    ...availableTracks.map((track) => ({ id: track.id, title: track.title }))
+  ];
+  elements.roleGroupFilter.innerHTML = options
+    .map((option) => `<option value="${option.id}">${option.title}</option>`)
+    .join("");
 }
 
 function syncSelectedTrackWithProfile() {
@@ -4572,13 +4612,7 @@ function syncSelectedTrackWithProfile() {
 }
 
 function getAvailableRoles(track) {
-  const roles = jobRoles[track?.id] || [];
-  if (!roles.length || state.profile.industry === "all") return roles;
-
-  const industryMatched = roles.filter((role) => role.industries.includes(state.profile.industry));
-  if (industryMatched.length) return industryMatched;
-  const genericRoles = roles.filter((role) => role.industries.includes("all"));
-  return genericRoles.length ? genericRoles : roles;
+  return getProfileRelevantRoles(track);
 }
 
 function getSelectedRole(trackId = state.selectedTrackId) {
@@ -5007,7 +5041,7 @@ function getRoleCatalog({ applyRoleFilters = true } = {}) {
 
   return getFilteredTracks()
     .filter((track) => !applyRoleFilters || groupFilter === "all" || track.id === groupFilter)
-    .flatMap((track) => getAvailableRoles(track)
+    .flatMap((track) => getProfileRelevantRoles(track)
       .filter((role) => !applyRoleFilters || matchesRoleFilters(track, role, searchTerm))
       .map((role) => ({ track, role, score: getRoleCatalogScore(track, role) })))
     .sort((a, b) => b.score - a.score);
