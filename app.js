@@ -2010,6 +2010,92 @@ const majorBridgeTracks = {
   chemical: ["electronics-pcb", "embedded-control", "mechanical-cae"]
 };
 
+const majorRoleFitProfiles = {
+  mechanical: {
+    direct: [
+      "mechanical-design-engineer",
+      "cae-analysis-engineer",
+      "manufacturing-design-engineer",
+      "thermal-cfd-engineer",
+      "mechanical-test-engineer",
+      "process-engineer",
+      "production-technology-engineer"
+    ],
+    bridge: [
+      "quality-engineer",
+      "supplier-quality-engineer",
+      "production-data-engineer",
+      "semiconductor-equipment-engineer",
+      "semiconductor-process-engineer",
+      "semiconductor-yield-engineer",
+      "etch-process-engineer",
+      "metrology-engineer",
+      "hardware-design-engineer",
+      "validation-engineer",
+      "control-engineer",
+      "robotics-software-engineer",
+      "motor-control-engineer",
+      "battery-process-engineer",
+      "process-safety-engineer"
+    ],
+    bridgeFocus: "데이터 분석, 전기·전자 기초, 공정·품질 언어를 보완하면 진입 가능성이 커집니다."
+  },
+  electrical: {
+    direct: [
+      "hardware-design-engineer",
+      "pcb-design-engineer",
+      "validation-engineer",
+      "power-hardware-engineer",
+      "emc-test-engineer",
+      "embedded-firmware-engineer",
+      "control-engineer",
+      "robotics-software-engineer",
+      "embedded-linux-engineer",
+      "motor-control-engineer",
+      "semiconductor-equipment-engineer",
+      "semiconductor-process-engineer",
+      "semiconductor-yield-engineer",
+      "etch-process-engineer",
+      "metrology-engineer"
+    ],
+    bridge: [
+      "process-engineer",
+      "quality-engineer",
+      "production-data-engineer",
+      "production-technology-engineer",
+      "mechanical-test-engineer",
+      "thermal-cfd-engineer",
+      "battery-process-engineer",
+      "process-safety-engineer"
+    ],
+    bridgeFocus: "회로·계측·제어 강점을 공정 데이터, 품질 기준, 설비 조건 해석으로 연결해야 합니다."
+  },
+  chemical: {
+    direct: [
+      "chemical-process-engineer",
+      "battery-process-engineer",
+      "materials-rnd-engineer",
+      "process-safety-engineer",
+      "bioprocess-engineer",
+      "semiconductor-process-engineer",
+      "semiconductor-yield-engineer",
+      "etch-process-engineer",
+      "process-engineer"
+    ],
+    bridge: [
+      "quality-engineer",
+      "production-data-engineer",
+      "production-technology-engineer",
+      "semiconductor-equipment-engineer",
+      "metrology-engineer",
+      "supplier-quality-engineer",
+      "validation-engineer",
+      "hardware-design-engineer"
+    ],
+    bridgeFocus: "물질수지·반응·분리 강점을 수율, 계측, 데이터, 장비 조건 언어로 번역해야 합니다."
+  }
+};
+
 const starterKeywords = {
   "mechanical-cae": "재료역학 기계요소설계 구조해석 CAD",
   "production-quality": "품질관리 SPC 관리도 FMEA 공정능력",
@@ -2570,10 +2656,14 @@ function loadState() {
   try {
     const stored = JSON.parse(localStorage.getItem(storageKey));
     const { year: _ignoredYear, ...storedProfile } = stored?.profile || {};
+    const profile = { ...defaultState.profile, ...storedProfile };
+    if (!["mechanical", "electrical", "chemical"].includes(profile.major)) {
+      profile.major = defaultState.profile.major;
+    }
     return {
       ...defaultState,
       ...(stored || {}),
-      profile: { ...defaultState.profile, ...storedProfile },
+      profile,
       roleSearch: typeof stored?.roleSearch === "string" ? stored.roleSearch : defaultState.roleSearch,
       roleGroupFilter: stored?.roleGroupFilter || defaultState.roleGroupFilter,
       view: normalizeView(stored?.view, defaultState.view),
@@ -2710,27 +2800,76 @@ function getMajorLabel(major = state.profile.major) {
   return majorLabels[major] || major;
 }
 
-function getMajorPathway(track, major = state.profile.major) {
-  if (!track || major === "both") return "direct";
-  if (track.majors.includes(major)) return "direct";
-  if ((majorBridgeTracks[major] || []).includes(track.id)) return "bridge";
-  return "explore";
+function getMajorRoleFit(track, role, major = state.profile.major) {
+  if (!track || major === "both") {
+    return {
+      level: "direct",
+      reason: "공학계열 전체 기준으로 직무 연결 가능성을 우선 보여줍니다.",
+      focus: "세부 전공보다 선택 직무의 보유 역량 체크 결과를 기준으로 로드맵을 구성합니다."
+    };
+  }
+
+  const majorLabel = getMajorLabel(major);
+  const profile = majorRoleFitProfiles[major];
+  if (role && profile?.direct.includes(role.id)) {
+    return {
+      level: "direct",
+      reason: `${majorLabel} 전공지식이 ${role.title}의 반복 업무와 직접 맞닿아 있습니다.`,
+      focus: "체크하지 못한 직무확보 항목만 보완하면 바로 로드맵 우선순위에 반영됩니다."
+    };
+  }
+  if (role && profile?.bridge.includes(role.id)) {
+    return {
+      level: "bridge",
+      reason: `${majorLabel} 전공자가 프로젝트와 보완 학습으로 확장 진입할 수 있는 세부 직무입니다.`,
+      focus: profile.bridgeFocus
+    };
+  }
+
+  if (track.majors.includes(major)) {
+    return {
+      level: "direct",
+      reason: `${majorLabel} 전공과 직접 맞닿은 직무군입니다.`,
+      focus: "세부 직무를 고른 뒤 보유 역량을 체크하면 부족 항목만 로드맵에 우선 반영됩니다."
+    };
+  }
+  if ((majorBridgeTracks[major] || []).includes(track.id)) {
+    return {
+      level: "bridge",
+      reason: `${majorLabel} 전공자가 보완 학습으로 확장할 수 있는 직무군입니다.`,
+      focus: profile?.bridgeFocus || "직무 언어와 도구 역량을 보완하면 진입 가능성이 커집니다."
+    };
+  }
+  return {
+    level: "explore",
+    reason: `${majorLabel} 전공자는 이 직무의 필수 언어와 산출물을 먼저 확인해야 합니다.`,
+    focus: "직무확보 체크에서 모르는 항목이 많으면 탐색 단계 로드맵으로 시작하는 편이 좋습니다."
+  };
 }
 
-function getMajorPathwayLabel(track, major = state.profile.major) {
+function getMajorPathway(track, role = null, major = state.profile.major) {
+  const fit = getMajorRoleFit(track, role, major);
+  return typeof fit === "string" ? fit : fit.level;
+}
+
+function getMajorPathwayLabel(track, role = null, major = state.profile.major) {
   return {
     direct: "전공 직결",
     bridge: "확장 가능",
     explore: "탐색 가능"
-  }[getMajorPathway(track, major)];
+  }[getMajorPathway(track, role, major)];
 }
 
-function getMajorPathwayReason(track, major = state.profile.major) {
-  const majorLabel = getMajorLabel(major);
-  const pathway = getMajorPathway(track, major);
-  if (pathway === "direct") return `${majorLabel} 전공자가 공고에서 자주 진입하는 직무군입니다.`;
-  if (pathway === "bridge") return `${majorLabel} 전공자가 프로젝트와 보완 학습으로 확장 진입할 수 있는 직무군입니다.`;
-  return `${majorLabel} 전공자는 공통 공학역량과 별도 기초 보완 여부를 먼저 확인해야 하는 탐색 직무군입니다.`;
+function getMajorPathwayReason(track, role = null, major = state.profile.major) {
+  const fit = getMajorRoleFit(track, role, major);
+  return typeof fit === "string"
+    ? getMajorRoleFit(track, null, major).reason
+    : fit.reason;
+}
+
+function getMajorPathwayFocus(track, role = null, major = state.profile.major) {
+  const fit = getMajorRoleFit(track, role, major);
+  return typeof fit === "string" ? "" : fit.focus;
 }
 
 function renderTracks() {
@@ -2750,7 +2889,7 @@ function renderTracks() {
     const selectedRole = getSelectedRole(track.id);
     const isSelected = track.id === state.selectedTrackId && selectedRole?.id === role.id;
     const recommendationLabel = index < 3 && score > 0 ? `추천 ${index + 1} · ${track.title}` : track.title;
-    const majorPathwayLabel = getMajorPathwayLabel(track);
+    const majorPathwayLabel = getMajorPathwayLabel(track, role);
     return `
     <button class="track-card ${isSelected ? "is-selected" : ""}" type="button" data-track-id="${track.id}" data-role-id="${role.id}">
       <span class="status-pill">${recommendationLabel}</span>
@@ -2795,8 +2934,8 @@ function renderInlineRoleWordCloud(track, role) {
           </ul>
         </div>
         <div class="flow-actions">
-          <button class="primary-button" type="button" data-view-target="roadmap">${getDurationLabel()} 자동 로드맵 보기</button>
-          <button class="ghost-button" type="button" data-view-target="diagnosis">직무확보 확인</button>
+          <button class="primary-button" type="button" data-view-target="diagnosis">보유 역량 체크하기</button>
+          <button class="ghost-button" type="button" data-view-target="roadmap">부족 역량 로드맵 보기</button>
         </div>
       </div>
     </article>
@@ -2818,7 +2957,7 @@ function getRoleCatalog({ applyRoleFilters = true } = {}) {
 function getRoleCatalogScore(track, role) {
   let score = 0;
 
-  const majorPathway = getMajorPathway(track);
+  const majorPathway = getMajorPathway(track, role);
   if (majorPathway === "direct") score += 32;
   if (majorPathway === "bridge") score += 18;
   if (majorPathway === "explore") score += 4;
@@ -2857,8 +2996,9 @@ function renderTrackDetail() {
   const roles = getAvailableRoles(track);
   const selectedRole = getSelectedRole(track.id);
   const evidence = selectedRole ? getHiringEvidence(track, selectedRole) : null;
-  const majorPathwayLabel = getMajorPathwayLabel(track);
-  const majorPathwayReason = getMajorPathwayReason(track);
+  const majorPathwayLabel = getMajorPathwayLabel(track, selectedRole);
+  const majorPathwayReason = getMajorPathwayReason(track, selectedRole);
+  const majorPathwayFocus = getMajorPathwayFocus(track, selectedRole);
   const roleOptions = roles.map((role) => `
     <button class="role-option ${selectedRole?.id === role.id ? "is-selected" : ""}" type="button" data-role-id="${role.id}">
       <strong>${role.title}</strong>
@@ -2874,7 +3014,7 @@ function renderTrackDetail() {
       <p>${selectedRole ? selectedRole.focus : track.summary}</p>
     </div>
     <div class="recommendation-note">
-      <strong>${majorPathwayLabel}:</strong> ${majorPathwayReason} 자료를 먼저 고를 필요 없이 선택 직무, 직무확보 공백, 준비 기간을 기준으로 로드맵에서 교육자료를 자동 배치합니다.
+      <strong>${majorPathwayLabel}:</strong> ${majorPathwayReason} ${majorPathwayFocus}
     </div>
     <section class="role-panel" aria-label="채용공고 기준 세부 직무">
       <div>
@@ -2888,8 +3028,8 @@ function renderTrackDetail() {
           ${detailBlock("자격요건 역량", selectedRole.requirements)}
           ${detailBlock("우대·차별화 역량", selectedRole.preferred)}
         </div>
+        ${renderMajorConnectionPanel(track, selectedRole)}
         ${renderRoleFitPanel(track, selectedRole)}
-        ${renderRoleEducationPanel(track, selectedRole)}
         <div class="evidence-panel">
           <div>
             <p class="eyebrow">채용공고 근거</p>
@@ -2904,8 +3044,8 @@ function renderTrackDetail() {
       ` : ""}
     </section>
     <div class="flow-actions detail-actions">
-      <button class="primary-button" type="button" data-view-target="roadmap">${getDurationLabel()} 자동 로드맵 보기</button>
-      <button class="ghost-button" type="button" data-view-target="diagnosis">직무확보 확인</button>
+      <button class="primary-button" type="button" data-view-target="diagnosis">보유 역량 체크하기</button>
+      <button class="ghost-button" type="button" data-view-target="roadmap">부족 역량 로드맵 보기</button>
     </div>
     <div class="detail-grid">
       ${detailBlock("주요 업무", track.tasks)}
@@ -2942,15 +3082,31 @@ function getHiringEvidence(track, role) {
 }
 
 function renderRoleWordCloud(track, role, modifier = "") {
-  const terms = getRoleWordCloudTerms(track, role).slice(0, 28);
+  const terms = getRoleWordCloudTerms(track, role).slice(0, 26);
   return `
     <figure class="word-cloud-panel ${modifier}" aria-label="${role.title} 직무 키워드 워드클라우드">
       <div class="word-cloud-terms">
-        ${terms.map((term) => `<span class="word-cloud-term weight-${term.level}">${term.word}</span>`).join("")}
+        ${terms.map((term, index) => `<span class="word-cloud-term weight-${term.level}" style="${getWordCloudTermStyle(term, index)}">${term.word}</span>`).join("")}
       </div>
       <figcaption>${role.title} 채용공고 키워드, 직무확보 문항, 업무·자격요건에서 반복되는 구체 단어를 즉시 계산해 표시합니다.</figcaption>
     </figure>
   `;
+}
+
+const wordCloudPlacements = [
+  [50, 49, 0], [32, 43, 0], [68, 55, 0], [52, 31, 0], [45, 67, 0],
+  [73, 36, 0], [27, 60, 0], [59, 74, 0], [39, 24, 0], [80, 68, 0],
+  [19, 34, 0], [64, 20, 0], [23, 77, 0], [83, 25, 0], [13, 52, -90],
+  [88, 48, 90], [35, 82, 0], [55, 84, 0], [72, 82, 0], [18, 20, 0],
+  [47, 14, 0], [82, 14, 0], [12, 70, 0], [92, 74, 0], [30, 12, 0],
+  [66, 11, 0]
+];
+
+function getWordCloudTermStyle(term, index) {
+  const placement = wordCloudPlacements[index % wordCloudPlacements.length];
+  const size = (0.68 + term.level * 0.29).toFixed(2);
+  const opacity = (0.74 + term.level * 0.04).toFixed(2);
+  return `--x:${placement[0]}%;--y:${placement[1]}%;--rotate:${placement[2]}deg;--size:${size}rem;--opacity:${opacity};--z:${term.level};`;
 }
 
 function renderRoleFitPanel(track, role) {
@@ -2964,6 +3120,33 @@ function renderRoleFitPanel(track, role) {
   `;
 }
 
+function renderMajorConnectionPanel(track, role) {
+  const label = getMajorPathwayLabel(track, role);
+  const reason = getMajorPathwayReason(track, role);
+  const focus = getMajorPathwayFocus(track, role);
+  const badges = getMajorConnectionBadges(track, role);
+  return `
+    <div class="major-connection-panel" aria-label="${getMajorLabel()} 전공과 ${role.title} 연결성">
+      <div>
+        <p class="eyebrow">전공 연결성</p>
+        <h4>${getMajorLabel()} → ${role.title}</h4>
+      </div>
+      <p><strong>${label}</strong> ${reason} ${focus}</p>
+      <div class="badge-row">
+        ${badges.map((badge) => `<span class="badge">${badge}</span>`).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function getMajorConnectionBadges(track, role) {
+  const pathway = getMajorPathway(track, role);
+  const base = role.postingKeywords.slice(0, 3);
+  if (pathway === "direct") return [...base, "미체크 역량만 보완"];
+  if (pathway === "bridge") return [...base.slice(0, 2), "전공 확장", "보완 로드맵 필요"];
+  return [...base.slice(0, 2), "직무 탐색", "기초 확인 우선"];
+}
+
 function roleFitBlock(title, items) {
   return `
     <div class="role-fit-block">
@@ -2971,83 +3154,6 @@ function roleFitBlock(title, items) {
       <ul>${items.map((item) => `<li>${item}</li>`).join("")}</ul>
     </div>
   `;
-}
-
-function renderRoleEducationPanel(track, role) {
-  const roleResources = getRoleEducationResources(role);
-  const featuredResources = roleResources.slice(0, 6);
-  const educationTypes = getRoleEducationTypes(roleResources);
-  const competencyTags = getRoleEducationCompetencyTags(roleResources, role);
-
-  return `
-    <div class="role-education-panel" aria-label="${role.title} 연결 교육자료">
-      <div class="role-education-head">
-        <div>
-          <p class="eyebrow">역량 습득 자료</p>
-          <h4>동영상 외 자료·교육 연결</h4>
-        </div>
-        <span class="status-pill">${roleResources.length}개 연결</span>
-      </div>
-      <div class="badge-row">
-        ${educationTypes.map((type) => `<span class="badge">${type}</span>`).join("")}
-      </div>
-      <div class="role-education-competencies">
-        ${competencyTags.slice(0, 10).map((skill) => `<span>${skill}</span>`).join("")}
-      </div>
-      <div class="role-education-list">
-        ${featuredResources.map((resource) => renderRoleEducationItem(resource)).join("")}
-      </div>
-    </div>
-  `;
-}
-
-function renderRoleEducationItem(resource) {
-  const skillText = (resource.skills || []).slice(0, 4).join(", ");
-  return `
-    <a class="role-education-item" href="${resource.url}" target="_blank" rel="noreferrer">
-      <span>
-        <strong>${resource.title}</strong>
-        <em>${resource.provider} · ${resource.type} · ${formatMinutes(resource.totalMinutes)}</em>
-      </span>
-      <small>${skillText}</small>
-    </a>
-  `;
-}
-
-function getRoleEducationResources(role) {
-  const linkedIds = getRoleLinkedResourceIds(role);
-  return linkedIds
-    .map((resourceId) => resources.find((resource) => resource.id === resourceId))
-    .filter(Boolean)
-    .sort((a, b) => {
-      if (!!a.core !== !!b.core) return a.core ? -1 : 1;
-      if (a.languageCode !== b.languageCode) return a.languageCode === "ko" ? -1 : 1;
-      return a.sequenceLevel - b.sequenceLevel;
-    });
-}
-
-function getRoleEducationTypes(roleResources) {
-  const typeGroups = roleResources.map((resource) => getEducationTypeGroup(resource));
-  return [...new Set(typeGroups)].slice(0, 6);
-}
-
-function getEducationTypeGroup(resource) {
-  const text = `${resource.type} ${resource.provider}`;
-  if (/직업훈련|HRD/i.test(text)) return "직업훈련";
-  if (/공식문서|가이던스|앱노트|문서/i.test(text)) return "공식문서·예제";
-  if (/OCW|대학|공개교육/i.test(text)) return "대학 공개강의";
-  if (/협회|정부|NIST|ASQ|KOSHA|FDA/i.test(text)) return "정부·협회자료";
-  if (/기업|MathWorks|Texas Instruments|STMicroelectronics|Arm|Yocto|Linux|KiCad/i.test(text)) return "기업·기술교육";
-  if (/청강|Coursera|edX|K-MOOC/i.test(text)) return "무료청강";
-  return resource.type;
-}
-
-function getRoleEducationCompetencyTags(roleResources, role) {
-  const tags = [
-    ...(role.postingKeywords || []),
-    ...roleResources.flatMap((resource) => resource.skills || [])
-  ];
-  return [...new Set(tags)].filter(Boolean);
 }
 
 function getRoleWordCloudTerms(track, role) {
@@ -3080,7 +3186,11 @@ function getRoleWordCloudTerms(track, role) {
 
 function addWeightedRoleTerms(target, words, weight) {
   (words || []).forEach((word) => {
-    if (String(word || "").trim()) target.push({ word, weight });
+    String(word || "")
+      .split(/[\/·]/)
+      .map((part) => part.trim())
+      .filter(Boolean)
+      .forEach((part) => target.push({ word: part, weight }));
   });
 }
 
@@ -3287,7 +3397,7 @@ function renderDiagnosisGuide(track, role, questions) {
       <span><strong>헷갈림</strong>보완 필요로 두면 추천 자료에서 우선 보완</span>
     </div>
     <div class="flow-actions">
-      <button class="primary-button" type="button" data-view-target="roadmap">확보 내용 기준 자동 로드맵 보기</button>
+      <button class="primary-button" type="button" data-view-target="roadmap">부족 역량 기준 로드맵 보기</button>
     </div>
   `;
 }
@@ -3307,6 +3417,13 @@ function getGapItems(trackId) {
 
 function getGapSkills(trackId) {
   return getGapItems(trackId).map((item) => item.skill);
+}
+
+function getAcquiredSkills(trackId) {
+  const track = tracks.find((item) => item.id === trackId);
+  return getDiagnosticItems(track)
+    .filter((item) => state.checked[item.id])
+    .map((item) => item.skill);
 }
 
 function getDiagnosticItems(track) {
@@ -3369,7 +3486,7 @@ function renderRoadmap() {
       </div>
       <div class="roadmap-resource-block">
         <h4>추천 교육자료</h4>
-        <p class="roadmap-resource-guide">이번 주 산출물에 맞춘 교육자료입니다. 교육 제목을 누르면 연결 이유와 교육 링크가 열립니다.</p>
+        <p class="roadmap-resource-guide">체크하지 않은 역량과 이번 주 산출물에 맞춘 자료입니다. 교육 제목을 누르면 연결 이유와 교육 링크가 열립니다.</p>
         ${linkedResources.length
           ? `<div class="roadmap-resource-list">${linkedResources.map((resource) => renderRoadmapResourceItem(resource, task, context)).join("")}</div>`
           : `<div class="empty-state compact">이 과제에 연결된 교육자료 후보가 아직 없습니다.</div>`}
@@ -3394,13 +3511,14 @@ function renderRoadmapGuidance(context, tasks) {
 
   elements.roadmapGuidance.innerHTML = `
     <h3>${selectedText}</h3>
-    <p>${durationStrategy.summary} ${context.role?.title || context.track.title} 기준 추천 교육 ${roleResourceCount}개, 직무확보 보완 역량(${gapText}), 학습목표를 함께 반영합니다.</p>
+    <p>${durationStrategy.summary} ${context.role?.title || context.track.title}에서 이미 체크한 보유 역량은 뒤로 두고, 체크하지 않은 보완 역량(${gapText})을 우선해 과제와 교육자료를 배치합니다.</p>
     <p>내 계획은 이 구성 결과를 완성된 로드맵 형태로 모아 보고 엑셀로 내보내는 화면입니다.</p>
     <div class="badge-row">
       <span class="badge">기간: ${getDurationLabel()}</span>
       <span class="badge">목표 반영: ${context.goal.label} · ${goalLabel}</span>
       <span class="badge">로드맵 주차: ${tasks.length}개</span>
-      <span class="badge">자료 배치: ${durationStrategy.resourceRule}</span>
+      <span class="badge">직무 연결 교육: ${roleResourceCount}개</span>
+      <span class="badge">자료 배치: 부족 역량 우선</span>
       <span class="badge">추가 자료: ${selectedResources.length}개</span>
     </div>
     <div class="duration-strategy-grid">
@@ -3561,9 +3679,12 @@ function getRecommendedResources(track, context) {
     const trackMatch = resource.tracks.includes(track.id);
     return trackMatch;
   });
+  const gapLinked = candidates.filter((resource) => getResourceGapMatches(resource, context).length);
   const roleLinked = candidates.filter((resource) => getRoleLinkedResourceIds(context.role).includes(resource.id));
   const roadmapLinked = candidates.filter((resource) => getResourceLinkedTasks(resource.id, context.visibleTasks).length);
-  const pool = uniqueResources([...roleLinked, ...roadmapLinked, ...candidates]);
+  const pool = uniqueResources(context.gapSkills.length
+    ? [...gapLinked, ...roleLinked, ...roadmapLinked, ...candidates]
+    : [...roleLinked, ...roadmapLinked, ...candidates]);
   return pool
     .map((resource) => ({
       resource,
@@ -3580,6 +3701,7 @@ function getRecommendedResources(track, context) {
 function getRoadmapResourcesForTask(track, task, context, resourceUseCounts = new Map()) {
   const trackResources = resources.filter((resource) => resource.tracks.includes(track.id));
   const selectedResources = trackResources.filter((resource) => state.saved.includes(resource.id));
+  const gapLinked = trackResources.filter((resource) => getResourceGapMatches(resource, context).length);
   const roleLinked = trackResources.filter((resource) => getRoleLinkedResourceIds(context.role).includes(resource.id));
   const directlyLinked = trackResources.filter((resource) => getResourceLinkedTasks(resource.id, [task]).length);
   const taskMatched = trackResources.filter((resource) => (
@@ -3587,7 +3709,7 @@ function getRoadmapResourcesForTask(track, task, context, resourceUseCounts = ne
     || getTaskResourceKeywordMatches(resource, task).length
     || getTaskRoleKeywordMatches(resource, task, context.role).length
   ));
-  const preferredPool = uniqueResources([...selectedResources, ...directlyLinked, ...roleLinked, ...taskMatched]);
+  const preferredPool = uniqueResources([...selectedResources, ...gapLinked, ...directlyLinked, ...roleLinked, ...taskMatched]);
   const pool = preferredPool.length >= 3
     ? preferredPool
     : uniqueResources([...preferredPool, ...trackResources]);
@@ -3654,20 +3776,22 @@ function clampScore(score, min, max) {
 function getCompetencyFitScore(resource, context) {
   const text = getResourceSearchText(resource);
   const coreResource = resource.core ? 1 : 0;
-  const gapMatches = resource.skills.filter((skill) => context.gapSkills.includes(skill)).length;
+  const gapMatches = getResourceGapMatches(resource, context).length;
+  const acquiredMatches = getResourceAcquiredMatches(resource, context).length;
   const roleKeywordMatches = getRoleKeywordMatches(resource, context.role).length;
   const linkedTaskMatches = getResourceLinkedTasks(resource.id, context.visibleTasks).length;
   const practiceEvidence = countKeywordMatches(text, ["실습", "보고서", "리포트", "README", "검증", "그래프", "표", "체크리스트"]);
   const shortDurationFit = context.durationWeeks <= 2 && resource.totalMinutes <= 180 ? 1 : 0;
   let score = 0;
 
-  score += gapMatches * 28;
+  score += gapMatches * 34;
   score += roleKeywordMatches * 16;
   score += linkedTaskMatches * 14;
   score += Math.min(practiceEvidence, 4) * 6;
   score += shortDurationFit * 10;
   score += coreResource * 16;
   if (resource.provider === "MathWorks" && isMathWorksRequiredForRole(context)) score += 16;
+  if (context.gapSkills.length && acquiredMatches && !gapMatches) score -= 18;
 
   return clampScore(score, 0, 92);
 }
@@ -3676,7 +3800,7 @@ function getGoalResourceScore(resource, context) {
   const text = getResourceSearchText(resource);
   const goalKey = context.goalKey || "foundation";
   const preferredDifficulty = context.goal.preferredDifficulties.includes(resource.difficulty) ? 1 : 0;
-  const gapMatches = resource.skills.filter((skill) => context.gapSkills.includes(skill)).length;
+  const gapMatches = getResourceGapMatches(resource, context).length;
   const goalSkillMatches = resource.skills.filter((skill) => context.goal.prioritySkills.includes(skill)).length;
   const roleKeywordMatches = getRoleKeywordMatches(resource, context.role).length;
   const outputEvidenceMatches = countKeywordMatches(text, [
@@ -3749,13 +3873,16 @@ function getEducationResourceScore(resource, context) {
   const roleDirectMatch = getRoleLinkedResourceIds(context.role).includes(resource.id) ? 1 : 0;
   const mathWorksRoleNeed = resource.provider === "MathWorks" && isMathWorksRequiredForRole(context) ? 1 : 0;
   const roleKeywordMatches = getRoleKeywordMatches(resource, context.role).length;
-  const gapMatches = resource.skills.filter((skill) => context.gapSkills.includes(skill)).length;
+  const gapMatches = getResourceGapMatches(resource, context).length;
+  const acquiredMatches = getResourceAcquiredMatches(resource, context).length;
   const taskMatches = getResourceLinkedTasks(resource.id, context.visibleTasks).length;
   const mathWorksMatches = getMathWorksSkillMatches(resource, context).length;
   const competencyScore = getCompetencyFitScore(resource, context);
   const goalScore = getGoalResourceScore(resource, context);
   const selectedMatch = state.saved.includes(resource.id) ? 1 : 0;
   const completedPenalty = state.completed.includes(resource.id) ? 18 : 0;
+  const acquiredOnlyPenalty = context.gapSkills.length && acquiredMatches && !gapMatches ? 80 : 0;
+  const noGapPenalty = context.gapSkills.length && !gapMatches ? 28 : 0;
 
   return roleDirectMatch * 140
     + coreResource * 90
@@ -3768,13 +3895,15 @@ function getEducationResourceScore(resource, context) {
     + goalScore
     + getResourcePriorityScore(resource, context)
     + selectedMatch * 24
-    - completedPenalty;
+    - completedPenalty
+    - acquiredOnlyPenalty
+    - noGapPenalty;
 }
 
 function getEducationResourceSignals(resource, context) {
   const signals = [];
   const roleDirectMatch = getRoleLinkedResourceIds(context.role).includes(resource.id);
-  const matchedGaps = resource.skills.filter((skill) => context.gapSkills.includes(skill));
+  const matchedGaps = getResourceGapMatches(resource, context);
   const mathWorksMatches = getMathWorksSkillMatches(resource, context);
   const mathWorksRoleNeed = resource.provider === "MathWorks" && isMathWorksRequiredForRole(context);
   const roleKeywordMatches = getRoleKeywordMatches(resource, context.role);
@@ -3841,6 +3970,8 @@ function getTaskResourceScore(resource, task, context, resourceUseCounts = new M
   const keywordMatches = getTaskResourceKeywordMatches(resource, task).length;
   const roleKeywordMatches = getTaskRoleKeywordMatches(resource, task, context.role).length;
   const gapMatches = getTaskGapMatches(resource, task, context.gapSkills).length;
+  const resourceGapMatches = getResourceGapMatches(resource, context).length;
+  const acquiredMatches = getResourceAcquiredMatches(resource, context).length;
   const outputMatches = getTaskOutputMatches(resource, task).length;
   const otherLinkedTaskMatches = getOtherLinkedTaskMatches(resource, task, context).length;
   const competencyScore = getCompetencyFitScore(resource, context);
@@ -3848,6 +3979,8 @@ function getTaskResourceScore(resource, task, context, resourceUseCounts = new M
   const selectedMatch = state.saved.includes(resource.id) ? 1 : 0;
   const alreadyUsedPenalty = getRoadmapResourceUseCount(resourceUseCounts, resource.id) * 220;
   const durationPenalty = getDurationResourcePenalty(resource, context);
+  const acquiredOnlyPenalty = context.gapSkills.length && acquiredMatches && !resourceGapMatches ? 160 : 0;
+  const noGapPenalty = context.gapSkills.length && !resourceGapMatches && !gapMatches ? 70 : 0;
 
   return directTaskMatches * 160
     + coreResource * 95
@@ -3857,7 +3990,8 @@ function getTaskResourceScore(resource, task, context, resourceUseCounts = new M
     + mathWorksRoleNeed * 35
     + matchedSkills * 45
     + Math.min(keywordMatches, 6) * 10
-    + gapMatches * 35
+    + resourceGapMatches * 90
+    + gapMatches * 45
     + roleKeywordMatches * 18
     + outputMatches * 14
     + competencyScore * 0.45
@@ -3865,7 +3999,9 @@ function getTaskResourceScore(resource, task, context, resourceUseCounts = new M
     + getResourcePriorityScore(resource, context) * 0.15
     - (directTaskMatches ? 0 : otherLinkedTaskMatches * 180)
     - alreadyUsedPenalty
-    - durationPenalty;
+    - durationPenalty
+    - acquiredOnlyPenalty
+    - noGapPenalty;
 }
 
 function getDurationResourcePenalty(resource, context) {
@@ -3897,17 +4033,19 @@ function getTaskResourceSignals(resource, task, context) {
   const roleDirectMatch = getRoleLinkedResourceIds(context.role).includes(resource.id);
   const matchedSkills = getTaskMatchedSkills(resource, task);
   const gapMatches = getTaskGapMatches(resource, task, context.gapSkills);
+  const resourceGapMatches = getResourceGapMatches(resource, context);
   const roleKeywordMatches = getTaskRoleKeywordMatches(resource, task, context.role);
   const competencyFitSignal = getCompetencyFitSignal(resource, context);
   const goalFitSignal = getGoalFitSignal(resource, context);
 
   if (directTaskMatches.length) signals.push("이번 주 과제 직접 연결");
+  if (resourceGapMatches.length) signals.push(`부족 역량 보완: ${resourceGapMatches.slice(0, 2).join(", ")}`);
   if (resource.core) signals.push("핵심 직무역량 교육");
   if (roleDirectMatch) signals.push("선택 직무 직접 추천");
   if (competencyFitSignal) signals.push(competencyFitSignal);
   if (goalFitSignal) signals.push(goalFitSignal);
   if (matchedSkills.length) signals.push(`과제 역량: ${matchedSkills.slice(0, 2).join(", ")}`);
-  if (gapMatches.length) signals.push(`직무확보 보완: ${gapMatches.slice(0, 2).join(", ")}`);
+  if (gapMatches.length) signals.push(`과제 결핍 연결: ${gapMatches.slice(0, 2).join(", ")}`);
   if (roleKeywordMatches.length) signals.push(`세부 직무 키워드: ${roleKeywordMatches.slice(0, 2).join(", ")}`);
   if (!signals.length) signals.push(`이번 주 산출물: ${task.deliverable}`);
 
@@ -3926,6 +4064,23 @@ function getTaskGapMatches(resource, task, gapSkills) {
     const normalized = skill.toLowerCase();
     return taskText.includes(normalized) && resourceText.includes(normalized);
   });
+}
+
+function getResourceSkillMatches(resource, skills) {
+  const resourceText = getResourceSearchText(resource);
+  return (skills || []).filter((skill) => {
+    const normalized = skill.toLowerCase();
+    return resourceText.includes(normalized)
+      || getSearchTokens(skill).some((token) => resourceText.includes(token));
+  });
+}
+
+function getResourceGapMatches(resource, context) {
+  return getResourceSkillMatches(resource, context.gapSkills);
+}
+
+function getResourceAcquiredMatches(resource, context) {
+  return getResourceSkillMatches(resource, context.acquiredSkills);
 }
 
 function getTaskRoleKeywordMatches(resource, task, role) {
@@ -4229,6 +4384,7 @@ function getRecommendationContext(track, gapSkills, visibleTasks = null) {
     track,
     role: getSelectedRole(track.id),
     gapSkills,
+    acquiredSkills: getAcquiredSkills(track.id),
     goalKey,
     goal: learningGoals[goalKey] || learningGoals.foundation,
     durationWeeks: getDurationWeeks(),
@@ -4249,7 +4405,7 @@ function getGoalGuide(goalKey, resource, track) {
 function getResourceSignals(resource, context) {
   const signals = [];
   const linkedTasks = getResourceLinkedTasks(resource.id, context.visibleTasks);
-  const matchedGaps = resource.skills.filter((skill) => context.gapSkills.includes(skill));
+  const matchedGaps = getResourceGapMatches(resource, context);
   const matchedGoal = resource.skills.filter((skill) => context.goal.prioritySkills.includes(skill));
   const matchedRoleKeywords = getRoleKeywordMatches(resource, context.role);
   const competencyFitSignal = getCompetencyFitSignal(resource, context);
@@ -4268,7 +4424,7 @@ function getResourceSignals(resource, context) {
 function getResourcePriorityScore(resource, context) {
   const coreResource = resource.core ? 1 : 0;
   const linkedTaskMatches = getResourceLinkedTasks(resource.id, context.visibleTasks).length;
-  const gapMatches = resource.skills.filter((skill) => context.gapSkills.includes(skill)).length;
+  const gapMatches = getResourceGapMatches(resource, context).length;
   const goalMatches = resource.skills.filter((skill) => context.goal.prioritySkills.includes(skill)).length;
   const roleKeywordMatches = getRoleKeywordMatches(resource, context.role).length;
   const difficultyMatch = context.goal.preferredDifficulties.includes(resource.difficulty) ? 1 : 0;
