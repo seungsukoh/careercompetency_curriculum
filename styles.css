@@ -309,6 +309,7 @@ input::placeholder {
   border: 0;
   border-bottom: 3px solid transparent;
   border-radius: 0;
+  font-weight: 800;
 }
 
 .tab.is-active {
@@ -344,6 +345,16 @@ input::placeholder {
   color: var(--primary-dark);
   background: #eef8fa;
   border-color: #9ed0dc;
+}
+
+.workflow-step.is-optional {
+  background: #f8f7f2;
+  border-style: dashed;
+}
+
+.workflow-step.is-optional .workflow-step-number {
+  color: #6c5d38;
+  background: #f1ead7;
 }
 
 .workflow-step.is-complete .workflow-step-number {
@@ -1530,6 +1541,179 @@ li {
   color: #5f4a25;
 }
 
+.roadmap-guidance .company-detail-inline.is-important {
+  padding: 12px;
+  color: #4f3317;
+  background: #fff7e6;
+  border: 1px solid #e4be74;
+  border-radius: 7px;
+  font-weight: 700;
+}
+
+.curriculum-overview-panel,
+.education-summary-panel {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  background: #ffffff;
+  border: 1px solid #b8dce6;
+  border-radius: 7px;
+}
+
+.curriculum-overview-panel {
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  align-items: start;
+}
+
+.curriculum-overview-panel h3,
+.education-summary-headline h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.18rem;
+  line-height: 1.3;
+}
+
+.curriculum-flow-list {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: curriculum-flow;
+}
+
+.curriculum-flow-list li {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  min-width: 0;
+  padding: 9px;
+  background: #f8fcfd;
+  border: 1px solid #d9edf2;
+  border-radius: 7px;
+  counter-increment: curriculum-flow;
+}
+
+.curriculum-flow-list li::before {
+  content: counter(curriculum-flow);
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  color: #ffffff;
+  background: var(--primary);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.curriculum-flow-list strong,
+.curriculum-flow-list span {
+  display: block;
+  min-width: 0;
+}
+
+.curriculum-flow-list strong {
+  color: var(--ink);
+  font-size: 0.86rem;
+}
+
+.curriculum-flow-list span {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.education-summary-headline {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.education-summary-headline > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.education-summary-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.education-summary-card {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: 12px;
+  background: #fbfcfa;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
+
+.education-summary-card.is-saved {
+  background: #f5fbf7;
+  border-color: #9bc7ad;
+}
+
+.education-summary-card-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 9px;
+  align-items: start;
+}
+
+.education-rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 26px;
+  padding: 0 8px;
+  color: #ffffff;
+  background: var(--primary);
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.education-summary-card h4 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.98rem;
+  line-height: 1.35;
+}
+
+.education-summary-card-head p,
+.education-summary-body p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.education-summary-body {
+  display: grid;
+  gap: 6px;
+}
+
+.education-summary-body strong {
+  display: block;
+  color: var(--ink);
+  font-size: 0.76rem;
+  line-height: 1.3;
+}
+
+.education-summary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .roadmap-decision-panel,
 .diagnosis-focus-panel {
   display: grid;
@@ -2566,6 +2750,8 @@ li {
   .diagnosis-context-strip,
   .diagnosis-focus-panel,
   .diagnosis-guide-grid,
+  .curriculum-overview-panel,
+  .education-summary-list,
   .roadmap-decision-panel,
   .diagnosis-next-panel,
   .roadmap-final-cta,
@@ -2634,6 +2820,15 @@ li {
   .resource-actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
+  }
+
+  .education-summary-headline {
+    display: grid;
+  }
+
+  .education-summary-headline .primary-button,
+  .education-summary-actions .resource-action {
+    width: 100%;
   }
 
   .competency-action-item,

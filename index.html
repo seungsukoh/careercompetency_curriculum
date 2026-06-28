@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#155e75">
-    <meta name="description" content="지원 직무 상세를 확인하고 부족 역량 중심의 준비 계획서를 만드는 앱">
-    <title>지원 직무 판단 및 역량 준비 계획서</title>
+    <meta name="description" content="지원 직무 상세를 확인하고 부족 역량 중심의 내 커리큘럼을 만드는 앱">
+    <title>지원 직무 판단 및 역량 커리큘럼</title>
     <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/assets/icon.svg">
     <link rel="stylesheet" href="/styles.css?v=20260628-applicant-flow">
@@ -16,7 +16,7 @@
       <header class="app-header">
         <div>
           <p class="eyebrow">채용공고 직무상세 기반</p>
-          <h1>지원 직무 판단 및 역량 준비 계획서</h1>
+          <h1>지원 직무 판단 및 역량 커리큘럼</h1>
         </div>
       </header>
 
@@ -90,9 +90,9 @@
           <nav class="tabs" aria-label="화면 전환">
             <button class="tab is-active" type="button" data-view="tracks">직무</button>
             <button class="tab" type="button" data-view="diagnosis">역량 체크</button>
-            <button class="tab" type="button" data-view="roadmap">로드맵</button>
-            <button class="tab" type="button" data-view="references">자료 선택</button>
-            <button class="tab" type="button" data-view="saved">계획서</button>
+            <button class="tab" type="button" data-view="roadmap">교육 선택</button>
+            <button class="tab" type="button" data-view="saved">내 커리큘럼</button>
+            <button class="tab" type="button" data-view="references">참고자료</button>
           </nav>
           <div class="workflow-status" id="workflowStatus" aria-label="진행 단계"></div>
           <div class="role-context-bar" id="roleContextBar" aria-live="polite"></div>
@@ -112,7 +112,7 @@
               </div>
               <div>
                 <strong>2. 보유역량 제외</strong>
-                <span>이미 갖춘 역량은 로드맵에서 뒤로 이동</span>
+                <span>이미 갖춘 역량은 커리큘럼에서 뒤로 이동</span>
               </div>
               <div>
                 <strong>3. 부족역량 준비</strong>
@@ -170,40 +170,40 @@
           <section class="view" id="roadmapView">
             <div class="section-heading">
               <div>
-                <p class="eyebrow">기간 맞춤 계획</p>
-                <h2 id="roadmapTitle">로드맵 구성</h2>
+                <p class="eyebrow">추천 교육 선택</p>
+                <h2 id="roadmapTitle">부족 역량에 맞는 교육을 고릅니다</h2>
               </div>
-              <span class="status-pill">주차별 구성</span>
+              <span class="status-pill">내 커리큘럼 전 단계</span>
             </div>
             <div class="roadmap-guidance" id="roadmapGuidance"></div>
             <div class="roadmap" id="roadmapList"></div>
           </section>
 
+          <section class="view" id="savedView">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">선택 결과 확인</p>
+                <h2>내 커리큘럼</h2>
+              </div>
+              <div class="section-actions">
+                <button class="primary-button" id="exportPlanButton" type="button">엑셀 커리큘럼 다운로드</button>
+                <button class="ghost-button" id="clearSavedButton" type="button">선택 자료 비우기</button>
+              </div>
+            </div>
+            <div class="plan-guidance" id="savedGuidance"></div>
+            <div class="resource-list" id="savedList"></div>
+          </section>
+
           <section class="view" id="referencesView">
             <div class="section-heading">
               <div>
-                <p class="eyebrow">참고자료 모음</p>
-                <h2>분야별 교육·실습자료</h2>
+                <p class="eyebrow">참고자료 보관함</p>
+                <h2>분야별 전체 교육·실습자료</h2>
               </div>
               <span class="status-pill" id="referenceCount">0개 자료</span>
             </div>
             <div class="reference-guidance" id="referenceGuidance"></div>
             <div class="reference-list" id="referenceList"></div>
-          </section>
-
-          <section class="view" id="savedView">
-            <div class="section-heading">
-              <div>
-                <p class="eyebrow">완성된 계획</p>
-                <h2>준비 계획서</h2>
-              </div>
-              <div class="section-actions">
-                <button class="primary-button" id="exportPlanButton" type="button">엑셀 계획서 다운로드</button>
-                <button class="ghost-button" id="clearSavedButton" type="button">계획 비우기</button>
-              </div>
-            </div>
-            <div class="plan-guidance" id="savedGuidance"></div>
-            <div class="resource-list" id="savedList"></div>
           </section>
         </section>
       </main>

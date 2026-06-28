@@ -3723,7 +3723,7 @@ Object.entries({
 });
 
 const storageKey = "careerCompetencyPilot";
-const primaryViews = ["tracks", "diagnosis", "roadmap", "references", "saved"];
+const primaryViews = ["tracks", "diagnosis", "roadmap", "saved", "references"];
 
 const defaultState = {
   selectedTrackId: null,
@@ -3933,9 +3933,9 @@ function renderWorkflowStatus() {
   if (!elements.workflowStatus || !elements.nextActionPanel) return;
 
   if (!hasActiveRoleSelection()) {
-    const steps = getWorkflowSteps({ track: null, role: null, checkedCount: 0, score: 0, gapCount: 0, savedCount: 0 });
+    const steps = getWorkflowSteps({ track: null, role: null, checkedCount: 0, score: 0, gapCount: 0, savedCount: 0, taskCount: 0 });
     elements.workflowStatus.innerHTML = steps.map((step, index) => `
-      <button class="workflow-step ${index === 0 ? "is-active" : ""}" type="button" data-view-target="${step.view}">
+      <button class="workflow-step ${index === 0 ? "is-active" : ""} ${step.optional ? "is-optional" : ""}" type="button" data-view-target="${step.view}">
         <span class="workflow-step-number">${index + 1}</span>
         <span>
           <strong>${step.title}</strong>
@@ -3959,11 +3959,12 @@ function renderWorkflowStatus() {
   const score = getDiagnosticScore(track.id);
   const gapCount = getGapItems(track.id).length;
   const savedCount = getSavedResources().length;
-  const steps = getWorkflowSteps({ track, role, checkedCount, score, gapCount, savedCount });
+  const taskCount = getVisibleRoadmapTasks(track.id).length;
+  const steps = getWorkflowSteps({ track, role, checkedCount, score, gapCount, savedCount, taskCount });
   const activeIndex = Math.max(steps.findIndex((step) => step.view === state.view), 0);
 
   elements.workflowStatus.innerHTML = steps.map((step, index) => `
-    <button class="workflow-step ${index === activeIndex ? "is-active" : ""} ${step.complete ? "is-complete" : ""}" type="button" data-view-target="${step.view}">
+    <button class="workflow-step ${index === activeIndex ? "is-active" : ""} ${step.complete ? "is-complete" : ""} ${step.optional ? "is-optional" : ""}" type="button" data-view-target="${step.view}">
       <span class="workflow-step-number">${index + 1}</span>
       <span>
         <strong>${step.title}</strong>
@@ -3981,11 +3982,11 @@ function renderWorkflowStatus() {
   `;
 }
 
-function getWorkflowSteps({ track, role, checkedCount, score, gapCount, savedCount }) {
+function getWorkflowSteps({ track, role, checkedCount, score, gapCount, savedCount, taskCount }) {
   return [
     {
       view: "tracks",
-      title: "직무 선택",
+      title: "직무 판단",
       status: role ? `${role.title}` : "선택 전",
       complete: hasActiveRoleSelection() && Boolean(role)
     },
@@ -3997,21 +3998,22 @@ function getWorkflowSteps({ track, role, checkedCount, score, gapCount, savedCou
     },
     {
       view: "roadmap",
-      title: "부족 역량 로드맵",
-      status: gapCount ? `보완 ${gapCount}개 기준` : "보완 공백 낮음",
+      title: "교육 선택",
+      status: gapCount ? `보완 ${gapCount}개 기준` : "추천 교육 확인",
       complete: hasActiveRoleSelection() && checkedCount > 0
+    },
+    {
+      view: "saved",
+      title: "내 커리큘럼",
+      status: hasActiveRoleSelection() ? `${taskCount || 0}주 구성 · 선택 ${savedCount}개` : "직무 선택 후",
+      complete: hasActiveRoleSelection()
     },
     {
       view: "references",
       title: "참고자료",
-      status: `${resources.length}개 자료`,
-      complete: hasActiveRoleSelection()
-    },
-    {
-      view: "saved",
-      title: "계획서",
-      status: hasActiveRoleSelection() ? (savedCount ? `${savedCount}개 추가 자료` : "자동 계획서 생성") : "직무 선택 후",
-      complete: hasActiveRoleSelection()
+      status: "필요할 때만 보기",
+      complete: false,
+      optional: true
     }
   ];
 }
@@ -4028,8 +4030,6 @@ function getNextWorkflowStep(steps, activeIndex) {
   }
 
   const diagnosisStep = steps.find((step) => step.view === "diagnosis");
-  const savedStep = steps.find((step) => step.view === "saved");
-
   if (!diagnosisStep.complete) {
     return {
       view: "diagnosis",
@@ -4043,28 +4043,38 @@ function getNextWorkflowStep(steps, activeIndex) {
   if (state.view !== "roadmap" && state.view !== "references" && state.view !== "saved") {
     return {
       view: "roadmap",
-      title: "부족 역량 로드맵을 확인하세요",
-      body: "체크하지 않은 항목을 기준으로 주차별 과제와 직접 교육자료가 배치됩니다.",
-      action: "로드맵 보기",
+      title: "추천 교육을 확인하고 고르세요",
+      body: "부족 역량과 첫 산출물에 맞춰 자동 추천된 교육을 먼저 훑고, 필요한 자료만 내 커리큘럼에 추가하세요.",
+      action: "교육 선택",
       primary: true
     };
   }
 
-  if (!savedStep.complete) {
+  if (state.view === "roadmap" || state.view === "references") {
     return {
       view: "saved",
-      title: "로드맵을 계획서로 정리하세요",
-      body: "자동 배치된 주차별 과제와 교육자료를 한 화면에서 확인하고 내보낼 수 있습니다.",
-      action: "계획서 보기",
-      primary: state.view === "roadmap"
+      title: "내 커리큘럼을 확인하세요",
+      body: "고른 교육과 자동 배치된 주차별 과제를 한 화면에서 확인하고, 엑셀 커리큘럼으로 내보낼 수 있습니다.",
+      action: "내 커리큘럼 확인",
+      primary: true
+    };
+  }
+
+  if (state.view === "saved") {
+    return {
+      view: "references",
+      title: "더 필요한 자료만 참고하세요",
+      body: "전체 자료 보관함은 보조 영역입니다. 내 커리큘럼에 부족한 유형이 있을 때만 분야별로 추가 확인하세요.",
+      action: "참고자료 보기",
+      primary: false
     };
   }
 
   return {
-    view: steps[Math.min(activeIndex + 1, steps.length - 1)]?.view || "roadmap",
+    view: "roadmap",
     title: "지원 회사 공고와 다시 대조하세요",
     body: "일반 직무 기반 추천이므로 회사별 직무상세의 업무, 자격요건, 우대사항과 맞는 항목을 우선하세요.",
-    action: "로드맵 재확인",
+    action: "교육 다시 확인",
     primary: false
   };
 }
@@ -4121,7 +4131,8 @@ function renderRoleContextBar() {
     <div class="role-context-actions">
       <button class="ghost-button" type="button" data-view-target="tracks">직무 상세</button>
       <button class="primary-button" type="button" data-view-target="diagnosis">역량 체크</button>
-      <button class="ghost-button" type="button" data-view-target="roadmap">로드맵</button>
+      <button class="ghost-button" type="button" data-view-target="roadmap">교육 선택</button>
+      <button class="ghost-button" type="button" data-view-target="saved">내 커리큘럼</button>
     </div>
   `;
 }
@@ -4376,7 +4387,7 @@ function renderRoleSelectionPrompt(roleCatalog) {
       <div>
         <p class="eyebrow">아직 선택 전</p>
         <h3>아래 추천 직무 중 실제 지원하려는 직무를 먼저 고르세요</h3>
-        <p>선택 후에는 같은 위치에 워드클라우드, 반복 업무, 자격조건, 우대역량, 전공 연결성, 바로 참고할 자료가 열립니다.</p>
+        <p>선택 후에는 같은 위치에 워드클라우드, 반복 업무, 자격조건, 우대역량, 전공 연결성, 교육 후보가 열립니다.</p>
       </div>
       ${topRoles.length ? `
         <div class="badge-row">
@@ -4434,14 +4445,13 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
           </div>
           ${quickResources.length ? `
             <div class="selected-role-resources">
-              <strong>바로 참고할 자료</strong>
+              <strong>교육 선택 전 미리 볼 후보</strong>
               ${quickResources.map((resource) => `
                 <span>
                   <em>${resource.title}</em>
                   <small>${resource.provider} · ${resource.type}</small>
                   <small>
                     <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
-                    ${renderSaveActionButton(resource, "계획 추가")}
                   </small>
                 </span>
               `).join("")}
@@ -4449,8 +4459,7 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
           ` : ""}
           <div class="flow-actions">
             <button class="primary-button" type="button" data-view-target="diagnosis">역량 체크하기</button>
-            <button class="ghost-button" type="button" data-view-target="roadmap">로드맵 보기</button>
-            <button class="ghost-button" type="button" data-view-target="references">참고자료 보기</button>
+            <button class="ghost-button" type="button" data-view-target="roadmap">교육 후보 보기</button>
           </div>
         </div>
         ${renderRoleWordCloud(track, role, "is-featured")}
@@ -4585,7 +4594,7 @@ function renderInlineRoleWordCloud(track, role) {
         </div>
         <div class="flow-actions">
           <button class="primary-button" type="button" data-view-target="diagnosis">역량 체크하기</button>
-          <button class="ghost-button" type="button" data-view-target="roadmap">부족 역량 로드맵 보기</button>
+          <button class="ghost-button" type="button" data-view-target="roadmap">부족 역량 교육 보기</button>
         </div>
       </div>
     </article>
@@ -5229,7 +5238,7 @@ function renderDiagnosisNextAction(gapCount) {
         <strong>${gapCount ? `${gapCount}개 부족 역량 기준으로 로드맵을 구성합니다` : "보완 공백이 낮아 산출물 정리 중심으로 넘어갑니다"}</strong>
         <span>체크한 보유 역량은 뒤로 두고, 미체크 항목과 선택 직무 산출물을 우선 배치합니다.</span>
       </div>
-      <button class="primary-button" type="button" data-view-target="roadmap">부족 역량 기준 로드맵 보기</button>
+      <button class="primary-button" type="button" data-view-target="roadmap">부족 역량 기준 교육 선택</button>
     </div>
   `;
 }
@@ -5299,7 +5308,7 @@ function renderDiagnosisGuide(track, role, questions) {
     <div>
       <p class="eyebrow">선택 기준</p>
       <h3>채용공고에서 요구하는 역량 중 내가 확보한 내용만 체크</h3>
-      <p>${diagnosisScope} 기준으로 확보 여부를 확인합니다. 체크하지 않은 항목은 자동 로드맵의 주차별 과제와 교육자료 배치에 바로 반영됩니다.</p>
+      <p>${diagnosisScope} 기준으로 확보 여부를 확인합니다. 체크하지 않은 항목은 내 커리큘럼의 주차별 과제와 교육자료 배치에 바로 반영됩니다.</p>
     </div>
     <div class="diagnosis-context-strip" aria-label="진단 현황">
       <span><strong>선택 직무</strong>${role?.title || track.title}</span>
@@ -5328,7 +5337,7 @@ function renderDiagnosisGuide(track, role, questions) {
       <span><strong>헷갈림</strong>보완 필요로 두면 추천 자료에서 우선 보완</span>
     </div>
     <div class="flow-actions">
-      <button class="primary-button" type="button" data-view-target="roadmap">부족 역량 기준 로드맵 보기</button>
+      <button class="primary-button" type="button" data-view-target="roadmap">부족 역량 기준 교육 선택</button>
     </div>
   `;
 }
@@ -5398,7 +5407,7 @@ function renderRoadmap() {
   const tasks = getVisibleRoadmapTasks(track.id);
   const context = getRecommendationContext(track, getGapSkills(track.id), tasks);
   const roadmapResourceUseCounts = new Map();
-  elements.roadmapTitle.textContent = `${track.title}${role ? ` · ${role.title}` : ""} ${getDurationLabel()} 로드맵 구성`;
+  elements.roadmapTitle.textContent = `${role?.title || track.title} 교육 선택`;
   renderRoadmapGuidance(context, tasks);
   elements.roadmapList.innerHTML = tasks.map((task, index) => {
     const linkedResources = getRoadmapResourcesForTask(track, task, context, roadmapResourceUseCounts);
@@ -5451,40 +5460,53 @@ function renderRoadmapGuidance(context, tasks) {
     .filter(isHandsOnResource)
     .length;
   const selectedText = selectedResources.length
-    ? `${selectedResources.length}개 추가 자료를 우선 반영해 ${getDurationLabel()} 로드맵을 자동 구성했습니다.`
-    : `교육자료를 직접 고르지 않아도 ${getDurationLabel()} 기준으로 자동 로드맵을 구성했습니다.`;
+    ? `${selectedResources.length}개 교육을 내 커리큘럼에 담았습니다.`
+    : "추천 교육을 먼저 훑고 필요한 것만 내 커리큘럼에 담으세요.";
 
   elements.roadmapGuidance.innerHTML = `
+    <section class="curriculum-overview-panel" aria-label="교육 선택 큰그림">
+      <div>
+        <p class="eyebrow">큰그림</p>
+        <h3>${context.role?.title || context.track.title} 준비는 이렇게 진행됩니다</h3>
+        <p>${durationStrategy.summary} 이미 체크한 보유 역량은 뒤로 두고, 보완 역량(${gapText})과 첫 산출물 중심으로 교육을 추천합니다.</p>
+      </div>
+      <ol class="curriculum-flow-list">
+        <li><strong>직무 확인</strong><span>반복 업무와 자격조건 이해</span></li>
+        <li><strong>부족 역량</strong><span>체크하지 못한 역량만 우선</span></li>
+        <li><strong>교육 선택</strong><span>필요한 교육만 커리큘럼에 추가</span></li>
+        <li><strong>내 커리큘럼</strong><span>주차별 과제와 산출물 확인</span></li>
+      </ol>
+    </section>
     ${renderRoadmapDecisionPanel(context, tasks)}
-    <h3>${selectedText}</h3>
-    <p>${durationStrategy.summary} ${context.role?.title || context.track.title}에서 이미 체크한 보유 역량은 뒤로 두고, 체크하지 않은 보완 역량(${gapText})을 우선해 과제와 교육자료를 배치합니다.</p>
-    ${renderCompetencyActionPlan(context, tasks)}
+    ${renderEducationSummaryPanel(context, tasks, selectedText)}
     ${checkedCount ? "" : `
       <div class="workflow-warning">
         <strong>보유 역량 체크 전입니다</strong>
-        아직 확보한 역량을 체크하지 않아 모든 역량 항목을 보완 대상으로 보고 있습니다. 실제 보유 역량을 체크하면 이미 아는 내용은 뒤로 빠지고 부족 역량 중심으로 로드맵이 다시 좁혀집니다.
+        아직 확보한 역량을 체크하지 않아 모든 역량 항목을 보완 대상으로 보고 있습니다. 실제 보유 역량을 체크하면 이미 아는 내용은 뒤로 빠지고 부족 역량 중심으로 커리큘럼이 다시 좁혀집니다.
         <button class="ghost-button" type="button" data-view-target="diagnosis">역량 체크하기</button>
       </div>
     `}
-    <p class="company-detail-inline"><strong>지원 전 필수 확인</strong> 이 로드맵은 일반적인 직무내용 기반 추천입니다. 지원 회사의 직무상세에 나온 업무·자격요건·우대사항을 확인한 뒤, 공고와 직접 맞닿은 역량과 산출물을 우선 준비하세요.</p>
-    <p class="company-detail-inline"><strong>실습 자료 안내</strong> 시뮬레이션, 현장실습, 직무부트캠프, KDT 과정은 일정·비용·선발 여부가 바뀔 수 있습니다. 앱에서는 직무 산출물과 연결되는 후보로 제시하고, 신청 전 과정 상세를 확인하세요.</p>
-    <p>주차별 과제에서 교육·실습자료를 열고, 필요한 자료만 계획에 추가해 진행하세요.</p>
+    <p class="company-detail-inline is-important"><strong>지원 전 필수 확인</strong> 이 커리큘럼 제안은 일반적인 직무내용을 기반으로 추천합니다. 지원 회사의 직무상세에 나온 업무·자격요건·우대사항을 반드시 확인하고, 공고와 직접 맞닿은 역량과 산출물을 우선 준비하세요.</p>
+    <details class="roadmap-detail-disclosure" open>
+      <summary>내 커리큘럼에 들어갈 과제 미리 보기</summary>
+      ${renderCompetencyActionPlan(context, tasks)}
+    </details>
     <div class="badge-row">
       <span class="badge">기간: ${getDurationLabel()}</span>
       <span class="badge">목표 반영: ${context.goal.label} · ${goalLabel}</span>
-      <span class="badge">로드맵 주차: ${tasks.length}개</span>
+      <span class="badge">커리큘럼 주차: ${tasks.length}개</span>
       <span class="badge">직무 연결 자료: ${roleResourceCount}개</span>
       <span class="badge">실습형 후보: ${practiceResourceCount}개</span>
       <span class="badge">자료 배치: 부족 역량 우선</span>
-      <span class="badge">추가 자료: ${selectedResources.length}개</span>
+      <span class="badge">내가 고른 교육: ${selectedResources.length}개</span>
     </div>
     ${renderHandsOnResourcePanel(context)}
     <div class="roadmap-final-cta">
       <div>
-        <strong>이 로드맵을 계획서로 정리</strong>
-        <span>자동 배치된 주차별 과제, 교육자료, 회사 공고 대조표를 계획서 화면과 엑셀 파일에서 확인합니다.</span>
+        <strong>교육을 골랐다면 내 커리큘럼을 확인하세요</strong>
+        <span>주차별 과제, 추천 교육, 회사 공고 대조표를 한 화면과 엑셀 파일에서 확인합니다.</span>
       </div>
-      <button class="primary-button" type="button" data-view-target="saved">계획서 보기</button>
+      <button class="primary-button" type="button" data-view-target="saved">내 커리큘럼 확인</button>
     </div>
     <details class="roadmap-detail-disclosure">
       <summary>추천 기준 자세히 보기</summary>
@@ -5536,14 +5558,114 @@ function renderRoadmapDecisionPanel(context, tasks) {
   `;
 }
 
+function renderEducationSummaryPanel(context, tasks, selectedText) {
+  const summaryResources = getEducationSummaryResources(context, tasks);
+  if (!summaryResources.length) {
+    return `
+      <section class="education-summary-panel" aria-label="추천 교육 요약">
+        <div class="education-summary-headline">
+          <div>
+            <p class="eyebrow">추천 교육 요약</p>
+            <h3>${selectedText}</h3>
+          </div>
+          <button class="primary-button" type="button" data-view-target="saved">내 커리큘럼 확인</button>
+        </div>
+        <div class="empty-state compact">선택 직무에 연결된 교육 후보가 아직 없습니다. 참고자료 보관함에서 직접 추가할 수 있습니다.</div>
+      </section>
+    `;
+  }
+
+  return `
+    <section class="education-summary-panel" aria-label="추천 교육 요약">
+      <div class="education-summary-headline">
+        <div>
+          <p class="eyebrow">추천 교육 요약</p>
+          <h3>${selectedText}</h3>
+          <p>상세 목록을 모두 읽기 전에, 먼저 아래 교육이 어떤 내용인지와 왜 추천됐는지 확인하세요.</p>
+        </div>
+        <button class="primary-button" type="button" data-view-target="saved">내 커리큘럼 확인</button>
+      </div>
+      <div class="education-summary-list">
+        ${summaryResources.map((resource, index) => renderEducationSummaryCard(resource, index, context, tasks)).join("")}
+      </div>
+    </section>
+  `;
+}
+
+function getEducationSummaryResources(context, tasks) {
+  const rankedResources = getRecommendedResources(context.track, context);
+  const focusedResources = rankedResources.filter((resource) => {
+    if (state.saved.includes(resource.id)) return true;
+    if (getRoleLinkedResourceIds(context.role).includes(resource.id)) return true;
+    if (getResourceGapMatches(resource, context).length) return true;
+    if (getResourceLinkedTasks(resource.id, tasks).length) return true;
+    return !resource.broad;
+  });
+  return uniqueResources([...focusedResources, ...rankedResources]).slice(0, 4);
+}
+
+function renderEducationSummaryCard(resource, index, context, tasks) {
+  const saved = state.saved.includes(resource.id);
+  const linkedTask = getPrimaryTaskForResource(resource, tasks, context);
+  const reason = getEducationSummaryReason(resource, linkedTask, context);
+  const learningText = truncateText(resource.reason, 96);
+  const outputText = truncateText(resource.expectedOutput, 88);
+  const taskText = linkedTask ? `${linkedTask.weekLabel || `${index + 1}주차`} · ${linkedTask.title}` : "자동 배치 과제";
+
+  return `
+    <article class="education-summary-card ${saved ? "is-saved" : ""}">
+      <div class="education-summary-card-head">
+        <span class="education-rank">추천 ${index + 1}</span>
+        <div>
+          <h4>${resource.title}</h4>
+          <p>${resource.provider} · ${resource.type} · ${formatMinutes(resource.totalMinutes)}</p>
+        </div>
+      </div>
+      <div class="education-summary-body">
+        <p><strong>내용</strong>${learningText}</p>
+        <p><strong>추천 이유</strong>${reason}</p>
+        <p><strong>내 커리큘럼 연결</strong>${taskText} / ${outputText}</p>
+      </div>
+      <div class="education-summary-actions">
+        <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
+        ${renderSaveActionButton(resource, "내 커리큘럼에 추가")}
+      </div>
+    </article>
+  `;
+}
+
+function getPrimaryTaskForResource(resource, tasks, context) {
+  return tasks.find((task) => getResourceLinkedTasks(resource.id, [task]).length)
+    || tasks.find((task) => getTaskGapMatches(resource, task, context.gapSkills).length)
+    || tasks.find((task) => getTaskRoleKeywordMatches(resource, task, context.role).length)
+    || tasks.find((task) => getTaskMatchedSkills(resource, task).length)
+    || tasks[0];
+}
+
+function getEducationSummaryReason(resource, task, context) {
+  const signals = getEducationResourceSignals(resource, context)
+    .filter((signal) => signal !== "계획 선택됨")
+    .slice(0, 2);
+  const connectionReason = task
+    ? getTaskResourceConnectionReason(resource, task, context)
+    : "선택 직무와 준비 목표에 연결되는 교육입니다.";
+  const text = signals.length ? `${signals.join(" · ")} · ${connectionReason}` : connectionReason;
+  return truncateText(text, 100);
+}
+
+function truncateText(text, maxLength) {
+  const normalized = String(text || "").trim();
+  return normalized.length > maxLength ? `${normalized.slice(0, maxLength - 3)}...` : normalized;
+}
+
 function renderReferences() {
   if (!elements.referenceList || !elements.referenceGuidance || !elements.referenceCount) return;
 
   if (!hasActiveRoleSelection()) {
     elements.referenceCount.textContent = `${resources.length}개 자료`;
     elements.referenceGuidance.innerHTML = `
-      <h3>직무를 선택하면 자료 우선순위가 정렬됩니다</h3>
-      <p>참고자료는 공식·시뮬레이션, 직접 실습·부트캠프, 기초 개념, 직무·채용공고 확인용으로 나뉩니다. 세부 직무 선택 후 필요한 자료만 계획에 추가하세요.</p>
+      <h3>참고자료는 보조 화면입니다</h3>
+      <p>먼저 직무를 선택하고 교육 선택 화면에서 핵심 추천을 확인하세요. 이곳은 더 찾아보고 싶을 때 여는 전체 자료 보관함입니다.</p>
     `;
     elements.referenceList.innerHTML = `<div class="empty-state">먼저 직무 탭에서 지원하려는 세부 직무를 선택하세요.</div>`;
     return;
@@ -5561,8 +5683,8 @@ function renderReferences() {
 
   elements.referenceCount.textContent = `${resources.length}개 자료`;
   elements.referenceGuidance.innerHTML = `
-    <h3>자료는 참고자료에서 찾고, 계획에는 필요한 것만 넣으세요</h3>
-    <p>로드맵은 선택 직무와 부족 역량에 맞는 자료만 자동 배치합니다. 이 탭은 전체 교육·실습자료 보관함이며, 분야별로 열어보고 관심 자료만 계획에 추가하면 됩니다.</p>
+    <h3>전체 자료는 필요할 때만 참고하세요</h3>
+    <p>핵심 추천은 교육 선택 화면에 이미 요약되어 있습니다. 이 탭은 공식 예제, 실습형 과정, 기초 강의, 채용공고 확인 자료를 더 살펴보고 싶을 때 사용하는 보관함입니다.</p>
     <div class="badge-row">
       <span class="badge">선택 직무: ${role?.title || track.title}</span>
       <span class="badge">전체 자료: ${resources.length}개</span>
@@ -5640,7 +5762,7 @@ function getReferenceSections(activeContext) {
     sections.push({
       id: "other",
       title: "추가 참고자료",
-      summary: "선택 직무와 직접 연결되면 계획에 추가해도 되는 보조 자료입니다.",
+      summary: "선택 직무와 직접 연결되면 내 커리큘럼에 추가해도 되는 보조 자료입니다.",
       context: activeContext,
       resources: otherResources
     });
@@ -6252,7 +6374,7 @@ function renderCompetencyActionPlan(context, tasks) {
                       <strong>${resource.title}</strong>
                       <div>
                         <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
-                        ${renderSaveActionButton(resource, "계획 추가")}
+                        ${renderSaveActionButton(resource, "내 커리큘럼에 추가")}
                       </div>
                     </div>
                   `).join("")}
@@ -6325,7 +6447,7 @@ function renderHandsOnResourcePanel(context) {
             </span>
             <span>
               <a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>
-              ${renderSaveActionButton(resource, "계획 추가")}
+              ${renderSaveActionButton(resource, "내 커리큘럼에 추가")}
             </span>
           </div>
         `).join("")}
@@ -6822,11 +6944,11 @@ function getResourceOpenLabel(resource) {
     : "교육 열기";
 }
 
-function renderSaveActionButton(resource, label = "계획에 추가") {
+function renderSaveActionButton(resource, label = "내 커리큘럼에 추가") {
   const saved = state.saved.includes(resource.id);
   return `
     <button class="resource-action ${saved ? "is-saved" : ""}" type="button" data-save-id="${resource.id}">
-      ${saved ? "계획에서 제거" : label}
+      ${saved ? "추가됨 · 제거" : label}
     </button>
   `;
 }
@@ -6864,8 +6986,8 @@ function getTaskResourceConnectionReason(resource, task, context) {
 function renderSaved() {
   if (!hasActiveRoleSelection()) {
     elements.savedGuidance.innerHTML = `
-      <h3>직무 선택 후 계획서가 생성됩니다</h3>
-      <p>선택 직무 상세, 부족 역량, 주차별 과제, 추천 교육자료, 회사 공고 대조표가 계획서로 정리됩니다.</p>
+      <h3>직무 선택 후 내 커리큘럼이 생성됩니다</h3>
+      <p>선택 직무 상세, 부족 역량, 주차별 과제, 추천 교육자료, 회사 공고 대조표가 내 커리큘럼으로 정리됩니다.</p>
     `;
     elements.savedList.innerHTML = `<div class="empty-state">직무 탭에서 세부 직무를 선택하세요.</div>`;
     return;
@@ -6912,13 +7034,13 @@ function renderSaved() {
       <section class="plan-selected-resources">
         <div class="section-heading compact">
           <div>
-            <p class="eyebrow">추가한 자료</p>
-            <h3>추가 교육자료</h3>
+            <p class="eyebrow">내가 고른 교육</p>
+            <h3>내 커리큘럼에 추가한 교육</h3>
           </div>
         </div>
         ${items.map((resource) => renderResourceCard(resource, null, null, true)).join("")}
       </section>
-    ` : `<div class="empty-state">추가한 교육자료가 없어도 위 자동 로드맵으로 바로 시작할 수 있습니다. 필요한 자료만 주차 안에서 계획에 추가하세요.</div>`}
+    ` : `<div class="empty-state">추가한 교육자료가 없어도 위 자동 커리큘럼으로 바로 시작할 수 있습니다. 교육 선택 화면에서 필요한 자료만 내 커리큘럼에 추가하세요.</div>`}
   `;
   elements.savedList.querySelectorAll("[data-roadmap-step-id]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -6968,12 +7090,12 @@ function renderSavedGuidance(items, tasks) {
   const durationStrategy = getDurationStrategy();
 
   elements.savedGuidance.innerHTML = `
-    <h3>계획서는 완성된 로드맵입니다</h3>
-    <p>로드맵 구성에서 계산된 주차별 과제와 자동 배치 교육자료를 한 화면에 모았습니다. 자료를 직접 고르지 않아도 ${durationStrategy.label} 기준으로 시작할 수 있고, 추가한 자료는 각 주차 추천에 우선 반영됩니다.</p>
+    <h3>내 커리큘럼에서 실제 실행 순서를 확인합니다</h3>
+    <p>교육 선택에서 고른 자료와 자동 배치된 주차별 과제를 한 화면에 모았습니다. 자료를 직접 고르지 않아도 ${durationStrategy.label} 기준으로 시작할 수 있고, 추가한 교육은 각 주차 추천에 우선 반영됩니다.</p>
     <div class="badge-row">
-      <span class="badge">로드맵 주차: ${tasks.length}개</span>
+      <span class="badge">커리큘럼 주차: ${tasks.length}개</span>
       <span class="badge">완료 주차: ${completedWeeks}/${tasks.length}</span>
-      <span class="badge">추가 자료: ${items.length}개</span>
+      <span class="badge">내가 고른 교육: ${items.length}개</span>
       <span class="badge">${durationStrategy.resourceRule}</span>
       <span class="badge">완료: ${completedCount}개</span>
       <span class="badge">진행: ${pendingCount}개</span>
@@ -7199,7 +7321,7 @@ function exportPlanAsExcel() {
   if (!hasActiveRoleSelection()) {
     elements.exportPlanButton.textContent = "직무 선택 필요";
     setTimeout(() => {
-      elements.exportPlanButton.textContent = "엑셀 계획서 다운로드";
+      elements.exportPlanButton.textContent = "엑셀 커리큘럼 다운로드";
     }, 1800);
     return;
   }
@@ -7216,7 +7338,7 @@ function exportPlanAsExcel() {
   }
 
   setTimeout(() => {
-    elements.exportPlanButton.textContent = "엑셀 계획서 다운로드";
+    elements.exportPlanButton.textContent = "엑셀 커리큘럼 다운로드";
   }, 1800);
 }
 
@@ -7245,7 +7367,7 @@ function buildSummaryExportRows() {
 
   return [
     ["항목", "내용"],
-    ["문서명", `${role?.title || track.title} 직무역량 준비 계획서`],
+    ["문서명", `${role?.title || track.title} 직무역량 내 커리큘럼`],
     ["내보낸 날짜", formatExportDate()],
     ["전공", getSelectLabel(elements.majorSelect)],
     ["관심 산업", getSelectLabel(elements.industrySelect)],
@@ -7272,7 +7394,7 @@ function buildCompanyPostingExportRows() {
 
   const rows = [
     ["구분", "앱 기준", "지원 회사 공고 문장", "준비 상태"],
-    ["안내", "이 계획서는 일반적인 직무내용 기반 추천입니다. 지원 회사의 직무상세 내용과 다를 수 있으므로 반드시 실제 공고 문장을 붙여 넣고 비교하세요.", "", "필수 확인"],
+    ["안내", "이 커리큘럼은 일반적인 직무내용 기반 추천입니다. 지원 회사의 직무상세 내용과 다를 수 있으므로 반드시 실제 공고 문장을 붙여 넣고 비교하세요.", "", "필수 확인"],
     ["선택 직무", role.title, "", ""],
     ["직무 설명", role.focus, "", ""],
     ["전공 연결성", `${getMajorPathwayLabel(track, role)} - ${getMajorPathwayReason(track, role)}`, "", ""]
