@@ -31,12 +31,12 @@ const tracks = [
     majors: ["mechanical", "electrical", "chemical", "both"],
     industries: ["semiconductor"],
     difficulty: "상",
-    summary: "웨이퍼 공정과 장비 조건을 이해하고 수율, 설비 안정성, 공정 문제를 개선하는 직무입니다.",
-    tasks: ["공정 흐름 이해", "장비 조건 관리", "수율·불량 데이터 분석", "진공·플라즈마 기초 적용"],
-    skills: ["반도체 소자", "공정 흐름", "진공·플라즈마", "계측", "데이터 분석"],
-    tools: ["Excel", "Python", "SPC", "장비 로그"],
-    outputs: ["공정 흐름도", "불량 Pareto 분석", "조건 변경 검토표", "수율 개선 가설"],
-    misconceptions: ["반도체 공정은 전자회로만으로 설명되지 않습니다.", "물리, 화학, 재료, 장비 이해가 함께 필요합니다."]
+    summary: "웨이퍼 공정, 장비 조건, 계측·검사, 수율 데이터, 공정통합 이슈를 연결해 양산 안정성과 수율을 개선하는 직무군입니다.",
+    tasks: ["포토·식각·증착·CMP 조건 관리", "장비·Facility 이상 대응", "계측·검사·수율 데이터 분석", "공정통합 영향과 조건 변경 검토"],
+    skills: ["반도체 소자", "Photo/Etch/Deposition/CMP", "진공·플라즈마·박막", "계측·검사", "SPC·DOE·수율분석"],
+    tools: ["JMP/Minitab", "Python/SQL", "Spotfire", "MES/FDC", "CD-SEM", "장비 로그"],
+    outputs: ["공정 조건 변경 검토표", "수율·결함 분석 리포트", "계측 trend 리포트", "장비 이상 대응표", "공정통합 split lot 계획"],
+    misconceptions: ["반도체 공정 직무는 하나가 아니라 포토, 식각, 증착, CMP, 계측, 수율, 장비, 공정통합으로 세분화됩니다.", "전공지식만큼 recipe, 계측 지표, 장비 로그, 수율 데이터로 원인 가설을 설명하는 역량이 중요합니다."]
   },
   {
     id: "chemical-process",
@@ -83,7 +83,7 @@ tracks.splice(1, 0, {
   id: "automotive-mobility",
   title: "자동차·모빌리티",
   majors: ["mechanical", "electrical", "both"],
-  industries: ["mobility", "manufacturing", "electronics"],
+  industries: ["mobility", "manufacturing", "electronics", "battery"],
   difficulty: "중",
   summary: "차량 시스템 요구사항을 차체·섀시·내외장·전동화·전장·제어·검증·양산 품질 산출물로 나누어 개발하는 직무군입니다.",
   tasks: ["차량 요구사항 분해", "차체·섀시·내외장·열관리 설계", "전장·BMS·제어 시스템 검증", "실차·HIL 시험과 신차 양산 이관"],
@@ -934,6 +934,80 @@ const resources = [
     expectedOutput: "식각 변수와 결과 지표 연결표",
     qualityStatus: "candidate",
     url: "https://semiengineering.com/knowledge_centers/manufacturing/process/etch/"
+  },
+  {
+    id: "semiengineering-lithography",
+    title: "Lithography Process 핵심 개념 후보",
+    provider: "Semiconductor Engineering",
+    type: "산업 기술교육자료",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 75,
+    practiceMinutes: 60,
+    sequenceLevel: 2,
+    core: true,
+    tracks: ["semiconductor-equipment"],
+    skills: ["Photo", "Lithography", "Overlay", "CD", "공정 흐름", "계측"],
+    prerequisites: ["반도체 공정 흐름"],
+    reason: "포토 공정에서 반복되는 exposure, focus, overlay, CD, defect 지표를 공정 조건과 연결해 보는 자료 후보입니다.",
+    expectedOutput: "포토 공정 변수와 CD/overlay 결과 지표 연결표",
+    qualityStatus: "candidate",
+    url: "https://semiengineering.com/knowledge_centers/manufacturing/lithography/"
+  },
+  {
+    id: "semiengineering-deposition",
+    title: "Deposition Process 핵심 개념 후보",
+    provider: "Semiconductor Engineering",
+    type: "산업 기술교육자료",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 75,
+    practiceMinutes: 60,
+    sequenceLevel: 2,
+    core: true,
+    tracks: ["semiconductor-equipment"],
+    skills: ["Deposition", "CVD", "PVD", "ALD", "박막", "장비조건"],
+    prerequisites: ["반도체 공정 흐름"],
+    reason: "CVD/PVD/ALD 박막 공정의 두께, 균일도, step coverage, particle 이슈를 장비 조건과 연결하는 데 적합한 자료 후보입니다.",
+    expectedOutput: "증착 조건과 박막 품질 지표 연결표",
+    qualityStatus: "candidate",
+    url: "https://semiengineering.com/knowledge_centers/manufacturing/deposition/"
+  },
+  {
+    id: "semiengineering-cmp",
+    title: "CMP Process 핵심 개념 후보",
+    provider: "Semiconductor Engineering",
+    type: "산업 기술교육자료",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 60,
+    practiceMinutes: 60,
+    sequenceLevel: 2,
+    tracks: ["semiconductor-equipment"],
+    skills: ["CMP", "Planarization", "Dishing", "Erosion", "Defect", "공정조건"],
+    prerequisites: ["반도체 공정 흐름"],
+    reason: "CMP 직무에서 쓰이는 removal rate, slurry, pad, pressure, dishing/erosion 같은 용어를 조건 변경과 연결하는 자료 후보입니다.",
+    expectedOutput: "CMP 조건과 dishing/erosion 원인 가설표",
+    qualityStatus: "candidate",
+    url: "https://semiengineering.com/knowledge_centers/manufacturing/process/cmp/"
+  },
+  {
+    id: "semiengineering-failure-analysis",
+    title: "Semiconductor Failure Analysis 핵심 개념 후보",
+    provider: "Semiconductor Engineering",
+    type: "산업 기술교육자료",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 75,
+    practiceMinutes: 90,
+    sequenceLevel: 3,
+    tracks: ["semiconductor-equipment"],
+    skills: ["Failure Analysis", "Defect Review", "SEM/EDS", "FIB", "Wafer map", "Root cause"],
+    prerequisites: ["반도체 공정 흐름", "계측·검사 기초"],
+    reason: "불량 분석에서 반복되는 defect review, FA 의뢰, 분석 결과 해석, root cause 연결 흐름을 잡기 위한 산업 자료 후보입니다.",
+    expectedOutput: "FA 의뢰서와 root-cause hypothesis report 초안",
+    qualityStatus: "candidate",
+    url: "https://semiengineering.com/knowledge_centers/test/failure-analysis/"
   },
   {
     id: "analog-dialogue",
@@ -2720,6 +2794,13 @@ const majorRoleFitProfiles = {
       "semiconductor-yield-engineer",
       "etch-process-engineer",
       "metrology-engineer",
+      "photo-lithography-engineer",
+      "thin-film-deposition-engineer",
+      "cmp-process-engineer",
+      "process-integration-engineer",
+      "semiconductor-facility-engineer",
+      "fdc-apc-process-control-engineer",
+      "defect-failure-analysis-engineer",
       "hardware-design-engineer",
       "validation-engineer",
       "control-engineer",
@@ -2746,7 +2827,12 @@ const majorRoleFitProfiles = {
       "semiconductor-process-engineer",
       "semiconductor-yield-engineer",
       "etch-process-engineer",
-      "metrology-engineer"
+      "metrology-engineer",
+      "photo-lithography-engineer",
+      "process-integration-engineer",
+      "semiconductor-facility-engineer",
+      "fdc-apc-process-control-engineer",
+      "defect-failure-analysis-engineer"
     ],
     bridge: [
       "process-engineer",
@@ -2756,7 +2842,9 @@ const majorRoleFitProfiles = {
       "mechanical-test-engineer",
       "thermal-cfd-engineer",
       "battery-process-engineer",
-      "process-safety-engineer"
+      "process-safety-engineer",
+      "thin-film-deposition-engineer",
+      "cmp-process-engineer"
     ],
     bridgeFocus: "회로·계측·제어 강점을 공정 데이터, 품질 기준, 설비 조건 해석으로 연결해야 합니다."
   },
@@ -2770,6 +2858,11 @@ const majorRoleFitProfiles = {
       "semiconductor-process-engineer",
       "semiconductor-yield-engineer",
       "etch-process-engineer",
+      "photo-lithography-engineer",
+      "thin-film-deposition-engineer",
+      "cmp-process-engineer",
+      "process-integration-engineer",
+      "defect-failure-analysis-engineer",
       "process-engineer"
     ],
     bridge: [
@@ -2778,6 +2871,8 @@ const majorRoleFitProfiles = {
       "production-technology-engineer",
       "semiconductor-equipment-engineer",
       "metrology-engineer",
+      "semiconductor-facility-engineer",
+      "fdc-apc-process-control-engineer",
       "supplier-quality-engineer"
     ],
     bridgeFocus: "물질수지·반응·분리 강점을 수율, 계측, 데이터, 장비 조건 언어로 번역해야 합니다."
@@ -2828,12 +2923,18 @@ majorRoleFitProfiles.electrical.bridge.push(
   "automotive-quality-field-engineer",
   "vehicle-test-validation-engineer"
 );
+majorRoleFitProfiles.chemical.bridge.push(
+  "ev-battery-pack-engineer",
+  "bms-control-engineer",
+  "vehicle-thermal-management-engineer",
+  "automotive-quality-field-engineer"
+);
 
 const starterKeywords = {
   "automotive-mobility": "자동차 차체 섀시 내외장 전장 ECU BMS 하네스 CAN HIL ADAS 기능안전 캘리브레이션 양산품질 검증",
   "mechanical-cae": "재료역학 기계요소설계 구조해석 CAD",
   "production-quality": "품질관리 SPC 관리도 FMEA 공정능력",
-  "semiconductor-equipment": "반도체 공정 소자 진공 플라즈마 계측",
+  "semiconductor-equipment": "반도체 공정 소자 포토 식각 증착 CMP 공정통합 장비 Facility 계측 수율",
   "chemical-process": "화학공정 물질수지 반응공학 분리공정 공정안전",
   "electronics-pcb": "회로이론 전자회로 전원회로 PCB 계측",
   "embedded-control": "임베디드 C언어 MCU 제어공학 UART"
@@ -2995,6 +3096,76 @@ const jobRoles = {
       responsibilities: ["계측 recipe와 검사 조건 관리", "측정 반복성·재현성 확인", "계측 데이터 이상치와 trend 분석", "공정·수율 팀에 판단 가능한 리포트 제공"],
       requirements: ["반도체 계측 지표 이해", "측정 오차와 샘플링 기준 이해", "SPC와 trend chart 해석", "공정 이력과 계측 결과 연결"],
       preferred: ["MSA 또는 gauge R&R 기초", "Defect review 흐름 이해", "SQL/Python 기반 계측 데이터 처리"]
+    },
+    {
+      id: "photo-lithography-engineer",
+      title: "포토·리소그래피 공정 엔지니어",
+      postingKeywords: ["Photo", "Lithography", "Overlay", "CD", "Exposure"],
+      industries: ["semiconductor", "all"],
+      focus: "노광 recipe, focus/exposure, overlay, CD, defect 데이터를 연결해 패턴 형성 품질과 수율을 개선하는 직무",
+      responsibilities: ["PR coating, exposure, develop, bake 조건과 CD/overlay 결과 관리", "focus, dose, alignment 조건 변경 실험과 공정 window 검토", "reticle, scanner, track 장비 이슈와 defect 원인 후보 정리", "계측 결과와 lot 이력을 연결해 OCAP 조치와 개선 실험을 설계"],
+      requirements: ["반도체 포토 공정 흐름과 lithography 기본 이해", "CD, overlay, focus, exposure dose, defect 지표 해석", "SPC/DOE 기반 공정 window와 조건 변경 판단", "계측 결과를 recipe 변경 근거로 문서화"],
+      preferred: ["scanner/track 장비, reticle, alignment 이슈 이해", "JMP/Python/Spotfire 기반 CD·overlay trend 분석", "OCAP, split lot, 공정 window 평가 경험"]
+    },
+    {
+      id: "thin-film-deposition-engineer",
+      title: "박막·증착 공정 엔지니어",
+      postingKeywords: ["Deposition", "CVD", "PVD", "ALD", "박막"],
+      industries: ["semiconductor", "all"],
+      focus: "CVD/PVD/ALD 증착 조건과 두께, 균일도, step coverage, particle 데이터를 연결해 박막 품질을 안정화하는 직무",
+      responsibilities: ["가스 유량, 압력, 온도, plasma/RF 조건과 박막 결과 지표 관리", "두께, uniformity, stress, step coverage, particle trend 분석", "chamber seasoning, PM 이후 matching, contamination 이슈 대응", "증착 recipe 변경 전후 결과와 장비 상태를 리포트로 정리"],
+      requirements: ["박막 공정, 진공, plasma, CVD/PVD/ALD 기초", "두께·균일도·particle·stress 계측 지표 이해", "장비 로그와 계측 결과를 시간 기준으로 연결하는 역량", "조건 변경 리스크와 검증 계획 문서화"],
+      preferred: ["CVD/ALD/PVD 장비 또는 박막 실습 경험", "FDC, SPC, chamber matching, PM 후 검증 이해", "Python/JMP 기반 박막 trend 분석 경험"]
+    },
+    {
+      id: "cmp-process-engineer",
+      title: "CMP 공정 엔지니어",
+      postingKeywords: ["CMP", "Planarization", "Slurry", "Dishing", "Erosion"],
+      industries: ["semiconductor", "all"],
+      focus: "CMP 장비 조건, slurry/pad 상태, removal rate, dishing/erosion, defect 데이터를 분석해 평탄화 품질을 관리하는 직무",
+      responsibilities: ["pressure, platen speed, slurry, pad conditioning 조건 관리", "removal rate, within-wafer uniformity, dishing, erosion 결과 분석", "scratch, particle, residue 결함과 consumable 상태 원인 후보 정리", "CMP 조건 변경과 post-CMP cleaning 결과를 개선 리포트로 연결"],
+      requirements: ["CMP 공정 흐름과 평탄화 지표 이해", "slurry, pad, pressure, speed, conditioning 변수 이해", "두께·defect·세정 결과를 조건 변경과 연결하는 역량", "SPC/DOE 기반 개선 실험 설계"],
+      preferred: ["CMP 장비·소모품·post-cleaning 이슈 이해", "dishing/erosion, scratch, particle 원인분석 경험", "JMP/Minitab/Python 기반 공정 데이터 분석"]
+    },
+    {
+      id: "process-integration-engineer",
+      title: "반도체 공정통합 엔지니어",
+      postingKeywords: ["Integration", "Device", "Split lot", "Module", "Yield"],
+      industries: ["semiconductor", "all"],
+      focus: "소자 구조, 단위 공정, 계측, 수율 데이터를 연결해 module 간 영향과 공정 변경 리스크를 판단하는 직무",
+      responsibilities: ["소자 구조와 module별 공정 flow, key parameter, 계측 지표 관리", "단위 공정 변경이 전후 공정, 전기특성, 수율에 미치는 영향 분석", "split lot, DOE, reliability 결과를 통합해 변경 승인 근거 작성", "공정·장비·계측·수율 팀 사이의 이슈 우선순위 조정"],
+      requirements: ["반도체 소자·공정 flow와 module integration 이해", "전기특성, 계측, 수율 지표를 함께 해석하는 역량", "split lot/DOE 결과를 변경 리스크로 정리", "여러 부서 데이터를 하나의 판단 근거로 통합"],
+      preferred: ["소자 물리, yield ramp, reliability, failure analysis 이해", "JMP/Spotfire/Python 기반 multi-factor 분석 경험", "공정 변경 심의 또는 risk assessment 경험"]
+    },
+    {
+      id: "semiconductor-facility-engineer",
+      title: "반도체 Facility·Utility 엔지니어",
+      postingKeywords: ["Facility", "Utility", "UPW", "CDA", "Gas/Chemical"],
+      industries: ["semiconductor", "all"],
+      focus: "클린룸, 초순수, 가스, 케미컬, 배기, 전력, 냉각수 설비를 안정적으로 운영해 공정 장비 가동 조건을 유지하는 직무",
+      responsibilities: ["UPW, CDA, vacuum, exhaust, gas/chemical, power, chiller 조건 모니터링", "utility 이상이 장비 alarm, 공정 품질, 안전에 미치는 영향 분석", "PM, 비상 대응, 법정 안전, 변경 작업 리스크 관리", "에너지·가동률·안전 지표를 운영 리포트로 정리"],
+      requirements: ["기계·전기·화공 설비와 P&ID 기본 이해", "압력, 유량, 온도, 전도도, particle 등 utility 지표 해석", "안전 절차, interlock, 화학물질·가스 취급 리스크 이해", "장비 부서와 공정 영향도를 커뮤니케이션하는 역량"],
+      preferred: ["클린룸/utility 설비, PSM, gas/chemical safety 경험", "SCADA/BMS/FMS 로그 분석, 에너지 절감 개선 경험", "비상 대응 시나리오와 변경관리 문서화 경험"]
+    },
+    {
+      id: "fdc-apc-process-control-engineer",
+      title: "FDC·APC 공정제어 엔지니어",
+      postingKeywords: ["FDC", "APC", "R2R", "EES", "SECS/GEM"],
+      industries: ["semiconductor", "all"],
+      focus: "장비 sensor trace, recipe drift, alarm, 계측 결과를 연결해 FDC rule과 APC/R2R 제어 기준을 설계하는 직무",
+      responsibilities: ["FDC sensor trace와 golden trace 기준 정의", "APC/R2R control parameter와 계측 feedback 연결", "OCAP rule, alarm threshold, recipe drift 감지 기준 관리", "장비·공정·IT 팀과 SECS/GEM, EDA/Interface A 데이터 품질 이슈 대응"],
+      requirements: ["SPC, 제어, 데이터 전처리, 장비 로그 기본 이해", "SECS/GEM, EDA/Interface A, sensor trace, recipe 구조 이해", "정상 trace와 이상 trace를 비교해 rule을 설계하는 역량", "false alarm과 missed alarm의 trade-off 판단"],
+      preferred: ["FDC/APC/EES 시스템, R2R control, OCAP 운영 경험", "Python/SQL 기반 time-series trace 분석", "장비 데이터 수집 인터페이스와 데이터 품질 검증 경험"]
+    },
+    {
+      id: "defect-failure-analysis-engineer",
+      title: "결함·불량 분석 FA 엔지니어",
+      postingKeywords: ["Defect Review", "Failure Analysis", "SEM/EDS", "FIB", "Wafer map"],
+      industries: ["semiconductor", "all"],
+      focus: "검사 장비의 defect, wafer map, e-test, WAT/PCM, 분석 장비 결과를 연결해 killer defect와 root cause를 찾는 직무",
+      responsibilities: ["defect Pareto와 wafer map pattern으로 우선 분석 대상 선정", "KLA inspection, defect review, SEM/EDS, FIB, cross-section 분석 의뢰", "WAT/PCM, e-test, 공정 이력과 결함 위치를 correlation", "FA 결과를 공정·장비 개선 가설과 재발 방지 항목으로 정리"],
+      requirements: ["반도체 공정 flow, defect 유형, 계측·검사 기본 이해", "wafer map, bin map, defect image, e-test 데이터를 연결하는 역량", "SEM/EDS, FIB, cross-section, optical inspection 결과 해석 기초", "분석 의뢰서와 원인 가설 리포트 작성"],
+      preferred: ["KLA inspection, defect review, SEM/EDS/FIB 분석 경험", "WAT/PCM, e-test correlation, killer defect 선별 경험", "Python/Spotfire/JMP 기반 defect pattern 분석"]
     }
   ],
   "electronics-pcb": [
@@ -3422,6 +3593,62 @@ const aiRoleCompetencyProfiles = {
     preferred: ["계측 이미지/defect 분류 또는 trend 이상탐지 경험"],
     diagnostics: [["계측 AI", "계측 trend에서 장비 drift, 공정 변화, 샘플링 문제를 구분할 수 있다."]]
   },
+  "photo-lithography-engineer": {
+    level: "중요",
+    summary: "CD/overlay trend와 scanner/track 조건을 연결해 공정 window와 이상 lot을 빠르게 좁히는 역량입니다.",
+    keywords: ["AI", "CD trend", "Overlay 이상탐지"],
+    requirements: ["CD, overlay, focus, dose 데이터를 lot/wafer 기준으로 정리하는 역량"],
+    preferred: ["CD/overlay trend 이상탐지, 공정 window 분석, Python/JMP 데이터 처리 경험"],
+    diagnostics: [["포토 데이터", "focus, dose, CD, overlay 데이터를 연결해 공정 window 문제를 정의할 수 있다."]]
+  },
+  "thin-film-deposition-engineer": {
+    level: "중요",
+    summary: "박막 두께, uniformity, particle, chamber 상태 로그를 연결해 PM 이후 matching과 이상 조건을 판단하는 역량입니다.",
+    keywords: ["AI", "박막 trend", "Chamber matching"],
+    requirements: ["증착 recipe, 장비 로그, 계측 결과를 시간 기준으로 연결하는 데이터 처리 역량"],
+    preferred: ["FDC, chamber matching, particle trend 이상탐지, Python/JMP 분석 경험"],
+    diagnostics: [["박막 데이터", "두께, uniformity, particle, chamber 상태를 연결해 원인 후보를 좁힐 수 있다."]]
+  },
+  "cmp-process-engineer": {
+    level: "도움됨",
+    summary: "CMP 조건, 소모품 상태, defect 데이터를 연결해 removal rate와 dishing/erosion 문제를 좁히는 역량입니다.",
+    keywords: ["AI", "CMP defect", "Removal rate"],
+    requirements: ["CMP 조건과 defect/두께 데이터를 같은 기준으로 비교하는 역량"],
+    preferred: ["소모품 이력, defect trend, removal rate 예측 또는 이상탐지 경험"],
+    diagnostics: [["CMP 데이터", "slurry, pad, pressure, removal rate, defect 데이터를 원인 가설로 연결할 수 있다."]]
+  },
+  "process-integration-engineer": {
+    level: "핵심",
+    summary: "여러 단위 공정, 계측, 전기특성, 수율 데이터를 통합해 변경 영향과 risk를 판단하는 핵심 역량입니다.",
+    keywords: ["AI", "공정통합", "multi-factor 분석"],
+    requirements: ["공정 flow, 계측, 전기특성, 수율 데이터를 하나의 판단 테이블로 묶는 역량"],
+    preferred: ["split lot, DOE, yield ramp, multi-factor analysis, Python/Spotfire/JMP 경험"],
+    diagnostics: [["통합 데이터", "단위 공정 변경이 전기특성, 수율, reliability에 미치는 영향을 데이터로 추적할 수 있다."]]
+  },
+  "semiconductor-facility-engineer": {
+    level: "도움됨",
+    summary: "Utility 로그와 장비 alarm, 공정 품질 변화를 연결해 설비 이상과 공정 영향도를 판단하는 역량입니다.",
+    keywords: ["AI", "Utility trend", "Facility 이상탐지"],
+    requirements: ["UPW, CDA, gas, exhaust, power, chiller 로그를 장비 alarm과 연결하는 역량"],
+    preferred: ["SCADA/BMS/FMS 로그 분석, 에너지 최적화, 이상탐지 경험"],
+    diagnostics: [["Facility 데이터", "utility trend와 장비 alarm을 연결해 공정 영향 가능성을 판단할 수 있다."]]
+  },
+  "fdc-apc-process-control-engineer": {
+    level: "핵심",
+    summary: "장비 sensor trace와 계측 feedback을 연결해 FDC rule, APC/R2R 제어, OCAP 기준을 설계하는 핵심 역량입니다.",
+    keywords: ["AI", "FDC", "APC", "Trace 이상탐지"],
+    requirements: ["time-series sensor trace, alarm, recipe, 계측 결과를 같은 lot/wafer 기준으로 연결하는 역량"],
+    preferred: ["FDC rule tuning, R2R control, false alarm 분석, Python/SQL trace 분석 경험"],
+    diagnostics: [["FDC/APC 데이터", "golden trace와 실제 sensor trace 차이를 rule, alarm, control action으로 연결할 수 있다."]]
+  },
+  "defect-failure-analysis-engineer": {
+    level: "핵심",
+    summary: "wafer map, defect image, e-test, 공정 이력을 연결해 killer defect와 root cause 후보를 좁히는 핵심 역량입니다.",
+    keywords: ["AI", "Defect 분류", "Wafer map pattern"],
+    requirements: ["defect image, wafer map, WAT/PCM, e-test, 공정 이력을 조인하고 원인 가설을 세우는 역량"],
+    preferred: ["defect classification, wafer map pattern 분석, SEM/EDS/FIB 결과 correlation 경험"],
+    diagnostics: [["결함 AI", "wafer map pattern과 defect image를 공정 이력·전기특성 데이터와 연결해 원인 후보를 설명할 수 있다."]]
+  },
   "battery-process-engineer": {
     level: "중요",
     summary: "전극 공정 조건과 품질 데이터를 연결해 불량 예측과 조건 최적화 후보를 찾는 역량입니다.",
@@ -3704,6 +3931,69 @@ const roleExpertEnhancementProfiles = {
     coreCompetencies: ["계측 recipe, 측정 위치, 샘플 수, 반복 측정 조건을 정의하는 역량", "반복성, 재현성, drift를 구분해 계측 신뢰도를 설명하는 역량", "계측 trend와 공정 이력을 연결해 이상 징후를 찾는 역량"],
     requirements: ["CD, overlay, thickness, defect 등 계측 지표와 오차 요인을 이해하는 역량", "MSA/Gauge R&R와 trend chart 해석 역량"],
     preferred: ["CD-SEM/defect review 데이터 처리, Python/SQL 분석 경험", "공정팀·수율팀에 판단 가능한 리포트 제공 경험"]
+  },
+  "photo-lithography-engineer": {
+    coreWork: "노광 recipe, focus, dose, overlay, CD, defect 데이터를 연결해 패턴 형성 품질과 공정 window를 관리합니다.",
+    coreTerms: ["lithography", "photo", "scanner", "track", "focus", "exposure dose", "overlay", "CD", "reticle", "alignment", "process window", "defect"],
+    tools: ["CD-SEM", "Overlay metrology", "JMP", "Spotfire", "Python", "MES", "OCAP"],
+    coreCompetencies: ["focus/dose 조건과 CD/overlay 결과를 연결해 공정 window를 설명하는 역량", "scanner, track, reticle, alignment 이슈를 defect 원인 후보로 분리하는 역량", "계측 trend와 lot 이력을 기반으로 split lot 또는 OCAP 조치를 제안하는 역량"],
+    requirements: ["포토 공정 흐름, PR coating/exposure/develop/bake 조건, CD/overlay 지표 이해", "SPC/DOE로 공정 window와 조건 변경 리스크를 판단하는 역량"],
+    preferred: ["scanner/track 장비 이해, reticle/alignment 이슈 대응 경험", "CD/overlay trend 분석, OCAP, split lot 평가 경험"],
+    diagnostics: [["포토공정", "PR coating, exposure, develop, bake 조건과 결과 지표를 연결할 수 있다."], ["CD/Overlay", "CD와 overlay trend를 보고 focus, dose, alignment 원인 후보를 말할 수 있다."], ["공정Window", "공정 window 평가에서 고정 조건과 변경 조건을 구분할 수 있다."], ["장비이슈", "scanner, track, reticle 이슈를 defect 원인 후보로 분리할 수 있다."], ["OCAP", "관리 이탈 시 확인 순서와 split lot 검증 계획을 제안할 수 있다."]]
+  },
+  "thin-film-deposition-engineer": {
+    coreWork: "CVD/PVD/ALD 증착 조건과 chamber 상태를 두께, uniformity, particle, stress 결과로 검증합니다.",
+    coreTerms: ["deposition", "CVD", "PVD", "ALD", "thin film", "thickness", "uniformity", "step coverage", "particle", "chamber seasoning", "PM", "FDC"],
+    tools: ["FDC", "MES", "JMP", "Minitab", "Python", "SEM", "Ellipsometer"],
+    coreCompetencies: ["가스 유량, 압력, 온도, plasma/RF 조건을 박막 품질 지표와 연결하는 역량", "PM 이후 chamber matching과 particle trend를 검증하는 역량", "장비 로그와 계측 결과를 시간 기준으로 맞춰 원인 후보를 좁히는 역량"],
+    requirements: ["박막 공정, 진공, plasma, CVD/PVD/ALD 기본 이해", "두께, uniformity, stress, particle, step coverage 지표 해석 역량"],
+    preferred: ["CVD/ALD/PVD 장비 또는 박막 실습 경험", "FDC, chamber matching, PM 후 검증, contamination 이슈 대응 경험"],
+    diagnostics: [["박막지표", "두께, uniformity, stress, particle 지표를 증착 조건과 연결할 수 있다."], ["장비조건", "가스 유량, 압력, 온도, RF 조건이 박막 품질에 미치는 영향을 설명할 수 있다."], ["PM검증", "PM 이후 chamber matching과 성능 확인 항목을 정할 수 있다."], ["오염관리", "particle 또는 contamination 원인 후보를 장비·공정·자재로 나눌 수 있다."], ["Trend", "박막 trend를 보고 정상 drift와 이상 징후를 구분할 수 있다."]]
+  },
+  "cmp-process-engineer": {
+    coreWork: "CMP pressure, platen speed, slurry, pad 상태를 removal rate, dishing, erosion, defect 결과로 검증합니다.",
+    coreTerms: ["CMP", "planarization", "removal rate", "slurry", "pad conditioning", "dishing", "erosion", "scratch", "particle", "post-CMP cleaning", "consumable", "uniformity"],
+    tools: ["JMP", "Minitab", "Python", "MES", "Defect review", "SPC"],
+    coreCompetencies: ["CMP 조건과 removal rate, uniformity, dishing/erosion 결과를 연결하는 역량", "scratch, particle, residue를 slurry/pad/cleaning/장비 상태 원인 후보로 분리하는 역량", "소모품 교체 이력과 공정 trend를 함께 보는 역량"],
+    requirements: ["CMP 공정 흐름, slurry, pad, pressure, platen speed, conditioning 변수 이해", "두께·defect·세정 결과를 SPC/DOE로 판단하는 역량"],
+    preferred: ["CMP 장비·소모품·post-cleaning 이슈 이해", "dishing/erosion, scratch, particle 원인분석과 개선 실험 경험"],
+    diagnostics: [["CMP조건", "pressure, speed, slurry, pad conditioning 조건을 결과 지표와 연결할 수 있다."], ["평탄화", "removal rate, dishing, erosion, uniformity를 평탄화 품질 지표로 설명할 수 있다."], ["Defect", "scratch, particle, residue 원인 후보를 조건·소모품·세정으로 나눌 수 있다."], ["소모품", "pad/slurry 교체 이력이 trend에 미치는 영향을 검토할 수 있다."], ["DOE", "CMP 조건 변경 실험에서 고정 조건과 변경 조건을 정할 수 있다."]]
+  },
+  "process-integration-engineer": {
+    coreWork: "소자 구조, module flow, 단위 공정 변경, 계측, 전기특성, 수율을 연결해 공정 변경 리스크를 판단합니다.",
+    coreTerms: ["process integration", "module", "device", "split lot", "DOE", "yield ramp", "electrical test", "reliability", "failure analysis", "risk assessment", "key parameter", "change control"],
+    tools: ["JMP", "Spotfire", "Python", "SQL", "MES", "Yield dashboard"],
+    coreCompetencies: ["단위 공정 변경이 전후 module, 전기특성, 수율에 미치는 영향을 설명하는 역량", "split lot/DOE/reliability 결과를 변경 승인 근거로 통합하는 역량", "공정·장비·계측·수율 팀의 데이터를 하나의 원인 가설로 묶는 역량"],
+    requirements: ["반도체 소자 구조, process flow, module integration, 전기특성 지표 이해", "계측·수율·전기특성 데이터를 함께 해석하는 역량"],
+    preferred: ["yield ramp, reliability, failure analysis, change control 경험", "multi-factor analysis, Spotfire/JMP/Python 기반 통합 분석 경험"],
+    diagnostics: [["Flow", "소자 구조와 module별 공정 flow, key parameter를 설명할 수 있다."], ["변경영향", "단위 공정 변경이 전후 공정과 전기특성에 미치는 영향을 추적할 수 있다."], ["Split lot", "split lot/DOE 결과를 변경 승인 근거로 정리할 수 있다."], ["통합분석", "계측, 수율, 전기특성 데이터를 한 표로 연결할 수 있다."], ["Risk", "공정 변경 리스크와 확인해야 할 reliability 항목을 말할 수 있다."]]
+  },
+  "semiconductor-facility-engineer": {
+    coreWork: "클린룸, UPW, gas/chemical, exhaust, power, chiller 같은 utility 조건을 안정화해 장비 가동과 공정 품질을 지킵니다.",
+    coreTerms: ["Facility", "Utility", "UPW", "CDA", "exhaust", "scrubber", "gas cabinet", "chemical supply", "chiller", "P&ID", "interlock", "SCADA"],
+    tools: ["SCADA", "BMS", "FMS", "P&ID", "Excel", "Power BI", "CMMS"],
+    coreCompetencies: ["utility trend와 장비 alarm, 공정 품질 변화를 연결해 영향도를 판단하는 역량", "P&ID와 설비 계통을 보고 안전·변경 작업 리스크를 찾는 역량", "PM, 비상 대응, 에너지·가동률 지표를 운영 리포트로 정리하는 역량"],
+    requirements: ["기계·전기·화공 설비와 P&ID 기본 이해", "압력, 유량, 온도, 전도도, particle, gas/chemical 안전 지표 해석 역량"],
+    preferred: ["클린룸/utility 설비, PSM, gas/chemical safety, SCADA/BMS/FMS 로그 분석 경험", "에너지 절감, 비상 대응, 변경관리 문서화 경험"],
+    diagnostics: [["Utility", "UPW, CDA, vacuum, exhaust, gas/chemical, power, chiller의 역할을 구분할 수 있다."], ["P&ID", "P&ID에서 주요 밸브, 센서, interlock, 위험 지점을 찾을 수 있다."], ["안전", "가스·케미컬·배기 설비의 안전 리스크와 대응 절차를 설명할 수 있다."], ["영향도", "utility 이상이 장비 alarm과 공정 품질에 미치는 영향을 판단할 수 있다."], ["운영지표", "에너지, 가동률, PM, 비상 대응 이력을 운영 리포트로 정리할 수 있다."]]
+  },
+  "fdc-apc-process-control-engineer": {
+    coreWork: "장비 sensor trace, recipe drift, alarm, 계측 feedback을 연결해 FDC rule과 APC/R2R 제어 기준을 설계합니다.",
+    coreTerms: ["FDC", "APC", "R2R", "EES", "SECS/GEM", "EDA/Interface A", "sensor trace", "golden trace", "OCAP", "recipe drift", "fault detection", "run-to-run control"],
+    tools: ["FDC", "APC", "EES", "SECS/GEM", "EDA/Interface A", "Python", "SQL", "Spotfire"],
+    coreCompetencies: ["golden trace와 실제 trace를 비교해 alarm rule과 threshold를 설계하는 역량", "계측 feedback을 R2R control parameter와 연결하는 역량", "false alarm과 missed alarm을 구분해 rule 품질을 개선하는 역량"],
+    requirements: ["SPC, 제어, time-series 데이터, 장비 로그, recipe 구조 이해", "SECS/GEM, EDA/Interface A, FDC/APC/EES 데이터 흐름 이해"],
+    preferred: ["FDC rule tuning, APC/R2R 운영, OCAP rule 관리, Python/SQL trace 분석 경험", "장비·공정·IT 사이 데이터 품질 이슈 대응 경험"],
+    diagnostics: [["FDC", "sensor trace와 golden trace를 비교해 이상 감지 rule을 정의할 수 있다."], ["APC/R2R", "계측 feedback을 다음 run의 control parameter로 연결할 수 있다."], ["OCAP", "alarm 발생 시 자동 조치 또는 hold 기준을 설정할 수 있다."], ["Interface", "SECS/GEM, EDA/Interface A 데이터 품질 문제가 분석에 미치는 영향을 설명할 수 있다."], ["Rule품질", "false alarm과 missed alarm의 trade-off를 판단할 수 있다."]]
+  },
+  "defect-failure-analysis-engineer": {
+    coreWork: "defect review, wafer map, WAT/PCM, e-test, FA 분석 결과를 연결해 killer defect와 root cause 후보를 좁힙니다.",
+    coreTerms: ["defect review", "failure analysis", "wafer map", "killer defect", "KLA inspection", "SEM/EDS", "FIB", "cross-section", "WAT", "PCM", "e-test correlation", "root cause"],
+    tools: ["KLA", "SEM/EDS", "FIB", "Optical inspection", "JMP", "Spotfire", "Python", "SQL"],
+    coreCompetencies: ["defect Pareto와 wafer map pattern으로 우선 분석 대상을 고르는 역량", "SEM/EDS/FIB/cross-section 분석 의뢰와 결과 해석을 공정 가설로 연결하는 역량", "WAT/PCM, e-test, 공정 이력을 defect 위치와 correlation하는 역량"],
+    requirements: ["반도체 공정 flow, defect 유형, 검사·계측·전기특성 데이터 이해", "FA request sheet와 root-cause hypothesis report 작성 역량"],
+    preferred: ["KLA inspection, defect review, SEM/EDS/FIB 분석 경험", "wafer map pattern 분석, WAT/PCM/e-test correlation, killer defect 선별 경험"],
+    diagnostics: [["Defect", "defect Pareto와 wafer map pattern으로 우선 분석 대상을 정할 수 있다."], ["FA의뢰", "SEM/EDS, FIB, cross-section 중 필요한 분석 방법을 고를 수 있다."], ["전기특성", "WAT/PCM, e-test 결과와 defect 위치를 연결할 수 있다."], ["Root cause", "공정 이력과 defect 유형을 바탕으로 원인 가설을 세울 수 있다."], ["개선연결", "FA 결과를 공정·장비 개선 항목과 재발 방지로 연결할 수 있다."]]
   },
   "hardware-design-engineer": {
     coreWork: "요구사항을 회로 블록도, schematic, 부품 선정, PCB 리뷰, bring-up 검증으로 연결합니다.",
@@ -4044,6 +4334,10 @@ const resourceTaskLinks = {
   "mit-microelectronic": ["공정 흐름 매핑", "전원 요구사항 정의"],
   "mit-semiconductor-devices": ["공정 흐름 매핑", "식각 장비 변수 정리"],
   "plasma-etch-core": ["식각 장비 변수 정리", "조건 변경 검토표"],
+  "semiengineering-lithography": ["포토 공정 window 검토표", "공정 조건 변경 검토표"],
+  "semiengineering-deposition": ["증착 박막 trend 분석표", "장비 이상 대응표"],
+  "semiengineering-cmp": ["CMP 조건·결함 원인 가설표", "공정 조건 변경 검토표"],
+  "semiengineering-failure-analysis": ["결함·FA 원인 가설 리포트", "수율·결함 분석 리포트"],
   "analog-dialogue": ["센서 신호 증폭 회로", "검증 리포트"],
   "nist-spc": ["관리도와 Cpk 계산", "원인 가설과 FMEA", "수율 Pareto 분석"],
   "nist-control-charts": ["관리도와 Cpk 계산", "수율 Pareto 분석"],
@@ -4159,6 +4453,13 @@ const roleResourceLinks = {
   "semiconductor-yield-engineer": ["nist-control-charts", "nist-process-capability", "matlab-onramp", "statistics-onramp", "machine-learning-onramp", "kocw-semiconductor", "coursera-engineering-data", "freecodecamp-python-data", "digital-learning-ai-it-basics"],
   "etch-process-engineer": ["plasma-etch-core", "mit-semiconductor-devices", "kocw-semiconductor", "statistics-onramp", "moresteam-doe", "nist-control-charts", "matlab-onramp", "optimization-onramp", "edx-engineering-systems", "coursera-engineering-data"],
   "metrology-engineer": ["signal-processing-onramp", "matlab-onramp", "statistics-onramp", "nist-spc", "kocw-semiconductor", "coursera-engineering-data", "freecodecamp-python-data"],
+  "photo-lithography-engineer": ["semiengineering-lithography", "mit-semiconductor-devices", "kocw-semiconductor", "statistics-onramp", "moresteam-doe", "nist-control-charts", "letuin-semiconductor-field-practice", "letuin-semiconductor-process-data-kdt"],
+  "thin-film-deposition-engineer": ["semiengineering-deposition", "plasma-etch-core", "mit-semiconductor-devices", "kocw-semiconductor", "statistics-onramp", "mathworks-predictive-maintenance", "letuin-cvd-maintenance-mentoring", "letuin-semiconductor-field-practice"],
+  "cmp-process-engineer": ["semiengineering-cmp", "kocw-semiconductor", "statistics-onramp", "moresteam-doe", "nist-control-charts", "nist-process-capability", "letuin-semiconductor-process-data-kdt", "letuin-semiconductor-field-practice"],
+  "process-integration-engineer": ["mit-semiconductor-devices", "kocw-semiconductor", "statistics-onramp", "moresteam-doe", "letuin-semiconductor-process-data-kdt", "letuin-spotfire-defect-analysis", "coursera-engineering-data", "google-ml-crash-course"],
+  "semiconductor-facility-engineer": ["kosha-psm", "youtube-nptel-hazop", "hrd-net-job-training", "mathworks-predictive-maintenance", "signal-processing-onramp", "kocw-semiconductor", "step-engineering", "ncs"],
+  "fdc-apc-process-control-engineer": ["mathworks-predictive-maintenance", "nist-control-charts", "statistics-onramp", "machine-learning-onramp", "letuin-semiconductor-process-data-kdt", "letuin-spotfire-defect-analysis", "google-ml-crash-course", "boostcourse-data-ai-basic"],
+  "defect-failure-analysis-engineer": ["semiengineering-failure-analysis", "letuin-spotfire-defect-analysis", "letuin-semiconductor-process-data-kdt", "kocw-semiconductor", "nist-control-charts", "statistics-onramp", "machine-learning-onramp", "google-ml-crash-course"],
   "chemical-process-engineer": ["learncheme-material-balances", "learncheme-separations", "learncheme-chemical-process", "kocw-chemical-process", "matlab-onramp", "statistics-onramp", "optimization-onramp", "coursera-chemical-engineering", "nptel-chemical-engineering"],
   "battery-process-engineer": ["learncheme-material-balances", "learncheme-separations", "statistics-onramp", "moresteam-doe", "matlab-onramp", "machine-learning-onramp", "coursera-chemical-engineering", "kosha-psm"],
   "materials-rnd-engineer": ["learncheme-material-balances", "learncheme-separations", "statistics-onramp", "mit-chemical-engineering", "coursera-chemical-engineering", "nptel-chemical-engineering", "khan-math-physics-basics", "coursera-engineering-data"],
@@ -4209,6 +4510,11 @@ Object.entries({
   "semiconductor-yield-engineer": ["letuin-spotfire-defect-analysis", "letuin-semiconductor-process-data-kdt"],
   "etch-process-engineer": ["letuin-semiconductor-field-practice", "letuin-cvd-maintenance-mentoring", "letuin-semiconductor-process-data-kdt"],
   "metrology-engineer": ["letuin-spotfire-defect-analysis", "letuin-semiconductor-process-data-kdt"],
+  "photo-lithography-engineer": ["letuin-semiconductor-field-practice", "letuin-semiconductor-process-data-kdt", "letuin-spotfire-defect-analysis"],
+  "thin-film-deposition-engineer": ["letuin-cvd-maintenance-mentoring", "letuin-semiconductor-field-practice", "letuin-semiconductor-process-data-kdt"],
+  "cmp-process-engineer": ["letuin-semiconductor-field-practice", "letuin-semiconductor-process-data-kdt"],
+  "process-integration-engineer": ["letuin-semiconductor-process-data-kdt", "letuin-spotfire-defect-analysis", "letuin-semiconductor-field-practice"],
+  "semiconductor-facility-engineer": ["youtube-nptel-hazop", "hrd-net-job-training", "step-engineering"],
   "hardware-design-engineer": ["letuin-low-power-design-validation", "mathworks-simscape-examples", "mathworks-official-videos"],
   "pcb-design-engineer": ["letuin-low-power-design-validation", "mathworks-official-videos"],
   "validation-engineer": ["letuin-low-power-design-validation", "mathworks-simulink-examples", "mathworks-official-videos"],
@@ -4244,6 +4550,11 @@ Object.entries({
   "semiconductor-yield-engineer": ["google-ml-crash-course", "boostcourse-data-ai-basic"],
   "etch-process-engineer": ["google-ml-crash-course", "boostcourse-data-ai-basic"],
   "metrology-engineer": ["ni-learn-test-measurement", "google-ml-crash-course"],
+  "photo-lithography-engineer": ["google-ml-crash-course", "boostcourse-data-ai-basic"],
+  "thin-film-deposition-engineer": ["machine-learning-onramp", "google-ml-crash-course"],
+  "cmp-process-engineer": ["google-ml-crash-course", "boostcourse-data-ai-basic"],
+  "process-integration-engineer": ["google-ml-crash-course", "boostcourse-data-ai-basic", "machine-learning-onramp"],
+  "semiconductor-facility-engineer": ["mathworks-predictive-maintenance", "machine-learning-onramp"],
   "battery-process-engineer": ["machine-learning-onramp", "google-ml-crash-course"],
   "materials-rnd-engineer": ["machine-learning-onramp", "coursera-engineering-data"],
   "validation-engineer": ["ni-learn-test-measurement", "machine-learning-onramp"],
@@ -5667,6 +5978,21 @@ function getRoleLinkedResources(role) {
 }
 
 function getRoleCurriculumOutput(track, role) {
+  const roleOutputById = {
+    "semiconductor-process-engineer": "공정 recipe-계측 지표 조건 변경 검토표",
+    "semiconductor-equipment-engineer": "장비 alarm·PM 원인분석표와 복구 검증 체크리스트",
+    "semiconductor-yield-engineer": "수율 Pareto·wafer map 원인 가설 리포트",
+    "etch-process-engineer": "식각 recipe DOE 표와 CD·uniformity 개선 리포트",
+    "metrology-engineer": "계측 recipe·MSA/Gauge R&R trend 리포트",
+    "photo-lithography-engineer": "포토 focus-exposure-CD/overlay 공정 window 검토표",
+    "thin-film-deposition-engineer": "증착 두께·uniformity trend와 chamber matching 리포트",
+    "cmp-process-engineer": "CMP removal rate·dishing/erosion DOE 분석표",
+    "process-integration-engineer": "공정통합 split lot 변경 리스크 메모와 module interaction map",
+    "semiconductor-facility-engineer": "Utility excursion 영향도 매트릭스와 비상 대응 체크리스트",
+    "fdc-apc-process-control-engineer": "FDC alarm rule sheet와 APC/R2R control plan",
+    "defect-failure-analysis-engineer": "defect Pareto·wafer map pattern 메모와 FA 원인 가설 리포트"
+  };
+  if (roleOutputById[role.id]) return roleOutputById[role.id];
   if (role.title.includes("필드이슈") || role.title.includes("Warranty")) return "필드이슈 8D 원인분석표와 보증 데이터 기반 품질 개선 리포트";
   if (role.title.includes("내외장") || role.title.includes("의장")) return "내외장 설계·감성품질 체크리스트와 품질 이슈 원인 가설표";
   if (role.title.includes("기능안전") || role.title.includes("SOTIF")) return "HARA-안전요구사항 추적표와 safety case 초안";
@@ -5769,7 +6095,7 @@ function getRoleExplicitToolTerms(track, role) {
   const toolTerms = [
     "MATLAB", "Simulink", "Simscape", "Stateflow", "Python", "SQL", "Excel",
     "Minitab", "JMP", "Power BI", "Tableau", "Spotfire", "Aspen Plus", "Aspen HYSYS",
-    "Aspen", "HYSYS", "COMSOL", "gPROMS", "LIMS", "MES", "ERP", "SPC", "DOE",
+    "Aspen", "HYSYS", "COMSOL", "gPROMS", "LIMS", "MES", "FDC", "APC", "EES", "SECS/GEM", "GEM300", "EDA/Interface A", "ERP", "SPC", "DOE",
     "MSA", "Gauge R&R", "APQP", "PPAP", "Control Plan", "8D", "A3", "IATF 16949",
     "CATIA", "NX", "Creo", "SolidWorks", "Teamcenter", "Windchill", "PLM", "GD&T",
     "DFMEA", "PFMEA", "DVP&R", "ANSYS Mechanical", "ANSYS Fluent", "Abaqus", "HyperMesh",
@@ -5781,7 +6107,7 @@ function getRoleExplicitToolTerms(track, role) {
     "AUTOSAR", "AUTOSAR Classic", "AUTOSAR Adaptive", "UDS", "DTC", "DBC", "ODX",
     "XCP", "HIL", "SIL", "MIL", "dSPACE", "NI VeriStand", "Vector", "CarMaker",
     "PreScan", "RoadRunner", "ROS", "ROS2", "Gazebo", "RViz", "SLAM", "Yocto",
-    "Buildroot", "BSP", "Kernel", "Linux", "Device tree", "PLC", "SEM", "XRD",
+    "Buildroot", "BSP", "Kernel", "Linux", "Device tree", "PLC", "CD-SEM", "SEM", "SEM/EDS", "FIB", "KLA", "OES", "RGA", "ellipsometry", "scatterometry", "WAT", "PCM", "SCADA", "BMS/FMS", "XRD",
     "FTIR", "DSC", "TGA", "GC/MS", "HPLC", "HAZOP", "PSM", "MSDS", "GMP", "SOP"
   ];
 
