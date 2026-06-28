@@ -571,10 +571,34 @@ input::placeholder {
   line-height: 1.4;
 }
 
+.role-screen-note {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  color: #334155;
+  background: #fbfcfa;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.role-screen-note strong {
+  color: var(--ink);
+  font-weight: 900;
+}
+
+.role-screen-note span {
+  color: var(--muted);
+}
+
 .role-workbench {
   display: grid;
-  grid-template-columns: minmax(320px, 0.76fr) minmax(0, 1.24fr);
-  gap: 18px;
+  grid-template-columns: minmax(300px, 0.66fr) minmax(0, 1.34fr);
+  gap: 16px;
   align-items: start;
 }
 
@@ -605,7 +629,7 @@ input::placeholder {
   top: 12px;
   max-height: calc(100vh - 24px);
   overflow: auto;
-  padding-left: 16px;
+  padding-left: 14px;
   border-left: 1px solid var(--line);
 }
 
@@ -619,7 +643,7 @@ input::placeholder {
   gap: 12px;
   align-items: end;
   margin-bottom: 14px;
-  padding: 12px;
+  padding: 10px;
   background: #fbfcfa;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -683,9 +707,9 @@ input::placeholder {
 
 .track-card {
   display: grid;
-  gap: 10px;
-  min-height: 168px;
-  padding: 16px;
+  gap: 8px;
+  min-height: 148px;
+  padding: 13px;
   text-align: left;
 }
 
@@ -699,7 +723,7 @@ input::placeholder {
 }
 
 .role-picker-panel .track-card {
-  min-height: 146px;
+  min-height: 124px;
 }
 
 .inline-wordcloud-panel {
@@ -851,17 +875,17 @@ input::placeholder {
 .selected-role-overview {
   grid-column: 1 / -1;
   display: grid;
-  gap: 14px;
+  gap: 10px;
   margin: 0 0 14px;
 }
 
 .selected-role-overview-slot .selected-role-overview {
   margin: 0 0 16px;
-  padding: 14px;
-  background: #f8fcfd;
-  border: 1px solid #b8dce6;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: 0 16px 36px rgba(15, 81, 97, 0.1);
+  box-shadow: none;
 }
 
 .track-grid .selected-role-overview {
@@ -879,10 +903,10 @@ input::placeholder {
   gap: 8px;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 12px;
+  padding: 8px 10px;
   color: #164e63;
-  background: #e8f4f7;
-  border: 1px solid #b8dce6;
+  background: #f5fafb;
+  border: 1px solid var(--line);
   border-radius: 7px;
 }
 
@@ -899,7 +923,7 @@ input::placeholder {
 
 .role-decision-dashboard {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
 }
 
@@ -940,22 +964,25 @@ input::placeholder {
 
 .selected-role-top {
   display: grid;
-  grid-template-columns: minmax(280px, 0.92fr) minmax(0, 1.08fr);
-  gap: 14px;
+  grid-template-columns: minmax(0, 1.08fr) minmax(260px, 0.92fr);
+  gap: 12px;
   align-items: stretch;
 }
 
 .role-result-panel .role-decision-dashboard {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.role-result-panel .selected-role-top,
 .role-result-panel .selected-role-detail-head,
 .role-result-panel .role-detail-grid,
 .role-result-panel .role-ai-grid,
 .role-result-panel .expert-review-grid,
 .role-result-panel .role-fit-panel {
   grid-template-columns: 1fr;
+}
+
+.role-result-panel .selected-role-top {
+  grid-template-columns: minmax(0, 1.08fr) minmax(250px, 0.92fr);
 }
 
 .role-result-panel .selected-role-overview-slot .selected-role-overview {
@@ -966,9 +993,9 @@ input::placeholder {
   display: grid;
   gap: 10px;
   margin-bottom: 14px;
-  padding: 14px;
-  background: #f8fcfd;
-  border: 1px solid #b8dce6;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid var(--line);
   border-radius: var(--radius);
 }
 
@@ -985,8 +1012,8 @@ input::placeholder {
 .selected-role-summary {
   display: grid;
   align-content: start;
-  gap: 10px;
-  padding: 14px;
+  gap: 9px;
+  padding: 12px;
   background: #ffffff;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -1137,6 +1164,61 @@ input::placeholder {
   background: #ffffff;
   border: 1px solid #d8def2;
   border-radius: 7px;
+}
+
+.role-detail-disclosure {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
+
+.role-detail-disclosure summary {
+  cursor: pointer;
+  list-style-position: outside;
+  padding: 11px 12px;
+}
+
+.role-detail-disclosure summary span {
+  display: inline-grid;
+  gap: 2px;
+  vertical-align: middle;
+}
+
+.role-detail-disclosure summary strong {
+  color: var(--ink);
+  font-size: 0.94rem;
+}
+
+.role-detail-disclosure summary small {
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.role-detail-disclosure[open] summary {
+  border-bottom: 1px solid var(--line);
+}
+
+.role-detail-disclosure .selected-role-detail-panel,
+.role-reference-stack {
+  margin: 0;
+  padding: 12px;
+  border: 0;
+  border-radius: 0;
+}
+
+.role-reference-stack {
+  display: grid;
+  gap: 10px;
+}
+
+.role-reference-stack > .major-connection-panel,
+.role-reference-stack > .expert-review-panel,
+.role-reference-stack > .role-fit-panel,
+.role-reference-stack > .role-ai-panel,
+.role-reference-stack > .selected-role-search,
+.role-reference-stack > .selected-role-resources {
+  margin-top: 0;
 }
 
 .diagnosis-next-panel,
@@ -1398,6 +1480,10 @@ input::placeholder {
   border-color: #b8dce6;
 }
 
+.word-cloud-panel.is-featured .word-cloud-terms {
+  min-height: 320px;
+}
+
 .word-cloud-panel.is-inline {
   margin: 0;
   padding: 12px;
@@ -1517,6 +1603,10 @@ input::placeholder {
   color: var(--muted);
   font-size: 0.82rem;
   line-height: 1.45;
+}
+
+.selected-role-overview-slot .word-cloud-panel figcaption {
+  display: none;
 }
 
 .detail-grid {

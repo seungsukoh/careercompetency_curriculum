@@ -4334,7 +4334,7 @@ function renderTracks() {
   if (elements.selectedRoleOverview) {
     elements.selectedRoleOverview.innerHTML = hasActiveRoleSelection()
       ? renderSelectedRoleOverview(selectedTrack, selectedRole)
-      : renderRoleSelectionPrompt(roleCatalog);
+      : renderRoleSelectionPrompt();
   }
 
   if (!roleCatalog.length) {
@@ -4356,10 +4356,10 @@ function renderTracks() {
       <span class="status-pill">${recommendationLabel}</span>
       <h3>${role.title}</h3>
       <p>${role.focus}</p>
-      <p class="role-preview">${role.responsibilities.slice(0, 2).join(" · ")}</p>
+      <p class="role-preview">${role.responsibilities[0]}</p>
       <span class="badge-row">
         <span class="badge major-pathway-badge">${majorPathwayLabel}</span>
-        ${role.postingKeywords.slice(0, 5).map((keyword) => `<span class="badge">${keyword}</span>`).join("")}
+        ${role.postingKeywords.slice(0, 2).map((keyword) => `<span class="badge">${keyword}</span>`).join("")}
       </span>
     </button>
   `;
@@ -4380,20 +4380,14 @@ function renderTracks() {
   bindResourceActions(elements.selectedRoleOverview);
 }
 
-function renderRoleSelectionPrompt(roleCatalog) {
-  const topRoles = roleCatalog.slice(0, 3).map(({ role }) => role.title);
+function renderRoleSelectionPrompt() {
   return `
     <article class="selection-prompt-panel">
       <div>
         <p class="eyebrow">아직 선택 전</p>
-        <h3>아래 추천 직무 중 실제 지원하려는 직무를 먼저 고르세요</h3>
-        <p>선택 후에는 같은 위치에 워드클라우드, 반복 업무, 자격조건, 우대역량, 전공 연결성, 교육 후보가 열립니다.</p>
+        <h3>지원하려는 직무를 하나 고르세요</h3>
+        <p>오른쪽에서 워드클라우드, 핵심 판단, 다음 단계만 먼저 보여줍니다. 상세 정보는 필요할 때 펼쳐보세요.</p>
       </div>
-      ${topRoles.length ? `
-        <div class="badge-row">
-          ${topRoles.map((roleTitle) => `<span class="badge">${roleTitle}</span>`).join("")}
-        </div>
-      ` : ""}
     </article>
   `;
 }
@@ -4426,21 +4420,66 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
   return `
     <article class="selected-role-overview" aria-live="polite" aria-label="${role.title} 선택 직무 요약">
       <div class="selected-role-anchor">
-        <span>선택 직무 판단 보드</span>
+        <span>선택 직무</span>
         <strong>${role.title}</strong>
       </div>
-      ${renderRoleDecisionDashboard(track, role, checkedCount, diagnosticItems.length, gapItems, output)}
-      <div class="selected-role-top">
+      <div class="selected-role-top is-simple">
+        ${renderRoleWordCloud(track, role, "is-featured")}
         <div class="selected-role-summary">
-          <p class="eyebrow">선택한 직무를 먼저 판단하세요</p>
+          <p class="eyebrow">먼저 확인할 것</p>
           <h3>${role.title}</h3>
           <p>${role.focus}</p>
           <div class="role-decision-mini">
-            <strong>지원 전 확인 질문</strong>
+            <strong>지원 전 질문</strong>
             <ul>
-              ${getRoleDecisionQuestions(track, role).slice(0, 2).map((item) => `<li>${item}</li>`).join("")}
+              ${getRoleDecisionQuestions(track, role).slice(0, 1).map((item) => `<li>${item}</li>`).join("")}
             </ul>
           </div>
+          <div class="flow-actions">
+            <button class="primary-button" type="button" data-view-target="diagnosis">역량 체크하기</button>
+            <button class="ghost-button" type="button" data-view-target="roadmap">교육 후보 보기</button>
+          </div>
+        </div>
+      </div>
+      ${renderRoleDecisionDashboard(track, role, checkedCount, diagnosticItems.length, gapItems, output)}
+      <details class="role-detail-disclosure">
+        <summary>
+          <span>
+            <strong>선택직무 상세 보기</strong>
+            <small>반복 업무, 자격조건, 우대 역량</small>
+          </span>
+        </summary>
+        <section class="selected-role-detail-panel" aria-label="${role.title} 선택직무 상세">
+          <div class="selected-role-detail-head">
+            <div>
+              <p class="eyebrow">선택직무 상세</p>
+              <h3>${role.title}에서 실제로 확인할 내용</h3>
+            </div>
+            <div class="badge-row">
+              ${role.postingKeywords.slice(0, 5).map((keyword) => `<span class="badge">${keyword}</span>`).join("")}
+            </div>
+          </div>
+          <div class="role-detail-grid is-prominent">
+            ${detailBlock("채용공고 반복 업무", role.responsibilities)}
+            ${detailBlock("자격조건·필수 역량", role.requirements)}
+            ${detailBlock("우대·차별화 역량", role.preferred)}
+          </div>
+          <div class="company-detail-inline">
+            <strong>지원 회사 공고와 대조</strong>
+            위 반복업무·자격조건·우대역량 중 지원 회사 공고에 실제로 적힌 문장을 표시한 뒤, 없는 내용은 커리큘럼 우선순위에서 낮추세요.
+          </div>
+        </section>
+      </details>
+      <details class="role-detail-disclosure">
+        <summary>
+          <span>
+            <strong>추천 이유와 참고자료</strong>
+            <small>전공 연결, AI 역량, 채용 검색, 교육 후보</small>
+          </span>
+        </summary>
+        <div class="role-reference-stack">
+          ${renderMajorConnectionPanel(track, role)}
+          ${renderRoleAiCompetencyPanel(role)}
           <div class="selected-role-search">
             <strong>채용 사이트에서는 직접 검색</strong>
             <span>검색어 예시: ${evidence.query}</span>
@@ -4462,37 +4501,10 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
               `).join("")}
             </div>
           ` : ""}
-          <div class="flow-actions">
-            <button class="primary-button" type="button" data-view-target="diagnosis">역량 체크하기</button>
-            <button class="ghost-button" type="button" data-view-target="roadmap">교육 후보 보기</button>
-          </div>
+          ${renderExpertReviewPanel(track, role)}
+          ${renderRoleFitPanel(track, role)}
         </div>
-        ${renderRoleWordCloud(track, role, "is-featured")}
-      </div>
-      <section class="selected-role-detail-panel" aria-label="${role.title} 선택직무 상세">
-        <div class="selected-role-detail-head">
-          <div>
-            <p class="eyebrow">선택직무 상세</p>
-            <h3>${role.title}에서 실제로 확인할 내용</h3>
-          </div>
-          <div class="badge-row">
-            ${role.postingKeywords.map((keyword) => `<span class="badge">${keyword}</span>`).join("")}
-          </div>
-        </div>
-        <div class="role-detail-grid is-prominent">
-          ${detailBlock("채용공고 반복 업무", role.responsibilities)}
-          ${detailBlock("자격조건·필수 역량", role.requirements)}
-          ${detailBlock("우대·차별화 역량", role.preferred)}
-        </div>
-        ${renderRoleAiCompetencyPanel(role)}
-        <div class="company-detail-inline">
-          <strong>지원 회사 공고와 대조</strong>
-          위 반복업무·자격조건·우대역량 중 지원 회사 공고에 실제로 적힌 문장을 표시한 뒤, 없는 내용은 커리큘럼 우선순위에서 낮추세요.
-        </div>
-      </section>
-      ${renderMajorConnectionPanel(track, role)}
-      ${renderExpertReviewPanel(track, role)}
-      ${renderRoleFitPanel(track, role)}
+      </details>
     </article>
   `;
 }
@@ -4500,9 +4512,8 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
 function renderRoleDecisionDashboard(track, role, checkedCount, totalCount, gapItems, output) {
   const majorLabel = getMajorPathwayLabel(track, role);
   const gapText = gapItems.length
-    ? gapItems.slice(0, 3).map((item) => item.skill).join(", ")
+    ? gapItems.slice(0, 2).map((item) => item.skill).join(", ")
     : "큰 공백 없음";
-  const aiProfile = getRoleAiCompetencyProfile(role);
   return `
     <section class="role-decision-dashboard" aria-label="${role.title} 지원 판단 요약">
       <div class="role-decision-card is-strong">
@@ -4519,11 +4530,6 @@ function renderRoleDecisionDashboard(track, role, checkedCount, totalCount, gapI
         <span>준비 결과물</span>
         <strong>${output}</strong>
         <em>교육자료보다 산출물이 최종 판단 기준입니다.</em>
-      </div>
-      <div class="role-decision-card">
-        <span>AI·데이터</span>
-        <strong>${aiProfile ? aiProfile.level : "직무별 필요 시 반영"}</strong>
-        <em>${aiProfile ? aiProfile.summary : "공고에 데이터·자동화 표현이 있을 때만 우선순위에 올립니다."}</em>
       </div>
     </section>
   `;
