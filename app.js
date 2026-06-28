@@ -3262,6 +3262,216 @@ Object.assign(roleDiagnostics, {
   "vehicle-test-validation-engineer": [["DVP&R", "요구사항을 시험 항목, 조건, 일정, 판정 기준으로 바꿀 수 있다."], ["계측채널", "온도, 진동, 전류, CAN, 위치 등 필요한 계측 채널을 고를 수 있다."], ["실차시험", "실차, 벤치, 환경 시험의 목적 차이를 설명할 수 있다."], ["결과정리", "시험 결과를 그래프, 표, Pass/Fail 문장으로 정리할 수 있다."], ["재시험", "불합격 항목의 원인 가설과 재시험 조건을 세울 수 있다."]]
 });
 
+const aiRoleCompetencyProfiles = {
+  "cae-analysis-engineer": {
+    level: "도움됨",
+    summary: "해석 케이스가 많을 때 결과 분류, 민감도 분석, 반복 후처리를 자동화하는 역량으로 쓰입니다.",
+    keywords: ["AI 후처리", "Python 자동화"],
+    requirements: ["해석 결과 데이터를 표로 정리하고 변수별 영향도를 비교하는 데이터 처리 역량"],
+    preferred: ["Python 기반 해석 자동화 또는 surrogate model 기초"],
+    diagnostics: [["AI 후처리", "해석 결과 여러 개를 입력 변수와 결과 지표로 정리해 영향도가 큰 조건을 찾을 수 있다."]]
+  },
+  "mechanical-test-engineer": {
+    level: "도움됨",
+    summary: "시험 센서 로그에서 이상 패턴을 찾고 반복 리포트 작성을 줄이는 보조 역량입니다.",
+    keywords: ["이상탐지", "시험데이터"],
+    requirements: ["시험 로그를 시간 기준으로 정리하고 이상 구간을 표시하는 데이터 처리 역량"],
+    preferred: ["Python/MATLAB 기반 시험 데이터 이상탐지 또는 자동 리포트 경험"],
+    diagnostics: [["시험데이터 AI", "시험 로그에서 정상 구간과 이상 구간을 구분하고 원인 후보를 표시할 수 있다."]]
+  },
+  "process-engineer": {
+    level: "중요",
+    summary: "공정 조건과 품질 지표를 연결해 수율 저하, 설비 이상, 조건 변경 우선순위를 판단하는 데 쓰입니다.",
+    keywords: ["AI", "이상탐지"],
+    requirements: ["공정 변수와 품질 지표를 묶어 예측·분류 문제로 정의하는 기초"],
+    preferred: ["AI/ML 기반 이상탐지, 예측모델 또는 공정 데이터 자동 분석 경험"],
+    diagnostics: [["AI 문제정의", "공정 데이터를 입력 변수, 목표 지표, 검증 기준으로 나누어 AI 적용 가능성을 판단할 수 있다."]]
+  },
+  "quality-engineer": {
+    level: "도움됨",
+    summary: "비전검사, 불량 분류, 고객 클레임 텍스트 분류처럼 반복 품질 판단을 보조하는 역량입니다.",
+    keywords: ["AI 검사", "불량분류"],
+    requirements: ["검사 데이터와 불량 유형을 기준으로 분류 기준을 정리하는 역량"],
+    preferred: ["AI 검사 결과를 관리도, FMEA, 8D 개선과 연결해 해석한 경험"],
+    diagnostics: [["AI 검사해석", "AI 검사 또는 자동 분류 결과를 품질 기준과 재발방지 액션으로 연결할 수 있다."]]
+  },
+  "production-data-engineer": {
+    level: "핵심",
+    summary: "MES, 설비 로그, 검사 데이터를 기반으로 예측, 이상탐지, 대시보드 자동화를 수행하는 핵심 역량입니다.",
+    keywords: ["AI", "머신러닝", "이상탐지"],
+    requirements: ["Python/SQL 기반 데이터 전처리와 모델 검증 기준 설정"],
+    preferred: ["예측모델, 이상탐지, 자동 대시보드 또는 MLOps 기초 경험"],
+    diagnostics: [["ML 모델검증", "공정 데이터 모델의 학습 데이터, 검증 데이터, 성능 지표를 구분해 설명할 수 있다."]]
+  },
+  "production-technology-engineer": {
+    level: "도움됨",
+    summary: "라인 정지, 설비 병목, 작업시간 데이터를 분석해 자동화 개선 우선순위를 잡는 데 쓰입니다.",
+    keywords: ["예지보전", "공정데이터"],
+    requirements: ["설비 정지·작업시간 데이터를 개선 후보로 바꾸는 데이터 분석 기초"],
+    preferred: ["예지보전, 라인 모니터링, 자동화 데이터 분석 경험"],
+    diagnostics: [["예지보전", "설비 정지 로그와 불량률 변화를 연결해 개선 우선순위를 제안할 수 있다."]]
+  },
+  "semiconductor-process-engineer": {
+    level: "중요",
+    summary: "recipe, 계측, 수율 데이터를 연결해 조건 변경 후보와 이상 공정 구간을 찾는 역량입니다.",
+    keywords: ["AI", "수율예측"],
+    requirements: ["공정 recipe와 계측 지표를 분석 가능한 데이터 구조로 정리하는 역량"],
+    preferred: ["수율 예측, 공정 이상탐지, DOE와 ML 결합 경험"],
+    diagnostics: [["공정 AI", "recipe, 계측, 수율 데이터를 연결해 모델 입력과 검증 지표를 정의할 수 있다."]]
+  },
+  "semiconductor-equipment-engineer": {
+    level: "중요",
+    summary: "장비 센서, 알람, PM 이력을 기반으로 이상 징후와 예방보전 타이밍을 판단하는 역량입니다.",
+    keywords: ["예지보전", "장비로그"],
+    requirements: ["장비 로그, 알람, 센서값을 시간 기준으로 정리하는 데이터 처리 역량"],
+    preferred: ["장비 이상탐지, 예지보전, 로그 기반 원인분석 경험"],
+    diagnostics: [["장비 AI", "장비 알람과 센서 로그에서 정상 패턴과 이상 패턴을 구분할 수 있다."]]
+  },
+  "semiconductor-yield-engineer": {
+    level: "핵심",
+    summary: "wafer map, defect, 공정 이력을 결합해 수율 저하 원인과 개선 우선순위를 찾는 핵심 역량입니다.",
+    keywords: ["AI", "Defect 분류", "수율예측"],
+    requirements: ["결함·계측·공정 이력을 조인하고 모델 검증 기준을 세우는 역량"],
+    preferred: ["불량 이미지/wafer map 분류, 수율 예측, 이상탐지 경험"],
+    diagnostics: [["수율 AI", "wafer map과 공정 이력을 결합해 결함 패턴 분류 또는 수율 예측 문제를 정의할 수 있다."]]
+  },
+  "etch-process-engineer": {
+    level: "도움됨",
+    summary: "식각 조건과 CD, uniformity, defect 데이터를 연결해 조건 변경 후보를 좁히는 보조 역량입니다.",
+    keywords: ["AI", "Recipe 최적화"],
+    requirements: ["식각 recipe와 계측 결과를 같은 기준으로 비교하는 데이터 처리 역량"],
+    preferred: ["DOE 결과를 ML 또는 통계 모델로 해석한 경험"],
+    diagnostics: [["Recipe AI", "식각 조건 변경 결과를 입력 변수와 결과 지표로 나누어 최적화 후보를 설명할 수 있다."]]
+  },
+  "metrology-engineer": {
+    level: "중요",
+    summary: "계측 trend, defect review, 이상치 판단을 자동화하고 공정팀이 쓸 수 있는 판단 근거로 바꾸는 역량입니다.",
+    keywords: ["AI 검사", "Trend 분석"],
+    requirements: ["계측 데이터 이상치와 drift를 구분하는 통계·데이터 해석 역량"],
+    preferred: ["계측 이미지/defect 분류 또는 trend 이상탐지 경험"],
+    diagnostics: [["계측 AI", "계측 trend에서 장비 drift, 공정 변화, 샘플링 문제를 구분할 수 있다."]]
+  },
+  "battery-process-engineer": {
+    level: "중요",
+    summary: "전극 공정 조건과 품질 데이터를 연결해 불량 예측과 조건 최적화 후보를 찾는 역량입니다.",
+    keywords: ["AI", "품질예측"],
+    requirements: ["두께, 밀도, 수분, 불량률을 공정 조건과 함께 분석하는 역량"],
+    preferred: ["전극 품질 예측, 이상탐지, DOE와 ML 결합 경험"],
+    diagnostics: [["배터리 공정 AI", "전극 품질 데이터를 입력 조건과 결과 지표로 나누어 품질 예측 문제를 만들 수 있다."]]
+  },
+  "materials-rnd-engineer": {
+    level: "도움됨",
+    summary: "실험 조건, 조성, 물성 데이터를 축적해 후보 소재 탐색과 실험 우선순위 선정에 활용합니다.",
+    keywords: ["AI 소재탐색", "실험데이터"],
+    requirements: ["실험 조건과 물성 결과를 재사용 가능한 데이터셋으로 정리하는 역량"],
+    preferred: ["AI 기반 후보 탐색, 문헌·특허 데이터 정리, 실험 최적화 경험"],
+    diagnostics: [["소재 AI", "조성, 공정 조건, 물성 결과를 묶어 다음 실험 후보를 고르는 기준을 만들 수 있다."]]
+  },
+  "validation-engineer": {
+    level: "도움됨",
+    summary: "반복 측정 로그와 실패 패턴을 자동으로 정리해 검증 리포트와 이슈 재현 속도를 높이는 역량입니다.",
+    keywords: ["테스트 자동화", "이상탐지"],
+    requirements: ["측정 로그를 정리하고 실패 패턴을 조건별로 분류하는 데이터 처리 역량"],
+    preferred: ["Python 기반 테스트 자동화, 로그 분석, 이상탐지 경험"],
+    diagnostics: [["검증 AI", "측정 로그에서 반복 실패 패턴을 찾아 테스트 조건과 연결할 수 있다."]]
+  },
+  "embedded-firmware-engineer": {
+    level: "도움됨",
+    summary: "엣지 AI 자체 개발보다 센서 데이터 전처리, 모델 입력·출력 인터페이스, 로그 검증 이해가 우선입니다.",
+    keywords: ["Edge AI", "센서데이터"],
+    requirements: ["센서 데이터 전처리와 모델 입출력 인터페이스를 펌웨어 관점에서 이해"],
+    preferred: ["TinyML, 모델 추론 로그 검증, Python 기반 데이터 전처리 경험"],
+    diagnostics: [["Edge AI 인터페이스", "센서 입력, 모델 출력, MCU 자원 제약을 연결해 설명할 수 있다."]]
+  },
+  "control-engineer": {
+    level: "도움됨",
+    summary: "제어 성능을 높이기 위한 데이터 기반 모델링, 상태추정, 센서융합 보조 역량으로 활용됩니다.",
+    keywords: ["AI 제어", "상태추정"],
+    requirements: ["제어 로그를 입력, 출력, 외란, 상태 추정 관점으로 정리하는 역량"],
+    preferred: ["데이터 기반 모델링, 센서융합, 이상탐지 기반 제어 검증 경험"],
+    diagnostics: [["데이터 기반 제어", "제어 로그로 모델 오차와 센서 노이즈가 응답에 미치는 영향을 설명할 수 있다."]]
+  },
+  "robotics-software-engineer": {
+    level: "중요",
+    summary: "인지, localization, 경로계획, 센서융합에서 AI 모델과 로봇 시스템을 연결하는 역량입니다.",
+    keywords: ["AI", "Perception", "SLAM"],
+    requirements: ["카메라·라이다·IMU 데이터를 ROS 노드와 모델 입출력으로 연결하는 이해"],
+    preferred: ["객체 인식, SLAM, 센서융합, 데이터셋 기반 성능평가 경험"],
+    diagnostics: [["로봇 AI", "센서 데이터, 모델 추론 결과, 로봇 동작 로그를 시간 기준으로 연결할 수 있다."]]
+  },
+  "adas-validation-engineer": {
+    level: "핵심",
+    summary: "인지 모델, 센서융합, 시나리오 기반 검증이 ADAS 채용공고에서 자주 같이 요구되는 핵심 역량입니다.",
+    keywords: ["AI", "센서융합", "Perception"],
+    requirements: ["인지 결과, 센서 로그, CAN 신호를 기준으로 시나리오별 성능을 검증하는 역량"],
+    preferred: ["객체 인식, 센서융합, 주행 시나리오 데이터셋 평가 경험"],
+    diagnostics: [["ADAS AI 검증", "인지 결과와 센서/CAN 로그를 비교해 false positive/negative 사례를 설명할 수 있다."]]
+  },
+  "hil-sil-validation-engineer": {
+    level: "중요",
+    summary: "테스트 자동화, 로그 분류, 시나리오 우선순위 선정에서 AI·데이터 분석 역량이 도움이 됩니다.",
+    keywords: ["테스트 자동화", "로그분석"],
+    requirements: ["시뮬레이션 로그와 실패 조건을 자동 분류할 수 있는 데이터 처리 역량"],
+    preferred: ["테스트 케이스 생성 보조, 로그 이상탐지, Python 자동화 경험"],
+    diagnostics: [["검증 자동화 AI", "반복 테스트 로그를 실패 유형별로 분류하고 재시험 우선순위를 세울 수 있다."]]
+  },
+  "vehicle-test-validation-engineer": {
+    level: "중요",
+    summary: "실차 계측 로그, CAN, 환경 조건을 분석해 불합격 원인과 재시험 조건을 빠르게 좁히는 역량입니다.",
+    keywords: ["AI", "실차로그"],
+    requirements: ["실차 계측 로그를 시간 기준으로 정렬하고 이상 구간을 표시하는 역량"],
+    preferred: ["실차 로그 이상탐지, 자동 리포트, Python/MATLAB 후처리 경험"],
+    diagnostics: [["실차로그 AI", "실차 계측 로그에서 이상 구간과 관련 계측 채널을 연결해 설명할 수 있다."]]
+  },
+  "automotive-embedded-sw-engineer": {
+    level: "도움됨",
+    summary: "AI 모델 자체보다 차량 SW에서 모델 출력, 센서 입력, 진단 로그를 안전하게 처리하는 역량이 중요합니다.",
+    keywords: ["AI 인터페이스", "센서데이터"],
+    requirements: ["AI 모델 출력과 ECU 상태·진단 로직의 인터페이스를 이해"],
+    preferred: ["인지 모델 출력 검증, 로그 기반 디버깅, 안전 요구사항 추적 경험"],
+    diagnostics: [["AI SW 인터페이스", "모델 출력, ECU 상태, 진단 로그를 요구사항과 테스트 케이스로 연결할 수 있다."]]
+  }
+};
+
+applyAiRoleCompetencyProfiles();
+
+function applyAiRoleCompetencyProfiles() {
+  const rolesById = Object.values(jobRoles).flat().reduce((acc, role) => {
+    acc[role.id] = role;
+    return acc;
+  }, {});
+
+  Object.entries(aiRoleCompetencyProfiles).forEach(([roleId, profile]) => {
+    const role = rolesById[roleId];
+    if (!role) return;
+    role.aiCompetency = profile;
+    role.postingKeywords = mergeUniqueRoleItems(role.postingKeywords, profile.keywords).slice(0, 9);
+    role.requirements = mergeUniqueRoleItems(role.requirements, profile.requirements);
+    role.preferred = mergeUniqueRoleItems(role.preferred, profile.preferred);
+    roleDiagnostics[roleId] = mergeUniqueDiagnostics(roleDiagnostics[roleId] || [], profile.diagnostics || []);
+  });
+}
+
+function mergeUniqueRoleItems(base = [], additions = []) {
+  const seen = new Set();
+  return [...base, ...additions].filter((item) => {
+    const key = String(item || "").trim();
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function mergeUniqueDiagnostics(base = [], additions = []) {
+  const seen = new Set();
+  return [...base, ...additions].filter(([skill]) => {
+    const key = String(skill || "").trim();
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 const industryDiagnostics = {
   mobility: [["차량신뢰성", "온도, 진동, 안전 요구가 설계·검증 조건에 미치는 영향을 설명할 수 있다."], ["양산검증", "시제품 검증과 양산 검증의 차이를 말할 수 있다."]],
   semiconductor: [["클린룸·공정", "오염, 진공, 계측 조건이 품질과 수율에 미치는 영향을 설명할 수 있다."], ["수율언어", "결함, 수율, 공정 조건을 하나의 개선 가설로 연결할 수 있다."]],
@@ -3483,22 +3693,29 @@ Object.entries({
 
 Object.entries({
   "mechanical-design-engineer": ["ansys-innovation-courses"],
-  "cae-analysis-engineer": ["ansys-innovation-courses"],
+  "cae-analysis-engineer": ["ansys-innovation-courses", "machine-learning-onramp", "google-ml-crash-course"],
   "thermal-cfd-engineer": ["ansys-innovation-courses"],
-  "mechanical-test-engineer": ["ni-learn-test-measurement", "ansys-innovation-courses"],
+  "mechanical-test-engineer": ["ni-learn-test-measurement", "ansys-innovation-courses", "machine-learning-onramp"],
   "process-engineer": ["google-ml-crash-course", "boostcourse-data-ai-basic"],
-  "quality-engineer": ["boostcourse-data-ai-basic"],
+  "quality-engineer": ["boostcourse-data-ai-basic", "google-ml-crash-course"],
   "production-data-engineer": ["google-ml-crash-course", "boostcourse-data-ai-basic"],
+  "production-technology-engineer": ["mathworks-predictive-maintenance", "machine-learning-onramp"],
+  "semiconductor-process-engineer": ["google-ml-crash-course", "boostcourse-data-ai-basic"],
+  "semiconductor-equipment-engineer": ["mathworks-predictive-maintenance", "machine-learning-onramp"],
   "semiconductor-yield-engineer": ["google-ml-crash-course", "boostcourse-data-ai-basic"],
+  "etch-process-engineer": ["google-ml-crash-course", "boostcourse-data-ai-basic"],
   "metrology-engineer": ["ni-learn-test-measurement", "google-ml-crash-course"],
-  "validation-engineer": ["ni-learn-test-measurement"],
+  "battery-process-engineer": ["machine-learning-onramp", "google-ml-crash-course"],
+  "materials-rnd-engineer": ["machine-learning-onramp", "coursera-engineering-data"],
+  "validation-engineer": ["ni-learn-test-measurement", "machine-learning-onramp"],
   "emc-test-engineer": ["ni-learn-test-measurement"],
-  "embedded-firmware-engineer": ["ni-learn-test-measurement", "boostcourse-data-ai-basic", "mathworks-fault-tolerant-fuel-control"],
-  "automotive-embedded-sw-engineer": ["mathworks-fault-tolerant-fuel-control", "mathworks-simulink-test-manager"],
-  "control-engineer": ["mathworks-fault-tolerant-fuel-control"],
-  "hil-sil-validation-engineer": ["ni-learn-test-measurement", "mathworks-simulink-test-manager", "mathworks-fault-tolerant-fuel-control"],
+  "embedded-firmware-engineer": ["ni-learn-test-measurement", "boostcourse-data-ai-basic", "mathworks-fault-tolerant-fuel-control", "machine-learning-onramp"],
+  "automotive-embedded-sw-engineer": ["mathworks-fault-tolerant-fuel-control", "mathworks-simulink-test-manager", "machine-learning-onramp"],
+  "control-engineer": ["mathworks-fault-tolerant-fuel-control", "sensor-fusion-onramp", "machine-learning-onramp"],
+  "robotics-software-engineer": ["google-ml-crash-course", "machine-learning-onramp", "sensor-fusion-onramp"],
+  "hil-sil-validation-engineer": ["ni-learn-test-measurement", "mathworks-simulink-test-manager", "mathworks-fault-tolerant-fuel-control", "google-ml-crash-course"],
   "adas-validation-engineer": ["google-ml-crash-course", "ni-learn-test-measurement", "mathworks-lane-following-sensor-fusion"],
-  "vehicle-test-validation-engineer": ["ni-learn-test-measurement", "ansys-innovation-courses", "mathworks-simulink-test-manager"],
+  "vehicle-test-validation-engineer": ["ni-learn-test-measurement", "ansys-innovation-courses", "mathworks-simulink-test-manager", "machine-learning-onramp"],
   "vehicle-thermal-management-engineer": ["ansys-innovation-courses"],
   "chassis-suspension-engineer": ["ansys-innovation-courses", "ni-learn-test-measurement"]
 }).forEach(([roleId, resourceIds]) => {
@@ -4019,7 +4236,7 @@ function getMajorPathwayFocus(track, role = null, major = state.profile.major) {
 function renderTracks() {
   const roleCatalog = getRoleCatalog();
   elements.trackCount.textContent = `${roleCatalog.length}개 채용공고 직무 · 전공은 추천순위 기준`;
-  renderSelectedRoleOverview();
+  if (elements.selectedRoleOverview) elements.selectedRoleOverview.innerHTML = "";
 
   if (!roleCatalog.length) {
     elements.trackList.innerHTML = `
@@ -4035,8 +4252,8 @@ function renderTracks() {
     const isSelected = track.id === state.selectedTrackId && selectedRole?.id === role.id;
     const recommendationLabel = index < 3 && score > 0 ? `추천 ${index + 1} · ${track.title}` : track.title;
     const majorPathwayLabel = getMajorPathwayLabel(track, role);
-    return `
-    <button class="track-card ${isSelected ? "is-selected" : ""}" type="button" data-track-id="${track.id}" data-role-id="${role.id}">
+    const roleCard = `
+    <button class="track-card ${isSelected ? "is-selected" : ""}" type="button" data-track-id="${track.id}" data-role-id="${role.id}" aria-expanded="${isSelected ? "true" : "false"}">
       <span class="status-pill">${recommendationLabel}</span>
       <h3>${role.title}</h3>
       <p>${role.focus}</p>
@@ -4047,6 +4264,7 @@ function renderTracks() {
       </span>
     </button>
   `;
+    return isSelected ? `${roleCard}${renderSelectedRoleOverview(track, role)}` : roleCard;
   }).join("");
 
   elements.trackList.querySelectorAll("[data-track-id][data-role-id]").forEach((button) => {
@@ -4063,18 +4281,14 @@ function renderTracks() {
 
 function focusSelectedRoleOverview() {
   requestAnimationFrame(() => {
-    elements.selectedRoleOverview?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const selectedCard = elements.trackList?.querySelector(".track-card.is-selected");
+    const selectedDetail = elements.trackList?.querySelector(".selected-role-overview");
+    (selectedCard || selectedDetail || elements.selectedRoleOverview)?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 }
 
-function renderSelectedRoleOverview() {
-  if (!elements.selectedRoleOverview) return;
-  const track = getSelectedTrack();
-  const role = getSelectedRole(track.id);
-  if (!role) {
-    elements.selectedRoleOverview.innerHTML = "";
-    return;
-  }
+function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelectedRole(track.id)) {
+  if (!role) return "";
 
   const evidence = getHiringEvidence(track, role);
   const context = getRecommendationContext(track, getGapSkills(track.id), getVisibleRoadmapTasks(track.id));
@@ -4083,8 +4297,12 @@ function renderSelectedRoleOverview() {
     ...getRecommendedResources(track, context)
   ]).slice(0, 3);
 
-  elements.selectedRoleOverview.innerHTML = `
+  return `
     <article class="selected-role-overview" aria-live="polite" aria-label="${role.title} 선택 직무 요약">
+      <div class="selected-role-anchor">
+        <span>선택한 직무 정보</span>
+        <strong>${role.title}</strong>
+      </div>
       <div class="selected-role-top">
         ${renderRoleWordCloud(track, role, "is-featured")}
         <div class="selected-role-summary">
@@ -4137,13 +4355,40 @@ function renderSelectedRoleOverview() {
           ${detailBlock("자격조건·필수 역량", role.requirements)}
           ${detailBlock("우대·차별화 역량", role.preferred)}
         </div>
+        ${renderRoleAiCompetencyPanel(role)}
         <div class="company-detail-inline">
           <strong>지원 회사 공고와 대조</strong>
           위 반복업무·자격조건·우대역량 중 지원 회사 공고에 실제로 적힌 문장을 표시한 뒤, 없는 내용은 로드맵 우선순위에서 낮추세요.
         </div>
       </section>
+      ${renderMajorConnectionPanel(track, role)}
+      ${renderExpertReviewPanel(track, role)}
+      ${renderRoleFitPanel(track, role)}
     </article>
   `;
+}
+
+function renderRoleAiCompetencyPanel(role) {
+  const profile = getRoleAiCompetencyProfile(role);
+  if (!profile) return "";
+  const diagnosticItems = (profile.diagnostics || []).slice(0, 2);
+  return `
+    <div class="role-ai-panel" aria-label="${role.title} AI 활용 역량">
+      <div>
+        <p class="eyebrow">AI·데이터 활용 역량</p>
+        <h4>${profile.level} · ${profile.summary}</h4>
+      </div>
+      <div class="role-ai-grid">
+        ${detailBlock("공고에서 보이면 볼 표현", profile.keywords || [])}
+        ${detailBlock("준비하면 좋은 증거", diagnosticItems.map(([skill, question]) => `${skill}: ${question}`))}
+      </div>
+      <p>AI가 직무의 본질을 대체한다는 뜻이 아니라, 해당 직무의 반복 데이터·로그·검사·시험 업무를 더 잘 설명하게 해주는 보조 또는 핵심 역량으로 반영합니다.</p>
+    </div>
+  `;
+}
+
+function getRoleAiCompetencyProfile(role) {
+  return role?.aiCompetency || null;
 }
 
 function renderInlineRoleWordCloud(track, role) {
@@ -4223,64 +4468,13 @@ function normalizeRoleSearch(value) {
 
 function renderTrackDetail() {
   const track = getSelectedTrack();
-  const roles = getAvailableRoles(track);
   const selectedRole = getSelectedRole(track.id);
-  const evidence = selectedRole ? getHiringEvidence(track, selectedRole) : null;
-  const majorPathwayLabel = getMajorPathwayLabel(track, selectedRole);
-  const majorPathwayReason = getMajorPathwayReason(track, selectedRole);
-  const majorPathwayFocus = getMajorPathwayFocus(track, selectedRole);
-  const roleOptions = roles.map((role) => `
-    <button class="role-option ${selectedRole?.id === role.id ? "is-selected" : ""}" type="button" data-role-id="${role.id}">
-      <strong>${role.title}</strong>
-      <span>${role.focus}</span>
-      <span class="badge-row">${role.postingKeywords.map((keyword) => `<span class="badge">${keyword}</span>`).join("")}</span>
-    </button>
-  `).join("");
 
   elements.trackDetail.innerHTML = `
     <div class="track-detail-head">
-      <p class="eyebrow">선택 직무 상세</p>
-      <h3>${selectedRole ? selectedRole.title : track.title}</h3>
-      <p>${selectedRole ? selectedRole.focus : track.summary}</p>
-    </div>
-    <div class="recommendation-note">
-      <strong>${majorPathwayLabel}:</strong> ${majorPathwayReason} ${majorPathwayFocus}
-    </div>
-    <div class="company-detail-notice">
-      <strong>회사별 직무상세 확인 필요</strong>
-      이 제안은 일반적인 직무내용 기반이므로 지원 회사의 실제 직무상세와 다를 수 있습니다. 공고의 업무, 자격요건, 우대사항을 반드시 확인하고 그 내용에 맞춰 보유 역량 체크와 로드맵을 조정하세요.
-    </div>
-    <section class="role-panel" aria-label="채용공고 기준 세부 직무">
-      <div>
-        <p class="eyebrow">채용공고 기준 세부 직무</p>
-        <h4>${selectedRole ? selectedRole.title : "세부 직무 선택"}</h4>
-      </div>
-      <div class="role-list">${roleOptions}</div>
-      ${selectedRole ? `
-        <div class="role-detail-grid">
-          ${detailBlock("채용공고 반복 업무", selectedRole.responsibilities)}
-          ${detailBlock("자격요건 역량", selectedRole.requirements)}
-          ${detailBlock("우대·차별화 역량", selectedRole.preferred)}
-        </div>
-        ${renderMajorConnectionPanel(track, selectedRole)}
-        ${renderExpertReviewPanel(track, selectedRole)}
-        ${renderRoleFitPanel(track, selectedRole)}
-        <div class="evidence-panel">
-          <div>
-            <p class="eyebrow">채용공고 근거</p>
-            <h4>반복 키워드와 확인 검색</h4>
-          </div>
-          <p><strong>반복 키워드:</strong> ${selectedRole.postingKeywords.join(", ")}</p>
-          <p><strong>확인 검색어:</strong> ${evidence.query}</p>
-          <div class="evidence-links">
-            ${evidence.links.map((link) => `<a class="resource-action" href="${link.url}" target="_blank" rel="noreferrer">${link.label}</a>`).join("")}
-          </div>
-        </div>
-      ` : ""}
-    </section>
-    <div class="flow-actions detail-actions">
-      <button class="primary-button" type="button" data-view-target="diagnosis">보유 역량 체크하기</button>
-      <button class="ghost-button" type="button" data-view-target="roadmap">부족 역량 로드맵 보기</button>
+      <p class="eyebrow">직무군 공통 참고 정보</p>
+      <h3>${track.title}</h3>
+      <p>${selectedRole ? `${selectedRole.title} 상세 정보는 위 선택 카드 바로 아래에 모았습니다. ` : ""}아래 내용은 같은 직무군에서 함께 쓰이는 공통 업무, 도구, 산출물입니다.</p>
     </div>
     <div class="detail-grid">
       ${detailBlock("주요 업무", track.tasks)}
@@ -4292,15 +4486,6 @@ function renderTrackDetail() {
       ${detailBlock("흔한 오해", track.misconceptions)}
     </div>
   `;
-
-  elements.trackDetail.querySelectorAll("[data-role-id]").forEach((button) => {
-    button.addEventListener("click", () => {
-      state.selectedRoles = { ...state.selectedRoles, [track.id]: button.dataset.roleId };
-      saveState();
-      render();
-      focusSelectedRoleOverview();
-    });
-  });
 }
 
 function getHiringEvidence(track, role) {
@@ -6494,6 +6679,12 @@ function buildRoleDetailExportRows() {
   role.responsibilities.forEach((item, index) => rows.push([`채용공고 반복 업무 ${index + 1}`, item]));
   role.requirements.forEach((item, index) => rows.push([`자격조건·필수 역량 ${index + 1}`, item]));
   role.preferred.forEach((item, index) => rows.push([`우대·차별화 역량 ${index + 1}`, item]));
+  const aiProfile = getRoleAiCompetencyProfile(role);
+  if (aiProfile) {
+    rows.push(["AI·데이터 활용 역량", `${aiProfile.level} - ${aiProfile.summary}`]);
+    (aiProfile.keywords || []).forEach((item, index) => rows.push([`AI 관련 공고 표현 ${index + 1}`, item]));
+    (aiProfile.diagnostics || []).forEach(([skill, question], index) => rows.push([`AI 준비 증거 ${index + 1}`, `${skill}: ${question}`]));
+  }
   getRoleDecisionQuestions(track, role).forEach((item, index) => rows.push([`지원 전 확인 질문 ${index + 1}`, item]));
   return rows;
 }

@@ -442,6 +442,10 @@ input::placeholder {
   gap: 12px;
 }
 
+.selected-role-overview-slot:empty {
+  display: none;
+}
+
 .role-filter-bar {
   display: grid;
   grid-template-columns: 1fr minmax(160px, 220px);
@@ -519,8 +523,13 @@ input::placeholder {
 }
 
 .track-card.is-selected {
+  grid-column: 1 / -1;
   outline: 3px solid rgba(21, 94, 117, 0.18);
   border-color: var(--primary);
+}
+
+.track-grid .track-card.is-selected {
+  min-height: auto;
 }
 
 .inline-wordcloud-panel {
@@ -638,9 +647,43 @@ input::placeholder {
 }
 
 .selected-role-overview {
+  grid-column: 1 / -1;
   display: grid;
   gap: 14px;
   margin: 0 0 14px;
+}
+
+.track-grid .selected-role-overview {
+  margin: -2px 0 16px;
+  padding: 14px;
+  background: #f8fcfd;
+  border: 1px solid #b8dce6;
+  border-radius: var(--radius);
+  box-shadow: 0 16px 36px rgba(15, 81, 97, 0.1);
+}
+
+.selected-role-anchor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  color: #164e63;
+  background: #e8f4f7;
+  border: 1px solid #b8dce6;
+  border-radius: 7px;
+}
+
+.selected-role-anchor span {
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.selected-role-anchor strong {
+  color: var(--ink);
 }
 
 .selected-role-top {
@@ -760,6 +803,50 @@ input::placeholder {
   background: #fbfcfa;
   border: 1px solid var(--line);
   border-radius: 7px;
+}
+
+.role-ai-panel {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  background: #f6f8ff;
+  border: 1px solid #c6d2f3;
+  border-radius: 7px;
+}
+
+.role-ai-panel h4,
+.role-ai-panel p {
+  margin: 0;
+}
+
+.role-ai-panel h4 {
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.role-ai-panel p {
+  color: #3f4d68;
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.role-ai-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 8px;
+}
+
+.role-ai-grid > div {
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #d8def2;
+  border-radius: 7px;
+}
+
+.selected-role-overview > .major-connection-panel,
+.selected-role-overview > .expert-review-panel,
+.selected-role-overview > .role-fit-panel {
+  margin-top: 0;
 }
 
 .role-panel {
@@ -2128,6 +2215,7 @@ li {
   .selected-role-detail-head,
   .role-list,
   .role-detail-grid,
+  .role-ai-grid,
   .role-fit-panel,
   .expert-review-grid,
   .detail-grid,
