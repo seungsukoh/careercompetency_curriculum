@@ -4356,7 +4356,6 @@ function renderTracks() {
       <span class="status-pill">${recommendationLabel}</span>
       <h3>${role.title}</h3>
       <p>${role.focus}</p>
-      <p class="role-preview">${role.responsibilities[0]}</p>
       <span class="badge-row">
         <span class="badge major-pathway-badge">${majorPathwayLabel}</span>
         ${role.postingKeywords.slice(0, 2).map((keyword) => `<span class="badge">${keyword}</span>`).join("")}
@@ -4383,10 +4382,11 @@ function renderTracks() {
 function renderRoleSelectionPrompt() {
   return `
     <article class="selection-prompt-panel">
+      <div class="selection-prompt-mark">왼쪽에서 선택</div>
       <div>
         <p class="eyebrow">아직 선택 전</p>
         <h3>지원하려는 직무를 하나 고르세요</h3>
-        <p>오른쪽에서 워드클라우드, 핵심 판단, 다음 단계만 먼저 보여줍니다. 상세 정보는 필요할 때 펼쳐보세요.</p>
+        <p>선택하면 이 영역에 워드클라우드, 핵심 판단, 다음 단계가 바로 표시됩니다.</p>
       </div>
     </article>
   `;
@@ -4423,10 +4423,9 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
         <span>선택 직무</span>
         <strong>${role.title}</strong>
       </div>
-      <div class="selected-role-top is-simple">
-        ${renderRoleWordCloud(track, role, "is-featured")}
+      <div class="selected-role-top is-summary-only">
         <div class="selected-role-summary">
-          <p class="eyebrow">먼저 확인할 것</p>
+          <p class="eyebrow">이 직무가 맞나요?</p>
           <h3>${role.title}</h3>
           <p>${role.focus}</p>
           <div class="role-decision-mini">
@@ -4435,13 +4434,27 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
               ${getRoleDecisionQuestions(track, role).slice(0, 1).map((item) => `<li>${item}</li>`).join("")}
             </ul>
           </div>
-          <div class="flow-actions">
-            <button class="primary-button" type="button" data-view-target="diagnosis">역량 체크하기</button>
-            <button class="ghost-button" type="button" data-view-target="roadmap">교육 후보 보기</button>
-          </div>
         </div>
       </div>
       ${renderRoleDecisionDashboard(track, role, checkedCount, diagnosticItems.length, gapItems, output)}
+      <div class="role-action-strip">
+        <span>
+          <strong>맞는 직무라면</strong>
+          <em>보유 역량을 체크한 뒤 부족한 역량만 교육 후보로 남깁니다.</em>
+        </span>
+        <div class="flow-actions">
+          <button class="primary-button" type="button" data-view-target="diagnosis">역량 체크하기</button>
+        </div>
+      </div>
+      <details class="role-detail-disclosure role-keyword-disclosure" open>
+        <summary>
+          <span>
+            <strong>직무 키워드 보기</strong>
+            <small>직무상세, 주요 툴, 시뮬레이션 키워드 포함</small>
+          </span>
+        </summary>
+        ${renderRoleWordCloud(track, role, "is-featured is-compact")}
+      </details>
       <details class="role-detail-disclosure">
         <summary>
           <span>
@@ -4712,6 +4725,10 @@ function renderRoleWordCloud(track, role, modifier = "") {
   const terms = getRoleWordCloudTerms(track, role).slice(0, 20);
   return `
     <figure class="word-cloud-panel ${modifier}" aria-label="${role.title} 직무 키워드 워드클라우드">
+      <div class="word-cloud-head">
+        <span>직무상세 워드클라우드</span>
+        <strong>중요할수록 크게 표시</strong>
+      </div>
       <div class="word-cloud-terms">
         ${terms.map((term, index) => renderWordCloudTerm(term, index, index === 0)).join("")}
       </div>
@@ -5025,10 +5042,13 @@ function roleFitBlock(title, items) {
 function getRoleWordCloudTerms(track, role) {
   const weightedTerms = [];
   addWeightedRoleTerms(weightedTerms, role.postingKeywords, 24);
+  addWeightedRoleTerms(weightedTerms, getRoleExplicitToolTerms(track, role), 18);
   addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.responsibilities), 19);
   addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.requirements), 17);
   addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.focus), 15);
   addWeightedRoleTerms(weightedTerms, extractRoleTerms(role.preferred), 12);
+  addWeightedRoleTerms(weightedTerms, getRoleSimulationTerms(track, role), 14);
+  addWeightedRoleTerms(weightedTerms, getTrackToolTerms(track), 8);
 
   const scoreMap = new Map();
   weightedTerms.forEach(({ word, weight }) => {
@@ -5046,6 +5066,69 @@ function getRoleWordCloudTerms(track, role) {
     ...term,
     level: Math.max(1, Math.min(6, Math.ceil((term.score / maxScore) * 6)))
   }));
+}
+
+function getRoleExplicitToolTerms(track, role) {
+  const roleText = [
+    role.title,
+    role.focus,
+    ...(role.postingKeywords || []),
+    ...(role.responsibilities || []),
+    ...(role.requirements || []),
+    ...(role.preferred || [])
+  ].join(" ");
+  const toolTerms = [
+    "MATLAB", "Simulink", "Simscape", "Stateflow", "Python", "SQL", "Excel",
+    "Minitab", "JMP", "Aspen", "HYSYS", "LIMS", "MES", "SPC", "DOE",
+    "CATIA", "Creo", "SolidWorks", "ANSYS", "Abaqus", "HyperWorks", "CFD", "FEA",
+    "SPICE", "PCB CAD", "KiCad", "오실로스코프", "멀티미터", "Logic Analyzer",
+    "STM32", "Arduino", "Git", "CANoe", "CANalyzer", "CAPL", "AUTOSAR", "UDS", "DBC",
+    "HIL", "SIL", "dSPACE", "NI", "Vector", "CarMaker", "PreScan",
+    "ROS", "ROS2", "Gazebo", "RViz", "Yocto", "BSP", "Kernel", "Linux", "PLC"
+  ];
+
+  return uniqueRoleTerms(toolTerms.filter((term) => roleTextMatchesTerm(roleText, term)));
+}
+
+function getRoleSimulationTerms(track, role) {
+  const text = getRoleCombinedText(track, role);
+  const simulationTerms = [];
+  if (/(시뮬레이션|Simulink|Simscape|Stateflow|HIL|SIL|CarMaker|PreScan|Gazebo|SPICE)/i.test(text)) simulationTerms.push("시뮬레이션");
+  if (/(모델링|모델|Model|MIL|SIL|HIL|Simulink|Simscape|Stateflow)/i.test(text)) simulationTerms.push("모델링");
+  if (/(FEA|CFD|해석|ANSYS|Abaqus|HyperWorks)/i.test(text)) simulationTerms.push("해석");
+  if (/(검증|Validation|Test Case|Pass\/Fail|DVP|HIL|SIL)/i.test(text)) simulationTerms.push("검증");
+  return uniqueRoleTerms(simulationTerms);
+}
+
+function getTrackToolTerms(track) {
+  return uniqueRoleTerms((track.tools || []).flatMap(splitRoleToolTerm));
+}
+
+function splitRoleToolTerm(term) {
+  return String(term || "")
+    .split(/[\/·,]/)
+    .map((part) => cleanRoleTerm(part.replace(/\s*기초$/, "")))
+    .filter(Boolean);
+}
+
+function roleTextMatchesTerm(text, term) {
+  const escapedTerm = escapeRegExp(String(term));
+  return new RegExp(`(^|[^0-9A-Za-z가-힣+#])${escapedTerm}([^0-9A-Za-z가-힣+#]|$)`, "i").test(text);
+}
+
+function uniqueRoleTerms(terms) {
+  const seen = new Set();
+  return terms.filter((term) => {
+    const cleanTerm = cleanRoleTerm(term);
+    const key = getRoleTermKey(cleanTerm);
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function addWeightedRoleTerms(target, words, weight) {
@@ -5158,6 +5241,7 @@ function getRoleCombinedText(track, role) {
   return [
     track.title,
     track.summary,
+    ...(track.tools || []),
     role.title,
     role.focus,
     ...(role.postingKeywords || []),
