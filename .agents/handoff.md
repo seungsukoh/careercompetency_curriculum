@@ -1,125 +1,114 @@
 # Development Handoff
 
-Date: 2026-06-25
-Workspace: `C:\workspace\careercompetency_curriculum`
+Date: 2026-06-29
+Workspace: `C:\workspace\projects\careercompetency_curriculum`
 Branch: `main` tracking `origin/main`
 
 ## Goal
 
-Build a free pilot web app for Korean mechanical/electrical engineering students to choose a job track, run a competency self-check, view a 4-week roadmap, save learning resources, and copy pilot results.
+Build and validate a free static PWA for Korean engineering students to choose a detailed job role, inspect competency keywords, run a role-specific competency check, get a duration-based curriculum, add education resources to their plan, and export the curriculum.
 
 ## Current Implementation
 
 - The app is a Vite-built static PWA intended for Cloudflare Pages.
+- The product flow is `직무 선택 -> 워드클라우드 -> 역량 체크 -> 교육 선택 -> 내 커리큘럼 -> 엑셀 내보내기`.
+- Current data scale:
+  - 16 role groups
+  - 96 detailed job roles
+  - 123 education resources
+  - 96 role-to-resource link groups
 - Main files:
-  - `package.json`: Vite scripts and dev dependency.
+  - `package.json`: Vite scripts and validation commands.
   - `vite.config.js`: Vite build output configuration.
   - `index.html`: app shell, profile filters, tabs, views.
   - `styles.css`: mobile-first responsive UI.
-  - `app.js`: seed data, localStorage state, rendering, diagnostics, saved/completed resources, PWA install prompt.
-  - `public/manifest.webmanifest`: PWA manifest.
-  - `public/sw.js`: static asset cache service worker.
-  - `public/assets/icon.svg`: SVG app icon.
-  - `docs/FREE_PILOT_PLAYBOOK.md`: free pilot operating plan.
-  - `PROJECT_PLAN.md`: product and implementation plan.
-  - `docs/PROJECT_SYNC.md`: shared source-of-truth files and synchronization rules.
-  - `docs/QA_RESULTS_2026-06-25.md`: latest QA result and remaining deployment/pilot work.
-
-## Git State Observed
-
-- Remote is configured as `https://github.com/seungsukoh/careercompetency_curriculum.git`.
-- Branch `main` tracks `origin/main`.
-- Latest pushed commit observed before current local edits: `9255e2b Update QA readiness docs`.
-- `git log --oneline "@{u}.."` returned no unpushed commits.
-- Cloudflare Pages failed on commit `051c8cb` because that deployed commit did not contain `package.json`, while Cloudflare was configured to run `npm run build`.
-- The deployment fix is to push the local Vite migration:
-  - `package.json`, `package-lock.json`, `vite.config.js`, `.gitignore`
-  - `public/manifest.webmanifest`, `public/sw.js`, `public/assets/icon.svg`
-  - root `manifest.webmanifest`, `sw.js`, and `assets/icon.svg` removed
-  - docs updated for Vite build command `npm run build` and output directory `dist`
+  - `app.js`: seed data, recommendation logic, localStorage state, rendering, export.
+  - `data/roleExpansions.js`: extended tracks, roles, diagnostics, resources, task links.
+  - `scripts/validate-data.mjs`: seed integrity audit.
+  - `public/manifest.webmanifest`, `public/sw.js`, `public/assets/icon.svg`: PWA files.
 
 ## Product Scope Implemented
 
-- Five role tracks:
-  - Mechanical design/CAE
-  - Production/process/quality
-  - Semiconductor process/equipment
-  - Electronics/PCB/hardware
-  - Embedded/control
-- Profile filters by major, year, and industry.
-- Track detail cards with tasks, skills, tools, outputs, misconceptions.
-- Competency checklist per selected track with percent score and gap list.
-- 4-week roadmap per selected track.
-- Resource library filtered by selected track and difficulty.
-- Seed resources now include 18 resources; every track has at least 4 Korean-accessible resources.
-- Save and complete resource actions persisted in localStorage.
-- Resource list now sorts Korean-accessible resources before English resources, then by learning sequence.
-- Resource cards now show quality status and checked date.
-- Pilot summary copy button.
-- PWA install prompt and service worker registration.
+- Profile filters by major, industry, learning goal, and preparation duration.
+- Detailed role selection with search and role group filtering.
+- Role-level dynamic word cloud rendered from seed terms, diagnostics, tasks, and resource language.
+- Role detail surfaces with responsibilities, requirements, preferred skills, tools, and outputs.
+- Role/industry-specific competency checklist with percent score and gap list.
+- Duration-based roadmap for 2, 4, 8, and 12 weeks.
+- Week-level recommended education resources with scores, placement signals, outputs, and original links.
+- Resource add/complete actions persisted in localStorage.
+- `내 커리큘럼` screen with full roadmap, completion checks, selected resources, and export.
+- Excel-compatible `.xls` export with sheets:
+  - `요약`
+  - `실행계획`
+  - `선택직무상세`
+  - `회사공고대조`
+  - `교육자료`
+  - `역량체크`
+- `참고자료` screen remains as a secondary full resource reference, not the primary selection workflow.
 
-## Product Direction Decisions
+## Recent Checks
 
-- The immediate MVP is narrowed to a self-study resource finder, not a full instructor/admin platform.
-- Primary use case: a student chooses a role track and receives pre-curated Korean-accessible resources arranged in a sensible learning order with estimated time, prerequisites, and expected outputs.
-- Instructor support is deferred, but student result summaries should remain useful for future advising conversations.
-- Product strategy review is documented in `docs/PRODUCT_STRATEGY_REVIEW.md`.
-- PM execution plan is documented in `docs/PM_ACTION_PLAN.md`.
-- Shared planning/progress synchronization rules are documented in `docs/PROJECT_SYNC.md`.
-- Parallel workstream structure is documented in `docs/WORKSTREAMS.md`.
-- Architecture and maintainability decisions are documented in `docs/ARCHITECTURE_DECISIONS.md`.
-- Requirement-based validation criteria are documented in `docs/REQUIREMENTS_VALIDATION_CRITERIA.md`.
-- QA should use `docs/QA_CHECKLIST.md` and record pass/fail by requirement ID.
-- Latest QA is documented in `docs/QA_RESULTS_2026-06-25.md`; R1-R6, R8-R11, R13, R14 passed and R15 is ready for pilot measurement.
-- Start with Korean-accessible resources first, then expand to English/global resources after the pilot validates the curriculum flow.
-- Resource cards should eventually include estimated learning time.
-- Resource search and ranking should use engagement signals such as YouTube views, comments, likes, channel credibility, and playlist structure as triage signals, while still checking officialness, freshness, fit, and expected output.
-- Resource curation rules are documented in `docs/RESOURCE_CURATION_POLICY.md`.
-- Keep curation low-ops: small stable Korean resource bundles per track, monthly/semester review cadence, user feedback for broken/outdated resources, and later automation for link/engagement checks.
-- Curriculum generation should support both short focused plans and longer broad plans based on student context:
-  - short plans: 1-2 weeks for urgent narrowing or interview prep
-  - standard pilot plans: 4 weeks
-  - longer plans: 8-12 weeks or semester-scale progression
-- Student context should influence scope:
-  - target role track
-  - current competency checklist gaps
-  - available hours per week
-  - deadline or preparation horizon
-  - preferred output, such as report, GitHub project, circuit review, CAD/CAE report, or analysis note
+Latest automated checks run on 2026-06-29:
 
-## Important Constraints
+- `node --check app.js`: passed
+- `node --check data/roleExpansions.js`: passed
+- `npm.cmd run validate:data`: passed with 0 warnings and 0 errors
+- `npm.cmd run check`: passed, Vite build succeeded
+- VM logic check confirmed:
+  - 2/4/8/12-week task counts are generated correctly for an embedded firmware role.
+  - Weekly education resources are generated.
+  - Goal changes affect task/resource priority for a quality role.
+  - Export workbook sheets are generated.
 
-- Keep the MVP static and backend-free. Vite is allowed as the build tool.
-- Prefer Cloudflare Pages deployment assumptions:
-  - Framework preset: Vite
+## Important Decisions
+
+- Keep the MVP static and backend-free.
+- Use Cloudflare Pages assumptions:
+  - Framework preset: `Vite`
   - Build command: `npm run build`
   - Output directory: `dist`
-- Do not add backend/auth/database for the pilot unless required.
+- Do not add backend/auth/database for the pilot.
 - User-facing content is Korean.
-- If a new session starts and finds local changes or unpushed commits, create/push a savepoint before continuing when possible.
-- If token limits, tool problems, or restart risk appear, update this handoff, commit a savepoint, and push to the current upstream branch before stopping when possible.
+- Current word clouds are dynamic HTML/CSS, not rendered PNGs. `generateWordClouds.m` is only relevant if static PNG word clouds are reintroduced.
+- The app no longer uses 학년 as a recommendation criterion.
+- The primary education selection surface is the roadmap week, not a standalone resource library.
+
+## Git State Observed
+
+- `git log --oneline "@{u}.."` returned no unpushed commits before the 2026-06-29 documentation sync.
+- The worktree has documentation changes for PM, requirements, QA, operations, pilot, handoff, and project plan sync.
+- `dist/` was regenerated by `npm.cmd run check` but is not shown as modified in `git status`.
+
+## Current Blockers / Limits
+
+- In-app Browser `iab` was unavailable in this session, so full desktop/mobile click and visual QA has not been completed.
+- No Chrome/Edge command was available on PATH.
+- Browser QA must still verify layout, click flows, localStorage persistence, and download behavior in an actual browser.
 
 ## Suggested Next Steps
 
-1. Commit and push the Vite deployment fix if it has not already been pushed.
-2. Retry Cloudflare Pages with Framework preset `Vite`, Build command `npm run build`, and Output directory `dist`.
-3. Run a short smoke test on the deployed URL.
-4. Start the 5-student pilot and record R15 outcome metrics.
-5. If YouTube resources are added later, record R7 views/comments/channel-trust signals before treating them as reviewed.
+1. Run actual desktop and mobile browser QA against `npm.cmd run dev` or `npm.cmd run preview`.
+2. Record the browser QA result in `docs/QA_RESULTS_2026-06-29.md`.
+3. Create and push a savepoint commit.
+4. Deploy or verify Cloudflare Pages with Vite settings.
+5. Smoke test the deployed URL.
+6. Start the student pilot and record selection, competency-check, curriculum-add, export, and qualitative feedback metrics.
 
 ## Useful Commands
 
 ```powershell
-npm install
-npm run dev
+npm.cmd install
+npm.cmd run dev
+npm.cmd run validate:data
+npm.cmd run check
 ```
 
 Open the local URL printed by Vite.
 
 ```powershell
 git status --short
+git log --oneline "@{u}.."
 ```
 
-Use this handoff first in future long sessions to avoid re-reading the full plan.
-
-Also read `.agents/CONTINUATION.md` after this file when resuming after token limits.
+Also read `.agents/CONTINUATION.md` and `docs/PROJECT_SYNC.md` when resuming.

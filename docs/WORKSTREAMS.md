@@ -12,7 +12,7 @@
 |---|---|---|---|
 | PM/전략 | 제품 범위, 파일럿 목표, 검증 질문 결정 | 전략 문서, 우선순위 | `docs/PRODUCT_STRATEGY_REVIEW.md`, `PROJECT_PLAN.md` |
 | 자료 큐레이션 | 한국어 자료 후보 수집, 검수 기준, 추천 순서 결정 | 자료 후보 목록, 검수 상태 | `docs/RESOURCE_CURATION_POLICY.md`, 추후 `data/resources.json` |
-| 데이터 모델 | 자료/직무/로드맵 스키마와 마이그레이션 경계 관리 | resource schema, progress schema | `app.js`, 추후 `data/*.json` |
+| 데이터 모델 | 자료/직무/로드맵 스키마와 마이그레이션 경계 관리 | resource schema, progress schema | `app.js`, `data/roleExpansions.js`, 추후 `data/*.json` |
 | 앱 UI/UX | 학생이 보는 화면, 저장/완료 체크, 모바일 사용성 | 정적 PWA 화면 | `index.html`, `styles.css`, `app.js` |
 | 검증/QA | 브라우저 동작, 모바일 레이아웃, 저장/복사 흐름 확인 | 검수 결과, 버그 목록 | `README.md`, 필요 시 `docs/QA_CHECKLIST.md` |
 | 배포/운영 | Cloudflare Pages 배포, 캐시, 업데이트 절차 | 배포 절차, 운영 절차 | `README.md`, `package.json`, `vite.config.js`, `public/sw.js`, `public/manifest.webmanifest` |
@@ -61,17 +61,24 @@ data/diagnostics.json
 
 이후 앱 개발자는 렌더링 로직을, 자료 큐레이션 담당자는 JSON 데이터를, QA 담당자는 검증 문서를 독립적으로 다룰 수 있다.
 
-## 현재 동기화 메모 - 2026-06-25
+## 현재 동기화 메모 - 2026-06-29
 
-최신 QA 결과는 `docs/QA_RESULTS_2026-06-25.md`에 기록되어 있다.
+최신 자동 검증 결과는 `docs/QA_RESULTS_2026-06-29.md`에 기록되어 있다.
+
+현재 구현 기준:
+
+- 16개 직무군, 96개 세부 직무, 123개 교육자료
+- 핵심 흐름: 직무 선택 -> 워드클라우드 -> 역량 체크 -> 교육 선택 -> 내 커리큘럼 -> 엑셀 내보내기
+- 정적 PWA와 Cloudflare Pages 배포 전제 유지
+- `npm.cmd run check`는 통과했으나, 실제 브라우저/모바일 렌더링 QA는 남아 있다.
 
 병렬 작업을 나눈다면 현재 우선순위는 다음과 같다.
 
 | 우선순위 | 흐름 | 작업 | 소유 파일 |
 |---|---|---|---|
-| 1 | 배포/운영 | savepoint 커밋과 푸시 후 Cloudflare Pages 배포 링크 준비 | Git 상태, `README.md` |
-| 2 | PM/전략 | 학생 5명 파일럿 실행과 R15 실제 지표 기록 | `docs/FREE_PILOT_PLAYBOOK.md`, `docs/PM_ACTION_PLAN.md` |
-| 3 | QA | 배포 URL에서 핵심 흐름 재확인 | `docs/QA_RESULTS_*.md` |
-| 4 | 자료 큐레이션 | YouTube 후보를 추가할 경우 R7 조회수/댓글/채널 신뢰도 기록 | `docs/RESOURCE_CURATION_POLICY.md`, 이후 `app.js` 또는 `data/resources.json` |
+| 1 | QA | 데스크톱/모바일 브라우저에서 최신 핵심 흐름 검증 | `docs/QA_RESULTS_*.md` |
+| 2 | 배포/운영 | savepoint 커밋과 푸시 후 Cloudflare Pages 배포 링크 준비 | Git 상태, `README.md` |
+| 3 | PM/전략 | 학생 파일럿 실행과 실제 지표 기록 | `docs/FREE_PILOT_PLAYBOOK.md`, `docs/PM_ACTION_PLAN.md` |
+| 4 | 자료 큐레이션 | 세부 직무별 교육자료 단원/섹션 정밀화 | `docs/RESOURCE_CURATION_POLICY.md`, `app.js`, `data/roleExpansions.js` |
 
-P1/P2 기능은 savepoint와 배포 URL 확인, 학생 5명 파일럿 시작 전에는 시작하지 않는다.
+P1/P2 기능은 최신 브라우저 QA, savepoint, 배포 URL 확인 전에는 시작하지 않는다.

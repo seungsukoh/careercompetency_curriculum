@@ -1,6 +1,6 @@
 # Career Competency Curriculum
 
-기계공학, 전자공학, 화학공학 대학생을 위한 직무역량 교육 로드맵입니다. 학생이 관심 직무를 채용공고 수준으로 고르면 역량 워드클라우드, 직무확보 진단, 기간 맞춤 자동 로드맵, 주차별 연결 교육자료, 내 계획 내보내기를 확인할 수 있습니다.
+기계공학, 전자공학, 화학공학 대학생을 위한 직무역량 교육 로드맵입니다. 학생이 관심 직무를 채용공고 수준으로 고르면 역량 워드클라우드, 역량 체크, 기간 맞춤 자동 로드맵, 주차별 연결 교육자료, 내 커리큘럼 내보내기를 확인할 수 있습니다.
 
 ## 무료 운영 방식
 
@@ -17,8 +17,8 @@
 Vite 개발 서버로 실행합니다.
 
 ```powershell
-npm install
-npm run dev
+npm.cmd install
+npm.cmd run dev
 ```
 
 그 다음 터미널에 표시되는 로컬 URL로 접속합니다.
@@ -26,8 +26,8 @@ npm run dev
 배포 산출물을 로컬에서 확인하려면 다음을 실행합니다.
 
 ```powershell
-npm run build
-npm run preview
+npm.cmd run build
+npm.cmd run preview
 ```
 
 ## Cloudflare Pages 배포
@@ -44,13 +44,14 @@ npm run preview
 - `vite.config.js`: Vite 빌드 설정
 - `index.html`: 앱 화면 구조
 - `styles.css`: 모바일 우선 UI 스타일
-- `app.js`: 직무 트랙, 진단, 로드맵, 자료 추천 로직
+- `app.js`: 직무군, 세부 직무, 진단, 로드맵, 자료 추천 로직
+- `data/roleExpansions.js`: 확장 직무군, 세부 직무, 교육자료 매핑
 - `public/manifest.webmanifest`: PWA 설치 정보
 - `public/sw.js`: 정적 파일 캐시
 - `public/assets/icon.svg`: PWA 아이콘
 - `docs/PROJECT_SYNC.md`: 병렬 작업 시 공유할 계획/진행 기준 파일과 동기화 규칙
 - `docs/REQUIREMENTS_VALIDATION_CRITERIA.md`: 요구사항과 검증 기준
 - `docs/QA_CHECKLIST.md`: 요구사항별 QA 체크리스트
-- `docs/QA_RESULTS_2026-06-25.md`: 현재 QA 결과와 배포/파일럿 전 남은 작업
+- `docs/QA_RESULTS_2026-06-29.md`: 현재 자동 검증 결과와 남은 브라우저 QA
 - `docs/FREE_PILOT_PLAYBOOK.md`: 무료 파일럿 운영안
 - `PROJECT_PLAN.md`: 전체 기획 및 구현 계획

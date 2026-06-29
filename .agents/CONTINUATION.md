@@ -26,7 +26,7 @@ If the session is about to restart, hits a persistent problem, or needs a handof
 5. Check whether there are unpushed commits:
 
 ```powershell
-git log --oneline @{u}..
+git log --oneline "@{u}.."
 ```
 
 6. If there are local changes or unpushed commits, create/push a savepoint before new work when possible.
@@ -75,16 +75,21 @@ If a push is impossible because of network/authentication restrictions, record t
 
 ## Current Default Next Step
 
-The technical P0 gate is currently passing in `docs/QA_RESULTS_2026-06-25.md`:
+The latest automated gate is currently passing in `docs/QA_RESULTS_2026-06-29.md`:
 
-- R6 now passes: every track has at least 4 Korean-accessible resources.
-- Desktop/mobile browser QA passed on local `http://localhost:8787`.
-- Seed external URLs returned HTTP 200.
-- Current seed has no YouTube resources, so R7 views/comments checks are only needed if YouTube candidates are added later.
+- Current data scale: 16 role groups, 96 detailed roles, 123 education resources.
+- `node --check app.js` passed.
+- `node --check data/roleExpansions.js` passed.
+- `npm.cmd run validate:data` passed with 0 warnings and 0 errors.
+- `npm.cmd run check` passed and Vite build succeeded.
+- VM logic checks confirmed duration-based roadmap counts, weekly resource generation, goal-influenced priority, and export workbook sheets.
+- Actual desktop/mobile browser click and visual QA is still pending because Browser `iab` was unavailable in the 2026-06-29 session.
 
 Next concrete steps:
 
-1. Create and push a savepoint commit.
-2. Prepare or verify the Cloudflare Pages deployment URL with Vite settings (`npm run build`, `dist`).
-3. Smoke test the deployed URL.
-4. Start the 5-student pilot and record R15 outcome metrics.
+1. Run actual desktop/mobile browser QA against `npm.cmd run dev` or `npm.cmd run preview`.
+2. Record browser QA results in `docs/QA_RESULTS_2026-06-29.md`.
+3. Create and push a savepoint commit.
+4. Prepare or verify the Cloudflare Pages deployment URL with Vite settings (`npm run build`, `dist`).
+5. Smoke test the deployed URL.
+6. Start the student pilot and record selection, competency-check, curriculum-add, export, and qualitative metrics.
