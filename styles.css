@@ -3911,6 +3911,26 @@ li {
   }
 }
 
+@media (min-width: 721px) and (max-width: 900px) {
+  .role-workbench {
+    grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
+    gap: 14px;
+  }
+
+  .role-result-panel {
+    position: sticky;
+    top: 12px;
+    max-height: calc(100vh - 24px);
+    overflow: auto;
+  }
+
+  .role-picker-panel .track-grid {
+    max-height: calc(100vh - 300px);
+    overflow: auto;
+    padding-right: 4px;
+  }
+}
+
 @media (max-width: 620px) {
   .app-header {
     flex-direction: column;

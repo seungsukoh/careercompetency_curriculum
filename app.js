@@ -5461,7 +5461,7 @@ function renderRoleSelectionPrompt() {
 function focusSelectedRoleOverview() {
   requestAnimationFrame(() => {
     const resultPanel = elements.selectedRoleOverview?.closest(".role-result-panel");
-    if (window.matchMedia("(max-width: 900px)").matches) {
+    if (window.matchMedia("(max-width: 720px)").matches) {
       elements.selectedRoleOverview?.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
