@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "vite preview --host 0.0.0.0",
+    "validate:data": "node scripts/validate-data.mjs",
+    "check": "node scripts/validate-data.mjs && vite build"
   },
   "devDependencies": {
     "vite": "6.4.3"
