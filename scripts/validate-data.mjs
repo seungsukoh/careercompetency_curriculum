@@ -69,6 +69,8 @@ const warnings = [];
 
 const fail = (message) => errors.push(message);
 const warn = (message) => warnings.push(message);
+const validQualityStatuses = new Set(["candidate", "reviewed", "verified", "reviewNeeded"]);
+const trustedQualityStatuses = new Set(["reviewed", "verified"]);
 
 function requireFields(entity, fields, label) {
   fields.forEach((field) => {
@@ -116,6 +118,15 @@ roles.forEach((role) => {
 
 data.resources.forEach((resource) => {
   requireFields(resource, ["id", "title", "provider", "type", "language", "difficulty", "tracks", "skills", "reason", "expectedOutput", "url"], `resource ${resource.id}`);
+  if (!validQualityStatuses.has(resource.qualityStatus)) {
+    fail(`resource ${resource.id} has invalid qualityStatus "${resource.qualityStatus}"`);
+  }
+  if ((resource.core || resource.starterPack) && !trustedQualityStatuses.has(resource.qualityStatus)) {
+    fail(`resource ${resource.id} cannot be core/starterPack while qualityStatus is "${resource.qualityStatus}"`);
+  }
+  if (resource.coreCandidate || resource.starterPackCandidate) {
+    fail(`resource ${resource.id} requests core/starterPack but is not reviewed or verified`);
+  }
   (resource.tracks || []).forEach((trackId) => {
     if (!trackIds.has(trackId)) fail(`resource ${resource.id} references missing track "${trackId}"`);
   });

@@ -102,12 +102,17 @@ function normalizeResource(resource) {
   const expectedOutput = resource.expectedOutput ?? resource.output;
   const recommendedSections = normalizeRecommendedSections(resource.recommendedSections ?? getDefaultRecommendedSections(resource));
   const qualityStatus = resource.qualityStatus ?? (languageCode === "ko" ? "reviewed" : "candidate");
-  const starterPackEligible = !["candidate", "reviewNeeded"].includes(qualityStatus);
+  const trustedResource = ["reviewed", "verified"].includes(qualityStatus);
+  const sourceCore = Boolean(resource.core);
+  const sourceStarterPack = resource.starterPack ?? sourceCore;
 
   return {
     ...resource,
     languageCode,
-    starterPack: starterPackEligible && (resource.starterPack ?? Boolean(resource.core)),
+    core: trustedResource && sourceCore,
+    coreCandidate: sourceCore && !trustedResource,
+    starterPack: trustedResource && sourceStarterPack,
+    starterPackCandidate: Boolean(sourceStarterPack) && !trustedResource,
     sequenceLevel: resource.sequenceLevel ?? getSequenceLevel(resource.difficulty),
     estimatedMinutes,
     practiceMinutes,
@@ -1222,7 +1227,6 @@ const resources = [
     estimatedMinutes: 60,
     practiceMinutes: 60,
     sequenceLevel: 2,
-    core: true,
     tracks: ["production-quality"],
     skills: ["문제해결", "8D 문제해결", "개선"],
     prerequisites: ["원인 가설"],
@@ -1362,7 +1366,6 @@ const resources = [
     estimatedMinutes: 75,
     practiceMinutes: 60,
     sequenceLevel: 2,
-    core: true,
     tracks: ["chemical-process", "semiconductor-equipment"],
     skills: ["공정안전", "PSM", "HAZOP", "MSDS"],
     prerequisites: ["공정 흐름 이해"],
@@ -8781,6 +8784,8 @@ function renderResourceTrustBadges(resource) {
   if (/youtube|영상/i.test(`${resource.provider} ${resource.type}`)) badges.push("동영상");
   if (resource.qualityStatus === "verified") badges.push("검증 자료");
   if (resource.qualityStatus === "reviewed") badges.push("검토 자료");
+  if (resource.qualityStatus === "candidate") badges.push("검토 후보");
+  if (resource.qualityStatus === "reviewNeeded") badges.push("재검토 필요");
 
   const uniqueBadges = [...new Set(badges)];
   return uniqueBadges.length
@@ -8951,17 +8956,87 @@ function renderPlanResourceItem(resource, task, context) {
   `;
 }
 
+function getTodayStartResourceScore(resource, task, context, comparison) {
+  const taskScore = getTaskResourceScore(resource, task, context, new Map());
+  const educationScore = getEducationResourceScore(resource, context);
+  const postingMatches = getPostingResourceMatches(resource, comparison);
+  const roleDirectMatch = getRoleLinkedResourceIds(context.role).includes(resource.id) ? 1 : 0;
+  const gapMatches = getResourceGapMatches(resource, context).length;
+  const acquiredMatches = getResourceAcquiredMatches(resource, context).length;
+  const competencyRepairTask = isCompetencyRepairTask(task);
+  const keywordPostingMatches = postingMatches.filter((item) => item.category === "직무 키워드").length;
+  const corePostingMatches = postingMatches.filter((item) => item.priority === "core").length;
+  const supportPostingMatches = Math.max(0, postingMatches.length - corePostingMatches);
+  const postingWeight = competencyRepairTask
+    ? { keyword: 35, core: 20, support: 8 }
+    : { keyword: 140, core: 70, support: 24 };
+  const postingScore = keywordPostingMatches * postingWeight.keyword
+    + corePostingMatches * postingWeight.core
+    + supportPostingMatches * postingWeight.support;
+  const acquiredOnlyPenalty = context.gapSkills.length && acquiredMatches && !gapMatches && !postingMatches.length ? 180 : 0;
+  const completedPenalty = state.completed.includes(resource.id) ? 900 : 0;
+
+  return taskScore
+    + educationScore * 0.32
+    + postingScore
+    + roleDirectMatch * 80
+    + gapMatches * (competencyRepairTask ? 35 : 18)
+    - acquiredOnlyPenalty
+    - completedPenalty;
+}
+
+function isCompetencyRepairTask(task) {
+  const text = getTaskSearchText(task);
+  return /핵심\s*역량\s*보완|미체크|보완|기초|개념/.test(text)
+    && !/산출물\s*작성/.test(task.title || "");
+}
+
+function getPostingResourceMatches(resource, comparison) {
+  if (!comparison?.hasText) return [];
+  const resourceText = getResourceSearchText(resource);
+  const normalizedResourceText = normalizePostingText(resourceText);
+  const compactResourceText = compactPostingTextValue(resourceText);
+
+  return comparison.matched
+    .map((item) => {
+      const matchedTerms = uniqueRoleTerms([item.label, ...item.matchedTerms])
+        .filter(isPostingResourceMatchTerm)
+        .filter((term) => postingTextHasTerm(normalizedResourceText, compactResourceText, term));
+      return matchedTerms.length ? { ...item, matchedTerms } : null;
+    })
+    .filter(Boolean);
+}
+
+function isPostingResourceMatchTerm(term) {
+  const cleanTerm = cleanRoleTerm(term);
+  if (cleanTerm.length < 2) return false;
+  if (/^[a-z0-9+#&./-]{1,2}$/i.test(cleanTerm)) return false;
+  if (postingComparisonStopwords.has(cleanTerm.toLowerCase())) return false;
+  return !roleTermStopWords.has(cleanTerm);
+}
+
 function getTodayStartAction(context, tasks) {
   const task = tasks.find((item) => !state.completedRoadmap.includes(getRoadmapStepId(context.track.id, item))) || tasks[0];
   if (!task) return null;
 
   const resourcesForTask = getRoadmapResourcesForTask(context.track, task, context, new Map());
   const fallbackResources = getRecommendedResources(context.track, context);
-  const resource = resourcesForTask.find((item) => !state.completed.includes(item.id))
-    || resourcesForTask[0]
-    || fallbackResources.find((item) => !state.completed.includes(item.id))
-    || fallbackResources[0]
-    || null;
+  const comparison = getPostingComparison(context, tasks);
+  const rankedResources = uniqueResources([...resourcesForTask, ...fallbackResources])
+    .map((resource) => ({
+      resource,
+      score: getTodayStartResourceScore(resource, task, context, comparison)
+    }))
+    .sort((a, b) => {
+      const completedDiff = Number(state.completed.includes(a.resource.id)) - Number(state.completed.includes(b.resource.id));
+      if (completedDiff !== 0) return completedDiff;
+      const scoreDiff = b.score - a.score;
+      if (scoreDiff !== 0) return scoreDiff;
+      const trustDiff = getRecommendationTrustRank(b.resource) - getRecommendationTrustRank(a.resource);
+      if (trustDiff !== 0) return trustDiff;
+      return sortResourcesForLearning(a.resource, b.resource, context);
+    });
+  const resource = rankedResources[0]?.resource || null;
 
   return {
     task,

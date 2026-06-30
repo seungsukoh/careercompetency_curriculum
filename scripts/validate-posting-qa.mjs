@@ -134,6 +134,21 @@ const fixtures = [
     minScore: 65,
     expectedMatches: ["MES", "공정데이터", "Python", "SQL", "Pareto"],
     expectedResourceIds: ["machine-learning-onramp", "coursera-engineering-data", "freecodecamp-python-data"],
+    expectedTodayResourceIds: ["nist-control-charts"],
+    postingText: "담당업무: MES 공정데이터 수집, Python SQL 기반 불량 Pareto 분석, 대시보드 구축, 설비 데이터 이상 패턴 탐지. 자격요건: 통계, 데이터 전처리, 제조 공정 이해. 우대사항: Power BI, Tableau, Spotfire."
+  },
+  {
+    id: "production-data-advanced",
+    label: "생산 데이터 분석 공고 - 기초 체크 완료",
+    major: "mechanical",
+    industry: "manufacturing",
+    trackId: "production-quality",
+    roleId: "production-data-engineer",
+    minScore: 65,
+    checkedSkills: ["통계", "SPC", "데이터 분석", "데이터 전처리", "MES/SQL", "Pareto"],
+    expectedMatches: ["MES", "공정데이터", "Python", "SQL", "Pareto"],
+    expectedResourceIds: ["machine-learning-onramp", "coursera-engineering-data", "freecodecamp-python-data"],
+    expectedTodayResourceIds: ["machine-learning-onramp"],
     postingText: "담당업무: MES 공정데이터 수집, Python SQL 기반 불량 Pareto 분석, 대시보드 구축, 설비 데이터 이상 패턴 탐지. 자격요건: 통계, 데이터 전처리, 제조 공정 이해. 우대사항: Power BI, Tableau, Spotfire."
   }
 ];
@@ -192,6 +207,13 @@ globalThis.__runPostingQaCase = function runPostingQaCase(fixture) {
     view: "saved"
   };
   const track = getSelectedTrack();
+  const checkedSkillKeys = new Set((fixture.checkedSkills || [])
+    .map((skill) => String(skill || "").toLowerCase().replace(/[\\s/_-]+/g, "")));
+  state.checked = Object.fromEntries(
+    getDiagnosticItems(track)
+      .filter((item) => checkedSkillKeys.has(String(item.skill || "").toLowerCase().replace(/[\\s/_-]+/g, "")))
+      .map((item) => [item.id, true])
+  );
   const role = getSelectedRole(track.id);
   const tasks = getVisibleRoadmapTasks(track.id);
   const context = getRecommendationContext(track, getGapSkills(track.id), tasks);
@@ -271,6 +293,7 @@ fixtures.forEach((fixture) => {
     role: result.selectedRoleTitle,
     score: result.score,
     today: result.todayResourceId,
+    todayTask: result.todayTaskTitle,
     recommended: result.recommendedResourceIds.slice(0, 5),
     matched: result.matchedLabels.slice(0, 5),
     errors: caseErrors
@@ -285,6 +308,7 @@ console.log("Posting QA summary:");
 summaries.forEach((summary) => {
   const status = summary.errors.length ? "FAIL" : "PASS";
   console.log(`- ${status} ${summary.id}: ${summary.role} / ${summary.score}% / today=${summary.today}`);
+  console.log(`  today task: ${summary.todayTask}`);
   console.log(`  matches: ${summary.matched.join(", ")}`);
   console.log(`  resources: ${summary.recommended.join(", ")}`);
 });
