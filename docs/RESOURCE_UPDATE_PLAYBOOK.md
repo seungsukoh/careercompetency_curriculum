@@ -10,7 +10,7 @@
 
 우선 출처:
 
-- 한국어 기반: K-MOOC, KOCW, HRD-Net, STEP, 디지털배움터, GSEEK
+- 한국어 기반: K-MOOC, KOCW, HRD-Net, STEP, 디지털배움터, GSEEK, Boostcourse, 엘리스, NCS, KIRD, KOSHA
 - 글로벌 무료/청강: Coursera, edX, Khan Academy, freeCodeCamp, MIT OCW, NPTEL
 - 공식/기업 자료: MathWorks, NCS, KOSHA, NIST/SEMATECH, ASQ, TI, Analog Devices, STMicroelectronics, ROS Documentation
 - 실전형 후보: 인프런 무료 강의, Udemy 무료 강의, 대학/기업 공식 YouTube
@@ -21,13 +21,15 @@
 2. `app.js`의 세부 직무, `roleDiagnostics`, `roleResourceLinks`가 채용공고 수준과 맞는지 갱신한다.
 3. 자료 후보는 반드시 특정 로드맵 과제 또는 진단 역량에 연결한다.
 4. 강의 전체가 아니라 학생이 볼 단원, 문서 섹션, 실습 범위를 기록한다.
-5. 산출물이 앱의 주차별 제출물과 맞는지 확인한다.
-6. 검수상태를 `candidate`, `reviewed`, `verified`, `reviewNeeded` 중 하나로 둔다.
-7. `reviewed` 이상이거나 공식 문서 기반 후보만 앱 데이터에 반영한다.
-8. 워드클라우드 용어는 직무 상세, 진단 항목, 교육자료, 로드맵 과제에서 반복되는 핵심어가 반영되었는지 확인한다.
-9. 정적 PNG 워드클라우드를 다시 쓰는 경우에만 `matlab -batch "addpath(pwd); generateWordClouds"`로 이미지를 재생성한다.
-10. `node --check app.js`, `node --check data/roleExpansions.js`, `npm.cmd run validate:data`, `npm.cmd run check`를 실행한다.
-11. 데이터 감사로 직무 진단, 역할별 자료, 주차별 자료 링크 누락을 확인한다.
+5. 학생이 누를 최종 URL을 본문 GET 기준으로 열어 제목, 본문 키워드, 목차 또는 파일명을 확인한다.
+6. 산출물이 앱의 주차별 제출물과 맞는지 확인한다.
+7. 검수상태를 `candidate`, `reviewed`, `verified`, `reviewNeeded` 중 하나로 둔다.
+8. 직접 강좌/문서/예제와 볼 섹션이 확정되고 링크 접근성이 확인된 자료만 `reviewed`로 승격한다. 플랫폼 검색 페이지와 403/404/홈 리다이렉트 자료는 `candidate`와 `broad`로 유지한다.
+9. `core: true` 자료는 `reviewed` 또는 `verified`일 때만 Starter Pack으로 보고, 학생이 먼저 완료할 필수 자료인지 검토한다.
+10. 워드클라우드 용어는 직무 상세, 진단 항목, 교육자료, 로드맵 과제에서 반복되는 핵심어가 반영되었는지 확인한다.
+11. 정적 PNG 워드클라우드를 다시 쓰는 경우에만 `matlab -batch "addpath(pwd); generateWordClouds"`로 이미지를 재생성한다.
+12. `node --check app.js`, `node --check data/roleExpansions.js`, `npm.cmd run validate:data`, `npm.cmd run check`를 실행한다.
+13. 데이터 감사로 직무 진단, 역할별 자료, 주차별 자료 링크 누락을 확인한다.
 
 ## 후보 검수 기준
 
@@ -36,6 +38,9 @@
 | 과제 연결 | 특정 직무와 주차 과제에 직접 연결되어야 한다. |
 | 학생 행동 | 시청/읽기 후 만들 산출물이 분명해야 한다. |
 | 범위 | 강의 전체가 아니라 볼 단원 또는 섹션이 지정되어야 한다. |
+| 링크 접근성 | 학생이 누를 최종 URL이 실제 자료 제목이나 파일명으로 열려야 한다. |
+| 언어 표기 | 한국어/영어 자료인지 앱 카드와 내보내기에서 명확히 보여야 한다. |
+| Starter Pack | 핵심 자료는 선택이 아니라 선완료 자료로 안내되어야 하며 candidate 자료는 포함하지 않는다. |
 | 목표 적합성 | 직무 탐색, 전공 보완, 포트폴리오, 면접 준비 중 어떤 목표에 맞는지 분명해야 한다. |
 | 기간 적합성 | 2주 로드맵에는 짧고 직접적인 자료, 8~12주 로드맵에는 반복/심화/프로젝트형 자료를 우선한다. |
 | 출처 | 공개자료, 공식문서, 대학 OCW, 기업 공식 기술자료를 우선한다. |

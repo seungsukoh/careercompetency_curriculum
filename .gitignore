@@ -1,3 +1,8 @@
 node_modules/
 dist/
 npm-debug.log*
+vite-dev*.log
+vite-preview*.log
+static-dev*.log
+tmp/
+.tmp-edge-*/
