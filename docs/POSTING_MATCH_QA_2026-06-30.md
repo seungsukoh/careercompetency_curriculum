@@ -26,14 +26,14 @@ npm.cmd run validate:posting
 | 케이스 | 선택 직무 | 점수 | 오늘 시작할 자료 | 상태 |
 | --- | --- | ---: | --- | --- |
 | 예지보전 AI 공고 | 예지보전 AI 엔지니어 | 83% | Predictive Maintenance Toolbox 예제 | PASS |
-| PCB 설계 공고 | PCB 설계·검토 엔지니어 | 58% | TI Power Management 공식 개요 | PASS |
+| PCB 설계 공고 | PCB 설계·검토 엔지니어 | 68% | TI Power Management 공식 개요 | PASS |
 | 차량 HIL/SIL 검증 공고 | HIL·SIL 검증 엔지니어 | 58% | Simulink Test 테스트 하네스·Test Manager 예제 | PASS |
-| 반도체 식각 공정 공고 | 반도체 식각 공정 엔지니어 | 68% | Semiconductor Devices 핵심 단원 | PASS |
-| 공정안전·환경 공고 | 공정안전·환경 엔지니어 | 42% | NPTEL Hazard and Operability Study | PASS |
+| 반도체 식각 공정 공고 | 반도체 식각 공정 엔지니어 | 74% | Semiconductor Devices 핵심 단원 | PASS |
+| 공정안전·환경 공고 | 공정안전·환경 엔지니어 | 58% | NPTEL Hazard and Operability Study | PASS |
 | 품질보증·품질관리 공고 | 품질보증·품질관리 엔지니어 | 63% | Coursera Six Sigma Principles | PASS |
-| 배터리 공정 공고 | 배터리 공정 엔지니어 | 47% | LearnChemE Material Balances 핵심 문제풀이 | PASS |
-| 차량 열관리 공고 | 차량 열관리·냉각 시스템 엔지니어 | 42% | Ansys Innovation Courses 구조·열·유동 해석 | PASS |
-| EV 전력전자 공고 | EV 전력전자·인버터 엔지니어 | 37% | KOCW 전력전자시스템 해석 핵심 단원 | PASS |
+| 배터리 공정 공고 | 배터리 공정 엔지니어 | 74% | LearnChemE Material Balances 핵심 문제풀이 | PASS |
+| 차량 열관리 공고 | 차량 열관리·냉각 시스템 엔지니어 | 63% | Ansys Innovation Courses 구조·열·유동 해석 | PASS |
+| EV 전력전자 공고 | EV 전력전자·인버터 엔지니어 | 63% | KOCW 전력전자시스템 해석 핵심 단원 | PASS |
 | 생산 데이터 분석 공고 | 생산 데이터 분석 담당 | 68% | NIST Control Charts 핵심 단원 | PASS |
 
 ## 확인한 정합성
@@ -43,15 +43,16 @@ npm.cmd run validate:posting
 - PCB, HIL/SIL, 식각, 품질, 생산 데이터 케이스는 공고 키워드와 추천 자료가 모두 직접 연결됐다.
 - 화공 계열 케이스는 배터리 공정과 공정안전이 분리되어 선택된다.
 - 전력전자와 차량 열관리처럼 영문/한글 표현이 섞인 공고도 핵심 직무 키워드는 잡힌다.
+- 한글/영문/약어 동의어 보강 후 PCB, 식각, 공정안전, 배터리 공정, 차량 열관리, EV 전력전자 점수가 개선됐다.
 
 ## 잔여 리스크
 
-- EV 전력전자, 차량 열관리, 공정안전, 배터리 공정은 핵심 키워드는 맞지만 점수가 낮은 편이다. 공고 표현이 `inverter`, `gate driver`, `battery thermal`, `coolant loop`처럼 영문으로만 들어오면 동의어 매칭을 더 보강할 필요가 있다.
 - `KOSHA PSM`, `Semiconductor Engineering 식각 후보`처럼 검수 상태가 후보인 자료는 직무 직접 연결성이 있어도 상위 추천에서 밀릴 수 있다. 이는 현재 검수 정책상 의도된 동작이지만, 자료 검수가 끝나면 추천 순위를 다시 확인해야 한다.
 - 생산 데이터 분석 케이스의 오늘 시작 자료는 통계/SPC 기초 자료로 잡힌다. 데이터 직무 지원자가 이미 통계를 알고 있다면 Python/SQL 또는 ML 자료가 더 적합할 수 있으므로 역량 체크 결과와 함께 추가 검증이 필요하다.
+- 동의어 사전은 공고 대조 기준으로만 적용했다. 직무 선택 랭킹이나 교육 추천 랭킹에는 아직 직접 반영하지 않았다.
 
 ## 다음 보정 후보
 
-- 영문 공고 표현 동의어 사전 추가: `inverter`, `gate driver`, `battery thermal`, `coolant loop`, `hazard assessment`, `mixing`, `drying`, `calendering`.
 - 후보 상태 자료의 검수 완료 후 `qualityStatus` 조정.
 - 실제 최신 공고 원문 10개를 별도로 붙여넣어 결과 스크린샷과 엑셀 산출물을 확인하는 수동 QA.
+- 생산 데이터 분석처럼 통계 기초와 Python/SQL 실습 사이의 우선순위가 학생 역량 체크에 따라 달라지는 케이스를 추가 검증한다.

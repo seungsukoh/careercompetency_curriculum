@@ -9147,11 +9147,15 @@ function buildPostingComparisonCriteria(context, tasks) {
 }
 
 function getPostingCriterionTerms(label, terms) {
-  return uniqueRoleTerms([
+  const baseTerms = uniqueRoleTerms([
     label,
     ...(terms || []),
     ...extractRoleTerms([label, ...(terms || [])]),
     ...(terms || []).flatMap(splitRoleToolTerm)
+  ]);
+  return uniqueRoleTerms([
+    ...baseTerms,
+    ...baseTerms.flatMap(getPostingTermVariants)
   ])
     .map((term) => cleanRoleTerm(term))
     .filter((term) => term.length >= 2)
@@ -9199,12 +9203,84 @@ function compactPostingTextValue(value) {
 }
 
 function postingTextHasTerm(normalizedText, compactText, term) {
-  const normalizedTerm = normalizePostingText(term);
-  if (normalizedTerm.length < 2) return false;
-  if (normalizedText.includes(normalizedTerm)) return true;
-  const compactTerm = compactPostingTextValue(term);
-  return compactTerm.length >= 2 && compactText.includes(compactTerm);
+  return getPostingTermVariants(term).some((variant) => {
+    const normalizedTerm = normalizePostingText(variant);
+    if (normalizedTerm.length < 2) return false;
+    if (normalizedText.includes(normalizedTerm)) return true;
+    const compactTerm = compactPostingTextValue(variant);
+    return compactTerm.length >= 2 && compactText.includes(compactTerm);
+  });
 }
+
+function getPostingTermVariants(term) {
+  const cleanTerm = cleanRoleTerm(term);
+  const key = getRoleTermKey(cleanTerm);
+  const matchedGroup = postingTermSynonymGroups.find((group) => (
+    group.some((candidate) => getRoleTermKey(candidate) === key)
+  ));
+  return uniqueRoleTerms([cleanTerm, ...(matchedGroup || [])]);
+}
+
+const postingTermSynonymGroups = [
+  ["예지보전", "predictive maintenance", "condition monitoring", "상태기반정비"],
+  ["이상탐지", "anomaly detection", "fault detection", "이상 감지"],
+  ["센서데이터", "sensor data", "센서 데이터"],
+  ["시계열", "time series", "timeseries"],
+  ["정비이력", "maintenance history", "maintenance log", "보전 이력"],
+  ["공정데이터", "process data", "공정 데이터"],
+  ["대시보드", "dashboard", "BI", "Power BI", "Tableau", "Spotfire"],
+  ["파레토", "Pareto"],
+  ["PCB Layout", "PCB 레이아웃", "PCB 배치"],
+  ["Stack-up", "stackup", "적층", "PCB 적층"],
+  ["리턴패스", "return path"],
+  ["디커플링", "decoupling", "decoupling capacitor"],
+  ["신호 무결성", "signal integrity", "SI"],
+  ["전원 무결성", "power integrity", "PI"],
+  ["HIL", "hardware in the loop", "hardware-in-the-loop"],
+  ["SIL", "software in the loop", "software-in-the-loop"],
+  ["MIL", "model in the loop", "model-in-the-loop"],
+  ["Test Case", "test cases", "테스트케이스", "시험 케이스"],
+  ["요구사항검증", "requirements validation", "requirement verification", "requirements verification"],
+  ["Etch", "etching", "식각"],
+  ["Plasma", "플라즈마"],
+  ["RF power", "RF 파워"],
+  ["Selectivity", "선택비"],
+  ["Recipe", "레시피"],
+  ["Wafer map", "wafermap", "웨이퍼맵"],
+  ["PSM", "process safety management"],
+  ["HAZOP", "hazard and operability", "hazard operability"],
+  ["MSDS", "SDS", "material safety data sheet"],
+  ["Risk Assessment", "hazard assessment", "위험성 평가", "위험평가"],
+  ["공정안전", "process safety"],
+  ["환경안전", "EHS", "HSE"],
+  ["SPC", "statistical process control"],
+  ["Cpk", "공정능력", "process capability"],
+  ["FMEA", "failure mode and effects analysis"],
+  ["8D", "eight disciplines", "8 disciplines"],
+  ["ISO/IATF", "IATF 16949", "ISO 9001"],
+  ["전극공정", "electrode process", "electrode manufacturing"],
+  ["슬러리", "slurry"],
+  ["믹싱", "mixing", "혼합", "slurry mixing", "슬러리 혼합"],
+  ["코팅", "coating"],
+  ["건조", "drying", "dryer"],
+  ["캘린더링", "calendering", "calender"],
+  ["조립", "assembly"],
+  ["수율", "yield"],
+  ["Scale-up", "scale up", "스케일업"],
+  ["열관리", "thermal management"],
+  ["냉각회로", "coolant loop", "cooling loop", "cooling circuit"],
+  ["HVAC", "공조", "냉난방"],
+  ["배터리온도", "battery thermal", "battery temperature", "battery temp", "배터리 열관리"],
+  ["CFD", "computational fluid dynamics", "유동해석"],
+  ["전력전자", "power electronics"],
+  ["인버터", "inverter"],
+  ["OBC", "on-board charger", "on board charger", "온보드차저"],
+  ["DC-DC", "DCDC", "DC DC", "DC-DC converter", "컨버터", "converter"],
+  ["게이트드라이브", "gate driver", "gate drive", "gate-drive", "gate driving"],
+  ["EMI", "electromagnetic interference"],
+  ["EMC", "electromagnetic compatibility"],
+  ["Thermal", "열", "열해석"]
+];
 
 const postingComparisonStopwords = new Set([
   "담당업무", "주요업무", "자격요건", "우대사항", "필수", "우대", "관련", "경험", "보유",

@@ -20,7 +20,7 @@ const fixtures = [
     industry: "ai",
     trackId: "ai-engineering",
     roleId: "predictive-maintenance-ai-engineer",
-    minScore: 75,
+    minScore: 80,
     expectedMatches: ["예지보전", "이상탐지", "센서데이터", "시계열", "정비이력"],
     expectedResourceIds: ["mathworks-predictive-maintenance", "machine-learning-onramp", "google-ml-crash-course"],
     expectedTodayResourceIds: ["mathworks-predictive-maintenance"],
@@ -34,8 +34,8 @@ const fixtures = [
     industry: "electronics",
     trackId: "electronics-pcb",
     roleId: "pcb-design-engineer",
-    minScore: 50,
-    expectedMatches: ["PCB Layout", "Stack-up", "리턴패스", "EMC", "디커플링"],
+    minScore: 65,
+    expectedMatches: ["PCB Layout", "Stack-up", "리턴패스", "return path", "EMC", "디커플링"],
     expectedResourceIds: ["kicad-pcb-docs", "ti-power-management-training", "youtube-emc-emi-basics"],
     postingText: "담당업무: PCB Layout 검토, Stack-up 설계, 리턴패스와 디커플링 검토, EMC/EMI 개선. 자격요건: 회로이론, 전원회로, PCB CAD 사용 경험. 우대사항: Altium, OrCAD, 신호 무결성, 측정 장비 활용."
   },
@@ -46,7 +46,7 @@ const fixtures = [
     industry: "mobility",
     trackId: "automotive-mobility",
     roleId: "hil-sil-validation-engineer",
-    minScore: 50,
+    minScore: 55,
     expectedMatches: ["HIL", "SIL", "Test Case", "CANoe", "요구사항검증"],
     expectedResourceIds: ["mathworks-simulink-test-manager", "mathworks-fault-tolerant-fuel-control", "ni-learn-test-measurement"],
     expectedTodayResourceIds: ["mathworks-simulink-test-manager"],
@@ -59,8 +59,8 @@ const fixtures = [
     industry: "semiconductor",
     trackId: "semiconductor-equipment",
     roleId: "etch-process-engineer",
-    minScore: 60,
-    expectedMatches: ["Etch", "식각", "Plasma", "RF power", "Selectivity"],
+    minScore: 70,
+    expectedMatches: ["Etch", "식각", "Plasma", "RF power", "RF 파워", "Selectivity", "선택비"],
     expectedResourceIds: ["kocw-semiconductor-process-cbnu", "mit-semiconductor-devices", "moresteam-doe"],
     postingText: "담당업무: Etch 공정 Recipe 조건 변경, Plasma RF power 조정, Selectivity 및 CD 관리, 공정개선과 수율 분석. 자격요건: 반도체 공정, 식각, 계측 데이터 해석. 우대사항: DOE, SPC, JMP, Wafer map 분석."
   },
@@ -71,10 +71,10 @@ const fixtures = [
     industry: "chemical",
     trackId: "chemical-process",
     roleId: "process-safety-engineer",
-    minScore: 40,
-    expectedMatches: ["PSM", "HAZOP", "MSDS", "환경안전", "Risk Assessment"],
+    minScore: 55,
+    expectedMatches: ["PSM", "HAZOP", "MSDS", "환경안전", "Risk Assessment", "hazard assessment"],
     expectedResourceIds: ["youtube-nptel-hazop", "aiche-ccps-process-safety-beacon", "learncheme-chemical-process"],
-    postingText: "담당업무: PSM 운영, HAZOP 검토, MSDS 기반 화학물질 위험성 평가, 환경안전 및 사고 예방 대책 수립. 자격요건: 공정안전, Risk Assessment, 화학공정 이해. 우대사항: KOSHA, 안전보건 규정 대응."
+    postingText: "담당업무: PSM 운영, HAZOP 검토, MSDS 기반 화학물질 위험성 평가, 환경안전 및 사고 예방 대책 수립. 자격요건: 공정안전, 화학공정 이해. 우대사항: KOSHA, 안전보건 규정 대응."
   },
   {
     id: "quality",
@@ -83,7 +83,7 @@ const fixtures = [
     industry: "manufacturing",
     trackId: "production-quality",
     roleId: "quality-engineer",
-    minScore: 55,
+    minScore: 60,
     expectedMatches: ["SPC", "Cpk", "FMEA", "8D", "ISO/IATF"],
     expectedResourceIds: ["nist-control-charts", "nist-process-capability", "asq-fmea", "asq-eight-d"],
     postingText: "담당업무: 품질보증, SPC 관리도 운영, Cpk 공정능력 분석, FMEA 및 8D 개선 보고서 작성. 자격요건: ISO/IATF 이해, 통계 분석, 계측 데이터 해석. 우대사항: Minitab, 고객 클레임 대응."
@@ -95,10 +95,10 @@ const fixtures = [
     industry: "battery",
     trackId: "chemical-process",
     roleId: "battery-process-engineer",
-    minScore: 45,
-    expectedMatches: ["전극공정", "슬러리", "코팅", "조립", "수율"],
+    minScore: 60,
+    expectedMatches: ["전극공정", "슬러리", "mixing", "코팅", "drying", "calendering", "조립", "수율"],
     expectedResourceIds: ["statistics-onramp", "moresteam-doe", "learncheme-material-balances"],
-    postingText: "담당업무: 전극공정 슬러리 혼합, 코팅 조건 최적화, 조립 공정 수율 개선, Recipe 조건변경. 자격요건: 배터리 소재와 화학공정 이해, DOE 실험계획, 품질 데이터 분석. 우대사항: Scale-up, 양산 공정 경험."
+    postingText: "담당업무: 전극공정 슬러리 혼합, 코팅 조건 최적화, 건조와 캘린더링 조건 관리, 조립 공정 수율 개선, Recipe 조건변경. 자격요건: 배터리 소재와 화학공정 이해, DOE 실험계획, 품질 데이터 분석. 우대사항: Scale-up, 양산 공정 경험."
   },
   {
     id: "vehicle-thermal",
@@ -107,8 +107,8 @@ const fixtures = [
     industry: "mobility",
     trackId: "automotive-mobility",
     roleId: "vehicle-thermal-management-engineer",
-    minScore: 40,
-    expectedMatches: ["열관리", "냉각회로", "HVAC", "배터리온도", "CFD"],
+    minScore: 60,
+    expectedMatches: ["열관리", "냉각회로", "coolant loop", "HVAC", "배터리온도", "battery thermal", "CFD"],
     expectedResourceIds: ["ansys-innovation-courses", "simscape-onramp", "youtube-skilllync-ev-crash-course"],
     postingText: "담당업무: 차량 열관리 시스템 개발, 냉각회로 설계, HVAC 성능 검증, 배터리온도 관리, CFD 해석. 자격요건: 열전달, 유체역학, 시험 데이터 분석. 우대사항: Simscape, GT-SUITE, 열해석 경험."
   },
@@ -119,8 +119,8 @@ const fixtures = [
     industry: "mobility",
     trackId: "automotive-mobility",
     roleId: "ev-power-electronics-engineer",
-    minScore: 35,
-    expectedMatches: ["인버터", "OBC", "DC-DC", "전력전자", "게이트드라이브"],
+    minScore: 60,
+    expectedMatches: ["인버터", "inverter", "OBC", "DC-DC", "전력전자", "게이트드라이브", "gate driver"],
     expectedResourceIds: ["kocw-power-electronics-system-analysis", "mathworks-simscape-electrical", "youtube-emc-emi-basics"],
     postingText: "담당업무: EV 인버터, OBC, DC-DC 컨버터 회로 검토, 게이트드라이브 설계, 전력전자 효율 및 Thermal 검증. 자격요건: 전력전자, 회로이론, EMI 대책. 우대사항: PLECS, SPICE, Simscape Electrical."
   },
@@ -131,7 +131,7 @@ const fixtures = [
     industry: "manufacturing",
     trackId: "production-quality",
     roleId: "production-data-engineer",
-    minScore: 60,
+    minScore: 65,
     expectedMatches: ["MES", "공정데이터", "Python", "SQL", "Pareto"],
     expectedResourceIds: ["machine-learning-onramp", "coursera-engineering-data", "freecodecamp-python-data"],
     postingText: "담당업무: MES 공정데이터 수집, Python SQL 기반 불량 Pareto 분석, 대시보드 구축, 설비 데이터 이상 패턴 탐지. 자격요건: 통계, 데이터 전처리, 제조 공정 이해. 우대사항: Power BI, Tableau, Spotfire."
