@@ -135,6 +135,7 @@ const fixtures = [
     expectedMatches: ["MES", "공정데이터", "Python", "SQL", "Pareto"],
     expectedResourceIds: ["machine-learning-onramp", "coursera-engineering-data", "freecodecamp-python-data"],
     expectedTodayResourceIds: ["nist-control-charts"],
+    expectedTodayEvidenceLabels: ["보완 역량", "자료 신뢰"],
     postingText: "담당업무: MES 공정데이터 수집, Python SQL 기반 불량 Pareto 분석, 대시보드 구축, 설비 데이터 이상 패턴 탐지. 자격요건: 통계, 데이터 전처리, 제조 공정 이해. 우대사항: Power BI, Tableau, Spotfire."
   },
   {
@@ -149,6 +150,7 @@ const fixtures = [
     expectedMatches: ["MES", "공정데이터", "Python", "SQL", "Pareto"],
     expectedResourceIds: ["machine-learning-onramp", "coursera-engineering-data", "freecodecamp-python-data"],
     expectedTodayResourceIds: ["machine-learning-onramp"],
+    expectedTodayEvidenceLabels: ["공고 신호", "체크 반영", "자료 신뢰"],
     postingText: "담당업무: MES 공정데이터 수집, Python SQL 기반 불량 Pareto 분석, 대시보드 구축, 설비 데이터 이상 패턴 탐지. 자격요건: 통계, 데이터 전처리, 제조 공정 이해. 우대사항: Power BI, Tableau, Spotfire."
   }
 ];
@@ -233,7 +235,8 @@ globalThis.__runPostingQaCase = function runPostingQaCase(fixture) {
     recommendedResourceIds: recommendedResources.map((resource) => resource.id),
     roadmapResourceIds: roadmapResources.map((resource) => resource.id),
     todayResourceId: todayAction?.resource?.id || null,
-    todayTaskTitle: todayAction?.task?.title || ""
+    todayTaskTitle: todayAction?.task?.title || "",
+    todayEvidenceLabels: (todayAction?.evidence || []).map((item) => item.label)
   };
 };
 `, sandbox, { filename: "posting-qa.vm.js" });
@@ -281,6 +284,12 @@ fixtures.forEach((fixture) => {
     }
   });
 
+  (fixture.expectedTodayEvidenceLabels || []).forEach((label) => {
+    if (!result.todayEvidenceLabels.includes(label)) {
+      caseErrors.push(`missing today evidence label "${label}"`);
+    }
+  });
+
   (fixture.forbiddenResourceIds || []).forEach((resourceId) => {
     if (combinedResourceIds.includes(resourceId)) {
       caseErrors.push(`forbidden resource appeared "${resourceId}"`);
@@ -294,6 +303,7 @@ fixtures.forEach((fixture) => {
     score: result.score,
     today: result.todayResourceId,
     todayTask: result.todayTaskTitle,
+    todayEvidence: result.todayEvidenceLabels,
     recommended: result.recommendedResourceIds.slice(0, 5),
     matched: result.matchedLabels.slice(0, 5),
     errors: caseErrors
@@ -309,6 +319,7 @@ summaries.forEach((summary) => {
   const status = summary.errors.length ? "FAIL" : "PASS";
   console.log(`- ${status} ${summary.id}: ${summary.role} / ${summary.score}% / today=${summary.today}`);
   console.log(`  today task: ${summary.todayTask}`);
+  console.log(`  today evidence: ${summary.todayEvidence.join(", ")}`);
   console.log(`  matches: ${summary.matched.join(", ")}`);
   console.log(`  resources: ${summary.recommended.join(", ")}`);
 });

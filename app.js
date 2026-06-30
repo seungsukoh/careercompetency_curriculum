@@ -8956,13 +8956,13 @@ function renderPlanResourceItem(resource, task, context) {
   `;
 }
 
-function getTodayStartResourceScore(resource, task, context, comparison) {
+function getTodayStartResourceFit(resource, task, context, comparison) {
   const taskScore = getTaskResourceScore(resource, task, context, new Map());
   const educationScore = getEducationResourceScore(resource, context);
   const postingMatches = getPostingResourceMatches(resource, comparison);
   const roleDirectMatch = getRoleLinkedResourceIds(context.role).includes(resource.id) ? 1 : 0;
-  const gapMatches = getResourceGapMatches(resource, context).length;
-  const acquiredMatches = getResourceAcquiredMatches(resource, context).length;
+  const gapMatches = getResourceGapMatches(resource, context);
+  const acquiredMatches = getResourceAcquiredMatches(resource, context);
   const competencyRepairTask = isCompetencyRepairTask(task);
   const keywordPostingMatches = postingMatches.filter((item) => item.category === "직무 키워드").length;
   const corePostingMatches = postingMatches.filter((item) => item.priority === "core").length;
@@ -8973,16 +8973,60 @@ function getTodayStartResourceScore(resource, task, context, comparison) {
   const postingScore = keywordPostingMatches * postingWeight.keyword
     + corePostingMatches * postingWeight.core
     + supportPostingMatches * postingWeight.support;
-  const acquiredOnlyPenalty = context.gapSkills.length && acquiredMatches && !gapMatches && !postingMatches.length ? 180 : 0;
+  const acquiredOnlyPenalty = context.gapSkills.length && acquiredMatches.length && !gapMatches.length && !postingMatches.length ? 180 : 0;
   const completedPenalty = state.completed.includes(resource.id) ? 900 : 0;
 
-  return taskScore
+  const score = taskScore
     + educationScore * 0.32
     + postingScore
     + roleDirectMatch * 80
-    + gapMatches * (competencyRepairTask ? 35 : 18)
+    + gapMatches.length * (competencyRepairTask ? 35 : 18)
     - acquiredOnlyPenalty
     - completedPenalty;
+
+  return {
+    score,
+    evidence: getTodayStartEvidenceItems(resource, task, context, {
+      postingMatches,
+      roleDirectMatch,
+      gapMatches,
+      acquiredMatches,
+      competencyRepairTask
+    })
+  };
+}
+
+function getTodayStartResourceScore(resource, task, context, comparison) {
+  return getTodayStartResourceFit(resource, task, context, comparison).score;
+}
+
+function getTodayStartEvidenceItems(resource, task, context, details) {
+  const evidence = [];
+  const postingTerms = uniqueRoleTerms(details.postingMatches.flatMap((item) => item.matchedTerms))
+    .filter(isPostingResourceMatchTerm);
+
+  if (postingTerms.length) {
+    evidence.push({ label: "공고 신호", value: postingTerms.slice(0, 3).join(", ") });
+  }
+  if (details.gapMatches.length) {
+    evidence.push({ label: "보완 역량", value: details.gapMatches.slice(0, 3).join(", ") });
+  }
+  if (details.acquiredMatches.length) {
+    evidence.push({ label: "체크 반영", value: `${details.acquiredMatches.slice(0, 2).join(", ")} 완료 반영` });
+  }
+  if (details.roleDirectMatch) {
+    evidence.push({ label: "직무 연결", value: "선택 직무 직접 자료" });
+  }
+  if (resource.starterPack || resource.core) {
+    evidence.push({ label: "자료 신뢰", value: resource.starterPack ? "필수 Starter Pack" : "핵심 교육" });
+  }
+  if (details.competencyRepairTask && details.gapMatches.length) {
+    evidence.push({ label: "오늘 순서", value: "미체크 역량 먼저 보완" });
+  }
+
+  return evidence.length
+    ? evidence.slice(0, 5)
+    : [{ label: "오늘 순서", value: task.deliverable }];
 }
 
 function isCompetencyRepairTask(task) {
@@ -9023,10 +9067,10 @@ function getTodayStartAction(context, tasks) {
   const fallbackResources = getRecommendedResources(context.track, context);
   const comparison = getPostingComparison(context, tasks);
   const rankedResources = uniqueResources([...resourcesForTask, ...fallbackResources])
-    .map((resource) => ({
-      resource,
-      score: getTodayStartResourceScore(resource, task, context, comparison)
-    }))
+    .map((resource) => {
+      const fit = getTodayStartResourceFit(resource, task, context, comparison);
+      return { resource, score: fit.score, evidence: fit.evidence };
+    })
     .sort((a, b) => {
       const completedDiff = Number(state.completed.includes(a.resource.id)) - Number(state.completed.includes(b.resource.id));
       if (completedDiff !== 0) return completedDiff;
@@ -9036,11 +9080,13 @@ function getTodayStartAction(context, tasks) {
       if (trustDiff !== 0) return trustDiff;
       return sortResourcesForLearning(a.resource, b.resource, context);
     });
-  const resource = rankedResources[0]?.resource || null;
+  const selected = rankedResources[0] || null;
+  const resource = selected?.resource || null;
 
   return {
     task,
     resource,
+    evidence: selected?.evidence || [],
     reason: resource
       ? getTaskResourceConnectionReason(resource, task, context)
       : task.priorityReason || "첫 산출물을 만들기 위한 최소 실행 과제입니다."
@@ -9051,7 +9097,7 @@ function renderTodayStartPanel(context, tasks) {
   const action = getTodayStartAction(context, tasks);
   if (!action) return "";
 
-  const { task, resource, reason } = action;
+  const { task, resource, reason, evidence } = action;
   const stepId = getRoadmapStepId(context.track.id, task);
   const taskCompleted = state.completedRoadmap.includes(stepId);
   const actionLabel = taskCompleted ? "다시 확인할 1개" : "오늘 시작할 1개";
@@ -9071,12 +9117,27 @@ function renderTodayStartPanel(context, tasks) {
         <strong>${resource ? resource.title : "공고 문장과 첫 과제 비교"}</strong>
         <span>${resource ? `${resource.provider} · ${resource.language} · ${formatMinutes(resource.totalMinutes)}` : "지원 회사 공고에서 업무·자격요건·우대사항 문장을 먼저 표시하세요."}</span>
         <em>${reason}</em>
+        ${renderTodayStartEvidence(evidence)}
         <div class="today-action-actions">
           ${resource ? `<a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>` : ""}
           ${resource ? renderSaveActionButton(resource, state.saved.includes(resource.id) ? "추가됨 · 제거" : "내 커리큘럼에 추가") : `<button class="ghost-button" type="button" data-view-target="saved">공고 대조로 이동</button>`}
         </div>
       </div>
     </section>
+  `;
+}
+
+function renderTodayStartEvidence(evidence) {
+  if (!evidence?.length) return "";
+  return `
+    <div class="today-action-evidence" aria-label="추천 근거">
+      ${evidence.map((item) => `
+        <span>
+          <strong>${escapeHtml(item.label)}</strong>
+          ${escapeHtml(item.value)}
+        </span>
+      `).join("")}
+    </div>
   `;
 }
 
