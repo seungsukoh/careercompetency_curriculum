@@ -7252,7 +7252,10 @@ function getStudentPersonaReview(context) {
 
 function getExpertCurriculumReview(context, tasks) {
   const roleResources = getRoleLinkedResources(context.role)
-    .filter((resource) => resource.tracks.includes(context.track.id));
+    .filter((resource) => (
+      resource.tracks.includes(context.track.id)
+      && !isRoleExcludedResource(resource, context.role)
+    ));
   const directCount = roleResources.filter(isDirectResourceUrl).length;
   const handsOnCount = roleResources.filter(isHandsOnResource).length;
   const taskCoverage = tasks.filter((task) => getRoadmapResourcesForTask(context.track, task, context).length).length;
@@ -7267,7 +7270,10 @@ function getExpertCurriculumReview(context, tasks) {
 function renderPersonaExpertAuditPanel(context, tasks) {
   const role = context.role;
   const roleResources = getRoleLinkedResources(role)
-    .filter((resource) => resource.tracks.includes(context.track.id));
+    .filter((resource) => (
+      resource.tracks.includes(context.track.id)
+      && !isRoleExcludedResource(resource, role)
+    ));
   const directCount = roleResources.filter(isDirectResourceUrl).length;
   const handsOnCount = roleResources.filter(isHandsOnResource).length;
   const shortResource = getRecommendedResources(context.track, context)
@@ -8211,7 +8217,10 @@ function getCompetencyActionItems(context, tasks) {
 
 function getCompetencyActionResources(context, task, usedResourceIds = new Set()) {
   const rankedResources = resources
-    .filter((resource) => resource.tracks.includes(context.track.id))
+    .filter((resource) => (
+      resource.tracks.includes(context.track.id)
+      && !isRoleExcludedResource(resource, context.role)
+    ))
     .map((resource) => ({
       resource,
       score: getTaskResourceScore(resource, task, context) + (isHandsOnResource(resource) ? 70 : 0)
