@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "validate:data": "node scripts/validate-data.mjs",
-    "check": "node scripts/validate-data.mjs && vite build"
+    "validate:posting": "node scripts/validate-posting-qa.mjs",
+    "check": "node scripts/validate-data.mjs && node scripts/validate-posting-qa.mjs && vite build"
   },
   "devDependencies": {
     "vite": "6.4.3"
