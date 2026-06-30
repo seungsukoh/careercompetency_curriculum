@@ -11,6 +11,8 @@
 - 직무에 직접 연결된 검수 자료가 충분하면 상위 추천에도 직접 연결 자료가 3개 이상 들어와야 한다.
 - 로드맵 과제별 추천에는 검수된 자료 중 직무 직접 연결 또는 과제 직접 연결 근거가 있어야 한다.
 - 역할의 `industries` 값은 부모 트랙의 `industries`와 모순되면 안 된다.
+- 직무역량 진단 문구는 해당 직무 본문, 키워드, 산출물 설명과 맞아야 한다.
+- 각 직무는 최소 3개 이상의 직무역량이 검수된 직접 연결 또는 상위 추천 교육자료로 보강되어야 한다.
 
 ## 수정 전 이슈
 
@@ -47,6 +49,23 @@
 - 직무-트랙 산업 필터 불일치: 0
 - 직무 선택 불가: 0
 
+## 심화 검토 결과
+
+직무역량과 교육자료의 연결 깊이를 추가로 감사했다. 첫 심화 감사에서는 24개 직무가 `weak_role_competency_education_coverage`로 잡혔다.
+
+결론:
+
+- 직무역량 문구 자체가 직무와 맞지 않는 문제는 0건이었다.
+- 약점은 역량 문구가 아니라, 해당 역량을 보완하는 검수 교육자료가 명시적으로 충분히 연결되지 않은 점이었다.
+- `roleCompetencyResourceLinks`를 추가해 직무별 역량과 교육자료를 직접 연결했다.
+- 기계/CAE, 자동차, 생산품질, 화학공정, 항공방산, 로보틱스, 에너지, AI 엔지니어링, 데이터센터 인프라, 제조 DX, 화학 지속가능성의 24개 직무를 보강했다.
+
+심화 보강 후 `npm run audit:education` 결과:
+
+- `lowRoleCompetencyCount`: 0
+- `weakRoleCompetencyTextAlignment`: 0
+- `weakRoleCompetencyEducationCoverage`: 0
+
 ## 검증
 
 - `npm run audit:education`: 통과
@@ -54,4 +73,4 @@
 - `npm run validate:posting`: 통과
 - `npm run check`: 통과
 
-참고: 샌드박스 안에서는 Vite/esbuild가 `spawn EPERM`으로 실패해 승인 후 동일 명령을 재실행했고, 빌드까지 통과했다.
+참고: 이번 심화 재검증에서는 데이터 검증, 공고 QA, Vite 빌드까지 같은 `npm run check` 흐름에서 통과했다.

@@ -4632,6 +4632,19 @@ const roleResourceExclusions = {
   "predictive-maintenance-ai-engineer": ["mathworks-ros-toolbox-examples", "nvidia-jetson-ai-course"]
 };
 
+const roleCompetencyResourceLinks = {};
+
+function addRoleCompetencyResourceLinks(definitions) {
+  Object.entries(definitions).forEach(([roleId, competencyMap]) => {
+    roleCompetencyResourceLinks[roleId] = roleCompetencyResourceLinks[roleId] || {};
+    Object.entries(competencyMap).forEach(([skill, resourceIds]) => {
+      roleCompetencyResourceLinks[roleId][skill] = [
+        ...new Set([...(roleCompetencyResourceLinks[roleId][skill] || []), ...resourceIds])
+      ];
+    });
+  });
+}
+
 Object.assign(roleResourceLinks, {
   "vehicle-body-design-engineer": ["mit-mechanics-materials", "kocw-mechanical-design", "mit-design-manufacturing", "mit-fea-solids", "optimization-onramp", "step-engineering", "hrd-net-job-training"],
   "vehicle-interior-exterior-design-engineer": ["mit-design-manufacturing", "mit-mechanics-materials", "ansys-innovation-courses", "kocw-mechanical-design", "step-engineering", "hrd-net-job-training", "comento-production-tech-internship", "udemy-free-practical-tools"],
@@ -4689,6 +4702,50 @@ Object.entries({
   "vehicle-test-validation-engineer": ["comento-production-tech-internship", "comento-plc-control-practice", "mathworks-vehicle-dynamics-examples", "mathworks-simulink-examples"]
 }).forEach(([roleId, resourceIds]) => {
   roleResourceLinks[roleId] = [...new Set([...(roleResourceLinks[roleId] || []), ...resourceIds])];
+});
+
+addRoleCompetencyResourceLinks({
+  "thermal-cfd-engineer": {
+    "열경계조건": ["ansys-innovation-courses", "simscape-onramp", "mit-fea-solids"],
+    "냉각설계": ["ansys-innovation-courses", "simscape-onramp"],
+    "후처리": ["matlab-onramp", "coursera-engineering-data", "ansys-innovation-courses"]
+  },
+  "supplier-quality-engineer": {
+    "협력사평가": ["ncs", "coursera-six-sigma-quality", "quality-one-fmea"],
+    "PPAP/APQP": ["quality-one-fmea", "asq-fmea", "nist-process-capability"],
+    "수입검사": ["nist-control-charts", "nist-process-capability", "coursera-six-sigma-quality"],
+    "8D추적": ["asq-eight-d", "quality-one-fmea"],
+    "Audit": ["ncs", "coursera-six-sigma-quality", "quality-one-fmea"]
+  },
+  "materials-rnd-engineer": {
+    "조성설계": ["mit-chemical-engineering", "coursera-chemical-engineering", "statistics-onramp"],
+    "합성조건": ["mit-chemical-engineering", "coursera-chemical-engineering", "learncheme-material-balances"],
+    "분석데이터": ["coursera-engineering-data", "statistics-onramp", "machine-learning-onramp"],
+    "물성평가": ["mit-chemical-engineering", "coursera-engineering-data", "statistics-onramp"],
+    "Scale-up": ["learncheme-material-balances", "learncheme-separations", "coursera-chemical-engineering"]
+  },
+  "bioprocess-engineer": {
+    "배양공정": ["kocw-chemical-process", "coursera-chemical-engineering", "fda-process-validation"],
+    "정제공정": ["kocw-chemical-process", "coursera-chemical-engineering", "fda-process-validation"],
+    "오염관리": ["fda-process-validation", "youtube-nptel-hazop", "moresteam-doe"]
+  },
+  "vehicle-interior-exterior-design-engineer": {
+    "내외장 패키지": ["mit-design-manufacturing", "mit-mechanics-materials"],
+    "감성품질": ["mit-design-manufacturing", "ansys-innovation-courses"],
+    "사출·도장": ["mit-design-manufacturing"],
+    "양산 이슈": ["mit-design-manufacturing", "ansys-innovation-courses"]
+  },
+  "vehicle-ee-architecture-engineer": {
+    "CAN/LIN": ["youtube-css-can-bus", "simulink-onramp"],
+    "전원분배": ["allaboutcircuits-textbook", "ti-precision-labs", "analog-dialogue"],
+    "변경영향": ["edx-engineering-systems", "simulink-onramp", "youtube-css-can-bus"]
+  },
+  "automotive-manufacturing-engineer": {
+    "공정설계": ["quality-one-fmea", "nist-process-capability", "mathworks-predictive-maintenance"],
+    "라인셋업": ["mathworks-predictive-maintenance", "nist-process-capability"],
+    "APQP/PPAP": ["quality-one-fmea", "asq-fmea", "nist-process-capability"],
+    "초기품질": ["nist-control-charts", "nist-process-capability", "asq-eight-d"]
+  }
 });
 
 Object.entries({
@@ -4811,6 +4868,7 @@ applyRoleExpansions({
   jobRoles,
   roleDiagnostics,
   roleResourceLinks,
+  roleCompetencyResourceLinks,
   resourceTaskLinks,
   curriculumTasks,
   starterKeywords,
@@ -8477,6 +8535,11 @@ function getRoleLinkedResourceIds(role) {
   return roleResourceLinks[role.id] || [];
 }
 
+function getRoleCompetencyResourceIds(role, skill) {
+  if (!role) return [];
+  return roleCompetencyResourceLinks[role.id]?.[skill] || [];
+}
+
 function isRoleExcludedResource(resource, role) {
   if (!role) return false;
   return (roleResourceExclusions[role.id] || []).includes(resource.id);
@@ -8648,12 +8711,28 @@ function getResourceSkillMatches(resource, skills) {
   });
 }
 
+function getMappedRoleCompetencyMatches(resource, context, skills = []) {
+  if (!context.role) return [];
+  const competencyMap = roleCompetencyResourceLinks[context.role.id] || {};
+  return (skills || []).filter((skill) => (competencyMap[skill] || []).includes(resource.id));
+}
+
 function getResourceGapMatches(resource, context) {
-  return getResourceSkillMatches(resource, context.gapSkills);
+  return [
+    ...new Set([
+      ...getResourceSkillMatches(resource, context.gapSkills),
+      ...getMappedRoleCompetencyMatches(resource, context, context.gapSkills)
+    ])
+  ];
 }
 
 function getResourceAcquiredMatches(resource, context) {
-  return getResourceSkillMatches(resource, context.acquiredSkills);
+  return [
+    ...new Set([
+      ...getResourceSkillMatches(resource, context.acquiredSkills),
+      ...getMappedRoleCompetencyMatches(resource, context, context.acquiredSkills)
+    ])
+  ];
 }
 
 function getTaskRoleKeywordMatches(resource, task, role) {

@@ -52,6 +52,7 @@ globalThis.__careerAudit = {
     resources,
     jobRoles,
     roleResourceLinks,
+    roleDiagnostics,
     majorRoleFitProfiles,
     industryLabels
   },
@@ -80,6 +81,13 @@ globalThis.__careerAudit = {
     const context = getRecommendationContext(track, getGapSkills(trackId), visibleTasks);
     const roleLinkedIds = new Set(getRoleLinkedResourceIds(context.role));
     const topResources = getRecommendedResources(track, context).slice(0, 8);
+    const trustedFocusedRoleResources = resources.filter((resource) => (
+      resource.tracks.includes(track.id)
+      && roleLinkedIds.has(resource.id)
+      && ["reviewed", "verified"].includes(resource.qualityStatus)
+      && !resource.broad
+      && !isRoleExcludedResource(resource, context.role)
+    ));
     const starterPack = getStarterPackResources(context, visibleTasks);
     const roadmapByTask = visibleTasks.map((task) => ({
       title: task.baseTitle || task.title,
@@ -92,10 +100,29 @@ globalThis.__careerAudit = {
         taskLinked: getResourceLinkedTasks(resource.id, [task]).length > 0
       }))
     }));
+    const roleSearchText = getRoleSearchText(track, context.role);
+    const roleCompetencies = (roleDiagnostics[roleId] || []).map(([skill, question]) => {
+      const mappedResourceIds = new Set(getRoleCompetencyResourceIds(context.role, skill));
+      const linkedResourceMatches = trustedFocusedRoleResources
+        .filter((resource) => mappedResourceIds.has(resource.id) || auditResourceMatchesCompetency(resource, skill, question))
+        .map((resource) => resource.id);
+      const topResourceMatches = topResources
+        .filter((resource) => ["reviewed", "verified"].includes(resource.qualityStatus) && !resource.broad)
+        .filter((resource) => mappedResourceIds.has(resource.id) || auditResourceMatchesCompetency(resource, skill, question))
+        .map((resource) => resource.id);
+      return {
+        skill,
+        question,
+        roleTextMatch: auditTextMatchesCompetency(roleSearchText, skill, question),
+        linkedResourceMatches,
+        topResourceMatches
+      };
+    });
 
     return {
       selectable: selectedRole?.id === roleId,
       selectedRoleId: selectedRole?.id || null,
+      roleCompetencies,
       topResources: topResources.map((resource) => ({
         id: resource.id,
         title: resource.title,
@@ -120,6 +147,64 @@ globalThis.__careerAudit = {
     };
   }
 };
+
+const auditCompetencyStopwords = new Set([
+  "기준",
+  "결과",
+  "관리",
+  "구분",
+  "기초",
+  "문서",
+  "문제",
+  "분석",
+  "비교",
+  "설명",
+  "수행",
+  "역량",
+  "영향",
+  "원인",
+  "이해",
+  "작성",
+  "조건",
+  "정리",
+  "제안",
+  "지표",
+  "판단",
+  "확인",
+  "후보",
+  "리포트",
+  "보고서"
+]);
+
+function auditCompetencyTokens(text) {
+  return getSearchTokens(text)
+    .filter((token) => !auditCompetencyStopwords.has(token))
+    .filter((token) => token.length >= 2);
+}
+
+function auditTextMatchesCompetency(text, skill, question) {
+  const normalizedText = String(text || "").toLowerCase();
+  const normalizedSkill = String(skill || "").toLowerCase();
+  if (normalizedSkill && normalizedText.includes(normalizedSkill)) return true;
+
+  const skillTokens = auditCompetencyTokens(skill);
+  if (skillTokens.some((token) => normalizedText.includes(token))) return true;
+
+  const questionTokens = auditCompetencyTokens(question);
+  return questionTokens.filter((token) => normalizedText.includes(token)).length >= 2;
+}
+
+function auditResourceMatchesCompetency(resource, skill, question) {
+  const resourceText = getResourceSearchText(resource);
+  const normalizedSkill = String(skill || "").toLowerCase();
+  if (normalizedSkill && resourceText.includes(normalizedSkill)) return true;
+
+  const skillTokens = auditCompetencyTokens(skill);
+  if (skillTokens.some((token) => resourceText.includes(token))) return true;
+
+  const questionTokens = auditCompetencyTokens(question);
+  return questionTokens.filter((token) => resourceText.includes(token)).length >= 2;
+}
 `, sandbox, { filename: "education-alignment-audit.vm.js" });
 
 const auditApi = sandbox.__careerAudit;
@@ -274,6 +359,50 @@ function auditEducationAlignment() {
       });
     }
 
+    const competencies = result.roleCompetencies || [];
+    const textMatchedCompetencies = competencies.filter((competency) => competency.roleTextMatch);
+    const linkedCoveredCompetencies = competencies.filter((competency) => competency.linkedResourceMatches.length);
+    const topCoveredCompetencies = competencies.filter((competency) => competency.topResourceMatches.length);
+    const educationCoveredCompetencies = competencies.filter((competency) => (
+      competency.linkedResourceMatches.length || competency.topResourceMatches.length
+    ));
+
+    if (competencies.length < 5) {
+      issues.push({
+        severity: "P1",
+        type: "low_role_competency_count",
+        role: role.id,
+        track: track.id,
+        message: `${roleLabel} has only ${competencies.length} role competency diagnostics.`
+      });
+    }
+
+    if (competencies.length && textMatchedCompetencies.length < Math.min(4, competencies.length)) {
+      const weak = competencies.filter((competency) => !competency.roleTextMatch);
+      issues.push({
+        severity: "P2",
+        type: "weak_role_competency_text_alignment",
+        role: role.id,
+        track: track.id,
+        message: `${roleLabel} has ${textMatchedCompetencies.length}/${competencies.length} competencies reflected in role text.`,
+        details: weak.map((competency) => competency.skill)
+      });
+    }
+
+    if (competencies.length && educationCoveredCompetencies.length < Math.min(3, competencies.length)) {
+      const weak = competencies.filter((competency) => (
+        !competency.linkedResourceMatches.length && !competency.topResourceMatches.length
+      ));
+      issues.push({
+        severity: "P2",
+        type: "weak_role_competency_education_coverage",
+        role: role.id,
+        track: track.id,
+        message: `${roleLabel} has ${educationCoveredCompetencies.length}/${competencies.length} competencies covered by trusted direct/top education.`,
+        details: weak.map((competency) => competency.skill)
+      });
+    }
+
     audited.push({
       track: track.id,
       role: role.id,
@@ -284,6 +413,11 @@ function auditEducationAlignment() {
       roleLinkedTopCount: topRoleLinked.length,
       trustedRoleLinkedTopCount: topRoleLinkedTrusted.length,
       trustedFocusedLinkedCount,
+      roleCompetencyCount: competencies.length,
+      roleCompetencyTextMatchCount: textMatchedCompetencies.length,
+      roleCompetencyLinkedCoverageCount: linkedCoveredCompetencies.length,
+      roleCompetencyTopCoverageCount: topCoveredCompetencies.length,
+      roleCompetencyEducationCoverageCount: educationCoveredCompetencies.length,
       topResourceIds: result.topResources.map((resource) => resource.id)
     });
   }
@@ -300,7 +434,10 @@ function auditEducationAlignment() {
     lowTrustedTopResources: issues.filter((issue) => issue.type === "low_trusted_top_resources").length,
     lowRoleLinkedTopResources: issues.filter((issue) => issue.type === "low_role_linked_top_resources").length,
     roleIndustryNotOnTrack: issues.filter((issue) => issue.type === "role_industry_not_on_track").length,
-    roleNotSelectable: issues.filter((issue) => issue.type === "role_not_selectable_for_audit").length
+    roleNotSelectable: issues.filter((issue) => issue.type === "role_not_selectable_for_audit").length,
+    lowRoleCompetencyCount: issues.filter((issue) => issue.type === "low_role_competency_count").length,
+    weakRoleCompetencyTextAlignment: issues.filter((issue) => issue.type === "weak_role_competency_text_alignment").length,
+    weakRoleCompetencyEducationCoverage: issues.filter((issue) => issue.type === "weak_role_competency_education_coverage").length
   };
 
   return { summary, issues, audited };

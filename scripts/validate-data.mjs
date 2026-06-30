@@ -52,6 +52,7 @@ globalThis.__careerData = {
   jobRoles,
   roleDiagnostics,
   roleResourceLinks,
+  roleCompetencyResourceLinks,
   resourceTaskLinks,
   roadmaps,
   curriculumTasks,
@@ -146,6 +147,16 @@ Object.entries(data.roleResourceLinks).forEach(([roleId, linkedResourceIds]) => 
   });
 });
 
+Object.entries(data.roleCompetencyResourceLinks).forEach(([roleId, competencyMap]) => {
+  if (!roleIds.has(roleId)) fail(`roleCompetencyResourceLinks references missing role "${roleId}"`);
+  Object.entries(competencyMap).forEach(([skill, linkedResourceIds]) => {
+    if (!skill) fail(`roleCompetencyResourceLinks.${roleId} has an empty competency key`);
+    linkedResourceIds.forEach((resourceId) => {
+      if (!resourceIds.has(resourceId)) fail(`roleCompetencyResourceLinks.${roleId}.${skill} references missing resource "${resourceId}"`);
+    });
+  });
+});
+
 Object.entries(data.resourceTaskLinks).forEach(([resourceId]) => {
   if (!resourceIds.has(resourceId)) fail(`resourceTaskLinks references missing resource "${resourceId}"`);
 });
@@ -171,6 +182,7 @@ const summary = {
   roles: roles.length,
   resources: data.resources.length,
   roleResourceLinks: Object.keys(data.roleResourceLinks).length,
+  roleCompetencyResourceLinks: Object.keys(data.roleCompetencyResourceLinks).length,
   warnings: warnings.length,
   errors: errors.length
 };

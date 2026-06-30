@@ -11,6 +11,7 @@ export function applyRoleExpansions(context) {
     jobRoles,
     roleDiagnostics,
     roleResourceLinks,
+    roleCompetencyResourceLinks,
     resourceTaskLinks,
     curriculumTasks,
     starterKeywords,
@@ -30,6 +31,14 @@ export function applyRoleExpansions(context) {
       majorRoleFitProfiles[major].direct = mergeValues(majorRoleFitProfiles[major].direct, direct);
       majorRoleFitProfiles[major].bridge = mergeValues(majorRoleFitProfiles[major].bridge, bridge);
       if (bridgeFocus) majorRoleFitProfiles[major].bridgeFocus = bridgeFocus;
+    };
+    const addRoleCompetencyLinks = (definitions) => {
+      Object.entries(definitions).forEach(([roleId, competencyMap]) => {
+        roleCompetencyResourceLinks[roleId] = roleCompetencyResourceLinks[roleId] || {};
+        Object.entries(competencyMap).forEach(([skill, resourceIds]) => {
+          roleCompetencyResourceLinks[roleId][skill] = mergeValues(roleCompetencyResourceLinks[roleId][skill], resourceIds);
+        });
+      });
     };
 
     Object.assign(industryLabels, {
@@ -667,6 +676,8 @@ export function applyRoleExpansions(context) {
       "mathworks-motor-control-blockset": ["energy-ess", "robotics-automation"],
       "ti-power-management-training": ["energy-ess"],
       "ti-precision-labs": ["energy-ess", "aerospace-defense"],
+      "mit-mechanics-materials": ["robotics-automation"],
+      "mit-design-manufacturing": ["robotics-automation"],
       "ros-tutorials": ["robotics-automation"],
       "comento-plc-control-practice": ["robotics-automation", "energy-ess"],
       "ni-learn-test-measurement": ["aerospace-defense", "robotics-automation", "energy-ess"],
@@ -774,6 +785,71 @@ export function applyRoleExpansions(context) {
       "simulation-ai-engineer": ["simulink-onramp", "simscape-onramp", "optimization-onramp", "machine-learning-onramp", "mathworks-simulink-examples", "mathworks-simscape-examples"]
     }).forEach(([roleId, resourceIds]) => {
       roleResourceLinks[roleId] = mergeValues(resourceIds, roleResourceLinks[roleId] || []);
+    });
+
+    addRoleCompetencyLinks({
+      "aerospace-systems-engineer": {
+        "요구사항": ["edx-engineering-systems", "mathworks-aerospace-blockset-examples", "ncs"],
+        "인터페이스": ["edx-engineering-systems", "ni-learn-test-measurement", "mathworks-aerospace-blockset-examples"],
+        "리스크": ["edx-engineering-systems", "ncs", "ni-learn-test-measurement"],
+        "규격": ["ncs", "ni-learn-test-measurement", "mathworks-aerospace-blockset-examples"]
+      },
+      "avionics-integration-engineer": {
+        "ICD": ["ni-learn-test-measurement", "mathworks-simulink-examples", "allaboutcircuits-textbook"],
+        "통합시험": ["ni-learn-test-measurement", "mathworks-simulink-examples"],
+        "EMI/EMC": ["youtube-emc-emi-basics", "ti-precision-labs", "allaboutcircuits-textbook"],
+        "환경시험": ["ni-learn-test-measurement", "mathworks-simulink-examples"]
+      },
+      "defense-systems-engineer": {
+        "운용요구": ["edx-engineering-systems", "ncs", "mathworks-aerospace-blockset-examples"],
+        "체계공학": ["edx-engineering-systems", "ncs"],
+        "시험평가": ["ni-learn-test-measurement", "edx-engineering-systems"],
+        "형상관리": ["ncs", "edx-engineering-systems"]
+      },
+      "radar-rf-signal-engineer": {
+        "RF": ["signal-processing-onramp", "ni-learn-test-measurement", "matlab-onramp"],
+        "탐지": ["signal-processing-onramp", "matlab-onramp", "mathworks-official-videos"],
+        "추적": ["signal-processing-onramp", "coursera-engineering-data", "google-ml-crash-course"]
+      },
+      "robot-mechanical-design-engineer": {
+        "하중": ["mit-mechanics-materials", "ansys-innovation-courses"],
+        "구동부": ["mathworks-motor-control-blockset", "mathworks-robotics-system-toolbox-examples"],
+        "강성": ["mit-mechanics-materials", "ansys-innovation-courses"],
+        "엔드이펙터": ["mathworks-robotics-system-toolbox-examples", "mit-design-manufacturing"],
+        "제조성": ["mit-design-manufacturing", "ansys-innovation-courses"]
+      },
+      "plc-instrumentation-engineer": {
+        "도면": ["ni-learn-test-measurement", "ti-precision-labs"],
+        "시퀀스": ["ni-learn-test-measurement", "kocw-embedded-control"],
+        "안전": ["ni-learn-test-measurement", "ncs"]
+      },
+      "power-systems-engineer": {
+        "수배전": ["kocw-power-electronics-system-analysis", "ncs", "mathworks-simscape-electrical"],
+        "보호계전": ["kocw-power-electronics-system-analysis", "ncs", "mathworks-simscape-electrical"],
+        "전력품질": ["mathworks-simscape-electrical", "ni-learn-test-measurement", "edx-engineering-systems"]
+      },
+      "renewable-energy-grid-engineer": {
+        "계통연계": ["mathworks-simscape-electrical", "kocw-power-electronics-system-analysis", "mathworks-simscape-battery-examples"],
+        "전력품질": ["mathworks-simscape-electrical", "kocw-power-electronics-system-analysis"],
+        "EMS": ["mathworks-simscape-battery-examples", "google-ml-crash-course"],
+        "예측": ["google-ml-crash-course", "coursera-engineering-data", "matlab-onramp"]
+      },
+      "manufacturing-ai-engineer": {
+        "문제정의": ["google-ml-crash-course", "machine-learning-onramp", "statistics-onramp"],
+        "전처리": ["freecodecamp-python-data", "statistics-onramp", "google-ml-crash-course"],
+        "운영": ["mathworks-predictive-maintenance", "google-ml-crash-course", "freecodecamp-python-data"]
+      },
+      "predictive-maintenance-ai-engineer": {
+        "시계열": ["mathworks-predictive-maintenance", "signal-processing-onramp", "statistics-onramp"],
+        "정비이력": ["mathworks-predictive-maintenance", "freecodecamp-python-data", "coursera-engineering-data"],
+        "리포트": ["mathworks-predictive-maintenance", "freecodecamp-python-data", "statistics-onramp"]
+      },
+      "simulation-ai-engineer": {
+        "물리모델": ["simulink-onramp", "simscape-onramp", "mathworks-simscape-examples"],
+        "상관검증": ["simulink-onramp", "statistics-onramp", "coursera-engineering-data"],
+        "Surrogate": ["machine-learning-onramp", "google-ml-crash-course", "statistics-onramp"],
+        "최적화": ["optimization-onramp", "machine-learning-onramp", "mathworks-simulink-examples"]
+      }
     });
 
     Object.entries({
@@ -1158,6 +1234,14 @@ export function applyRoleExpansions(context) {
 
   function applyPriorityRoleExpansion() {
     const mergeValues = (base = [], additions = []) => [...new Set([...(base || []), ...(additions || [])])];
+    const addRoleCompetencyLinks = (definitions) => {
+      Object.entries(definitions).forEach(([roleId, competencyMap]) => {
+        roleCompetencyResourceLinks[roleId] = roleCompetencyResourceLinks[roleId] || {};
+        Object.entries(competencyMap).forEach(([skill, resourceIds]) => {
+          roleCompetencyResourceLinks[roleId][skill] = mergeValues(roleCompetencyResourceLinks[roleId][skill], resourceIds);
+        });
+      });
+    };
     const mergeRolesById = (base = [], additions = []) => {
       const seen = new Set();
       return [...base, ...additions].filter((role) => {
@@ -1857,6 +1941,43 @@ export function applyRoleExpansions(context) {
       "battery-recycling-process-engineer": ["learncheme-material-balances", "learncheme-separations", "aiche-ccps-process-safety-beacon", "statistics-onramp"]
     }).forEach(([roleId, resourceIds]) => {
       roleResourceLinks[roleId] = mergeValues(resourceIds, roleResourceLinks[roleId] || []);
+    });
+
+    addRoleCompetencyLinks({
+      "data-center-cooling-engineer": {
+        "열부하": ["kdcc-data-center-operation-study", "mathworks-simscape-fluids-examples", "ansys-innovation-courses"],
+        "Airflow": ["kdcc-data-center-operation-study", "mathworks-simscape-fluids-examples", "ansys-innovation-courses"],
+        "온도로그": ["mathworks-predictive-maintenance", "mathworks-simscape-fluids-examples", "kdcc-data-center-operation-study"],
+        "공조": ["kdcc-data-center-operation-study", "mathworks-simscape-fluids-examples", "mathworks-simscape-examples"]
+      },
+      "dcim-bms-operations-engineer": {
+        "반복 알람": ["kdcc-data-center-operation-study", "mathworks-predictive-maintenance", "freecodecamp-python-data"],
+        "대시보드": ["freecodecamp-python-data", "boostcourse-data-ai-basic", "kdcc-data-center-operation-study"],
+        "예방정비": ["mathworks-predictive-maintenance", "kdcc-data-center-operation-study"],
+        "조치 기준": ["kdcc-data-center-operation-study", "mathworks-predictive-maintenance"]
+      },
+      "industrial-data-engineer": {
+        "전처리": ["freecodecamp-python-data", "statistics-onramp", "machine-learning-onramp"],
+        "OEE": ["mathworks-predictive-maintenance", "nist-process-capability", "freecodecamp-python-data"],
+        "대시보드": ["freecodecamp-python-data", "boostcourse-data-ai-basic", "google-ml-crash-course"]
+      },
+      "smart-factory-vision-engineer": {
+        "라벨": ["mathworks-deep-learning-onramp", "google-ml-crash-course", "nvidia-jetson-ai-course"],
+        "조명": ["nvidia-jetson-ai-course", "mathworks-deep-learning-onramp"],
+        "모델평가": ["google-ml-crash-course", "machine-learning-onramp", "statistics-onramp"]
+      },
+      "water-treatment-process-engineer": {
+        "수질": ["learncheme-separations", "mathworks-simscape-fluids-examples", "aiche-ccps-process-safety-beacon"],
+        "막분리": ["learncheme-separations", "mathworks-simscape-fluids-examples"],
+        "규제": ["kosha-psm", "aiche-ccps-process-safety-beacon", "youtube-nptel-hazop"],
+        "설비": ["mathworks-simscape-fluids-examples", "learncheme-separations"],
+        "이상 대응": ["youtube-nptel-hazop", "aiche-ccps-process-safety-beacon", "mathworks-simscape-fluids-examples"]
+      },
+      "polymer-film-materials-engineer": {
+        "분석": ["statistics-onramp", "coursera-engineering-data", "nptel-chemical-engineering"],
+        "코팅": ["learncheme-reactor-design", "nptel-chemical-engineering", "statistics-onramp"],
+        "DOE": ["statistics-onramp", "coursera-engineering-data"]
+      }
     });
 
     Object.entries({
