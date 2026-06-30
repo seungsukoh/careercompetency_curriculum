@@ -7,6 +7,7 @@
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
+    "audit:education": "node scripts/audit-education-alignment.mjs",
     "validate:data": "node scripts/validate-data.mjs",
     "validate:posting": "node scripts/validate-posting-qa.mjs",
     "check": "node scripts/validate-data.mjs && node scripts/validate-posting-qa.mjs && vite build"

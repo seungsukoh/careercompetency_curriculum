@@ -1,0 +1,325 @@
+import fs from "node:fs";
+import path from "node:path";
+import vm from "node:vm";
+import { fileURLToPath } from "node:url";
+
+const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const appPath = path.join(rootDir, "app.js");
+const expansionPath = path.join(rootDir, "data", "roleExpansions.js");
+
+const appSource = fs.readFileSync(appPath, "utf8")
+  .replace(/^import\s+\{\s*applyRoleExpansions\s*\}\s+from\s+["']\.\/data\/roleExpansions\.js["'];\s*/m, "");
+const expansionSource = fs.readFileSync(expansionPath, "utf8")
+  .replace("export function applyRoleExpansions", "function applyRoleExpansions");
+
+const sandbox = {
+  console,
+  localStorage: {
+    getItem: () => null,
+    setItem: () => {},
+    removeItem: () => {}
+  },
+  document: {
+    addEventListener: () => {},
+    querySelectorAll: () => [],
+    getElementById: () => null
+  },
+  window: {
+    addEventListener: () => {},
+    matchMedia: () => ({ matches: false })
+  },
+  navigator: {},
+  Blob: class {},
+  URL: {
+    createObjectURL: () => "",
+    revokeObjectURL: () => {}
+  },
+  setTimeout: () => 0,
+  clearTimeout: () => {},
+  requestAnimationFrame: () => 0,
+  cancelAnimationFrame: () => {}
+};
+sandbox.globalThis = sandbox;
+
+vm.createContext(sandbox);
+vm.runInContext(`
+${expansionSource}
+${appSource}
+
+globalThis.__careerAudit = {
+  data: {
+    tracks,
+    resources,
+    jobRoles,
+    roleResourceLinks,
+    majorRoleFitProfiles,
+    industryLabels
+  },
+  auditRole({ trackId, roleId, major, industry, goal = "foundation", durationWeeks = "4" }) {
+    state = {
+      ...defaultState,
+      selectedTrackId: trackId,
+      hasSelectedRoleSelection: true,
+      profile: {
+        ...defaultState.profile,
+        major,
+        industry,
+        goal,
+        durationWeeks
+      },
+      selectedRoles: { [trackId]: roleId },
+      checked: {},
+      saved: [],
+      completed: [],
+      completedRoadmap: []
+    };
+
+    const track = tracks.find((item) => item.id === trackId);
+    const selectedRole = getSelectedRole(trackId);
+    const visibleTasks = getVisibleRoadmapTasks(trackId);
+    const context = getRecommendationContext(track, getGapSkills(trackId), visibleTasks);
+    const roleLinkedIds = new Set(getRoleLinkedResourceIds(context.role));
+    const topResources = getRecommendedResources(track, context).slice(0, 8);
+    const starterPack = getStarterPackResources(context, visibleTasks);
+    const roadmapByTask = visibleTasks.map((task) => ({
+      title: task.baseTitle || task.title,
+      resources: getRoadmapResourcesForTask(track, task, context).map((resource) => ({
+        id: resource.id,
+        title: resource.title,
+        trusted: ["reviewed", "verified"].includes(resource.qualityStatus),
+        broad: Boolean(resource.broad),
+        roleLinked: roleLinkedIds.has(resource.id),
+        taskLinked: getResourceLinkedTasks(resource.id, [task]).length > 0
+      }))
+    }));
+
+    return {
+      selectable: selectedRole?.id === roleId,
+      selectedRoleId: selectedRole?.id || null,
+      topResources: topResources.map((resource) => ({
+        id: resource.id,
+        title: resource.title,
+        provider: resource.provider,
+        qualityStatus: resource.qualityStatus,
+        trusted: ["reviewed", "verified"].includes(resource.qualityStatus),
+        broad: Boolean(resource.broad),
+        starterPack: Boolean(resource.starterPack),
+        roleLinked: roleLinkedIds.has(resource.id),
+        taskLinked: getResourceLinkedTasks(resource.id, visibleTasks).length > 0
+      })),
+      starterPack: starterPack.map((resource) => ({
+        id: resource.id,
+        title: resource.title,
+        qualityStatus: resource.qualityStatus,
+        trusted: ["reviewed", "verified"].includes(resource.qualityStatus),
+        broad: Boolean(resource.broad),
+        roleLinked: roleLinkedIds.has(resource.id),
+        taskLinked: getResourceLinkedTasks(resource.id, visibleTasks).length > 0
+      })),
+      roadmapByTask
+    };
+  }
+};
+`, sandbox, { filename: "education-alignment-audit.vm.js" });
+
+const auditApi = sandbox.__careerAudit;
+const { tracks, resources, jobRoles, roleResourceLinks, majorRoleFitProfiles } = auditApi.data;
+const resourceById = new Map(resources.map((resource) => [resource.id, resource]));
+
+const trusted = (resource) => ["reviewed", "verified"].includes(resource?.qualityStatus);
+const trustedFocused = (resource) => trusted(resource) && !resource.broad;
+const unique = (values) => [...new Set(values.filter(Boolean))];
+
+function getRoles() {
+  return tracks.flatMap((track) => (jobRoles[track.id] || []).map((role) => ({ track, role })));
+}
+
+function pickMajor(role, track) {
+  const entries = Object.entries(majorRoleFitProfiles);
+  const direct = entries.find(([, profile]) => (profile.direct || []).includes(role.id));
+  if (direct) return direct[0];
+  const bridge = entries.find(([, profile]) => (profile.bridge || []).includes(role.id));
+  if (bridge) return bridge[0];
+  const challenge = entries.find(([, profile]) => (profile.challenge || []).includes(role.id));
+  if (challenge) return challenge[0];
+  return track.majors.find((major) => major !== "both") || "mechanical";
+}
+
+function pickIndustry(role, track) {
+  const roleIndustries = (role.industries || []).filter((industry) => industry !== "all");
+  return roleIndustries.find((industry) => track.industries.includes(industry))
+    || track.industries[0]
+    || "all";
+}
+
+function formatRoleLabel(track, role) {
+  return `${track.id}/${role.id}`;
+}
+
+function auditEducationAlignment() {
+  const issues = [];
+  const audited = [];
+
+  for (const { track, role } of getRoles()) {
+    const roleLabel = formatRoleLabel(track, role);
+    const roleIndustries = (role.industries || []).filter((industry) => industry !== "all");
+    const missingTrackIndustries = roleIndustries.filter((industry) => !track.industries.includes(industry));
+    if (missingTrackIndustries.length) {
+      issues.push({
+        severity: "P1",
+        type: "role_industry_not_on_track",
+        role: role.id,
+        track: track.id,
+        message: `${roleLabel} uses industries not exposed by the track: ${missingTrackIndustries.join(", ")}`
+      });
+    }
+
+    const major = pickMajor(role, track);
+    const industry = pickIndustry(role, track);
+    const result = auditApi.auditRole({ trackId: track.id, roleId: role.id, major, industry });
+    if (!result.selectable) {
+      issues.push({
+        severity: "P1",
+        type: "role_not_selectable_for_audit",
+        role: role.id,
+        track: track.id,
+        message: `${roleLabel} was not selectable with major=${major}, industry=${industry}; selected=${result.selectedRoleId || "none"}`
+      });
+      continue;
+    }
+
+    const topTrustedFocused = result.topResources.filter((resource) => resource.trusted && !resource.broad);
+    const topRoleLinked = result.topResources.filter((resource) => resource.roleLinked);
+    const topRoleLinkedTrusted = result.topResources.filter((resource) => resource.roleLinked && resource.trusted && !resource.broad);
+    const topCandidateOrBroad = result.topResources.filter((resource) => !resource.trusted || resource.broad);
+    const linkedIds = roleResourceLinks[role.id] || [];
+    const trustedFocusedLinkedCount = linkedIds
+      .map((resourceId) => resourceById.get(resourceId))
+      .filter((resource) => resource?.tracks?.includes(track.id))
+      .filter(trustedFocused)
+      .length;
+
+    if (!result.starterPack.length) {
+      issues.push({
+        severity: "P0",
+        type: "starter_pack_missing",
+        role: role.id,
+        track: track.id,
+        message: `${roleLabel} has no trusted starter pack resources.`
+      });
+    }
+
+    const weakStarterPack = result.starterPack.filter((resource) => !resource.trusted || resource.broad);
+    if (weakStarterPack.length) {
+      issues.push({
+        severity: "P0",
+        type: "weak_starter_pack_resource",
+        role: role.id,
+        track: track.id,
+        message: `${roleLabel} starter pack includes untrusted or broad resources: ${weakStarterPack.map((resource) => resource.id).join(", ")}`
+      });
+    }
+
+    if (topTrustedFocused.length < 6) {
+      issues.push({
+        severity: "P1",
+        type: "low_trusted_top_resources",
+        role: role.id,
+        track: track.id,
+        message: `${roleLabel} has ${topTrustedFocused.length}/8 trusted focused top resources.`
+      });
+    }
+
+    if (trustedFocusedLinkedCount >= 3 && topRoleLinkedTrusted.length < 3) {
+      issues.push({
+        severity: "P1",
+        type: "low_role_linked_top_resources",
+        role: role.id,
+        track: track.id,
+        message: `${roleLabel} has ${topRoleLinkedTrusted.length}/8 trusted role-linked top resources despite ${trustedFocusedLinkedCount} trusted focused role links.`
+      });
+    }
+
+    if (topCandidateOrBroad.length > 2) {
+      issues.push({
+        severity: "P2",
+        type: "candidate_or_broad_leakage",
+        role: role.id,
+        track: track.id,
+        message: `${roleLabel} has ${topCandidateOrBroad.length}/8 candidate or broad top resources.`
+      });
+    }
+
+    const weakRoadmapTasks = result.roadmapByTask.filter((task) => (
+      task.resources.length
+      && !task.resources.some((resource) => resource.trusted && !resource.broad && (resource.roleLinked || resource.taskLinked))
+    ));
+    if (weakRoadmapTasks.length) {
+      issues.push({
+        severity: "P2",
+        type: "weak_roadmap_task_resources",
+        role: role.id,
+        track: track.id,
+        message: `${roleLabel} has weak roadmap resources for tasks: ${weakRoadmapTasks.map((task) => task.title).join(", ")}`,
+        details: weakRoadmapTasks.map((task) => ({
+          task: task.title,
+          resources: task.resources.map((resource) => ({
+            id: resource.id,
+            trusted: resource.trusted,
+            broad: resource.broad,
+            roleLinked: resource.roleLinked,
+            taskLinked: resource.taskLinked
+          }))
+        }))
+      });
+    }
+
+    audited.push({
+      track: track.id,
+      role: role.id,
+      major,
+      industry,
+      starterPackCount: result.starterPack.length,
+      trustedFocusedTopCount: topTrustedFocused.length,
+      roleLinkedTopCount: topRoleLinked.length,
+      trustedRoleLinkedTopCount: topRoleLinkedTrusted.length,
+      trustedFocusedLinkedCount,
+      topResourceIds: result.topResources.map((resource) => resource.id)
+    });
+  }
+
+  const summary = {
+    tracks: tracks.length,
+    roles: getRoles().length,
+    auditedRoles: audited.length,
+    issues: issues.length,
+    p0: issues.filter((issue) => issue.severity === "P0").length,
+    p1: issues.filter((issue) => issue.severity === "P1").length,
+    p2: issues.filter((issue) => issue.severity === "P2").length,
+    starterPackMissing: issues.filter((issue) => issue.type === "starter_pack_missing").length,
+    lowTrustedTopResources: issues.filter((issue) => issue.type === "low_trusted_top_resources").length,
+    lowRoleLinkedTopResources: issues.filter((issue) => issue.type === "low_role_linked_top_resources").length,
+    roleIndustryNotOnTrack: issues.filter((issue) => issue.type === "role_industry_not_on_track").length,
+    roleNotSelectable: issues.filter((issue) => issue.type === "role_not_selectable_for_audit").length
+  };
+
+  return { summary, issues, audited };
+}
+
+const result = auditEducationAlignment();
+const json = process.argv.includes("--json");
+
+if (json) {
+  console.log(JSON.stringify(result, null, 2));
+} else {
+  console.log("Education alignment audit:");
+  console.log(JSON.stringify(result.summary, null, 2));
+  if (result.issues.length) {
+    console.log("Issues:");
+    result.issues.forEach((issue) => {
+      console.log(`- [${issue.severity}] ${issue.type}: ${issue.message}`);
+    });
+  }
+}
+
+if (result.summary.p0 > 0) process.exit(1);
