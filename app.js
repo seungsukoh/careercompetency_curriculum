@@ -4825,6 +4825,7 @@ const defaultState = {
   saved: [],
   completed: [],
   completedRoadmap: [],
+  postingText: "",
   view: "tracks"
 };
 
@@ -4940,6 +4941,14 @@ function bindEvents() {
     renderViews();
   });
 
+  document.addEventListener("input", (event) => {
+    const postingInput = event.target.closest("[data-posting-input]");
+    if (!postingInput) return;
+    state.postingText = postingInput.value;
+    saveState();
+    renderPostingComparisonPanel();
+  });
+
   elements.clearSavedButton.addEventListener("click", () => {
     state.saved = [];
     state.completed = [];
@@ -4977,7 +4986,8 @@ function loadState() {
       checked: stored?.checked || defaultState.checked,
       saved: Array.isArray(stored?.saved) ? stored.saved : defaultState.saved,
       completed: Array.isArray(stored?.completed) ? stored.completed : defaultState.completed,
-      completedRoadmap: Array.isArray(stored?.completedRoadmap) ? stored.completedRoadmap : defaultState.completedRoadmap
+      completedRoadmap: Array.isArray(stored?.completedRoadmap) ? stored.completedRoadmap : defaultState.completedRoadmap,
+      postingText: typeof stored?.postingText === "string" ? stored.postingText : defaultState.postingText
     };
   } catch {
     return { ...defaultState };
@@ -5003,7 +5013,8 @@ function resetState() {
     checked: {},
     saved: [],
     completed: [],
-    completedRoadmap: []
+    completedRoadmap: [],
+    postingText: ""
   };
   localStorage.removeItem(storageKey);
   saveState();
@@ -6942,6 +6953,7 @@ function renderRoadmapGuidance(context, tasks) {
       </ol>
     </section>
     ${renderRoadmapDecisionPanel(context, tasks)}
+    ${renderTodayStartPanel(context, tasks)}
     ${renderStarterPackPanel(context, tasks)}
     ${renderEducationSummaryPanel(context, tasks, selectedText)}
     ${checkedCount ? "" : `
@@ -8855,7 +8867,7 @@ function renderSaved() {
   const items = getSavedResources();
   const resourceUseCounts = new Map();
 
-  renderSavedGuidance(items, tasks);
+  renderSavedGuidance(items, tasks, context);
   elements.savedList.innerHTML = `
     <div class="plan-roadmap">
       ${tasks.map((task) => {
@@ -8939,19 +8951,283 @@ function renderPlanResourceItem(resource, task, context) {
   `;
 }
 
-function renderSavedGuidance(items, tasks) {
+function getTodayStartAction(context, tasks) {
+  const task = tasks.find((item) => !state.completedRoadmap.includes(getRoadmapStepId(context.track.id, item))) || tasks[0];
+  if (!task) return null;
+
+  const resourcesForTask = getRoadmapResourcesForTask(context.track, task, context, new Map());
+  const fallbackResources = getRecommendedResources(context.track, context);
+  const resource = resourcesForTask.find((item) => !state.completed.includes(item.id))
+    || resourcesForTask[0]
+    || fallbackResources.find((item) => !state.completed.includes(item.id))
+    || fallbackResources[0]
+    || null;
+
+  return {
+    task,
+    resource,
+    reason: resource
+      ? getTaskResourceConnectionReason(resource, task, context)
+      : task.priorityReason || "첫 산출물을 만들기 위한 최소 실행 과제입니다."
+  };
+}
+
+function renderTodayStartPanel(context, tasks) {
+  const action = getTodayStartAction(context, tasks);
+  if (!action) return "";
+
+  const { task, resource, reason } = action;
+  const stepId = getRoadmapStepId(context.track.id, task);
+  const taskCompleted = state.completedRoadmap.includes(stepId);
+  const actionLabel = taskCompleted ? "다시 확인할 1개" : "오늘 시작할 1개";
+
+  return `
+    <section class="today-action-panel" aria-label="${actionLabel}">
+      <div class="today-action-main">
+        <p class="eyebrow">${actionLabel}</p>
+        <h3>${task.title}</h3>
+        <p>${task.objective}</p>
+        <div class="today-action-meta">
+          <span class="badge">${task.weekLabel || "첫 단계"}</span>
+          <span class="badge">산출물: ${task.deliverable}</span>
+        </div>
+      </div>
+      <div class="today-action-resource">
+        <strong>${resource ? resource.title : "공고 문장과 첫 과제 비교"}</strong>
+        <span>${resource ? `${resource.provider} · ${resource.language} · ${formatMinutes(resource.totalMinutes)}` : "지원 회사 공고에서 업무·자격요건·우대사항 문장을 먼저 표시하세요."}</span>
+        <em>${reason}</em>
+        <div class="today-action-actions">
+          ${resource ? `<a class="resource-action" href="${resource.url}" target="_blank" rel="noreferrer">${getResourceOpenLabel(resource)}</a>` : ""}
+          ${resource ? renderSaveActionButton(resource, state.saved.includes(resource.id) ? "추가됨 · 제거" : "내 커리큘럼에 추가") : `<button class="ghost-button" type="button" data-view-target="saved">공고 대조로 이동</button>`}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function renderPostingComparePanel(context, tasks) {
+  return `
+    <section class="posting-compare-panel" aria-label="회사 공고 붙여넣기 대조">
+      <div class="posting-compare-head">
+        <div>
+          <p class="eyebrow">회사 공고 붙여넣기 대조</p>
+          <h3>실제 공고 문장과 직무·교육 추천 기준을 비교합니다</h3>
+          <p>지원할 공고의 업무, 자격요건, 우대사항 본문을 붙여넣으면 앱의 일반 직무 기준과 겹치는 신호와 추가 확인할 표현을 나눠 보여줍니다.</p>
+        </div>
+        <span class="badge">${context.role?.title || context.track.title}</span>
+      </div>
+      <label class="posting-input-label">
+        <span>공고 원문</span>
+        <textarea data-posting-input maxlength="8000" rows="7" placeholder="예: 담당업무, 자격요건, 우대사항 문장을 그대로 붙여넣으세요.">${escapeHtml(getPostingText())}</textarea>
+      </label>
+      <div class="posting-comparison-result" data-posting-result>
+        ${renderPostingComparisonResult(context, tasks)}
+      </div>
+    </section>
+  `;
+}
+
+function renderPostingComparisonPanel() {
+  const target = document.querySelector("[data-posting-result]");
+  if (!target || !hasActiveRoleSelection()) return;
+  const track = getSelectedTrack();
+  const tasks = getVisibleRoadmapTasks(track.id);
+  const context = getRecommendationContext(track, getGapSkills(track.id), tasks);
+  target.innerHTML = renderPostingComparisonResult(context, tasks);
+}
+
+function renderPostingComparisonResult(context, tasks) {
+  const comparison = getPostingComparison(context, tasks);
+  if (!comparison.hasText) {
+    return `<div class="empty-state compact">공고 원문을 붙여넣으면 선택 직무 기준, 추천 교육 역량, 첫 산출물과 겹치는 표현이 표시됩니다.</div>`;
+  }
+
+  const fitLabel = comparison.score >= 70 ? "겹침 높음" : comparison.score >= 40 ? "부분 겹침" : "추가 확인 필요";
+  return `
+    <div class="posting-score-strip" aria-label="공고 대조 요약">
+      <div><strong>${comparison.score}%</strong><span>${fitLabel}</span></div>
+      <div><strong>${comparison.matched.length}</strong><span>공고에서 확인</span></div>
+      <div><strong>${comparison.missing.length}</strong><span>공고에서 미확인</span></div>
+      <div><strong>${comparison.postingOnlyTerms.length}</strong><span>추가 표현</span></div>
+    </div>
+    <div class="posting-result-grid">
+      <div class="posting-result-block">
+        <h4>공고에서 바로 보이는 신호</h4>
+        ${renderPostingComparisonRows(comparison.matched.slice(0, 7), "아직 앱 기준과 직접 겹치는 표현을 찾지 못했습니다. 공고 문장을 더 붙여넣거나 세부 직무가 맞는지 확인하세요.")}
+      </div>
+      <div class="posting-result-block">
+        <h4>지원 전 확인·보완할 기준</h4>
+        ${renderPostingComparisonRows(comparison.missing.slice(0, 7), "주요 앱 기준이 대부분 공고에 보입니다. 이제 산출물과 면접 설명을 준비하세요.")}
+      </div>
+    </div>
+    ${comparison.postingOnlyTerms.length ? `
+      <div class="posting-extra-terms">
+        <strong>공고에 추가로 반복되는 표현</strong>
+        <span>${comparison.postingOnlyTerms.map((term) => `<em>${escapeHtml(term.term)}</em>`).join("")}</span>
+        <p>앱의 일반 직무 기준에는 약하게 잡힌 회사별 표현일 수 있습니다. 반복되는 표현은 오늘 산출물과 자기소개서 근거에 우선 반영하세요.</p>
+      </div>
+    ` : ""}
+  `;
+}
+
+function renderPostingComparisonRows(items, emptyText) {
+  if (!items.length) return `<div class="empty-state compact">${emptyText}</div>`;
+  return `
+    <div class="posting-match-list">
+      ${items.map((item) => `
+        <div class="posting-match-row">
+          <span>${escapeHtml(item.category)}</span>
+          <strong>${escapeHtml(item.label)}</strong>
+          <em>${item.matchedTerms.length ? `확인 표현: ${item.matchedTerms.map(escapeHtml).join(", ")}` : "공고에서 직접 표현 미확인"}</em>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function getPostingComparison(context, tasks) {
+  const postingText = getPostingText();
+  const normalizedPostingText = normalizePostingText(postingText);
+  const compactPostingText = compactPostingTextValue(postingText);
+  const criteria = buildPostingComparisonCriteria(context, tasks);
+  const checkedCriteria = criteria.map((item) => {
+    const matchedTerms = item.terms.filter((term) => postingTextHasTerm(normalizedPostingText, compactPostingText, term));
+    return { ...item, matchedTerms };
+  });
+  const matched = checkedCriteria.filter((item) => item.matchedTerms.length >= item.minMatches);
+  const missing = checkedCriteria.filter((item) => item.matchedTerms.length < item.minMatches);
+  const scoreBase = checkedCriteria.filter((item) => item.priority === "core");
+  const scoreItems = scoreBase.length ? scoreBase : checkedCriteria;
+  const score = scoreItems.length
+    ? Math.round((scoreItems.filter((item) => item.matchedTerms.length >= item.minMatches).length / scoreItems.length) * 100)
+    : 0;
+
+  return {
+    hasText: Boolean(normalizedPostingText),
+    postingText,
+    criteria: checkedCriteria,
+    matched,
+    missing,
+    postingOnlyTerms: normalizedPostingText ? getPostingOnlyTerms(postingText, checkedCriteria) : [],
+    score
+  };
+}
+
+function buildPostingComparisonCriteria(context, tasks) {
+  const role = context.role;
+  if (!role) return [];
+  const criteria = [];
+  const seen = new Set();
+  const addCriterion = (category, label, terms, priority = "support") => {
+    const cleanLabel = String(label || "").trim();
+    const cleanTerms = getPostingCriterionTerms(cleanLabel, terms);
+    const key = `${category}:${cleanLabel}`;
+    if (!cleanLabel || !cleanTerms.length || seen.has(key)) return;
+    seen.add(key);
+    criteria.push({
+      category,
+      label: cleanLabel,
+      terms: cleanTerms,
+      priority,
+      minMatches: category === "직무 키워드" || cleanTerms.length <= 2 ? 1 : 2
+    });
+  };
+
+  (role.postingKeywords || []).slice(0, 10).forEach((keyword) => addCriterion("직무 키워드", keyword, [keyword], "core"));
+  (role.responsibilities || []).slice(0, 5).forEach((item) => addCriterion("반복 업무", item, [item], "core"));
+  (role.requirements || []).slice(0, 5).forEach((item) => addCriterion("자격요건", item, [item], "core"));
+  (role.preferred || []).slice(0, 4).forEach((item) => addCriterion("우대·차별화", item, [item], "support"));
+  getRoleArtifactExamples(context.track, role).slice(0, 4).forEach((item) => addCriterion("준비 산출물", item, [item], "support"));
+  tasks.slice(0, 3).forEach((task) => addCriterion("커리큘럼 과제", task.deliverable, [task.title, task.deliverable, ...(task.steps || [])], "support"));
+  getRecommendedResources(context.track, context).slice(0, 5).forEach((resource) => {
+    (resource.skills || []).slice(0, 2).forEach((skill) => addCriterion("교육 연결 역량", skill, [skill, resource.title, resource.expectedOutput], "support"));
+  });
+
+  return criteria;
+}
+
+function getPostingCriterionTerms(label, terms) {
+  return uniqueRoleTerms([
+    label,
+    ...(terms || []),
+    ...extractRoleTerms([label, ...(terms || [])]),
+    ...(terms || []).flatMap(splitRoleToolTerm)
+  ])
+    .map((term) => cleanRoleTerm(term))
+    .filter((term) => term.length >= 2)
+    .slice(0, 10);
+}
+
+function getPostingOnlyTerms(postingText, criteria) {
+  const appTermKeys = new Set(criteria.flatMap((item) => item.terms).map(getRoleTermKey));
+  const counts = new Map();
+  String(postingText || "")
+    .normalize("NFKC")
+    .split(/[^0-9A-Za-z가-힣+#&./-]+/g)
+    .map((term) => cleanRoleTerm(term))
+    .filter((term) => term.length >= 2)
+    .filter((term) => !roleTermStopWords.has(term))
+    .filter((term) => !postingComparisonStopwords.has(term.toLowerCase()))
+    .forEach((term) => {
+      const key = getRoleTermKey(term);
+      if (!key || appTermKeys.has(key)) return;
+      counts.set(key, { term, count: (counts.get(key)?.count || 0) + 1 });
+    });
+
+  return [...counts.values()]
+    .filter((item) => item.count >= 2 || /[A-Za-z+#&./-]/.test(item.term))
+    .sort((a, b) => b.count - a.count || b.term.length - a.term.length)
+    .slice(0, 8);
+}
+
+function getPostingText() {
+  return typeof state.postingText === "string" ? state.postingText : "";
+}
+
+function normalizePostingText(value) {
+  return String(value || "")
+    .normalize("NFKC")
+    .toLowerCase()
+    .replace(/[|()[\]{}"'`,;:]/g, " ")
+    .replace(/[·ㆍ]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function compactPostingTextValue(value) {
+  return normalizePostingText(value).replace(/[\s/_-]+/g, "");
+}
+
+function postingTextHasTerm(normalizedText, compactText, term) {
+  const normalizedTerm = normalizePostingText(term);
+  if (normalizedTerm.length < 2) return false;
+  if (normalizedText.includes(normalizedTerm)) return true;
+  const compactTerm = compactPostingTextValue(term);
+  return compactTerm.length >= 2 && compactText.includes(compactTerm);
+}
+
+const postingComparisonStopwords = new Set([
+  "담당업무", "주요업무", "자격요건", "우대사항", "필수", "우대", "관련", "경험", "보유",
+  "이상", "이하", "가능", "역량", "직무", "업무", "프로젝트", "사용", "활용", "기반",
+  "작성", "운영", "관리", "지원", "개발", "개선", "수행", "검토", "분석", "설계"
+]);
+
+function renderSavedGuidance(items, tasks, context = null) {
   if (!elements.savedGuidance) return;
+  const currentContext = context || getRecommendationContext(getSelectedTrack(), getGapSkills(getSelectedTrack().id), tasks);
+  const track = currentContext.track;
   const completedCount = items.filter((resource) => state.completed.includes(resource.id)).length;
   const totalMinutes = items.reduce((sum, resource) => sum + resource.totalMinutes, 0);
   const pendingCount = Math.max(items.length - completedCount, 0);
   const completedWeeks = tasks
-    .map((task) => getRoadmapStepId(getSelectedTrack().id, task))
+    .map((task) => getRoadmapStepId(track.id, task))
     .filter((stepId) => state.completedRoadmap.includes(stepId)).length;
   const durationStrategy = getDurationStrategy();
 
   elements.savedGuidance.innerHTML = `
     <h3>내 커리큘럼에서 실제 실행 순서를 확인합니다</h3>
     <p>교육 선택에서 고른 자료와 추천된 주차별 과제를 한 화면에 모았습니다. 자료를 직접 고르지 않아도 ${durationStrategy.label} 기준으로 시작할 수 있고, 추가한 교육은 각 주차 추천에 우선 반영됩니다.</p>
+    ${renderTodayStartPanel(currentContext, tasks)}
     <div class="badge-row">
       <span class="badge">커리큘럼 주차: ${tasks.length}개</span>
       <span class="badge">완료 주차: ${completedWeeks}/${tasks.length}</span>
@@ -8961,7 +9237,9 @@ function renderSavedGuidance(items, tasks) {
       <span class="badge">진행: ${pendingCount}개</span>
       <span class="badge">총 학습량: ${formatMinutes(totalMinutes)}</span>
     </div>
+    ${renderPostingComparePanel(currentContext, tasks)}
   `;
+  bindResourceActions(elements.savedGuidance);
 }
 
 function renderResourceCard(resource, context = null, priorityIndex = null, showCompletionAction = !context) {
@@ -9265,14 +9543,30 @@ function buildCompanyPostingExportRows() {
   const track = getSelectedTrack();
   const role = getSelectedRole(track.id);
   if (!role) return [["구분", "앱 기준", "지원 회사 공고 문장", "준비 상태"], ["선택 직무", "미선택", "", ""]];
+  const visibleTasks = getVisibleRoadmapTasks(track.id);
+  const context = getRecommendationContext(track, getGapSkills(track.id), visibleTasks);
+  const comparison = getPostingComparison(context, visibleTasks);
 
   const rows = [
     ["구분", "앱 기준", "지원 회사 공고 문장", "준비 상태"],
     ["안내", "이 커리큘럼은 일반적인 직무내용 기반 추천입니다. 지원 회사의 직무상세 내용과 다를 수 있으므로 반드시 실제 공고 문장을 붙여 넣고 비교하세요.", "", "필수 확인"],
     ["선택 직무", role.title, "", ""],
     ["직무 설명", role.focus, "", ""],
-    ["전공 연결성", `${getMajorPathwayLabel(track, role)} - ${getMajorPathwayReason(track, role)}`, "", ""]
+    ["전공 연결성", `${getMajorPathwayLabel(track, role)} - ${getMajorPathwayReason(track, role)}`, "", ""],
+    ["붙여넣은 공고 원문", "내 커리큘럼 화면 입력값", comparison.postingText || "미입력", comparison.hasText ? `${comparison.score}% 겹침` : "공고 입력 필요"]
   ];
+
+  if (comparison.hasText) {
+    comparison.matched.slice(0, 12).forEach((item) => {
+      rows.push([`공고 확인: ${item.category}`, item.label, item.matchedTerms.join(", "), "우선 준비"]);
+    });
+    comparison.missing.slice(0, 12).forEach((item) => {
+      rows.push([`공고 미확인: ${item.category}`, item.label, "", "지원 전 확인"]);
+    });
+    comparison.postingOnlyTerms.forEach((item) => {
+      rows.push(["공고 추가 표현", "회사별 특화 표현 후보", item.term, "산출물 반영 검토"]);
+    });
+  }
 
   role.responsibilities.forEach((item, index) => rows.push([`반복 업무 ${index + 1}`, item, "", "공고에 있으면 우선 준비"]));
   role.requirements.forEach((item, index) => rows.push([`자격조건 ${index + 1}`, item, "", "보유/보완 표시"]));
@@ -9476,6 +9770,15 @@ function escapeXml(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function downloadTextFile(fileName, content, mimeType) {
