@@ -97,6 +97,7 @@
    - 완료: Edge headless에서 P6 데이터센터 전력설비 교육 선택 화면을 확인했다.
    - 완료: Edge headless에서 P1 CAE, P3 반도체 식각, P5 예지보전 AI 교육 선택 화면을 desktop/mobile로 확인했다.
    - 완료: P6 내 커리큘럼의 `엑셀 커리큘럼 다운로드` 버튼을 실제 클릭해 `.xls` 파일 저장, 6개 시트, 직무명, 교육자료 URL, 볼 단원/섹션 포함을 확인했다.
+   - 완료: Cloudflare Pages 배포 URL에서 P5 예지보전 AI 흐름을 다시 확인했고, 3주차 예시 자료까지 ROS Toolbox/NVIDIA Jetson이 노출되지 않도록 보정했다.
    - 완료: Starter Pack 영역은 “선택 과제가 아니라 먼저 완료할 기본 역량”으로 노출된다.
    - 완료: 모바일 390px에서 `볼 단원/섹션` 문장은 Starter Pack 카드 밖으로 넘치지 않았다.
 

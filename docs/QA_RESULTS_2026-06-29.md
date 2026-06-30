@@ -214,6 +214,33 @@ Vite 빌드 결과:
 
 이 검증으로 이전 Blob/anchor 계측뿐 아니라 실제 브라우저 다운로드 저장까지 통과했다.
 
+## 추가 검증 - Cloudflare Pages 배포 smoke test
+
+2026-06-30에 `main` 푸시 후 Cloudflare Pages 배포 URL `https://careercompetency-curriculum.pages.dev/`에서 smoke test를 수행했다.
+
+HTTP/asset 확인:
+
+- URL 응답: 200
+- `<title>`: `지원 직무 판단 및 역량 커리큘럼`
+- 최신 asset: `assets/index-B5XXzJr5.js`, `assets/role-expansions-B12dKokU.js`, `assets/index-BH05jmIL.css`
+
+배포 smoke 중 발견한 추가 문제와 조치:
+
+- 첫 배포 smoke에서 P5 예지보전 AI의 3주차 `예시 자료`에 `NVIDIA Jetson AI 실습 과정`이 남아 있었다.
+- 원인: 상위 추천과 주차별 추천에는 역할별 제외 목록을 적용했지만, 보완 과제용 예시 자료를 고르는 `getCompetencyActionResources()`에는 같은 제외 기준이 빠져 있었다.
+- 조치: `getCompetencyActionResources()`와 교육 매핑 확인 패널의 role resource 집계에도 `isRoleExcludedResource()`를 적용했다.
+- 보정 커밋: `ee7783a Filter excluded role resources in task suggestions`
+
+최종 배포 브라우저 smoke 결과:
+
+| 항목 | 결과 |
+|---|---|
+| 페르소나 | 기계공학 / AI·데이터 / 8주 / 예지보전 AI 엔지니어 |
+| 전공-직무 단계 | 전공 확장 |
+| 핵심 추천 확인 | Predictive Maintenance, Google Machine Learning Crash Course, Machine Learning Onramp 노출 |
+| 제외 확인 | `ROS Toolbox` 미노출, `NVIDIA Jetson` 미노출 |
+| 레이아웃 | desktop 1366x900 기준 가로 오버플로 0건 |
+
 ## VM 기반 로직 QA
 
 브라우저 DOM 대신 앱 seed와 함수 로직을 VM에서 실행해 핵심 계산을 확인했다.
@@ -270,14 +297,13 @@ Vite 빌드 결과:
 | Q6 | 통과 | Edge headless에서 P6 교육 선택 화면의 필수 Starter Pack 영역과 candidate 제외를 확인 |
 | Q7 | 통과 | Edge headless에서 P1/P3/P5 교육 선택 화면의 전공-직무 단계, 상위 추천 교육, P5 ROS/Jetson 제외를 확인 |
 | Q8 | 통과 | Edge headless에서 P6 내 커리큘럼 `.xls` 다운로드가 실제 파일로 저장되는지 확인 |
+| Q9 | 통과 | Cloudflare Pages 배포 URL에서 최신 asset, P5 예지보전 AI 추천, ROS/Jetson 제외, 가로 오버플로 0건 확인 |
 
 ## 보류
 
-실제 브라우저에서 다음은 아직 확인해야 한다.
-
-- Cloudflare Pages 배포 URL에서 같은 흐름이 동작하는지
+현재 QA 범위의 P0/P1 보류 항목은 없다. 실제 학생 파일럿에서는 학생이 고른 직무와 회사 공고 문장을 기준으로 추천 자료가 과하거나 부족한 사례를 계속 수집한다.
 
 ## 다음 작업
 
-1. 통과 후 savepoint 커밋과 푸시를 수행한다.
-2. Cloudflare Pages 배포 URL에서 smoke test를 진행한다.
+1. 학생 파일럿에서 세부 직무 선택률, 역량 체크 완료율, 내 커리큘럼/엑셀 사용률을 수집한다.
+2. P1/P2의 한국어 broad 후보처럼 상위 추천에서는 제외했지만 후보 풀에 남긴 자료를 월간 검수에서 계속 승격 또는 제거한다.
