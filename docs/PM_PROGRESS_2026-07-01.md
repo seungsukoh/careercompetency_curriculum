@@ -645,3 +645,37 @@ VM 기반 persona QA에 이어, 오해 위험이 큰 페르소나 3개를 실제
 1. 학생 5명으로 파일럿 인터뷰를 먼저 진행한다.
 2. 같은 혼동이 2회 이상 반복되는 항목만 코드/문구 수정 우선순위로 올린다.
 3. 우선순위는 `첫 추천 교육 이유`, `전공-상세직무-교육 구분`, `1-2주차 추천 순서`, `페르소나 문구` 순서로 둔다.
+
+## 추가 진행 - 학생 인터뷰 결과 누적 및 요약 장치
+
+인터뷰 프로토콜을 실제 실행 결과로 이어가기 위해 CSV 입력 템플릿과 요약 스크립트를 추가했다. 목표는 파일럿 후 주관적 메모를 그대로 두지 않고, 2회 이상 반복된 혼동만 수정 우선순위로 올리는 것이다.
+
+산출물:
+
+- `docs/STUDENT_INTERVIEW_RESULTS_TEMPLATE_2026-07-01.csv`
+- `scripts/summarize-student-interviews.mjs`
+- `npm.cmd run summarize:interviews`
+
+주요 내용:
+
+- 인터뷰 기록은 개인정보 대신 `interview_id` 중심으로 남기도록 했다.
+- 전공 적합도, 상세직무 이해, 교육 추천 이해, 1-2주차 순서, 페르소나 문구, 내보내기 유용성을 각각 `pass/hold/fix`로 기록할 수 있게 했다.
+- `first_recommendation_reason`, `concept_confusion`, `week_sequence`, `persona_copy`, `export_usefulness`, `language_access`, `resource_quality` 이슈 카테고리를 표준화했다.
+- 요약 스크립트는 CSV에서 2회 이상 반복된 이슈를 찾아 다음 수정 우선순위를 출력한다.
+
+검증 결과:
+
+- `node --check scripts/summarize-student-interviews.mjs` PASS
+- `npm.cmd run summarize:interviews` PASS
+  - 현재 템플릿에는 인터뷰 행이 없으므로 interviews 0, repeatedIssues 0으로 정상 종료
+
+판단:
+
+- 다음 실제 파일럿에서 학생 반응이 나오면, 교육 수를 늘리기 전에 반복 이슈가 어느 범주인지 먼저 확인할 수 있다.
+- 특히 `첫 추천 교육 이유`와 `전공-상세직무-교육 구분`은 2회 이상 반복되면 P0 수정 후보로 본다.
+
+다음 단계:
+
+1. 학생 5명 인터뷰 후 CSV에 결과를 입력한다.
+2. `npm.cmd run summarize:interviews -- docs/STUDENT_INTERVIEW_RESULTS_TEMPLATE_2026-07-01.csv`로 반복 이슈를 확인한다.
+3. 반복 이슈가 있으면 교육 데이터 추가보다 추천 이유 문구, 상세직무 카드, 주차 순서 로직을 먼저 수정한다.
