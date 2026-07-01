@@ -20,6 +20,13 @@ export function applyRoleExpansions(context) {
 
   function applyEmergingRoleExpansion() {
     const mergeValues = (base = [], additions = []) => [...new Set([...(base || []), ...(additions || [])])];
+    const removeValues = (base = [], removals = []) => {
+      const removalSet = new Set(removals);
+      return (base || []).filter((value) => !removalSet.has(value));
+    };
+    const removeResourceTaskLinks = (resourceId, taskTitles = []) => {
+      resourceTaskLinks[resourceId] = removeValues(resourceTaskLinks[resourceId], taskTitles);
+    };
     const addTrackTags = (trackId, field, values) => {
       const track = tracks.find((item) => item.id === trackId);
       if (track) track[field] = mergeValues(track[field], values);
@@ -519,6 +526,24 @@ export function applyRoleExpansions(context) {
         url: "https://www.mathworks.com/help/aeroblks/examples.html"
       },
       {
+        id: "nasa-systems-engineering-handbook",
+        title: "NASA Systems Engineering Handbook 요구사항·검증 핵심",
+        provider: "NASA",
+        type: "공식 핸드북/요구사항",
+        language: "영어",
+        difficulty: "기초실습",
+        estimatedMinutes: 120,
+        practiceMinutes: 90,
+        sequenceLevel: 2,
+        tracks: ["aerospace-defense"],
+        skills: ["시스템공학", "요구사항", "검증", "추적성", "리스크"],
+        prerequisites: [],
+        reason: "임무 요구를 기능, 성능, 운용 환경, 검증 증거로 나누는 항공우주 시스템공학 기준 자료입니다. UAV·방산 직무의 첫 산출물인 요구사항 분해와 추적표 작성에 직접 연결됩니다.",
+        expectedOutput: "임무 요구사항-검증 방법-증거 자료 추적표",
+        qualityStatus: "reviewed",
+        url: "https://www.nasa.gov/reference/systems-engineering-handbook/"
+      },
+      {
         id: "mathworks-uav-toolbox-examples",
         title: "UAV Toolbox 드론 비행제어 예제",
         provider: "MathWorks",
@@ -675,8 +700,19 @@ export function applyRoleExpansions(context) {
       "stateflow-onramp": ["aerospace-defense", "robotics-automation", "energy-ess"],
       "control-design-onramp": ["aerospace-defense", "robotics-automation", "energy-ess"],
       "signal-processing-onramp": ["aerospace-defense", "robotics-automation", "energy-ess", "ai-engineering"],
+      "simscape-onramp": ["energy-ess"],
       "statistics-onramp": ["ai-engineering"],
       "coursera-engineering-data": ["ai-engineering"],
+      "coursera-intro-self-driving-cars": ["autonomous-sdv", "automotive-mobility"],
+      "coursera-state-estimation-localization": ["autonomous-sdv", "robotics-automation", "aerospace-defense"],
+      "coursera-visual-perception-self-driving": ["autonomous-sdv", "ai-engineering", "robotics-automation"],
+      "coursera-motion-planning-self-driving": ["autonomous-sdv", "robotics-automation"],
+      "coursera-battery-management-systems": ["energy-ess", "automotive-mobility"],
+      "coursera-power-electronics": ["energy-ess", "automotive-mobility", "electronics-pcb"],
+      "coursera-electric-power-systems": ["energy-ess", "data-center-infra"],
+      "coursera-digital-manufacturing-design": ["manufacturing-dx", "production-quality", "automotive-mobility"],
+      "coursera-solar-energy-basics": ["energy-ess"],
+      "coursera-introduction-sustainability": ["chemical-sustainability"],
       "sensor-fusion-onramp": ["aerospace-defense", "robotics-automation"],
       "machine-learning-onramp": ["ai-engineering", "robotics-automation", "energy-ess"],
       "google-ml-crash-course": ["ai-engineering", "robotics-automation", "production-quality", "manufacturing-dx"],
@@ -777,26 +813,26 @@ export function applyRoleExpansions(context) {
     });
 
     Object.entries({
-      "aerospace-systems-engineer": ["mathworks-aerospace-blockset-examples", "simulink-onramp", "edx-engineering-systems", "ni-learn-test-measurement", "ncs"],
-      "uav-flight-control-engineer": ["mathworks-uav-toolbox-examples", "px4-autopilot-docs", "control-design-onramp", "sensor-fusion-onramp", "simulink-onramp", "ni-learn-test-measurement"],
+      "aerospace-systems-engineer": ["mathworks-aerospace-blockset-examples", "simulink-onramp", "edx-engineering-systems", "coursera-state-estimation-localization", "ni-learn-test-measurement", "ncs"],
+      "uav-flight-control-engineer": ["nasa-systems-engineering-handbook", "mathworks-uav-toolbox-examples", "px4-autopilot-docs", "coursera-state-estimation-localization", "coursera-motion-planning-self-driving", "control-design-onramp", "sensor-fusion-onramp", "simulink-onramp", "ni-learn-test-measurement"],
       "avionics-integration-engineer": ["ti-precision-labs", "signal-processing-onramp", "ni-learn-test-measurement", "mathworks-simulink-examples", "allaboutcircuits-textbook", "youtube-emc-emi-basics"],
       "defense-systems-engineer": ["edx-engineering-systems", "mathworks-aerospace-blockset-examples", "ncs", "quality-one-fmea", "asq-fmea", "ni-learn-test-measurement"],
       "radar-rf-signal-engineer": ["signal-processing-onramp", "matlab-onramp", "mathworks-official-videos", "coursera-engineering-data", "google-ml-crash-course"],
       "robot-mechanical-design-engineer": ["mit-mechanics-materials", "mit-design-manufacturing", "ansys-innovation-courses", "mathworks-robotics-system-toolbox-examples", "kocw-mechanical-design"],
-      "robot-control-engineer": ["mathworks-robotics-system-toolbox-examples", "mathworks-ros-toolbox-examples", "control-design-onramp", "simulink-onramp", "ros-tutorials", "comento-plc-control-practice"],
-      "robot-perception-engineer": ["mathworks-ros-toolbox-examples", "nav2-ros-docs", "sensor-fusion-onramp", "mathworks-deep-learning-onramp", "nvidia-jetson-ai-course", "google-ml-crash-course"],
+      "robot-control-engineer": ["mathworks-robotics-system-toolbox-examples", "mathworks-ros-toolbox-examples", "coursera-motion-planning-self-driving", "coursera-state-estimation-localization", "control-design-onramp", "simulink-onramp", "ros-tutorials", "comento-plc-control-practice"],
+      "robot-perception-engineer": ["mathworks-ros-toolbox-examples", "nav2-ros-docs", "coursera-visual-perception-self-driving", "coursera-state-estimation-localization", "sensor-fusion-onramp", "mathworks-deep-learning-onramp", "nvidia-jetson-ai-course", "google-ml-crash-course"],
       "smart-factory-automation-engineer": ["comento-plc-control-practice", "mathworks-predictive-maintenance", "boostcourse-data-ai-basic", "freecodecamp-python-data", "nist-process-capability", "comento-production-tech-internship"],
       "plc-instrumentation-engineer": ["comento-plc-control-practice", "ni-learn-test-measurement", "kocw-embedded-control", "ti-precision-labs", "hrd-net-job-training"],
-      "power-systems-engineer": ["mathworks-simscape-electrical", "kocw-power-electronics-system-analysis", "simscape-onramp", "matlab-onramp", "edx-engineering-systems", "ni-learn-test-measurement", "ncs"],
-      "ess-bms-engineer": ["mathworks-simscape-battery-examples", "mathworks-simscape-electrical", "kocw-power-electronics-system-analysis", "simulink-onramp", "stateflow-onramp", "matlab-onramp", "mathworks-predictive-maintenance"],
-      "power-electronics-inverter-engineer": ["kocw-power-electronics-system-analysis", "mathworks-simscape-electrical", "ti-power-management-training", "ti-precision-labs", "simscape-onramp", "mathworks-motor-control-blockset", "youtube-emc-emi-basics"],
-      "electric-machine-drive-engineer": ["kocw-power-electronics-system-analysis", "mathworks-motor-control-blockset", "control-design-onramp", "mathworks-simscape-electrical", "simulink-onramp", "ni-learn-test-measurement"],
-      "renewable-energy-grid-engineer": ["mathworks-simscape-electrical", "kocw-power-electronics-system-analysis", "mathworks-simscape-battery-examples", "matlab-onramp", "coursera-engineering-data", "google-ml-crash-course"],
-      "manufacturing-ai-engineer": ["google-ml-crash-course", "machine-learning-onramp", "boostcourse-data-ai-basic", "freecodecamp-python-data", "mathworks-predictive-maintenance", "statistics-onramp"],
+      "power-systems-engineer": ["coursera-electric-power-systems", "mathworks-simscape-electrical", "kocw-power-electronics-system-analysis", "simscape-onramp", "matlab-onramp", "edx-engineering-systems", "ni-learn-test-measurement", "ncs"],
+      "ess-bms-engineer": ["coursera-battery-management-systems", "mathworks-simscape-battery-examples", "mathworks-simscape-electrical", "kocw-power-electronics-system-analysis", "simulink-onramp", "stateflow-onramp", "matlab-onramp", "mathworks-predictive-maintenance"],
+      "power-electronics-inverter-engineer": ["coursera-power-electronics", "kocw-power-electronics-system-analysis", "mathworks-simscape-electrical", "ti-power-management-training", "ti-precision-labs", "simscape-onramp", "mathworks-motor-control-blockset", "youtube-emc-emi-basics"],
+      "electric-machine-drive-engineer": ["coursera-power-electronics", "kocw-power-electronics-system-analysis", "mathworks-motor-control-blockset", "control-design-onramp", "mathworks-simscape-electrical", "simulink-onramp", "ni-learn-test-measurement"],
+      "renewable-energy-grid-engineer": ["coursera-solar-energy-basics", "coursera-electric-power-systems", "mathworks-simscape-electrical", "kocw-power-electronics-system-analysis", "mathworks-simscape-battery-examples", "matlab-onramp", "coursera-engineering-data", "google-ml-crash-course"],
+      "manufacturing-ai-engineer": ["google-ml-crash-course", "machine-learning-onramp", "coursera-digital-manufacturing-design", "boostcourse-data-ai-basic", "freecodecamp-python-data", "mathworks-predictive-maintenance", "statistics-onramp"],
       "predictive-maintenance-ai-engineer": ["mathworks-predictive-maintenance", "signal-processing-onramp", "machine-learning-onramp", "statistics-onramp", "google-ml-crash-course", "freecodecamp-python-data", "coursera-engineering-data"],
-      "vision-inspection-ai-engineer": ["mathworks-deep-learning-onramp", "nvidia-jetson-ai-course", "machine-learning-onramp", "google-ml-crash-course", "boostcourse-data-ai-basic"],
+      "vision-inspection-ai-engineer": ["coursera-visual-perception-self-driving", "mathworks-deep-learning-onramp", "nvidia-jetson-ai-course", "machine-learning-onramp", "google-ml-crash-course", "boostcourse-data-ai-basic"],
       "engineering-data-analyst": ["freecodecamp-python-data", "google-ml-crash-course", "boostcourse-data-ai-basic", "statistics-onramp", "coursera-engineering-data"],
-      "simulation-ai-engineer": ["simulink-onramp", "simscape-onramp", "optimization-onramp", "machine-learning-onramp", "mathworks-simulink-examples", "mathworks-simscape-examples"]
+      "simulation-ai-engineer": ["simulink-onramp", "simscape-onramp", "optimization-onramp", "machine-learning-onramp", "statistics-onramp", "google-ml-crash-course", "coursera-engineering-data", "mathworks-simulink-examples", "mathworks-simscape-examples"]
     }).forEach(([roleId, resourceIds]) => {
       roleResourceLinks[roleId] = mergeValues(resourceIds, roleResourceLinks[roleId] || []);
     });
@@ -807,6 +843,12 @@ export function applyRoleExpansions(context) {
         "인터페이스": ["edx-engineering-systems", "ni-learn-test-measurement", "mathworks-aerospace-blockset-examples"],
         "리스크": ["edx-engineering-systems", "ncs", "ni-learn-test-measurement"],
         "규격": ["ncs", "ni-learn-test-measurement", "mathworks-aerospace-blockset-examples"]
+      },
+      "uav-flight-control-engineer": {
+        "비행·제어": ["mathworks-uav-toolbox-examples", "control-design-onramp", "coursera-motion-planning-self-driving"],
+        "센서융합": ["coursera-state-estimation-localization", "sensor-fusion-onramp", "mathworks-uav-toolbox-examples"],
+        "로그분석": ["coursera-state-estimation-localization", "matlab-onramp", "ni-learn-test-measurement"],
+        "검증": ["mathworks-uav-toolbox-examples", "youtube-mathworks-hil-testing", "ni-learn-test-measurement"]
       },
       "avionics-integration-engineer": {
         "ICD": ["ni-learn-test-measurement", "mathworks-simulink-examples", "allaboutcircuits-textbook"],
@@ -832,26 +874,47 @@ export function applyRoleExpansions(context) {
         "엔드이펙터": ["mathworks-robotics-system-toolbox-examples", "mit-design-manufacturing"],
         "제조성": ["mit-design-manufacturing", "ansys-innovation-courses"]
       },
+      "robot-control-engineer": {
+        "경로계획": ["coursera-motion-planning-self-driving", "mathworks-robotics-system-toolbox-examples", "nav2-ros-docs"],
+        "Localization": ["coursera-state-estimation-localization", "sensor-fusion-onramp", "mathworks-ros-toolbox-examples"],
+        "제어": ["control-design-onramp", "simulink-onramp", "coursera-motion-planning-self-driving"]
+      },
+      "robot-perception-engineer": {
+        "센서": ["coursera-visual-perception-self-driving", "sensor-fusion-onramp", "nvidia-jetson-ai-course"],
+        "모델평가": ["coursera-visual-perception-self-driving", "google-ml-crash-course", "mathworks-deep-learning-onramp"],
+        "좌표계": ["coursera-state-estimation-localization", "mathworks-ros-toolbox-examples", "nav2-ros-docs"]
+      },
       "plc-instrumentation-engineer": {
         "도면": ["ni-learn-test-measurement", "ti-precision-labs"],
         "시퀀스": ["ni-learn-test-measurement", "kocw-embedded-control"],
         "안전": ["ni-learn-test-measurement", "ncs"]
       },
       "power-systems-engineer": {
-        "수배전": ["kocw-power-electronics-system-analysis", "ncs", "mathworks-simscape-electrical"],
-        "보호계전": ["kocw-power-electronics-system-analysis", "ncs", "mathworks-simscape-electrical"],
-        "전력품질": ["mathworks-simscape-electrical", "ni-learn-test-measurement", "edx-engineering-systems"]
+        "수배전": ["coursera-electric-power-systems", "kocw-power-electronics-system-analysis", "ncs", "mathworks-simscape-electrical"],
+        "보호계전": ["coursera-electric-power-systems", "kocw-power-electronics-system-analysis", "ncs", "mathworks-simscape-electrical"],
+        "전력품질": ["coursera-electric-power-systems", "mathworks-simscape-electrical", "ni-learn-test-measurement", "edx-engineering-systems"]
+      },
+      "ess-bms-engineer": {
+        "ESS·BMS": ["coursera-battery-management-systems", "mathworks-simscape-battery-examples", "simulink-onramp"],
+        "SOC/SOH": ["coursera-battery-management-systems", "mathworks-simscape-battery-examples", "statistics-onramp"],
+        "보호·안전": ["coursera-battery-management-systems", "stateflow-onramp", "mathworks-simscape-electrical"],
+        "운영 데이터": ["mathworks-predictive-maintenance", "coursera-engineering-data", "coursera-battery-management-systems"]
+      },
+      "power-electronics-inverter-engineer": {
+        "PCS·인버터": ["coursera-power-electronics", "kocw-power-electronics-system-analysis", "mathworks-simscape-electrical"],
+        "스위칭": ["coursera-power-electronics", "ti-power-management-training", "mathworks-simscape-electrical"],
+        "보호·안전": ["coursera-power-electronics", "ti-precision-labs", "stateflow-onramp"]
       },
       "renewable-energy-grid-engineer": {
-        "계통연계": ["mathworks-simscape-electrical", "kocw-power-electronics-system-analysis", "mathworks-simscape-battery-examples"],
-        "전력품질": ["mathworks-simscape-electrical", "kocw-power-electronics-system-analysis"],
-        "EMS": ["mathworks-simscape-battery-examples", "google-ml-crash-course"],
+        "계통연계": ["coursera-electric-power-systems", "coursera-solar-energy-basics", "mathworks-simscape-electrical", "kocw-power-electronics-system-analysis", "mathworks-simscape-battery-examples"],
+        "전력품질": ["coursera-electric-power-systems", "mathworks-simscape-electrical", "kocw-power-electronics-system-analysis"],
+        "EMS": ["mathworks-simscape-battery-examples", "google-ml-crash-course", "coursera-solar-energy-basics"],
         "예측": ["google-ml-crash-course", "coursera-engineering-data", "matlab-onramp"]
       },
       "manufacturing-ai-engineer": {
-        "문제정의": ["google-ml-crash-course", "machine-learning-onramp", "statistics-onramp"],
+        "문제정의": ["google-ml-crash-course", "machine-learning-onramp", "statistics-onramp", "coursera-digital-manufacturing-design"],
         "전처리": ["freecodecamp-python-data", "statistics-onramp", "google-ml-crash-course"],
-        "운영": ["mathworks-predictive-maintenance", "google-ml-crash-course", "freecodecamp-python-data"]
+        "운영": ["mathworks-predictive-maintenance", "google-ml-crash-course", "freecodecamp-python-data", "coursera-digital-manufacturing-design"]
       },
       "predictive-maintenance-ai-engineer": {
         "시계열": ["mathworks-predictive-maintenance", "signal-processing-onramp", "statistics-onramp"],
@@ -867,16 +930,24 @@ export function applyRoleExpansions(context) {
     });
 
     Object.entries({
+      "nasa-systems-engineering-handbook": ["임무 요구사항 분해"],
       "mathworks-aerospace-blockset-examples": ["임무 요구사항 분해", "비행·센서 모델 확인", "시험·안전 검증 리포트"],
       "mathworks-uav-toolbox-examples": ["비행·센서 모델 확인", "시험·안전 검증 리포트", "제어·경로 계획 실습"],
       "px4-autopilot-docs": ["비행·센서 모델 확인", "시험·안전 검증 리포트"],
+      "coursera-state-estimation-localization": ["비행·센서 모델 확인", "시험·안전 검증 리포트", "센서·구동기 인터페이스", "제어·경로 계획 실습"],
+      "coursera-motion-planning-self-driving": ["제어·경로 계획 실습", "시험·안전 검증 리포트", "현장 안전·검증 리포트"],
+      "coursera-visual-perception-self-driving": ["대시보드·비전검사 적용"],
       "mathworks-robotics-system-toolbox-examples": ["로봇 작업 시나리오 정의", "제어·경로 계획 실습"],
       "mathworks-ros-toolbox-examples": ["센서·구동기 인터페이스", "제어·경로 계획 실습", "문제와 데이터 정의"],
       "nav2-ros-docs": ["제어·경로 계획 실습", "현장 안전·검증 리포트"],
       "mathworks-simscape-battery-examples": ["PCS·배터리 구성 검토", "보호·안전 로직 검증", "운영 데이터 분석 리포트"],
+      "coursera-battery-management-systems": ["PCS·배터리 구성 검토", "보호·안전 로직 검증", "운영 데이터 분석 리포트"],
       "mathworks-deep-learning-onramp": ["기준 모델 학습·평가", "개선 리포트와 설명 자료"],
       "mathworks-simscape-electrical": ["전력·부하 요구사항 정의", "PCS·배터리 구성 검토", "보호·안전 로직 검증"],
       "kocw-power-electronics-system-analysis": ["전력·부하 요구사항 정의", "PCS·배터리 구성 검토", "보호·안전 로직 검증"],
+      "coursera-power-electronics": ["전력·부하 요구사항 정의", "PCS·배터리 구성 검토", "보호·안전 로직 검증"],
+      "coursera-electric-power-systems": ["전력·부하 요구사항 정의"],
+      "coursera-solar-energy-basics": ["전력·부하 요구사항 정의", "PCS·배터리 구성 검토"],
       "ti-power-management-training": ["전력·부하 요구사항 정의", "보호·안전 로직 검증"],
       "mathworks-motor-control-blockset": ["보호·안전 로직 검증", "제어·경로 계획 실습"],
       "signal-processing-onramp": ["기준 모델 학습·평가"],
@@ -884,6 +955,7 @@ export function applyRoleExpansions(context) {
       "statistics-onramp": ["문제와 데이터 정의", "기준 모델 학습·평가", "현장 적용 리스크 검토"],
       "mathworks-predictive-maintenance": ["운영 데이터 분석 리포트", "문제와 데이터 정의", "기준 모델 학습·평가"],
       "google-ml-crash-course": ["문제와 데이터 정의", "기준 모델 학습·평가", "현장 적용 리스크 검토"],
+      "coursera-digital-manufacturing-design": ["문제와 데이터 정의", "현장 적용 리스크 검토", "개선 리포트와 설명 자료"],
       "coursera-engineering-data": ["문제와 데이터 정의", "개선 리포트와 설명 자료"],
       "boostcourse-data-ai-basic": ["문제와 데이터 정의", "개선 리포트와 설명 자료"],
       "freecodecamp-python-data": ["문제와 데이터 정의", "기준 모델 학습·평가", "개선 리포트와 설명 자료"],
@@ -1208,10 +1280,10 @@ export function applyRoleExpansions(context) {
     });
 
     Object.entries({
-      "autonomous-perception-engineer": ["mathworks-automated-driving-examples", "mathworks-lane-following-sensor-fusion", "mathworks-deep-learning-onramp", "nvidia-jetson-ai-course", "sensor-fusion-onramp", "google-ml-crash-course"],
-      "sensor-fusion-localization-engineer": ["sensor-fusion-onramp", "mathworks-lane-following-sensor-fusion", "mathworks-automated-driving-examples", "mathworks-ros-toolbox-examples", "signal-processing-onramp", "matlab-onramp"],
-      "autonomous-planning-control-engineer": ["control-design-onramp", "simulink-onramp", "mathworks-automated-driving-examples", "mathworks-roadrunner-scenario-examples", "mathworks-lane-following-sensor-fusion", "youtube-mathworks-hil-testing"],
-      "autonomous-simulation-validation-engineer": ["mathworks-roadrunner-scenario-examples", "mathworks-automated-driving-examples", "mathworks-simulink-test-manager", "youtube-mathworks-hil-testing", "ni-learn-test-measurement", "sensor-fusion-onramp"],
+      "autonomous-perception-engineer": ["coursera-intro-self-driving-cars", "coursera-visual-perception-self-driving", "mathworks-automated-driving-examples", "mathworks-lane-following-sensor-fusion", "mathworks-deep-learning-onramp", "nvidia-jetson-ai-course", "sensor-fusion-onramp", "google-ml-crash-course"],
+      "sensor-fusion-localization-engineer": ["coursera-state-estimation-localization", "coursera-intro-self-driving-cars", "sensor-fusion-onramp", "mathworks-lane-following-sensor-fusion", "mathworks-automated-driving-examples", "mathworks-ros-toolbox-examples", "signal-processing-onramp", "matlab-onramp"],
+      "autonomous-planning-control-engineer": ["coursera-motion-planning-self-driving", "coursera-intro-self-driving-cars", "control-design-onramp", "simulink-onramp", "mathworks-automated-driving-examples", "mathworks-roadrunner-scenario-examples", "mathworks-lane-following-sensor-fusion", "youtube-mathworks-hil-testing"],
+      "autonomous-simulation-validation-engineer": ["coursera-motion-planning-self-driving", "coursera-intro-self-driving-cars", "mathworks-roadrunner-scenario-examples", "mathworks-automated-driving-examples", "mathworks-simulink-test-manager", "youtube-mathworks-hil-testing", "ni-learn-test-measurement", "sensor-fusion-onramp"],
       "vehicle-sw-platform-engineer": ["mathworks-autosar-blockset-examples", "mathworks-vehicle-network-toolbox-examples", "simulink-onramp", "stateflow-onramp", "youtube-css-can-bus", "freecodecamp-python-data"],
       "vehicle-diagnostics-ota-engineer": ["mathworks-vehicle-network-toolbox-examples", "youtube-css-can-bus", "stateflow-onramp", "simulink-onramp", "freecodecamp-python-data", "ni-learn-test-measurement"],
       "vehicle-cybersecurity-engineer": ["autoisac-cybersecurity-best-practices", "mathworks-vehicle-network-toolbox-examples", "youtube-css-can-bus", "freecodecamp-python-data", "ncs"]
@@ -1222,6 +1294,10 @@ export function applyRoleExpansions(context) {
     Object.entries({
       "mathworks-automated-driving-examples": ["자율주행 기능 요구사항 분해", "센서·차량 로그 구조 정리", "시나리오·SW 인터페이스 검증"],
       "mathworks-lane-following-sensor-fusion": ["자율주행 기능 요구사항 분해", "센서·차량 로그 구조 정리", "시나리오·SW 인터페이스 검증"],
+      "coursera-intro-self-driving-cars": ["자율주행 기능 요구사항 분해", "센서·차량 로그 구조 정리", "시나리오·SW 인터페이스 검증"],
+      "coursera-state-estimation-localization": ["자율주행 기능 요구사항 분해", "센서·차량 로그 구조 정리"],
+      "coursera-visual-perception-self-driving": ["자율주행 기능 요구사항 분해", "센서·차량 로그 구조 정리"],
+      "coursera-motion-planning-self-driving": ["자율주행 기능 요구사항 분해", "시나리오·SW 인터페이스 검증", "차량 SW 검증 리포트"],
       "mathworks-roadrunner-scenario-examples": ["시나리오·SW 인터페이스 검증", "차량 SW 검증 리포트"],
       "mathworks-autosar-blockset-examples": ["시나리오·SW 인터페이스 검증", "차량 SW 검증 리포트"],
       "mathworks-vehicle-network-toolbox-examples": ["센서·차량 로그 구조 정리", "시나리오·SW 인터페이스 검증", "차량 SW 검증 리포트"],
@@ -1248,6 +1324,13 @@ export function applyRoleExpansions(context) {
 
   function applyPriorityRoleExpansion() {
     const mergeValues = (base = [], additions = []) => [...new Set([...(base || []), ...(additions || [])])];
+    const removeValues = (base = [], removals = []) => {
+      const removalSet = new Set(removals);
+      return (base || []).filter((value) => !removalSet.has(value));
+    };
+    const removeResourceTaskLinks = (resourceId, taskTitles = []) => {
+      resourceTaskLinks[resourceId] = removeValues(resourceTaskLinks[resourceId], taskTitles);
+    };
     const addRoleCompetencyLinks = (definitions) => {
       Object.entries(definitions).forEach(([roleId, competencyMap]) => {
         roleCompetencyResourceLinks[roleId] = roleCompetencyResourceLinks[roleId] || {};
@@ -1843,6 +1926,9 @@ export function applyRoleExpansions(context) {
       "mathworks-simscape-electrical",
       "mathworks-simscape-examples",
       "mathworks-predictive-maintenance",
+      "signal-processing-onramp",
+      "coursera-engineering-data",
+      "freecodecamp-python-data",
       "ni-learn-test-measurement"
     ].forEach((resourceId) => {
       const resource = resources.find((item) => item.id === resourceId);
@@ -1885,7 +1971,9 @@ export function applyRoleExpansions(context) {
       "nptel-chemical-engineering",
       "kosha-psm",
       "youtube-nptel-hazop",
-      "coursera-chemical-engineering"
+      "coursera-chemical-engineering",
+      "statistics-onramp",
+      "coursera-engineering-data"
     ].forEach((resourceId) => {
       const resource = resources.find((item) => item.id === resourceId);
       if (resource) resource.tracks = mergeValues(resource.tracks, ["chemical-sustainability"]);
@@ -1941,15 +2029,15 @@ export function applyRoleExpansions(context) {
     });
 
     Object.entries({
-      "data-center-electrical-infra-engineer": ["kdcc-data-center-operation-study", "smartspace-data-center-electrical-guide", "keea-electrical-facility-operation-training", "mathworks-simscape-electrical", "ti-power-management-training", "ni-learn-test-measurement"],
-      "data-center-cooling-engineer": ["kdcc-data-center-operation-study", "mathworks-simscape-fluids-examples", "mathworks-simscape-examples", "ansys-innovation-courses", "simscape-onramp"],
-      "dcim-bms-operations-engineer": ["kdcc-data-center-operation-study", "mathworks-predictive-maintenance", "freecodecamp-python-data", "boostcourse-data-ai-basic"],
+      "data-center-electrical-infra-engineer": ["coursera-electric-power-systems", "kdcc-data-center-operation-study", "smartspace-data-center-electrical-guide", "keea-electrical-facility-operation-training", "mathworks-predictive-maintenance", "signal-processing-onramp", "coursera-engineering-data", "freecodecamp-python-data", "mathworks-simscape-electrical", "ti-power-management-training", "ni-learn-test-measurement"],
+      "data-center-cooling-engineer": ["kdcc-data-center-operation-study", "mathworks-simscape-fluids-examples", "mathworks-predictive-maintenance", "signal-processing-onramp", "coursera-engineering-data", "freecodecamp-python-data", "mathworks-simscape-examples", "ansys-innovation-courses", "simscape-onramp"],
+      "dcim-bms-operations-engineer": ["kdcc-data-center-operation-study", "mathworks-predictive-maintenance", "signal-processing-onramp", "coursera-engineering-data", "freecodecamp-python-data", "boostcourse-data-ai-basic"],
       "advanced-packaging-engineer": ["semiengineering-advanced-packaging", "semiengineering-failure-analysis", "statistics-onramp", "nist-control-charts", "nist-process-capability", "letuin-semiconductor-field-practice"],
       "semiconductor-test-engineer": ["semiengineering-semiconductor-test", "letuin-spotfire-defect-analysis", "statistics-onramp", "freecodecamp-python-data", "google-ml-crash-course", "nist-control-charts", "nist-process-capability"],
       "packaging-reliability-fa-engineer": ["semiengineering-advanced-packaging", "semiengineering-failure-analysis", "asq-eight-d", "statistics-onramp", "nist-control-charts", "nist-process-capability"],
-      "mes-scada-integration-engineer": ["opc-foundation-opcua-overview", "comento-plc-control-practice", "ncs", "freecodecamp-python-data", "mathworks-predictive-maintenance", "statistics-onramp", "nist-process-capability"],
-      "industrial-data-engineer": ["freecodecamp-python-data", "boostcourse-data-ai-basic", "mathworks-predictive-maintenance", "google-ml-crash-course", "statistics-onramp", "machine-learning-onramp", "nist-control-charts", "nist-process-capability"],
-      "smart-factory-vision-engineer": ["nvidia-jetson-ai-course", "mathworks-deep-learning-onramp", "google-ml-crash-course", "boostcourse-data-ai-basic", "machine-learning-onramp", "statistics-onramp", "freecodecamp-python-data"],
+      "mes-scada-integration-engineer": ["opc-foundation-opcua-overview", "comento-plc-control-practice", "ncs", "coursera-digital-manufacturing-design", "freecodecamp-python-data", "mathworks-predictive-maintenance", "statistics-onramp", "nist-process-capability"],
+      "industrial-data-engineer": ["freecodecamp-python-data", "coursera-digital-manufacturing-design", "boostcourse-data-ai-basic", "mathworks-predictive-maintenance", "google-ml-crash-course", "statistics-onramp", "machine-learning-onramp", "nist-control-charts", "nist-process-capability"],
+      "smart-factory-vision-engineer": ["coursera-visual-perception-self-driving", "nvidia-jetson-ai-course", "mathworks-deep-learning-onramp", "google-ml-crash-course", "boostcourse-data-ai-basic", "machine-learning-onramp", "statistics-onramp", "freecodecamp-python-data"],
       "hydrogen-process-engineer": ["doe-hydrogen-production-delivery", "learncheme-reactor-design", "learncheme-material-balances", "aiche-ccps-process-safety-beacon"],
       "ccus-process-engineer": ["doe-carbon-capture-overview", "learncheme-separations", "learncheme-reactor-design", "mit-chemical-engineering"],
       "water-treatment-process-engineer": ["aiche-ccps-process-safety-beacon", "learncheme-separations", "kosha-psm", "youtube-nptel-hazop"],
@@ -1963,24 +2051,24 @@ export function applyRoleExpansions(context) {
       "data-center-cooling-engineer": {
         "열부하": ["kdcc-data-center-operation-study", "mathworks-simscape-fluids-examples", "ansys-innovation-courses", "simscape-onramp"],
         "Airflow": ["kdcc-data-center-operation-study", "mathworks-simscape-fluids-examples", "ansys-innovation-courses", "simscape-onramp"],
-        "온도로그": ["mathworks-predictive-maintenance", "mathworks-simscape-fluids-examples", "kdcc-data-center-operation-study"],
+        "온도로그": ["mathworks-predictive-maintenance", "mathworks-simscape-fluids-examples", "kdcc-data-center-operation-study", "coursera-engineering-data"],
         "공조": ["kdcc-data-center-operation-study", "mathworks-simscape-fluids-examples", "mathworks-simscape-examples", "simscape-onramp"]
       },
       "dcim-bms-operations-engineer": {
-        "반복 알람": ["kdcc-data-center-operation-study", "mathworks-predictive-maintenance", "freecodecamp-python-data"],
-        "대시보드": ["freecodecamp-python-data", "boostcourse-data-ai-basic", "kdcc-data-center-operation-study"],
+        "반복 알람": ["kdcc-data-center-operation-study", "mathworks-predictive-maintenance", "coursera-engineering-data", "freecodecamp-python-data"],
+        "대시보드": ["freecodecamp-python-data", "coursera-engineering-data", "boostcourse-data-ai-basic", "kdcc-data-center-operation-study"],
         "예방정비": ["mathworks-predictive-maintenance", "kdcc-data-center-operation-study"],
         "조치 기준": ["kdcc-data-center-operation-study", "mathworks-predictive-maintenance"]
       },
       "industrial-data-engineer": {
-        "전처리": ["freecodecamp-python-data", "statistics-onramp", "machine-learning-onramp"],
+        "전처리": ["freecodecamp-python-data", "statistics-onramp", "machine-learning-onramp", "coursera-engineering-data"],
         "OEE": ["mathworks-predictive-maintenance", "nist-process-capability", "freecodecamp-python-data"],
-        "대시보드": ["freecodecamp-python-data", "boostcourse-data-ai-basic", "google-ml-crash-course"]
+        "대시보드": ["freecodecamp-python-data", "coursera-digital-manufacturing-design", "boostcourse-data-ai-basic", "google-ml-crash-course"]
       },
       "smart-factory-vision-engineer": {
-        "라벨": ["mathworks-deep-learning-onramp", "google-ml-crash-course", "nvidia-jetson-ai-course"],
-        "조명": ["nvidia-jetson-ai-course", "mathworks-deep-learning-onramp"],
-        "모델평가": ["google-ml-crash-course", "machine-learning-onramp", "statistics-onramp"]
+        "라벨": ["coursera-visual-perception-self-driving", "mathworks-deep-learning-onramp", "google-ml-crash-course", "nvidia-jetson-ai-course"],
+        "조명": ["coursera-visual-perception-self-driving", "nvidia-jetson-ai-course", "mathworks-deep-learning-onramp"],
+        "모델평가": ["coursera-visual-perception-self-driving", "google-ml-crash-course", "machine-learning-onramp", "statistics-onramp"]
       },
       "water-treatment-process-engineer": {
         "수질": ["learncheme-separations", "mathworks-simscape-fluids-examples", "aiche-ccps-process-safety-beacon"],
@@ -1992,7 +2080,8 @@ export function applyRoleExpansions(context) {
       "polymer-film-materials-engineer": {
         "분석": ["statistics-onramp", "coursera-engineering-data", "nptel-chemical-engineering"],
         "코팅": ["learncheme-reactor-design", "nptel-chemical-engineering", "statistics-onramp"],
-        "DOE": ["statistics-onramp", "coursera-engineering-data"]
+        "DOE": ["statistics-onramp", "coursera-engineering-data"],
+        "환경성": ["aiche-ccps-process-safety-beacon"]
       }
     });
 
@@ -2000,21 +2089,49 @@ export function applyRoleExpansions(context) {
       "kdcc-data-center-operation-study": ["전력·냉각 구성도 정리", "운영 로그와 알람 분석", "PUE·장애 대응 리포트"],
       "smartspace-data-center-electrical-guide": ["전력·냉각 구성도 정리", "PUE·장애 대응 리포트"],
       "keea-electrical-facility-operation-training": ["전력·냉각 구성도 정리", "운영 로그와 알람 분석", "PUE·장애 대응 리포트"],
+      "coursera-electric-power-systems": ["전력·냉각 구성도 정리"],
       "mathworks-simscape-fluids-examples": ["전력·냉각 구성도 정리", "PUE·장애 대응 리포트"],
       "semiengineering-advanced-packaging": ["패키지 구조·공정 흐름 정리", "신뢰성·FA 리포트"],
       "semiengineering-semiconductor-test": ["Test bin·수율 분석", "신뢰성·FA 리포트"],
       "opc-foundation-opcua-overview": ["설비 데이터 구조 정의", "OEE·정지 손실 분석"],
+      "coursera-digital-manufacturing-design": ["설비 데이터 구조 정의", "OEE·정지 손실 분석", "대시보드·비전검사 적용"],
       "statistics-onramp": ["Test bin·수율 분석", "OEE·정지 손실 분석"],
       "nist-control-charts": ["Test bin·수율 분석", "OEE·정지 손실 분석"],
       "nist-process-capability": ["Test bin·수율 분석", "신뢰성·FA 리포트", "OEE·정지 손실 분석"],
       "freecodecamp-python-data": ["Test bin·수율 분석", "설비 데이터 구조 정의", "OEE·정지 손실 분석", "대시보드·비전검사 적용"],
       "google-ml-crash-course": ["Test bin·수율 분석", "대시보드·비전검사 적용"],
+      "coursera-visual-perception-self-driving": ["대시보드·비전검사 적용"],
       "machine-learning-onramp": ["Test bin·수율 분석", "대시보드·비전검사 적용"],
       "aiche-ccps-process-safety-beacon": ["Scale-up·환경안전 검토"],
       "doe-hydrogen-production-delivery": ["신사업 화학공정 흐름도", "Scale-up·환경안전 검토"],
       "doe-carbon-capture-overview": ["신사업 화학공정 흐름도", "Scale-up·환경안전 검토"],
+      "coursera-introduction-sustainability": ["신사업 화학공정 흐름도", "Scale-up·환경안전 검토"],
       "learncheme-reactor-design": ["신사업 화학공정 흐름도", "분석·품질 데이터 연결"],
       "learncheme-separations": ["신사업 화학공정 흐름도", "Scale-up·환경안전 검토"]
+    }).forEach(([resourceId, taskTitles]) => {
+      resourceTaskLinks[resourceId] = mergeValues(resourceTaskLinks[resourceId], taskTitles);
+    });
+
+    [
+      ["kdcc-data-center-operation-study", ["전력·냉각 구성도 정리", "운영 로그와 알람 분석"]],
+      ["smartspace-data-center-electrical-guide", ["PUE·장애 대응 리포트"]],
+      ["keea-electrical-facility-operation-training", ["전력·냉각 구성도 정리", "운영 로그와 알람 분석"]],
+      ["mathworks-simscape-fluids-examples", ["전력·냉각 구성도 정리"]],
+      ["coursera-power-electronics", ["PCS·배터리 구성 검토", "보호·안전 로직 검증"]],
+      ["kocw-power-electronics-system-analysis", ["PCS·배터리 구성 검토", "보호·안전 로직 검증"]],
+      ["mathworks-simscape-electrical", ["보호·안전 로직 검증"]],
+      ["google-ml-crash-course", ["문제와 데이터 정의", "기준 모델 학습·평가"]]
+    ].forEach(([resourceId, taskTitles]) => removeResourceTaskLinks(resourceId, taskTitles));
+
+    Object.entries({
+      "ansys-innovation-courses": ["전력·냉각 구성도 정리"],
+      "simscape-onramp": ["PCS·배터리 구성 검토"],
+      "ti-precision-labs": ["PCS·배터리 구성 검토"],
+      "mathworks-predictive-maintenance": ["운영 로그와 알람 분석"],
+      "signal-processing-onramp": ["운영 로그와 알람 분석"],
+      "statistics-onramp": ["분석·품질 데이터 연결", "현장 적용 리스크 검토"],
+      "coursera-engineering-data": ["운영 로그와 알람 분석", "분석·품질 데이터 연결"],
+      "freecodecamp-python-data": ["운영 로그와 알람 분석", "산출물 정리"]
     }).forEach(([resourceId, taskTitles]) => {
       resourceTaskLinks[resourceId] = mergeValues(resourceTaskLinks[resourceId], taskTitles);
     });

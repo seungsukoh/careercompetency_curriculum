@@ -89,17 +89,29 @@ globalThis.__careerAudit = {
       && !isRoleExcludedResource(resource, context.role)
     ));
     const starterPack = getStarterPackResources(context, visibleTasks);
-    const roadmapByTask = visibleTasks.map((task) => ({
+    const roadmapResourceUseCounts = new Map();
+    const roadmapByTask = visibleTasks.map((task) => {
+      const linkedResources = getRoadmapResourcesForTask(track, task, context, roadmapResourceUseCounts);
+      linkedResources.forEach((resource) => {
+        roadmapResourceUseCounts.set(resource.id, (roadmapResourceUseCounts.get(resource.id) || 0) + 1);
+      });
+      return {
       title: task.baseTitle || task.title,
-      resources: getRoadmapResourcesForTask(track, task, context).map((resource) => ({
+      week: task.planWeek,
+      resources: linkedResources.map((resource) => ({
         id: resource.id,
         title: resource.title,
+        sequenceLevel: resource.sequenceLevel,
+        totalMinutes: resource.totalMinutes,
         trusted: ["reviewed", "verified"].includes(resource.qualityStatus),
         broad: Boolean(resource.broad),
+        reusable: isReusableRoadmapResource(resource),
         roleLinked: roleLinkedIds.has(resource.id),
-        taskLinked: getResourceLinkedTasks(resource.id, [task]).length > 0
+        taskLinked: getResourceLinkedTasks(resource.id, [task]).length > 0,
+        prerequisiteResourceIds: getResourcePrerequisiteResourceIds(resource, context)
       }))
-    }));
+    };
+    });
     const roleSearchText = getRoleSearchText(track, context.role);
     const roleCompetencies = (roleDiagnostics[roleId] || []).map(([skill, question]) => {
       const mappedResourceIds = new Set(getRoleCompetencyResourceIds(context.role, skill));
@@ -359,6 +371,69 @@ function auditEducationAlignment() {
       });
     }
 
+    const structuralResults = [
+      { durationWeeks: "4", result },
+      { durationWeeks: "8", result: auditApi.auditRole({ trackId: track.id, roleId: role.id, major, industry, durationWeeks: "8" }) }
+    ];
+    structuralResults.forEach(({ durationWeeks, result: structuralResult }) => {
+      const roadmapResourceWeeks = new Map();
+      structuralResult.roadmapByTask.forEach((task) => {
+        task.resources.forEach((resource) => {
+          const usages = roadmapResourceWeeks.get(resource.id) || [];
+          usages.push({
+            week: task.week,
+            task: task.title,
+            totalMinutes: resource.totalMinutes,
+            reusable: resource.reusable
+          });
+          roadmapResourceWeeks.set(resource.id, usages);
+        });
+      });
+      const duplicateShortResources = [...roadmapResourceWeeks.entries()]
+        .filter(([, usages]) => usages.length > 1 && usages.some((usage) => !usage.reusable));
+      if (duplicateShortResources.length) {
+        issues.push({
+          severity: "P2",
+          type: "duplicate_short_roadmap_resource",
+          role: role.id,
+          track: track.id,
+          message: `${roleLabel} repeats short one-shot resources across ${durationWeeks}w roadmap weeks: ${duplicateShortResources.map(([resourceId]) => resourceId).join(", ")}`,
+          details: duplicateShortResources.map(([resourceId, usages]) => ({
+            durationWeeks,
+            resourceId,
+            usages
+          }))
+        });
+      }
+
+      const firstWeekByResource = new Map();
+      structuralResult.roadmapByTask.forEach((task) => {
+        task.resources.forEach((resource) => {
+          if (!firstWeekByResource.has(resource.id)) firstWeekByResource.set(resource.id, task.week);
+        });
+      });
+      const sequenceBacktracks = structuralResult.roadmapByTask.flatMap((task) => task.resources
+        .flatMap((resource) => (resource.prerequisiteResourceIds || [])
+          .filter((prerequisiteId) => firstWeekByResource.has(prerequisiteId) && firstWeekByResource.get(prerequisiteId) > task.week)
+          .map((prerequisiteId) => ({
+            durationWeeks,
+            resourceId: resource.id,
+            resourceWeek: task.week,
+            prerequisiteId,
+            prerequisiteWeek: firstWeekByResource.get(prerequisiteId)
+          }))));
+      if (sequenceBacktracks.length) {
+        issues.push({
+          severity: "P2",
+          type: "roadmap_resource_sequence_backtrack",
+          role: role.id,
+          track: track.id,
+          message: `${roleLabel} schedules prerequisite resources after dependent resources in ${durationWeeks}w roadmap.`,
+          details: sequenceBacktracks
+        });
+      }
+    });
+
     const competencies = result.roleCompetencies || [];
     const textMatchedCompetencies = competencies.filter((competency) => competency.roleTextMatch);
     const linkedCoveredCompetencies = competencies.filter((competency) => competency.linkedResourceMatches.length);
@@ -437,7 +512,9 @@ function auditEducationAlignment() {
     roleNotSelectable: issues.filter((issue) => issue.type === "role_not_selectable_for_audit").length,
     lowRoleCompetencyCount: issues.filter((issue) => issue.type === "low_role_competency_count").length,
     weakRoleCompetencyTextAlignment: issues.filter((issue) => issue.type === "weak_role_competency_text_alignment").length,
-    weakRoleCompetencyEducationCoverage: issues.filter((issue) => issue.type === "weak_role_competency_education_coverage").length
+    weakRoleCompetencyEducationCoverage: issues.filter((issue) => issue.type === "weak_role_competency_education_coverage").length,
+    duplicateShortRoadmapResources: issues.filter((issue) => issue.type === "duplicate_short_roadmap_resource").length,
+    roadmapResourceSequenceBacktracks: issues.filter((issue) => issue.type === "roadmap_resource_sequence_backtrack").length
   };
 
   return { summary, issues, audited };

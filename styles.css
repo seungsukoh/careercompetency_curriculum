@@ -1448,6 +1448,44 @@ input::placeholder {
   overflow-wrap: anywhere;
 }
 
+.role-decision-card small {
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.role-decision-card.is-education {
+  align-content: start;
+}
+
+.role-education-preview {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.role-education-preview > span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding-top: 6px;
+  border-top: 1px solid var(--line);
+}
+
+.role-education-preview strong {
+  color: var(--ink);
+  font-size: 0.98rem;
+  line-height: 1.32;
+  overflow-wrap: anywhere;
+}
+
+.role-education-preview small {
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.35;
+}
+
 .selected-role-top {
   display: grid;
   grid-template-columns: 1fr;

@@ -98,7 +98,7 @@ tracks.splice(1, 0, {
 function normalizeResource(resource) {
   const estimatedMinutes = resource.estimatedMinutes ?? Math.max(30, (resource.hours || 1) * 60);
   const practiceMinutes = resource.practiceMinutes ?? getDefaultPracticeMinutes(resource.difficulty, estimatedMinutes);
-  const languageCode = resource.language === "한국어" ? "ko" : "en";
+  const languageCode = getResourceLanguageCode(resource.language);
   const expectedOutput = resource.expectedOutput ?? resource.output;
   const recommendedSections = normalizeRecommendedSections(resource.recommendedSections ?? getDefaultRecommendedSections(resource));
   const qualityStatus = resource.qualityStatus ?? (languageCode === "ko" ? "reviewed" : "candidate");
@@ -129,6 +129,10 @@ function normalizeResource(resource) {
       ...(resource.engagement || {})
     }
   };
+}
+
+function getResourceLanguageCode(language) {
+  return String(language || "").includes("한국어") ? "ko" : "en";
 }
 
 function normalizeRecommendedSections(sections) {
@@ -236,7 +240,7 @@ const resources = [
     title: "MATLAB Onramp",
     provider: "MathWorks",
     type: "무료교육",
-    language: "영어",
+    language: "한국어/영어",
     difficulty: "입문",
     hours: 2,
     tracks: ["mechanical-cae", "production-quality", "semiconductor-equipment", "chemical-process", "electronics-pcb", "embedded-control"],
@@ -251,11 +255,11 @@ const resources = [
     title: "Simulink Onramp",
     provider: "MathWorks",
     type: "무료교육",
-    language: "영어",
+    language: "한국어/영어",
     difficulty: "입문",
     estimatedMinutes: 120,
     practiceMinutes: 60,
-    sequenceLevel: 1,
+    sequenceLevel: 2,
     tracks: ["mechanical-cae", "production-quality", "electronics-pcb", "embedded-control", "semiconductor-equipment", "chemical-process"],
     skills: ["Simulink", "모델링", "제어", "검증"],
     prerequisites: ["MATLAB 기초"],
@@ -269,11 +273,11 @@ const resources = [
     title: "Stateflow Onramp",
     provider: "MathWorks",
     type: "무료교육",
-    language: "영어",
+    language: "한국어/영어",
     difficulty: "기초실습",
     estimatedMinutes: 90,
     practiceMinutes: 60,
-    sequenceLevel: 2,
+    sequenceLevel: 3,
     tracks: ["embedded-control", "electronics-pcb"],
     skills: ["Stateflow", "상태기계", "Fault처리", "검증"],
     prerequisites: ["Simulink 기초"],
@@ -287,11 +291,11 @@ const resources = [
     title: "Control Design Onramp with Simulink",
     provider: "MathWorks",
     type: "무료교육",
-    language: "영어",
+    language: "한국어/영어",
     difficulty: "기초실습",
     estimatedMinutes: 120,
     practiceMinutes: 90,
-    sequenceLevel: 2,
+    sequenceLevel: 3,
     core: true,
     tracks: ["embedded-control", "mechanical-cae", "electronics-pcb"],
     skills: ["제어", "PID", "Simulink", "검증"],
@@ -306,7 +310,7 @@ const resources = [
     title: "Signal Processing Onramp",
     provider: "MathWorks",
     type: "무료교육",
-    language: "영어",
+    language: "한국어/영어",
     difficulty: "기초실습",
     estimatedMinutes: 120,
     practiceMinutes: 60,
@@ -324,7 +328,7 @@ const resources = [
     title: "Machine Learning Onramp",
     provider: "MathWorks",
     type: "무료교육",
-    language: "영어",
+    language: "한국어/영어",
     difficulty: "기초실습",
     estimatedMinutes: 120,
     practiceMinutes: 90,
@@ -343,7 +347,7 @@ const resources = [
     title: "Statistics Onramp",
     provider: "MathWorks",
     type: "무료교육",
-    language: "영어",
+    language: "한국어/영어",
     difficulty: "기초실습",
     estimatedMinutes: 120,
     practiceMinutes: 90,
@@ -380,7 +384,7 @@ const resources = [
     title: "Simscape Onramp",
     provider: "MathWorks",
     type: "무료교육",
-    language: "영어",
+    language: "한국어/영어",
     difficulty: "기초실습",
     estimatedMinutes: 120,
     practiceMinutes: 90,
@@ -623,7 +627,7 @@ const resources = [
     title: "Sensor Fusion Onramp",
     provider: "MathWorks",
     type: "무료교육",
-    language: "영어",
+    language: "한국어/영어",
     difficulty: "적용",
     estimatedMinutes: 120,
     practiceMinutes: 90,
@@ -642,7 +646,7 @@ const resources = [
     title: "Optimization Onramp",
     provider: "MathWorks",
     type: "무료교육",
-    language: "영어",
+    language: "한국어/영어",
     difficulty: "적용",
     estimatedMinutes: 120,
     practiceMinutes: 90,
@@ -1413,6 +1417,7 @@ const resources = [
     prerequisites: ["물질수지", "열역학 기초"],
     reason: "화학공정, 소재, 배터리 직무에서 필요한 열역학 개념을 Coursera의 실제 화학공학 강좌로 보완합니다.",
     expectedOutput: "열역학 개념 2개와 적용할 직무 과제 기록",
+    recommendedSections: ["강좌 목차에서 thermodynamic properties, phase equilibrium, reaction/separation condition과 연결되는 단원", "조건 변화가 평형, 수율, 분리 가능성에 미치는 영향을 설명하는 예제", "HAZOP 자체보다 공정 조건 변경 근거를 보완할 수 있는 열역학 개념 정리 부분"],
     qualityStatus: "reviewed",
     engagement: {
       checkedAt: "2026-06-26",
@@ -1740,6 +1745,7 @@ const resources = [
     prerequisites: ["기초 통계"],
     reason: "품질·공정개선 직무에서 Six Sigma 원리와 개선 흐름을 실제 Coursera 과정으로 보완합니다.",
     expectedOutput: "품질 개선 과제에 적용할 Six Sigma 도구 1개와 적용 메모",
+    recommendedSections: ["DMAIC 흐름과 문제정의 단원", "process capability, variation, control 관점으로 Cp/Cpk와 관리도 해석을 보완하는 단원", "root cause, improvement action을 8D/FMEA 산출물로 옮길 수 있는 사례 부분"],
     qualityStatus: "reviewed",
     engagement: {
       checkedAt: "2026-06-26",
@@ -1762,6 +1768,7 @@ const resources = [
     prerequisites: ["기초 통계", "스프레드시트 또는 Python 기초"],
     reason: "공정·수율·시험 데이터를 다루는 직무에서 Python 기반 데이터 분석 흐름을 실제 Coursera 과정으로 보완합니다.",
     expectedOutput: "공정 또는 시험 데이터 분석 강좌 1개와 적용할 데이터 과제",
+    recommendedSections: ["data wrangling/cleaning으로 공정·시험 로그를 정리하는 단원", "exploratory data analysis와 visualization으로 수율·불량·시험 결과를 비교하는 단원", "model evaluation 또는 correlation 해석을 개선 가설 근거로 쓰는 단원"],
     qualityStatus: "reviewed",
     engagement: {
       checkedAt: "2026-06-26",
@@ -1784,12 +1791,244 @@ const resources = [
     prerequisites: ["C언어 기초", "제어공학 기초"],
     reason: "펌웨어·제어 직무에서 C 기반 임베디드 개발환경과 디버깅 흐름을 실제 Coursera 과정으로 보완합니다.",
     expectedOutput: "임베디드·제어 강좌 1개와 PID/센서 과제 적용 메모",
+    recommendedSections: ["C 기반 embedded software build/debug 흐름을 다루는 단원", "memory, register, peripheral interface처럼 MCU 주변장치 설명에 필요한 단원", "테스트 로그나 디버깅 노트를 남길 수 있는 assignment 또는 실습 부분"],
     qualityStatus: "reviewed",
     engagement: {
       checkedAt: "2026-06-26",
       nextReviewAt: "2026-07-26"
     },
     url: "https://www.coursera.org/learn/introduction-embedded-systems"
+  },
+  {
+    id: "coursera-intro-self-driving-cars",
+    title: "Coursera Introduction to Self-Driving Cars",
+    provider: "Coursera",
+    type: "글로벌 무료청강",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 150,
+    practiceMinutes: 120,
+    sequenceLevel: 3,
+    tracks: ["autonomous-sdv", "automotive-mobility"],
+    skills: ["자율주행", "센서융합", "차량모델", "제어", "검증"],
+    prerequisites: ["Python 기초", "선형대수·제어 기초"],
+    reason: "자율주행 직무의 센서, 차량 모델, 제어, 검증 흐름을 한 번에 잡는 Coursera 과정입니다. 세부 직무를 고르기 전 기능 요구사항을 분해하는 데 적합합니다.",
+    expectedOutput: "자율주행 기능 스택과 지원 직무 산출물 연결표",
+    recommendedSections: ["vehicle models와 autonomous driving architecture를 설명하는 단원", "sensor, perception, localization, control 역할을 구분하는 단원", "주행 기능을 requirement, input, output, validation metric으로 나누는 과제 부분"],
+    qualityStatus: "reviewed",
+    engagement: {
+      checkedAt: "2026-07-01",
+      nextReviewAt: "2026-08-01"
+    },
+    url: "https://www.coursera.org/learn/intro-self-driving-cars"
+  },
+  {
+    id: "coursera-state-estimation-localization",
+    title: "Coursera State Estimation and Localization for Self-Driving Cars",
+    provider: "Coursera",
+    type: "글로벌 무료청강",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 150,
+    practiceMinutes: 150,
+    sequenceLevel: 4,
+    tracks: ["autonomous-sdv", "robotics-automation", "aerospace-defense"],
+    skills: ["Localization", "Sensor fusion", "Kalman filter", "IMU/GNSS", "상태추정"],
+    prerequisites: ["선형대수", "확률·통계", "센서융합 기초"],
+    reason: "GNSS, IMU, 센서 데이터를 상태추정과 위치추정 문제로 연결하는 과정입니다. 자율주행·로봇·UAV 로그 분석 산출물에 직접 맞습니다.",
+    expectedOutput: "센서 입력, 상태 변수, 추정 오차, 검증 지표 정리표",
+    recommendedSections: ["state estimation problem setup과 coordinate frame 단원", "Kalman filter 또는 sensor fusion 업데이트 식을 다루는 단원", "위치 오차와 센서 노이즈를 로그 분석 지표로 해석하는 과제 부분"],
+    qualityStatus: "reviewed",
+    engagement: {
+      checkedAt: "2026-07-01",
+      nextReviewAt: "2026-08-01"
+    },
+    url: "https://www.coursera.org/learn/state-estimation-localization-self-driving-cars"
+  },
+  {
+    id: "coursera-visual-perception-self-driving",
+    title: "Coursera Visual Perception for Self-Driving Cars",
+    provider: "Coursera",
+    type: "글로벌 무료청강",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 150,
+    practiceMinutes: 150,
+    sequenceLevel: 4,
+    tracks: ["autonomous-sdv", "ai-engineering", "robotics-automation"],
+    skills: ["컴퓨터비전", "Perception", "라벨링", "모델평가", "센서"],
+    prerequisites: ["Python 기초", "머신러닝 기초", "영상 데이터 이해"],
+    reason: "카메라 기반 인지와 평가 기준을 다루는 과정입니다. 자율주행 인지뿐 아니라 제조 비전검사 직무의 라벨·오탐·미탐 기준에도 연결됩니다.",
+    expectedOutput: "인지 모델 입력, 라벨 기준, 평가 지표, 실패 사례 메모",
+    recommendedSections: ["camera model과 feature/visual perception 개념 단원", "object detection 또는 segmentation 평가 지표를 다루는 단원", "오탐·미탐 사례를 라벨 기준과 시나리오로 정리하는 과제 부분"],
+    qualityStatus: "reviewed",
+    engagement: {
+      checkedAt: "2026-07-01",
+      nextReviewAt: "2026-08-01"
+    },
+    url: "https://www.coursera.org/learn/visual-perception-self-driving-cars"
+  },
+  {
+    id: "coursera-motion-planning-self-driving",
+    title: "Coursera Motion Planning for Self-Driving Cars",
+    provider: "Coursera",
+    type: "글로벌 무료청강",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 150,
+    practiceMinutes: 150,
+    sequenceLevel: 4,
+    tracks: ["autonomous-sdv", "robotics-automation"],
+    skills: ["경로계획", "Trajectory", "Control", "Scenario", "검증"],
+    prerequisites: ["자율주행 기능 이해", "제어 기초", "Python 기초"],
+    reason: "차선 변경, 추종, 정지 같은 행동을 trajectory와 검증 시나리오로 바꾸는 과정입니다. Planning/Control과 시뮬레이션 검증 직무에 맞습니다.",
+    expectedOutput: "주행 시나리오, 경로 제약, 평가 지표, 실패 조건 표",
+    recommendedSections: ["behavior planning과 motion planning 문제 정의 단원", "trajectory generation과 safety/comfort constraint 단원", "scenario별 pass/fail 기준을 만들 수 있는 project 또는 assignment 부분"],
+    qualityStatus: "reviewed",
+    engagement: {
+      checkedAt: "2026-07-01",
+      nextReviewAt: "2026-08-01"
+    },
+    url: "https://www.coursera.org/learn/motion-planning-self-driving-cars"
+  },
+  {
+    id: "coursera-battery-management-systems",
+    title: "Coursera Algorithms for Battery Management Systems",
+    provider: "Coursera",
+    type: "글로벌 무료청강",
+    language: "영어",
+    difficulty: "적용",
+    estimatedMinutes: 150,
+    practiceMinutes: 150,
+    sequenceLevel: 4,
+    tracks: ["energy-ess", "automotive-mobility"],
+    skills: ["BMS", "SOC/SOH", "셀 밸런싱", "충방전", "로그분석"],
+    prerequisites: ["회로 기초", "배터리 기초", "MATLAB/Python 기초"],
+    reason: "SOC/SOH 추정, 셀 밸런싱, 충방전 제한처럼 BMS 직무에서 반복되는 알고리즘 개념을 Coursera 과정으로 보완합니다.",
+    expectedOutput: "BMS 입력 신호, 상태 추정, 안전 제한, 검증 로그 정리표",
+    recommendedSections: ["battery cell model과 SOC/SOH estimation 단원", "balancing, current/voltage/temperature limit을 다루는 단원", "충방전 로그를 상태 추정과 안전 판정 기준으로 연결하는 assignment 부분"],
+    qualityStatus: "reviewed",
+    engagement: {
+      checkedAt: "2026-07-01",
+      nextReviewAt: "2026-08-01"
+    },
+    url: "https://www.coursera.org/learn/battery-management-systems"
+  },
+  {
+    id: "coursera-power-electronics",
+    title: "Coursera Introduction to Power Electronics",
+    provider: "Coursera",
+    type: "글로벌 무료청강",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 150,
+    practiceMinutes: 120,
+    sequenceLevel: 3,
+    tracks: ["energy-ess", "electronics-pcb", "automotive-mobility"],
+    skills: ["전력전자", "DC-DC", "인버터", "스위칭", "보호회로"],
+    prerequisites: ["회로이론", "전자회로 기초"],
+    reason: "컨버터, 인버터, 스위칭, 리플, 효율을 전력전자 직무 산출물로 연결할 수 있는 Coursera 과정입니다.",
+    expectedOutput: "전력 변환 회로 요구사항과 계측·보호 검토표",
+    recommendedSections: ["switching converter 기본 원리와 duty cycle 단원", "converter ripple, efficiency, loss를 해석하는 단원", "전압·전류·보호 조건을 시험 항목으로 바꿀 수 있는 예제 부분"],
+    qualityStatus: "reviewed",
+    engagement: {
+      checkedAt: "2026-07-01",
+      nextReviewAt: "2026-08-01"
+    },
+    url: "https://www.coursera.org/learn/power-electronics"
+  },
+  {
+    id: "coursera-electric-power-systems",
+    title: "Coursera Electric Power Systems",
+    provider: "Coursera",
+    type: "글로벌 무료청강",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 150,
+    practiceMinutes: 120,
+    sequenceLevel: 3,
+    tracks: ["energy-ess", "data-center-infra"],
+    skills: ["전력계통", "수배전", "전력품질", "보호", "운영"],
+    prerequisites: ["전기회로", "전력공학 기초"],
+    reason: "수배전, 전력 흐름, 전력품질, 보호 관점을 전력·ESS와 데이터센터 인프라 산출물에 연결할 수 있는 과정입니다.",
+    expectedOutput: "전력 단선도, 부하 조건, 보호·장애 대응 체크리스트",
+    recommendedSections: ["generation, transmission, distribution 기본 구조 단원", "power flow, voltage, load, protection 관점을 다루는 단원", "데이터센터나 ESS 전력 요구사항을 단선도와 알람 대응 기준으로 바꾸는 적용 메모"],
+    qualityStatus: "reviewed",
+    engagement: {
+      checkedAt: "2026-07-01",
+      nextReviewAt: "2026-08-01"
+    },
+    url: "https://www.coursera.org/learn/electric-power-systems"
+  },
+  {
+    id: "coursera-digital-manufacturing-design",
+    title: "Coursera Digital Manufacturing & Design",
+    provider: "Coursera",
+    type: "글로벌 무료청강",
+    language: "영어",
+    difficulty: "기초실습",
+    estimatedMinutes: 120,
+    practiceMinutes: 90,
+    sequenceLevel: 3,
+    tracks: ["manufacturing-dx", "production-quality", "automotive-mobility"],
+    skills: ["디지털제조", "공정설계", "CAD/CAM", "품질", "산출물 정리"],
+    prerequisites: ["제조공정 기초", "도면·공정 흐름 이해"],
+    reason: "디지털 제조 흐름과 설계-생산 데이터 연결을 다루는 과정입니다. 생산기술, 스마트팩토리, 자동차 제조 직무의 공정 산출물에 적합합니다.",
+    expectedOutput: "설계-공정-품질 데이터 연결도와 개선 과제 정의서",
+    recommendedSections: ["digital thread, manufacturing system, product/process data를 설명하는 단원", "설계 변경이 공정과 품질 지표에 미치는 영향을 다루는 단원", "공정 문제를 데이터와 산출물로 정리하는 project 또는 case 부분"],
+    qualityStatus: "reviewed",
+    engagement: {
+      checkedAt: "2026-07-01",
+      nextReviewAt: "2026-08-01"
+    },
+    url: "https://www.coursera.org/learn/digital-manufacturing-design"
+  },
+  {
+    id: "coursera-solar-energy-basics",
+    title: "Coursera Solar Energy Basics",
+    provider: "Coursera",
+    type: "글로벌 무료청강",
+    language: "영어",
+    difficulty: "입문",
+    estimatedMinutes: 120,
+    practiceMinutes: 90,
+    sequenceLevel: 2,
+    tracks: ["energy-ess"],
+    skills: ["재생에너지", "태양광", "계통연계", "발전량", "경제성"],
+    prerequisites: ["전기·에너지 기초"],
+    reason: "재생에너지와 ESS 연계 직무에서 발전량, 부하, 계통 연계, 경제성 관점을 빠르게 보완할 수 있는 과정입니다.",
+    expectedOutput: "태양광-ESS 구성, 부하 조건, 계통 연계 검토 메모",
+    recommendedSections: ["solar resource와 PV system 구성 단원", "발전량, 부하, 저장장치 연계를 계산하는 단원", "재생에너지 적용 가능성을 요구사항표로 바꾸는 과제 부분"],
+    qualityStatus: "reviewed",
+    engagement: {
+      checkedAt: "2026-07-01",
+      nextReviewAt: "2026-08-01"
+    },
+    url: "https://www.coursera.org/learn/solar-energy-basics"
+  },
+  {
+    id: "coursera-introduction-sustainability",
+    title: "Coursera Introduction to Sustainability",
+    provider: "Coursera",
+    type: "글로벌 무료청강",
+    language: "영어",
+    difficulty: "입문",
+    estimatedMinutes: 120,
+    practiceMinutes: 90,
+    sequenceLevel: 2,
+    tracks: ["chemical-sustainability"],
+    skills: ["지속가능성", "환경영향", "자원순환", "리스크", "정책"],
+    prerequisites: ["환경·공정 기초"],
+    reason: "수소, CCUS, 수처리, 리사이클처럼 지속가능 공정 직무를 볼 때 기술·환경·정책 리스크를 함께 정리하는 보완 과정입니다.",
+    expectedOutput: "공정 선택안의 환경영향, 리스크, 이해관계자 체크리스트",
+    recommendedSections: ["sustainability framework와 system thinking 단원", "resource, energy, pollution, policy trade-off를 다루는 단원", "기술 선택안을 환경·운영 리스크로 정리하는 case 부분"],
+    qualityStatus: "candidate",
+    broad: true,
+    engagement: {
+      checkedAt: "2026-07-01",
+      nextReviewAt: "2026-08-01"
+    },
+    url: "https://www.coursera.org/learn/sustainability"
   },
   {
     id: "edx-engineering-systems",
@@ -4489,7 +4728,7 @@ const resourceTaskLinks = {
   "ros-tutorials": ["MCU 주변장치 설계", "디버깅 노트와 README"],
   "mit-microelectronic": ["공정 흐름 매핑", "전원 요구사항 정의"],
   "mit-semiconductor-devices": ["공정 흐름 매핑", "식각 장비 변수 정리"],
-  "kocw-semiconductor-process-cbnu": ["공정 흐름 매핑", "식각 장비 변수 정리", "조건 변경 검토표"],
+  "kocw-semiconductor-process-cbnu": ["식각 장비 변수 정리"],
   "semiengineering-lithography": ["포토 공정 window 검토표", "공정 조건 변경 검토표"],
   "semiengineering-deposition": ["증착 박막 trend 분석표", "장비 이상 대응표"],
   "semiengineering-cmp": ["CMP 조건·결함 원인 가설표", "공정 조건 변경 검토표"],
@@ -4510,7 +4749,7 @@ const resourceTaskLinks = {
   "mit-chemical-engineering": ["물질수지와 수율 계산", "반응·분리 조건 비교"],
   "kocw-chemical-process": ["화학공정 흐름도", "물질수지와 수율 계산", "반응·분리 조건 비교"],
   "kosha-psm": ["HAZOP 안전 체크", "조건 변경 검토표"],
-  "coursera-chemical-engineering": ["반응·분리 조건 비교", "HAZOP 안전 체크"],
+  "coursera-chemical-engineering": ["반응·분리 조건 비교", "조건 변경 검토표"],
   "nptel-chemical-engineering": ["물질수지와 수율 계산", "반응·분리 조건 비교"],
   kmooc: ["제품 요구사항 분해", "공정 문제 정의", "공정 흐름 매핑", "화학공정 흐름도", "전원 요구사항 정의", "MCU 주변장치 설계"],
   "kocw-mechanical-design": ["제품 요구사항 분해", "손계산과 CAD 초안", "해석 조건 검증"],
@@ -4525,7 +4764,17 @@ const resourceTaskLinks = {
   "gseek-career-certificate": ["제품 요구사항 분해", "공정 문제 정의", "전원 요구사항 정의", "MCU 주변장치 설계"],
   "coursera-six-sigma-quality": ["공정 문제 정의", "관리도와 Cpk 계산", "원인 가설과 FMEA", "8D 개선 보고서", "조건 변경 검토표"],
   "coursera-engineering-data": ["관리도와 Cpk 계산", "수율 Pareto 분석", "해석 조건 검증", "조건 변경 검토표", "물질수지와 수율 계산"],
-  "coursera-embedded-control": ["PID 응답 실험", "UART 센서 프로토콜", "디버깅 노트와 README", "검증 리포트"],
+  "coursera-embedded-control": ["MCU 주변장치 설계", "UART 센서 프로토콜", "디버깅 노트와 README", "검증 리포트"],
+  "coursera-intro-self-driving-cars": ["자율주행 기능 요구사항 분해", "센서·차량 로그 구조 정리", "시나리오·SW 인터페이스 검증"],
+  "coursera-state-estimation-localization": ["자율주행 기능 요구사항 분해", "센서·차량 로그 구조 정리", "비행·센서 모델 확인", "제어·경로 계획 실습"],
+  "coursera-visual-perception-self-driving": ["자율주행 기능 요구사항 분해", "센서·차량 로그 구조 정리", "대시보드·비전검사 적용"],
+  "coursera-motion-planning-self-driving": ["자율주행 기능 요구사항 분해", "시나리오·SW 인터페이스 검증", "차량 SW 검증 리포트", "제어·경로 계획 실습"],
+  "coursera-battery-management-systems": ["PCS·배터리 구성 검토", "보호·안전 로직 검증", "운영 데이터 분석 리포트"],
+  "coursera-power-electronics": ["전력·부하 요구사항 정의", "PCS·배터리 구성 검토", "보호·안전 로직 검증", "전원 요구사항 정의", "자동차 핵심 역량 실습"],
+  "coursera-electric-power-systems": ["전력·부하 요구사항 정의", "전력·냉각 구성도 정리"],
+  "coursera-digital-manufacturing-design": ["공정 문제 정의", "조건 변경 검토표", "OEE·정지 손실 분석", "설비 데이터 구조 정의"],
+  "coursera-solar-energy-basics": ["전력·부하 요구사항 정의", "PCS·배터리 구성 검토"],
+  "coursera-introduction-sustainability": ["신사업 화학공정 흐름도", "Scale-up·환경안전 검토"],
   "edx-engineering-systems": ["해석 조건 검증", "공정 흐름 매핑", "화학공정 흐름도", "전원 요구사항 정의", "PID 응답 실험"],
   "khan-math-physics-basics": ["손계산과 CAD 초안", "관리도와 Cpk 계산", "전원 요구사항 정의", "PID 응답 실험", "물질수지와 수율 계산"],
   "freecodecamp-python-data": ["관리도와 Cpk 계산", "수율 Pareto 분석", "물질수지와 수율 계산", "디버깅 노트와 README"],
@@ -4540,7 +4789,7 @@ const resourceTaskLinks = {
   "youtube-skilllync-ev-crash-course": ["자동차 세부 직무 비교표", "차량 시스템 요구사항표", "인터페이스·시험 조건 노트"],
   "youtube-mathworks-hil-testing": ["검증 리포트", "PID 응답 실험", "인터페이스·시험 조건 노트", "자동차 직무 검증 리포트"],
   "youtube-emc-emi-basics": ["전원 요구사항 정의", "PCB 리뷰 체크리스트", "검증 리포트", "자동차 직무 검증 리포트"],
-  "youtube-nptel-hazop": ["HAZOP 안전 체크", "화학공정 흐름도", "조건 변경 검토표"],
+  "youtube-nptel-hazop": ["HAZOP 안전 체크"],
   "youtube-cqe-quality-tools": ["공정 문제 정의", "관리도와 Cpk 계산", "원인 가설과 FMEA", "8D 개선 보고서"],
   "mathworks-simulink-examples": ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트", "PID 응답 실험", "검증 리포트"],
   "mathworks-fault-tolerant-fuel-control": ["인터페이스·시험 조건 노트", "자동차 직무 검증 리포트", "PID 응답 실험", "검증 리포트"],
@@ -4602,10 +4851,10 @@ const roleResourceLinks = {
   "manufacturing-design-engineer": ["mit-mechanics-materials", "mit-design-manufacturing", "kocw-mechanical-design", "step-engineering", "optimization-onramp", "hrd-net-job-training", "udemy-free-practical-tools"],
   "thermal-cfd-engineer": ["mit-fea-solids", "matlab-onramp", "simscape-onramp", "mit-numerical-me", "signal-processing-onramp", "edx-engineering-systems", "coursera-engineering-data"],
   "mechanical-test-engineer": ["matlab-onramp", "signal-processing-onramp", "mathworks-predictive-maintenance", "step-engineering", "kocw-mechanical-design", "hrd-net-job-training", "youtube-nptel-vehicle-dynamics", "youtube-mathworks-hil-testing"],
-  "process-engineer": ["nist-control-charts", "nist-process-capability", "statistics-onramp", "moresteam-doe", "matlab-onramp", "optimization-onramp", "coursera-six-sigma-quality", "kocw-production-quality", "coursera-engineering-data", "hrd-net-job-training"],
+  "process-engineer": ["nist-control-charts", "nist-process-capability", "statistics-onramp", "moresteam-doe", "matlab-onramp", "optimization-onramp", "coursera-six-sigma-quality", "kocw-production-quality", "coursera-engineering-data", "coursera-digital-manufacturing-design", "hrd-net-job-training"],
   "quality-engineer": ["nist-control-charts", "nist-process-capability", "kocw-production-quality", "statistics-onramp", "coursera-six-sigma-quality", "asq-fmea", "asq-eight-d", "quality-one-fmea", "hrd-net-job-training", "gseek-career-certificate"],
   "production-data-engineer": ["nist-control-charts", "matlab-onramp", "statistics-onramp", "machine-learning-onramp", "mathworks-predictive-maintenance", "kocw-production-quality", "coursera-engineering-data", "freecodecamp-python-data", "digital-learning-ai-it-basics"],
-  "production-technology-engineer": ["step-engineering", "mathworks-predictive-maintenance", "moresteam-doe", "simulink-onramp", "optimization-onramp", "hrd-net-job-training", "udemy-free-practical-tools"],
+  "production-technology-engineer": ["step-engineering", "mathworks-predictive-maintenance", "moresteam-doe", "simulink-onramp", "optimization-onramp", "coursera-digital-manufacturing-design", "hrd-net-job-training", "udemy-free-practical-tools"],
   "supplier-quality-engineer": ["asq-eight-d", "quality-one-fmea", "coursera-six-sigma-quality", "lean-a3-problem-solving", "ncs", "hrd-net-job-training", "gseek-career-certificate"],
   "semiconductor-process-engineer": ["kocw-semiconductor-process-cbnu", "mit-semiconductor-devices", "plasma-etch-core", "kocw-semiconductor", "statistics-onramp", "nist-control-charts", "moresteam-doe", "matlab-onramp", "optimization-onramp", "edx-engineering-systems", "coursera-engineering-data"],
   "semiconductor-equipment-engineer": ["kocw-semiconductor-process-cbnu", "mathworks-predictive-maintenance", "mit-semiconductor-devices", "kocw-semiconductor", "simulink-onramp", "simscape-onramp", "matlab-onramp", "signal-processing-onramp", "edx-engineering-systems", "hrd-net-job-training", "plasma-etch-core"],
@@ -4627,7 +4876,7 @@ const roleResourceLinks = {
   "hardware-design-engineer": ["allaboutcircuits-textbook", "mit-circuits", "ti-precision-labs", "mathworks-simscape-electrical", "simscape-onramp", "analog-dialogue", "matlab-onramp", "edx-engineering-systems", "khan-math-physics-basics"],
   "pcb-design-engineer": ["kicad-pcb-docs", "allaboutcircuits-textbook", "kocw-electronics-circuit", "ti-precision-labs", "analog-dialogue", "step-engineering", "inflearn-free-it-practice", "udemy-free-practical-tools"],
   "validation-engineer": ["signal-processing-onramp", "matlab-onramp", "ti-precision-labs", "analog-dialogue", "simulink-onramp", "freecodecamp-python-data", "youtube-mathworks-hil-testing"],
-  "power-hardware-engineer": ["mathworks-simscape-electrical", "kocw-power-electronics-system-analysis", "simscape-onramp", "ti-precision-labs", "kocw-electronics-circuit", "simulink-onramp", "edx-engineering-systems", "khan-math-physics-basics"],
+  "power-hardware-engineer": ["mathworks-simscape-electrical", "kocw-power-electronics-system-analysis", "coursera-power-electronics", "simscape-onramp", "ti-precision-labs", "kocw-electronics-circuit", "simulink-onramp", "edx-engineering-systems", "khan-math-physics-basics"],
   "emc-test-engineer": ["signal-processing-onramp", "analog-dialogue", "ti-precision-labs", "kocw-electronics-circuit", "udemy-free-practical-tools", "youtube-emc-emi-basics"],
   "embedded-firmware-engineer": ["stm32-mooc-gpio-timer-uart", "arm-embedded-systems", "stm32-education", "kocw-embedded-control", "stateflow-onramp", "simulink-onramp", "freecodecamp-python-data", "inflearn-free-it-practice", "youtube-css-can-bus"],
   "control-engineer": ["control-design-onramp", "simulink-onramp", "matlab-onramp", "signal-processing-onramp", "mathworks-simscape-electrical", "sensor-fusion-onramp", "coursera-embedded-control", "edx-engineering-systems"],
@@ -4640,6 +4889,12 @@ const roleResourceExclusions = {
   "thermal-cfd-engineer": ["youtube-nptel-vehicle-dynamics"],
   "vehicle-interior-exterior-design-engineer": [
     "allaboutcircuits-textbook",
+    "coursera-battery-management-systems",
+    "coursera-digital-manufacturing-design",
+    "coursera-intro-self-driving-cars",
+    "coursera-motion-planning-self-driving",
+    "coursera-state-estimation-localization",
+    "coursera-visual-perception-self-driving",
     "kicad-pcb-docs",
     "kocw-power-electronics-system-analysis",
     "control-design-onramp",
@@ -4656,6 +4911,10 @@ const roleResourceExclusions = {
   ],
   "robot-mechanical-design-engineer": [
     "control-design-onramp",
+    "coursera-intro-self-driving-cars",
+    "coursera-motion-planning-self-driving",
+    "coursera-state-estimation-localization",
+    "coursera-visual-perception-self-driving",
     "mathworks-ros-toolbox-examples",
     "mathworks-predictive-maintenance",
     "ros-tutorials",
@@ -4664,12 +4923,145 @@ const roleResourceExclusions = {
     "ni-learn-test-measurement"
   ],
   "data-center-cooling-engineer": [
+    "coursera-electric-power-systems",
     "keea-electrical-facility-operation-training",
     "mathworks-simscape-electrical",
     "ti-power-management-training",
     "ni-learn-test-measurement"
   ],
-  "predictive-maintenance-ai-engineer": ["mathworks-ros-toolbox-examples", "nvidia-jetson-ai-course"]
+  "dcim-bms-operations-engineer": ["coursera-electric-power-systems"],
+  "vehicle-body-design-engineer": [
+    "coursera-battery-management-systems",
+    "coursera-digital-manufacturing-design",
+    "coursera-intro-self-driving-cars",
+    "coursera-motion-planning-self-driving",
+    "coursera-state-estimation-localization",
+    "coursera-visual-perception-self-driving"
+  ],
+  "chassis-suspension-engineer": [
+    "coursera-battery-management-systems",
+    "coursera-digital-manufacturing-design",
+    "coursera-intro-self-driving-cars",
+    "coursera-motion-planning-self-driving",
+    "coursera-state-estimation-localization",
+    "coursera-visual-perception-self-driving"
+  ],
+  "powertrain-mechanical-engineer": [
+    "coursera-battery-management-systems",
+    "coursera-digital-manufacturing-design",
+    "coursera-intro-self-driving-cars",
+    "coursera-motion-planning-self-driving",
+    "coursera-state-estimation-localization",
+    "coursera-visual-perception-self-driving"
+  ],
+  "vehicle-thermal-management-engineer": [
+    "coursera-battery-management-systems",
+    "coursera-digital-manufacturing-design",
+    "coursera-intro-self-driving-cars",
+    "coursera-motion-planning-self-driving",
+    "coursera-state-estimation-localization",
+    "coursera-visual-perception-self-driving"
+  ],
+  "vehicle-calibration-engineer": [
+    "coursera-battery-management-systems",
+    "coursera-digital-manufacturing-design",
+    "coursera-intro-self-driving-cars",
+    "coursera-motion-planning-self-driving",
+    "coursera-state-estimation-localization",
+    "coursera-visual-perception-self-driving"
+  ],
+  "hil-sil-validation-engineer": [
+    "coursera-battery-management-systems",
+    "coursera-digital-manufacturing-design",
+    "coursera-intro-self-driving-cars",
+    "coursera-motion-planning-self-driving",
+    "coursera-state-estimation-localization",
+    "coursera-visual-perception-self-driving"
+  ],
+  "functional-safety-engineer": [
+    "coursera-battery-management-systems",
+    "coursera-digital-manufacturing-design",
+    "coursera-intro-self-driving-cars",
+    "coursera-motion-planning-self-driving",
+    "coursera-state-estimation-localization",
+    "coursera-visual-perception-self-driving"
+  ],
+  "vehicle-test-validation-engineer": [
+    "coursera-battery-management-systems",
+    "coursera-digital-manufacturing-design",
+    "coursera-intro-self-driving-cars",
+    "coursera-motion-planning-self-driving",
+    "coursera-state-estimation-localization",
+    "coursera-visual-perception-self-driving"
+  ],
+  "pcb-design-engineer": ["coursera-power-electronics"],
+  "defense-systems-engineer": [
+    "coursera-intro-self-driving-cars",
+    "coursera-motion-planning-self-driving",
+    "coursera-state-estimation-localization",
+    "coursera-visual-perception-self-driving"
+  ],
+  "smart-factory-automation-engineer": [
+    "coursera-intro-self-driving-cars",
+    "coursera-motion-planning-self-driving",
+    "coursera-state-estimation-localization",
+    "coursera-visual-perception-self-driving"
+  ],
+  "power-systems-engineer": [
+    "coursera-battery-management-systems",
+    "coursera-power-electronics",
+    "coursera-solar-energy-basics"
+  ],
+  "ess-bms-engineer": [
+    "coursera-electric-power-systems",
+    "coursera-solar-energy-basics"
+  ],
+  "power-electronics-inverter-engineer": [
+    "coursera-battery-management-systems",
+    "coursera-electric-power-systems",
+    "coursera-solar-energy-basics"
+  ],
+  "electric-machine-drive-engineer": [
+    "coursera-battery-management-systems",
+    "coursera-electric-power-systems",
+    "coursera-solar-energy-basics"
+  ],
+  "renewable-energy-grid-engineer": ["coursera-battery-management-systems"],
+  "vehicle-sw-platform-engineer": [
+    "coursera-intro-self-driving-cars",
+    "coursera-motion-planning-self-driving",
+    "coursera-state-estimation-localization",
+    "coursera-visual-perception-self-driving"
+  ],
+  "vehicle-diagnostics-ota-engineer": [
+    "coursera-intro-self-driving-cars",
+    "coursera-motion-planning-self-driving",
+    "coursera-state-estimation-localization",
+    "coursera-visual-perception-self-driving"
+  ],
+  "vehicle-cybersecurity-engineer": [
+    "coursera-intro-self-driving-cars",
+    "coursera-motion-planning-self-driving",
+    "coursera-state-estimation-localization",
+    "coursera-visual-perception-self-driving"
+  ],
+  "manufacturing-ai-engineer": ["coursera-visual-perception-self-driving"],
+  "predictive-maintenance-ai-engineer": [
+    "coursera-visual-perception-self-driving",
+    "mathworks-ros-toolbox-examples",
+    "nvidia-jetson-ai-course"
+  ],
+  "engineering-data-analyst": [
+    "coursera-intro-self-driving-cars",
+    "coursera-state-estimation-localization",
+    "coursera-visual-perception-self-driving",
+    "coursera-motion-planning-self-driving"
+  ],
+  "simulation-ai-engineer": [
+    "coursera-intro-self-driving-cars",
+    "coursera-visual-perception-self-driving",
+    "coursera-motion-planning-self-driving"
+  ]
 };
 
 const roleCompetencyResourceLinks = {};
@@ -4691,17 +5083,17 @@ Object.assign(roleResourceLinks, {
   "chassis-suspension-engineer": ["mit-mechanics-materials", "mit-fea-solids", "matlab-onramp", "simulink-onramp", "signal-processing-onramp", "optimization-onramp", "coursera-engineering-data", "youtube-nptel-vehicle-dynamics"],
   "powertrain-mechanical-engineer": ["mit-mechanics-materials", "mit-fea-solids", "simscape-onramp", "matlab-onramp", "signal-processing-onramp", "mathworks-predictive-maintenance", "edx-engineering-systems", "youtube-skilllync-ev-crash-course"],
   "vehicle-thermal-management-engineer": ["mit-fea-solids", "mit-numerical-me", "matlab-onramp", "simscape-onramp", "signal-processing-onramp", "coursera-engineering-data", "edx-engineering-systems", "youtube-skilllync-ev-crash-course"],
-  "ev-battery-pack-engineer": ["simscape-onramp", "mathworks-simscape-electrical", "matlab-onramp", "signal-processing-onramp", "statistics-onramp", "kocw-electronics-circuit", "hrd-net-job-training", "youtube-skilllync-ev-crash-course"],
-  "bms-control-engineer": ["simulink-onramp", "stateflow-onramp", "control-design-onramp", "simscape-onramp", "mathworks-simscape-electrical", "matlab-onramp", "signal-processing-onramp", "youtube-css-can-bus", "youtube-skilllync-ev-crash-course"],
+  "ev-battery-pack-engineer": ["coursera-battery-management-systems", "simscape-onramp", "mathworks-simscape-electrical", "matlab-onramp", "signal-processing-onramp", "statistics-onramp", "kocw-electronics-circuit", "hrd-net-job-training", "youtube-skilllync-ev-crash-course"],
+  "bms-control-engineer": ["coursera-battery-management-systems", "simulink-onramp", "stateflow-onramp", "control-design-onramp", "simscape-onramp", "mathworks-simscape-electrical", "matlab-onramp", "signal-processing-onramp", "youtube-css-can-bus", "youtube-skilllync-ev-crash-course"],
   "vehicle-ee-architecture-engineer": ["allaboutcircuits-textbook", "mit-circuits", "kocw-electronics-circuit", "ti-precision-labs", "analog-dialogue", "simulink-onramp", "edx-engineering-systems", "youtube-css-can-bus", "youtube-emc-emi-basics"],
   "wiring-harness-engineer": ["allaboutcircuits-textbook", "mit-circuits", "kocw-electronics-circuit", "analog-dialogue", "ti-precision-labs", "youtube-css-can-bus", "youtube-emc-emi-basics", "hrd-net-job-training"],
   "automotive-embedded-sw-engineer": ["stm32-mooc-gpio-timer-uart", "arm-embedded-systems", "stm32-education", "kocw-embedded-control", "stateflow-onramp", "simulink-onramp", "freecodecamp-python-data", "inflearn-free-it-practice", "youtube-css-can-bus"],
   "vehicle-calibration-engineer": ["control-design-onramp", "simulink-onramp", "matlab-onramp", "signal-processing-onramp", "optimization-onramp", "mathworks-vehicle-dynamics-examples", "youtube-nptel-vehicle-dynamics", "youtube-mathworks-hil-testing"],
   "hil-sil-validation-engineer": ["simulink-onramp", "stateflow-onramp", "control-design-onramp", "matlab-onramp", "signal-processing-onramp", "coursera-embedded-control", "freecodecamp-python-data", "youtube-mathworks-hil-testing", "youtube-css-can-bus"],
-  "adas-validation-engineer": ["sensor-fusion-onramp", "signal-processing-onramp", "matlab-onramp", "simulink-onramp", "machine-learning-onramp", "coursera-embedded-control", "freecodecamp-python-data", "youtube-mathworks-hil-testing"],
+  "adas-validation-engineer": ["coursera-intro-self-driving-cars", "coursera-visual-perception-self-driving", "sensor-fusion-onramp", "signal-processing-onramp", "matlab-onramp", "simulink-onramp", "machine-learning-onramp", "coursera-embedded-control", "freecodecamp-python-data", "youtube-mathworks-hil-testing"],
   "functional-safety-engineer": ["ncs", "quality-one-fmea", "asq-fmea", "simulink-onramp", "mathworks-simulink-test-manager", "mathworks-fault-tolerant-fuel-control", "edx-engineering-systems", "youtube-mathworks-hil-testing"],
-  "ev-power-electronics-engineer": ["mathworks-simscape-electrical", "kocw-power-electronics-system-analysis", "simscape-onramp", "ti-precision-labs", "kocw-electronics-circuit", "analog-dialogue", "simulink-onramp", "edx-engineering-systems", "youtube-skilllync-ev-crash-course", "youtube-emc-emi-basics"],
-  "automotive-manufacturing-engineer": ["comento-production-tech-internship", "comento-production-management-core", "nist-process-capability", "quality-one-fmea", "asq-fmea", "asq-eight-d", "step-engineering", "hrd-net-job-training"],
+  "ev-power-electronics-engineer": ["coursera-power-electronics", "mathworks-simscape-electrical", "kocw-power-electronics-system-analysis", "simscape-onramp", "ti-precision-labs", "kocw-electronics-circuit", "analog-dialogue", "simulink-onramp", "edx-engineering-systems", "youtube-skilllync-ev-crash-course", "youtube-emc-emi-basics"],
+  "automotive-manufacturing-engineer": ["comento-production-tech-internship", "comento-production-management-core", "coursera-digital-manufacturing-design", "nist-process-capability", "quality-one-fmea", "asq-fmea", "asq-eight-d", "step-engineering", "hrd-net-job-training"],
   "automotive-quality-field-engineer": ["quality-one-fmea", "asq-fmea", "asq-eight-d", "asq-quality-tools", "nist-control-charts", "nist-process-capability", "coursera-six-sigma-quality", "youtube-cqe-quality-tools"],
   "vehicle-test-validation-engineer": ["matlab-onramp", "signal-processing-onramp", "mathworks-predictive-maintenance", "statistics-onramp", "step-engineering", "hrd-net-job-training", "youtube-nptel-vehicle-dynamics", "youtube-mathworks-hil-testing"]
 });
@@ -5762,7 +6154,6 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
         <span>선택 직무</span>
         <strong>${role.title}</strong>
       </div>
-      ${renderRoleWordCloud(track, role, "is-featured is-compact")}
       <div class="selected-role-top is-summary-only">
         <div class="selected-role-summary">
           <p class="eyebrow">이 직무가 맞나요?</p>
@@ -5777,16 +6168,17 @@ function renderSelectedRoleOverview(track = getSelectedTrack(), role = getSelect
           </div>
         </div>
       </div>
-      ${renderRoleDecisionDashboard(track, role, checkedCount, diagnosticItems.length, gapItems, output)}
+      ${renderRoleDecisionDashboard(track, role, checkedCount, diagnosticItems.length, gapItems, output, quickResources, context)}
       <div class="role-action-strip">
         <span>
-          <strong>맞는 직무라면</strong>
-          <em>보유 역량을 체크한 뒤 부족한 역량만 교육 후보로 남깁니다.</em>
+          <strong>다음 단계</strong>
+          <em>상세직무내용이 맞는지 확인한 뒤 보유 역량을 체크하면 직무 관련 교육만 좁혀집니다.</em>
         </span>
         <div class="flow-actions">
           <button class="primary-button" type="button" data-view-target="diagnosis">역량 체크하기</button>
         </div>
       </div>
+      ${renderRoleWordCloud(track, role, "is-featured is-compact")}
       <details class="role-detail-disclosure">
         <summary>
           <span>
@@ -5872,30 +6264,70 @@ function getRoleCoreCompetencyItems(role) {
     .map(([skill, description]) => `${skill}: ${description}`);
 }
 
-function renderRoleDecisionDashboard(track, role, checkedCount, totalCount, gapItems, output) {
+function renderRoleDecisionDashboard(track, role, checkedCount, totalCount, gapItems, output, quickResources = [], context = null) {
   const majorLabel = getMajorPathwayLabel(track, role);
+  const majorName = getMajorLabel();
+  const roleWork = role.coreWork || role.focus;
+  const roleResponsibilities = (role.responsibilities || []).slice(0, 2).join(" · ");
   const gapText = gapItems.length
     ? gapItems.slice(0, 2).map((item) => item.skill).join(", ")
     : "큰 공백 없음";
   return `
-    <section class="role-decision-dashboard" aria-label="${role.title} 지원 판단 요약">
+    <section class="role-decision-dashboard" aria-label="${role.title} 핵심 연결 요약">
       <div class="role-decision-card is-strong">
-        <span>전공 연결</span>
-        <strong>${majorLabel}</strong>
+        <span>전공</span>
+        <strong>${majorName} · ${majorLabel}</strong>
         <em>${getMajorPathwayReason(track, role)}</em>
       </div>
       <div class="role-decision-card">
-        <span>역량 체크</span>
-        <strong>${checkedCount}/${totalCount}개 확인</strong>
-        <em>보완 우선: ${gapText}</em>
+        <span>상세직무내용</span>
+        <strong>${role.title}</strong>
+        <em>${truncateText(roleWork, 92)}</em>
+        ${roleResponsibilities ? `<small>반복 업무: ${truncateText(roleResponsibilities, 96)}</small>` : ""}
       </div>
-      <div class="role-decision-card">
-        <span>완성할 산출물</span>
-        <strong>${output}</strong>
-        <em>선택한 교육자료는 이 산출물을 만들기 위한 참고자료입니다.</em>
+      <div class="role-decision-card is-education">
+        <span>직무 관련 교육</span>
+        <strong>${quickResources.length ? `${quickResources.length}개 우선 후보` : "역량 체크 후 추천"}</strong>
+        ${renderRoleEducationPreview(quickResources, context)}
+        <em>${checkedCount}/${totalCount}개 역량 체크 · 보완 우선: ${gapText}</em>
+        <small>교육으로 남길 산출물: ${output}</small>
       </div>
     </section>
   `;
+}
+
+function renderRoleEducationPreview(resources, context) {
+  if (!resources.length) {
+    return `
+      <div class="role-education-preview">
+        <span>
+          <strong>교육 후보 대기</strong>
+          <small>보유 역량을 체크하면 이미 아는 교육은 뒤로 보내고 부족 역량 자료를 우선합니다.</small>
+        </span>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="role-education-preview">
+      ${resources.slice(0, 2).map((resource) => `
+        <span>
+          <strong>${resource.title}</strong>
+          <small>${getRoleEducationPreviewReason(resource, context)}</small>
+        </span>
+      `).join("")}
+    </div>
+  `;
+}
+
+function getRoleEducationPreviewReason(resource, context) {
+  const signals = context
+    ? getEducationResourceSignals(resource, context).filter((signal) => signal !== "계획 선택됨")
+    : [];
+  const reason = signals.length
+    ? signals.slice(0, 2).join(" · ")
+    : getResourceSkillSummary(resource, 3);
+  return truncateText(reason, 82);
 }
 
 function renderRoleAiCompetencyPanel(role) {
@@ -7015,10 +7447,10 @@ function renderRoadmap() {
       </div>
       <div class="roadmap-resource-block">
         <h4>추천 교육·실습자료</h4>
-        <p class="roadmap-resource-guide">체크하지 않은 역량과 이번 주 산출물에 맞춘 자료입니다. 교육내용 상세보기를 열어 소개를 확인한 뒤 필요한 자료만 추가하세요.</p>
+        <p class="roadmap-resource-guide">${getRoadmapResourceGuideText(task)}</p>
         ${linkedResources.length
           ? `<div class="roadmap-resource-list">${linkedResources.map((resource) => renderRoadmapResourceItem(resource, task, context)).join("")}</div>`
-          : `<div class="empty-state compact">이 과제에 연결된 교육자료 후보가 아직 없습니다.</div>`}
+          : renderRoadmapResourceEmptyState(task)}
       </div>
     </article>
   `;
@@ -7026,6 +7458,37 @@ function renderRoadmap() {
 
   bindResourceActions(elements.roadmapGuidance);
   bindResourceActions(elements.roadmapList);
+}
+
+function getRoadmapResourceGuideText(task) {
+  if (isExtendedRoadmapTask(task)) {
+    return "앞 주차에서 고른 교육과 산출물을 다시 쓰는 반복·보강 주차입니다. 새 교육은 직무 산출물에 직접 맞을 때만 추가로 보여줍니다.";
+  }
+  return "체크하지 않은 역량과 이번 주 산출물에 맞춘 자료입니다. 교육내용 상세보기를 열어 소개를 확인한 뒤 필요한 자료만 추가하세요.";
+}
+
+function renderRoadmapResourceEmptyState(task) {
+  if (isExtendedRoadmapTask(task)) {
+    return `<div class="empty-state compact">이 주차는 새 짧은 교육을 다시 추천하지 않고, 앞 주차 산출물을 다른 조건으로 반복·보강하는 구간입니다.</div>`;
+  }
+  if (isPostingFitTask(task)) {
+    return `<div class="empty-state compact">회사 공고 맞춤 점검 주차입니다. 공통 broad 교육 대신 앞 주차 산출물과 공고 키워드를 직접 대조하세요.</div>`;
+  }
+  return `<div class="empty-state compact">직무와 산출물에 직접 맞는 검토 완료 교육자료가 아직 없습니다. 약한 broad 후보는 추천에서 제외했습니다.</div>`;
+}
+
+function isExtendedRoadmapTask(task) {
+  return /심화 반복|산출물 보강/.test(task?.phase || "")
+    || /반복본|보강본/.test(task?.deliverable || "");
+}
+
+function isPostingFitTask(task) {
+  return /회사 공고|공고 맞춤|보완 체크리스트/.test([
+    task?.title,
+    task?.objective,
+    task?.deliverable,
+    ...(task?.steps || [])
+  ].join(" "));
 }
 
 function renderRoadmapGuidance(context, tasks) {
@@ -8261,24 +8724,95 @@ function getRoadmapResourcesForTask(track, task, context, resourceUseCounts = ne
   const addRankedResources = (items) => {
     items.forEach((item) => {
       if (selected.length >= resourceLimit) return;
-      if (!selected.some((selectedItem) => selectedItem.resource.id === item.resource.id)) selected.push(item);
+      if (selected.some((selectedItem) => selectedItem.resource.id === item.resource.id)) return;
+      if (shouldSkipRepeatedRoadmapResource(item.resource, resourceUseCounts)) return;
+      if (shouldDeferRoadmapResourceForPrerequisites(item.resource, context, resourceUseCounts)) return;
+      if (shouldReserveRoadmapResourceForLaterTask(item.resource, task, context)) return;
+      selected.push(item);
     });
   };
 
   const savedRanked = ranked.filter((item) => state.saved.includes(item.resource.id));
   const directCompetencyRanked = ranked.filter((item) => isTaskRoleCompetencyResource(item.resource, task, context));
+  const directTaskRanked = ranked.filter((item) => getResourceLinkedTasks(item.resource.id, [task]).length);
+  const trustedDirectTaskRanked = directTaskRanked.filter((item) => (
+    ["reviewed", "verified"].includes(item.resource.qualityStatus) && !item.resource.broad
+  ));
+  const weakDirectTaskRanked = directTaskRanked.filter((item) => !trustedDirectTaskRanked.includes(item));
+  const directRoleRanked = ranked.filter((item) => getRoleLinkedResourceIds(context.role).includes(item.resource.id));
   const unusedRelevant = ranked.filter((item) => getRoadmapResourceUseCount(resourceUseCounts, item.resource.id) === 0 && item.score >= 8);
   addRankedResources(savedRanked);
+  addRankedResources(trustedDirectTaskRanked);
   addRankedResources(directCompetencyRanked);
+  addRankedResources(directRoleRanked);
+  addRankedResources(weakDirectTaskRanked);
   addRankedResources(unusedRelevant);
 
   if (selected.length < resourceLimit) {
     selected.push(...ranked
       .filter((item) => !selected.some((selectedItem) => selectedItem.resource.id === item.resource.id))
+      .filter((item) => !shouldSkipRepeatedRoadmapResource(item.resource, resourceUseCounts))
+      .filter((item) => !shouldDeferRoadmapResourceForPrerequisites(item.resource, context, resourceUseCounts))
+      .filter((item) => !shouldReserveRoadmapResourceForLaterTask(item.resource, task, context))
       .slice(0, resourceLimit - selected.length));
   }
 
-  return selected.map((item) => item.resource);
+  const hasDirectTrustedResource = selected.some((item) => isTrustedDirectRoadmapResource(item.resource, task, context));
+  if (!hasDirectTrustedResource) return [];
+
+  return selected
+    .filter((item) => isRelevantRoadmapResource(item.resource, task, context))
+    .slice(0, resourceLimit)
+    .map((item) => item.resource);
+}
+
+function isTrustedDirectRoadmapResource(resource, task, context) {
+  return ["reviewed", "verified"].includes(resource.qualityStatus)
+    && !resource.broad
+    && (
+      getResourceLinkedTasks(resource.id, [task]).length
+      || getRoleLinkedResourceIds(context.role).includes(resource.id)
+      || isTaskRoleCompetencyResource(resource, task, context)
+    );
+}
+
+function isRelevantRoadmapResource(resource, task, context) {
+  if (state.saved.includes(resource.id)) return true;
+  if (resource.broad) return false;
+  return getResourceLinkedTasks(resource.id, [task]).length
+    || getRoleLinkedResourceIds(context.role).includes(resource.id)
+    || isTaskRoleCompetencyResource(resource, task, context)
+    || getTaskMatchedSkills(resource, task).length
+    || getTaskResourceKeywordMatches(resource, task).length
+    || getTaskRoleKeywordMatches(resource, task, context.role).length;
+}
+
+function shouldSkipRepeatedRoadmapResource(resource, resourceUseCounts) {
+  return getRoadmapResourceUseCount(resourceUseCounts, resource.id) > 0 && !isReusableRoadmapResource(resource);
+}
+
+function isReusableRoadmapResource(resource) {
+  const resourceText = getResourceBadgeText(resource);
+  return resource.totalMinutes >= 480
+    || resource.practiceMinutes >= 300
+    || /부트캠프|KDT|프로젝트|멘토링|현장실습|인턴체험|장기훈련/i.test(resourceText);
+}
+
+function shouldDeferRoadmapResourceForPrerequisites(resource, context, resourceUseCounts) {
+  if (resource.id === "matlab-onramp") return false;
+  return getMissingRoadmapPrerequisiteIds(resource, context, resourceUseCounts).length > 0;
+}
+
+function shouldReserveRoadmapResourceForLaterTask(resource, task, context) {
+  if (isReusableRoadmapResource(resource)) return false;
+  if (getResourceLinkedTasks(resource.id, [task]).length) return false;
+
+  const currentWeek = Number(task.planWeek || 1);
+  return (context.visibleTasks || [])
+    .some((visibleTask) => (
+      Number(visibleTask.planWeek || 1) > currentWeek
+      && getResourceLinkedTasks(resource.id, [visibleTask]).length
+    ));
 }
 
 function getTaskRoleCompetencySkills(task, context) {
@@ -8595,6 +9129,7 @@ function getEducationResourceSignals(resource, context) {
   const goalFitSignal = getGoalFitSignal(resource, context);
 
   if (roleDirectMatch) signals.push("선택 직무 직접 연결");
+  if (isKoreanAvailableResource(resource)) signals.push("한국어 가능");
   if (resource.starterPack) signals.push("필수 Starter Pack");
   else if (resource.core) signals.push("핵심 직무역량 교육");
   if (competencyFitSignal) signals.push(competencyFitSignal);
@@ -8672,12 +9207,14 @@ function getTaskResourceScore(resource, task, context, resourceUseCounts = new M
   const goalScore = getGoalResourceScore(resource, context);
   const selectedMatch = state.saved.includes(resource.id) ? 1 : 0;
   const handsOnMatch = isHandsOnResource(resource) ? 1 : 0;
-  const alreadyUsedPenalty = getRoadmapResourceUseCount(resourceUseCounts, resource.id) * 220;
+  const alreadyUsedPenalty = getRoadmapResourceUseCount(resourceUseCounts, resource.id) * (isReusableRoadmapResource(resource) ? 220 : 1400);
   const durationPenalty = getDurationResourcePenalty(resource, context);
   const broadPenalty = resource.broad && !selectedMatch ? 240 : 0;
   const qualityPenalty = getResourceQualityPenalty(resource);
   const acquiredOnlyPenalty = context.gapSkills.length && acquiredMatches && !resourceGapMatches ? 160 : 0;
   const noGapPenalty = context.gapSkills.length && !resourceGapMatches && !gapMatches ? 70 : 0;
+  const sequencePenalty = getRoadmapSequencePenalty(resource, task, context, resourceUseCounts);
+  const laterTaskReservationPenalty = shouldReserveRoadmapResourceForLaterTask(resource, task, context) ? 900 : 0;
 
   return directTaskMatches * 160
     + coreResource * 95
@@ -8701,7 +9238,64 @@ function getTaskResourceScore(resource, task, context, resourceUseCounts = new M
     - broadPenalty
     - qualityPenalty
     - acquiredOnlyPenalty
-    - noGapPenalty;
+    - noGapPenalty
+    - sequencePenalty
+    - laterTaskReservationPenalty;
+}
+
+function getRoadmapSequencePenalty(resource, task, context, resourceUseCounts = new Map()) {
+  const preferredLevel = getPreferredSequenceLevelForTask(task, context);
+  const sequenceOverrun = Math.max(0, (resource.sequenceLevel || 1) - preferredLevel);
+  const missingPrerequisiteCount = getMissingRoadmapPrerequisiteIds(resource, context, resourceUseCounts).length;
+  return sequenceOverrun * 90 + missingPrerequisiteCount * 260;
+}
+
+function getPreferredSequenceLevelForTask(task, context) {
+  const week = Number(task?.planWeek || 1);
+  if (/산출물/.test(task?.phase || "")) return 5;
+  if (/심화/.test(task?.phase || "")) return 4;
+  if (context.durationWeeks <= 2) return week <= 1 ? 2 : 4;
+  if (week <= 1) return 2;
+  if (week <= 2) return 3;
+  if (week <= Math.max(3, Math.ceil(context.durationWeeks / 2))) return 4;
+  return 5;
+}
+
+function getMissingRoadmapPrerequisiteIds(resource, context, resourceUseCounts = new Map()) {
+  return getResourcePrerequisiteResourceIds(resource, context)
+    .filter((resourceId) => resourceId !== resource.id)
+    .filter((resourceId) => !getRoadmapResourceUseCount(resourceUseCounts, resourceId));
+}
+
+function getResourcePrerequisiteResourceIds(resource, context) {
+  const prerequisites = resource.prerequisites || [];
+  const acquiredText = normalizeRoleSearch([
+    ...(context?.acquiredSkills || []),
+    ...(context?.role?.coreCompetencies || [])
+  ].join(" "));
+  const prerequisiteMap = [
+    { pattern: /MATLAB 기초|데이터 분석 기초/, ids: ["matlab-onramp"] },
+    { pattern: /Simulink 기초/, ids: ["simulink-onramp"] },
+    { pattern: /Simscape 기초/, ids: ["simscape-onramp"] },
+    { pattern: /상태기계 기초|Stateflow 기초/, ids: ["stateflow-onramp"] },
+    { pattern: /신호처리 기초/, ids: ["signal-processing-onramp"] },
+    { pattern: /통계 기초|평균과 표준편차/, ids: ["statistics-onramp"] }
+  ];
+
+  return [...new Set(prerequisites.flatMap((prerequisite) => {
+    if (isPrerequisiteSatisfiedByProfile(prerequisite, acquiredText)) return [];
+    return prerequisiteMap
+      .filter((item) => item.pattern.test(prerequisite))
+      .flatMap((item) => item.ids);
+  }))];
+}
+
+function isPrerequisiteSatisfiedByProfile(prerequisite, acquiredText) {
+  if (!acquiredText) return false;
+  if (/MATLAB 기초/.test(prerequisite) && /matlab|python|데이터|통계|분석/.test(acquiredText)) return true;
+  return getSearchTokens(prerequisite)
+    .filter((token) => token.length >= 2)
+    .some((token) => acquiredText.includes(token));
 }
 
 function getResourceQualityPenalty(resource) {
@@ -8937,6 +9531,7 @@ function renderResourceTrustBadges(resource) {
   const resourceText = getResourceBadgeText(resource);
 
   if (resource.starterPack) badges.push("필수 Starter Pack");
+  if (isKoreanAvailableResource(resource)) badges.push("한국어 가능");
   if (/Simulink|Simscape|Stateflow|시뮬레이션|HIL|SIL|모델링|모델/.test(resourceText)) badges.push("시뮬레이션");
   if (isHandsOnResource(resource)) badges.push("실습형");
   if (/코멘토|렛유인|Coursera|edX|K-MOOC|KOCW|STEP|HRD-Net|인프런|Udemy|Boostcourse/.test(resource.provider)) badges.push("외부 과정");
@@ -8952,6 +9547,10 @@ function renderResourceTrustBadges(resource) {
   return uniqueBadges.length
     ? `<span class="resource-trust-badges">${uniqueBadges.slice(0, 4).map((badge) => `<span>${badge}</span>`).join("")}</span>`
     : "";
+}
+
+function isKoreanAvailableResource(resource) {
+  return resource.languageCode === "ko" || String(resource.language || "").includes("한국어");
 }
 
 function isHandsOnResource(resource) {
@@ -9058,7 +9657,9 @@ function renderSaved() {
               <span class="badge">${task.deliverable}</span>
             </div>
             <div class="plan-resource-list">
-              ${linkedResources.map((resource) => renderPlanResourceItem(resource, task, context)).join("")}
+              ${linkedResources.length
+                ? linkedResources.map((resource) => renderPlanResourceItem(resource, task, context)).join("")
+                : renderRoadmapResourceEmptyState(task)}
             </div>
           </article>
         `;
@@ -9136,12 +9737,14 @@ function getTodayStartResourceFit(resource, task, context, comparison) {
     + supportPostingMatches * postingWeight.support;
   const acquiredOnlyPenalty = context.gapSkills.length && acquiredMatches.length && !gapMatches.length && !postingMatches.length ? 180 : 0;
   const completedPenalty = state.completed.includes(resource.id) ? 900 : 0;
+  const trustedStarterScore = (resource.starterPack ? 280 : 0) + (resource.core ? 220 : 0);
 
   const score = taskScore
     + educationScore * 0.32
     + postingScore
     + roleDirectMatch * 80
     + gapMatches.length * (competencyRepairTask ? 35 : 18)
+    + trustedStarterScore
     - acquiredOnlyPenalty
     - completedPenalty;
 
@@ -9745,8 +10348,11 @@ function getResourceLinkedTasks(resourceId, visibleTasks = []) {
   const linkedTaskTitles = resourceTaskLinks[resourceId] || [];
   if (!visibleTasks.length) return linkedTaskTitles;
 
-  const visibleBaseTitles = new Set(visibleTasks.map((task) => task.baseTitle || task.title));
-  return linkedTaskTitles.filter((taskTitle) => visibleBaseTitles.has(taskTitle));
+  const visibleTaskTitles = new Set(visibleTasks.flatMap((task) => [
+    task.baseTitle,
+    task.title
+  ].filter(Boolean)));
+  return linkedTaskTitles.filter((taskTitle) => visibleTaskTitles.has(taskTitle));
 }
 
 function getRoleKeywordMatches(resource, role) {
