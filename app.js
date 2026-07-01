@@ -6381,32 +6381,6 @@ function getRoleAiDataExercise(role) {
   return `${keyword} 관점에서 샘플 로그·측정값·공고 문장을 입력, 판단 기준, 결과 지표로 나누어 5줄 표로 정리합니다.`;
 }
 
-function renderInlineRoleWordCloud(track, role) {
-  return `
-    <article class="inline-wordcloud-panel" aria-label="${role.title} 역량 워드클라우드">
-      ${renderRoleWordCloud(track, role, "is-inline")}
-      <div class="inline-wordcloud-summary">
-        <p class="eyebrow">선택 직무 역량</p>
-        <h3>${role.title}</h3>
-        <p>${role.focus}</p>
-        <div class="badge-row">
-          ${role.postingKeywords.map((keyword) => `<span class="badge">${keyword}</span>`).join("")}
-        </div>
-        <div class="role-decision-mini">
-          <strong>직무 판단 포인트</strong>
-          <ul>
-            ${getRoleDecisionQuestions(track, role).slice(0, 2).map((item) => `<li>${item}</li>`).join("")}
-          </ul>
-        </div>
-        <div class="flow-actions">
-          <button class="primary-button" type="button" data-view-target="diagnosis">역량 체크하기</button>
-          <button class="ghost-button" type="button" data-view-target="roadmap">부족 역량 교육 보기</button>
-        </div>
-      </div>
-    </article>
-  `;
-}
-
 function getRoleCatalog({ applyRoleFilters = true } = {}) {
   const groupFilter = state.roleGroupFilter || "all";
   const searchTerm = normalizeRoleSearch(state.roleSearch);
@@ -7163,22 +7137,6 @@ function getRoleCombinedText(track, role) {
     ...(role.preferred || []),
     ...getRoleDiagnosticTerms(role)
   ].join(" ");
-}
-
-function getWordCloudAsset(track, role) {
-  if (role) {
-    return {
-      src: `/assets/wordcloud-role-${role.id}.png`,
-      alt: `${role.title} 세부 직무 역량 워드 클라우드`,
-      caption: `${role.title} 채용공고 키워드, 역량 체크 문항, 업무·자격요건에서 반복되는 역량일수록 크게 표시됩니다.`
-    };
-  }
-
-  return {
-    src: `/assets/wordcloud-${track.id}.png`,
-    alt: `${track.title} 핵심 역량 워드 클라우드`,
-    caption: "단어 크기는 직무 설명, 역량 체크 문항, 과제, 교육자료에서 반복 강조되는 정도를 반영합니다."
-  };
 }
 
 function detailBlock(title, items) {
@@ -9760,10 +9718,6 @@ function getTodayStartResourceFit(resource, task, context, comparison) {
   };
 }
 
-function getTodayStartResourceScore(resource, task, context, comparison) {
-  return getTodayStartResourceFit(resource, task, context, comparison).score;
-}
-
 function getTodayStartEvidenceItems(resource, task, context, details) {
   const evidence = [];
   const postingTerms = uniqueRoleTerms(details.postingMatches.flatMap((item) => item.matchedTerms))
@@ -10279,16 +10233,6 @@ function getRecommendationContext(track, gapSkills, visibleTasks = null) {
     durationWeeks: getDurationWeeks(),
     visibleTasks: visibleTasks || getVisibleRoadmapTasks(track.id)
   };
-}
-
-function getGoalGuide(goalKey, resource, track) {
-  const output = resource.expectedOutput || track.outputs[0];
-  return {
-    explore: `30분 안에 ${track.title}의 업무 3개와 모르는 용어 5개를 적으면 충분합니다.`,
-    foundation: `체크하지 못한 역량 중 하나를 골라 ${output}까지 남기는 것을 최소 완료 기준으로 두세요.`,
-    portfolio: `${output}을 면접에서 설명할 수 있도록 문제, 방법, 결과, 배운 점 순서로 정리하세요.`,
-    interview: `${track.title} 직무에서 이 교육자료가 왜 필요한지 3문장으로 설명할 수 있으면 다음 교육자료로 넘어가세요.`
-  }[goalKey] || `교육자료를 본 뒤 ${output}을 남기세요.`;
 }
 
 function getResourceSignals(resource, context) {

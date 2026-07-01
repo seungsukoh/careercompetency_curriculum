@@ -270,7 +270,6 @@ a:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 
-.company-detail-notice,
 .company-detail-inline,
 .expert-review-item p,
 .role-ai-panel p,
@@ -450,24 +449,6 @@ input::placeholder {
   background: var(--deep-bg);
 }
 
-.summary-preview {
-  display: grid;
-  gap: 6px;
-  padding: 12px;
-  background: var(--surface-muted);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-
-.summary-preview pre {
-  max-height: 180px;
-  margin: 0;
-  overflow: auto;
-  color: var(--muted);
-  font: 1rem/1.55 var(--font-mono);
-  white-space: pre-wrap;
-}
-
 .ghost-button,
 .resource-action {
   color: var(--primary);
@@ -540,14 +521,11 @@ input::placeholder {
   .role-picker-panel,
   .role-result-panel,
   .workbench-panel-head,
-  .inline-wordcloud-panel,
-  .inline-wordcloud-summary,
   .selected-role-anchor,
   .role-decision-card,
   .selected-role-summary,
   .role-action-strip,
   .role-core-work,
-  .selected-role-keypoints > div,
   .selected-role-search,
   .selected-role-resources,
   .selected-role-detail-panel,
@@ -556,7 +534,6 @@ input::placeholder {
   .roadmap-final-cta,
   .role-fit-block,
   .education-summary-card,
-  .education-detail-disclosure,
   .roadmap-decision-panel > div,
   .diagnosis-focus-panel > div,
   .reference-section,
@@ -887,38 +864,6 @@ input::placeholder {
   gap: 12px;
 }
 
-.flow-overview {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
-  margin-bottom: 14px;
-  padding: 12px;
-  background: var(--surface-muted);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-
-.flow-overview div {
-  display: grid;
-  gap: 4px;
-  min-width: 0;
-  padding: 10px;
-  background: var(--surface-raised);
-  border: 1px solid var(--line);
-  border-radius: 7px;
-}
-
-.flow-overview strong {
-  color: var(--ink);
-  font-size: 1rem;
-}
-
-.flow-overview span {
-  color: var(--muted);
-  font-size: 1rem;
-  line-height: 1.4;
-}
-
 .role-screen-note {
   display: flex;
   flex-wrap: wrap;
@@ -1044,27 +989,9 @@ input::placeholder {
   border-radius: var(--radius);
 }
 
-.company-detail-notice {
-  margin: -4px 0 14px;
-  padding: 11px 12px;
-  color: var(--muted);
-  background: var(--surface-raised);
-  border: 1px solid var(--line);
-  border-left: 3px solid var(--yellow);
-  border-radius: 7px;
-  font-size: 1rem;
-  line-height: 1.55;
-}
-
-.company-detail-notice strong,
 .company-detail-inline strong {
   color: var(--ink);
   font-weight: 900;
-}
-
-.company-detail-notice strong {
-  display: block;
-  margin-bottom: 2px;
 }
 
 .company-detail-inline {
@@ -1141,40 +1068,6 @@ input::placeholder {
   min-height: 250px;
 }
 
-.inline-wordcloud-panel {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  gap: 14px;
-  align-items: start;
-  padding: 16px;
-  background: var(--surface-raised);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-soft);
-}
-
-.inline-wordcloud-summary {
-  display: grid;
-  align-content: start;
-  gap: 10px;
-  padding: 14px;
-  background: var(--surface-raised);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-
-.inline-wordcloud-summary h3 {
-  margin: 0;
-  font-size: 1.05rem;
-}
-
-.inline-wordcloud-summary p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.5;
-}
-
 .role-decision-mini {
   display: grid;
   gap: 6px;
@@ -1217,10 +1110,6 @@ input::placeholder {
   line-height: 1.55;
   overflow-wrap: anywhere;
   word-break: keep-all;
-}
-
-.role-preview {
-  font-weight: 800;
 }
 
 .badge-row {
@@ -1340,11 +1229,6 @@ input::placeholder {
   display: grid;
   gap: 10px;
   margin-top: 12px;
-}
-
-.track-detail-head {
-  display: grid;
-  gap: 6px;
 }
 
 .selected-role-overview {
@@ -1646,13 +1530,6 @@ input::placeholder {
   line-height: 1.45;
 }
 
-.selected-role-keypoints {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.selected-role-keypoints > div,
 .selected-role-search,
 .selected-role-resources {
   display: grid;
@@ -1663,16 +1540,10 @@ input::placeholder {
   border-radius: 6px;
 }
 
-.selected-role-keypoints strong,
 .selected-role-search strong,
 .selected-role-resources strong {
   color: var(--ink);
   font-size: 1rem;
-}
-
-.selected-role-keypoints ul {
-  margin: 0;
-  padding-left: 18px;
 }
 
 .selected-role-search span {
@@ -1786,17 +1657,6 @@ input::placeholder {
   margin-top: 2px;
 }
 
-.role-keyword-disclosure {
-  border-color: var(--line-strong);
-}
-
-.role-keyword-disclosure .word-cloud-panel {
-  margin: 0;
-  padding: 12px;
-  border: 0;
-  border-radius: 0;
-}
-
 .role-detail-disclosure summary {
   cursor: pointer;
   list-style-position: outside;
@@ -1881,71 +1741,6 @@ input::placeholder {
 .selected-role-overview > .expert-review-panel,
 .selected-role-overview > .role-fit-panel {
   margin-top: 0;
-}
-
-.role-panel {
-  display: grid;
-  gap: 10px;
-  margin-top: 14px;
-  padding: 12px;
-  background: var(--surface-raised);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-
-.role-panel h4 {
-  margin: 0;
-}
-
-.role-list {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.role-option {
-  display: grid;
-  gap: 7px;
-  min-height: 132px;
-  padding: 12px;
-  color: var(--ink);
-  background: var(--surface-muted);
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  text-align: left;
-}
-
-.role-option.is-selected {
-  background: var(--primary-soft);
-  border-color: var(--primary);
-  outline: 2px solid rgb(14 39 80 / 0.14);
-}
-
-.role-option strong {
-  line-height: 1.3;
-}
-
-.role-option > span:not(.badge-row) {
-  color: var(--muted);
-  font-size: 1rem;
-  line-height: 1.45;
-}
-
-.evidence-panel {
-  display: grid;
-  gap: 8px;
-  margin-top: 12px;
-  padding: 11px;
-  background: var(--surface-muted);
-  border: 1px solid var(--line);
-  border-radius: 6px;
-}
-
-.evidence-panel p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 1rem;
-  line-height: 1.5;
 }
 
 .evidence-links {
@@ -2144,13 +1939,6 @@ input::placeholder {
   padding: 12px 10px;
 }
 
-.word-cloud-panel.is-inline {
-  margin: 0;
-  padding: 12px;
-  border-color: var(--line-strong);
-  box-shadow: inset 0 0 0 1px rgb(14 39 80 / 0.12);
-}
-
 .word-cloud-terms {
   position: relative;
   display: flex;
@@ -2172,10 +1960,6 @@ input::placeholder {
   border-radius: 46% 54% 48% 52% / 40% 44% 56% 60%;
   contain: layout paint;
   overflow: hidden;
-}
-
-.word-cloud-panel.is-inline .word-cloud-terms {
-  min-height: 380px;
 }
 
 .word-cloud-terms.is-layout-ready {
@@ -2255,11 +2039,6 @@ input::placeholder {
   object-fit: contain;
 }
 
-.word-cloud-panel.is-inline img {
-  aspect-ratio: 16 / 9;
-  filter: saturate(1.06) contrast(1.03);
-}
-
 .word-cloud-panel figcaption {
   color: var(--muted);
   font-size: 1rem;
@@ -2317,7 +2096,6 @@ li {
   gap: 10px;
 }
 
-.resource-guidance,
 .reference-guidance,
 .roadmap-guidance,
 .plan-guidance {
@@ -2330,7 +2108,6 @@ li {
   border-radius: var(--radius);
 }
 
-.resource-guidance h3,
 .reference-guidance h3,
 .roadmap-guidance h3,
 .plan-guidance h3 {
@@ -2338,7 +2115,6 @@ li {
   font-size: 1rem;
 }
 
-.resource-guidance p,
 .reference-guidance p,
 .roadmap-guidance p,
 .plan-guidance p {
@@ -2805,38 +2581,6 @@ li {
   border-radius: 6px;
 }
 
-.education-detail-disclosure {
-  min-width: 0;
-  background: var(--surface-raised);
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.education-detail-disclosure summary {
-  cursor: pointer;
-  padding: 9px 10px;
-  color: var(--primary-dark);
-  background: var(--primary-soft);
-  font-size: 1rem;
-  font-weight: 900;
-  list-style: none;
-}
-
-.education-detail-disclosure summary::-webkit-details-marker {
-  display: none;
-}
-
-.education-detail-disclosure[open] summary {
-  border-bottom: 1px solid var(--line-strong);
-}
-
-.education-detail-disclosure .education-summary-body {
-  padding: 10px;
-  border: 0;
-  border-radius: 0;
-}
-
 .education-info-row {
   display: grid;
   grid-template-columns: minmax(92px, 0.28fr) minmax(0, 1fr);
@@ -2980,7 +2724,6 @@ li {
   gap: 10px;
 }
 
-.reference-section-head,
 .reference-section > summary {
   display: flex;
   align-items: center;
@@ -2998,8 +2741,7 @@ li {
   min-width: 0;
 }
 
-.reference-section > summary strong,
-.reference-section-head h3 {
+.reference-section > summary strong {
   margin: 0;
   color: var(--ink);
 }
@@ -3011,14 +2753,9 @@ li {
   line-height: 1.45;
 }
 
-.reference-section-body,
-.reference-resource-grid {
+.reference-section-body {
   display: grid;
   gap: 12px;
-}
-
-.reference-resource-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .reference-resource-card {
@@ -4141,16 +3878,12 @@ li {
   }
 
   .track-grid,
-  .flow-overview,
   .role-workbench,
   .role-filter-bar,
-  .inline-wordcloud-panel,
   .selected-role-overview,
   .selected-role-top,
   .role-decision-dashboard,
-  .selected-role-keypoints,
   .selected-role-detail-head,
-  .role-list,
   .role-detail-grid,
   .role-ai-grid,
   .role-fit-panel,
@@ -4170,7 +3903,6 @@ li {
   .duration-strategy-grid,
   .persona-review-grid,
   .reference-category-strip,
-  .reference-resource-grid,
   .resource-learning-meta,
   .workflow-status,
   .roadmap {
@@ -4353,7 +4085,6 @@ li {
     width: 100%;
   }
 
-  .reference-section-head,
   .reference-section > summary,
   .reference-resource-card > summary {
     display: grid;
@@ -4368,8 +4099,7 @@ li {
     min-width: 0;
   }
 
-  .word-cloud-terms,
-  .word-cloud-panel.is-inline .word-cloud-terms {
+  .word-cloud-terms {
     min-height: 350px;
     padding: 10px 8px;
   }
