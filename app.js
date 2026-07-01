@@ -4629,6 +4629,38 @@ const roleResourceLinks = {
 };
 
 const roleResourceExclusions = {
+  "thermal-cfd-engineer": ["youtube-nptel-vehicle-dynamics"],
+  "vehicle-interior-exterior-design-engineer": [
+    "allaboutcircuits-textbook",
+    "kicad-pcb-docs",
+    "kocw-power-electronics-system-analysis",
+    "control-design-onramp",
+    "mathworks-simscape-electrical",
+    "mathworks-simulink-examples",
+    "mathworks-vehicle-network-toolbox-examples",
+    "ni-learn-test-measurement",
+    "simulink-onramp",
+    "ti-precision-labs",
+    "youtube-nptel-vehicle-dynamics",
+    "youtube-css-can-bus",
+    "youtube-mathworks-hil-testing",
+    "youtube-emc-emi-basics"
+  ],
+  "robot-mechanical-design-engineer": [
+    "control-design-onramp",
+    "mathworks-ros-toolbox-examples",
+    "mathworks-predictive-maintenance",
+    "ros-tutorials",
+    "sensor-fusion-onramp",
+    "simulink-onramp",
+    "ni-learn-test-measurement"
+  ],
+  "data-center-cooling-engineer": [
+    "keea-electrical-facility-operation-training",
+    "mathworks-simscape-electrical",
+    "ti-power-management-training",
+    "ni-learn-test-measurement"
+  ],
   "predictive-maintenance-ai-engineer": ["mathworks-ros-toolbox-examples", "nvidia-jetson-ai-course"]
 };
 
@@ -4731,7 +4763,7 @@ addRoleCompetencyResourceLinks({
   },
   "vehicle-interior-exterior-design-engineer": {
     "내외장 패키지": ["mit-design-manufacturing", "mit-mechanics-materials"],
-    "감성품질": ["mit-design-manufacturing", "ansys-innovation-courses"],
+    "감성품질": ["mit-design-manufacturing", "mit-mechanics-materials", "ansys-innovation-courses"],
     "사출·도장": ["mit-design-manufacturing"],
     "양산 이슈": ["mit-design-manufacturing", "ansys-innovation-courses"]
   },
@@ -8044,10 +8076,15 @@ function getTaskPriorityScore(task, trackId) {
 
 function getTaskPriorityReason(task, trackId) {
   const text = getTaskSearchText(task);
-  const gapMatch = getGapSkills(trackId).find((skill) => text.includes(skill));
   const role = getSelectedRole(trackId);
+  const roleGapMatch = role ? getGapItems(trackId).find((item) => item.source === role.title && text.includes(item.skill)) : null;
+  const roleDiagnosticMatch = role ? (roleDiagnostics[role.id] || []).find(([skill]) => text.includes(skill))?.[0] : null;
+  const roleSkill = roleGapMatch?.skill || roleDiagnosticMatch;
   const roleKeyword = role?.postingKeywords.find((keyword) => text.includes(keyword));
+  const focusedGapMatch = getGapItems(trackId).find((item) => item.source !== "트랙 공통" && text.includes(item.skill));
+  const gapMatch = focusedGapMatch?.skill || getGapSkills(trackId).find((skill) => text.includes(skill));
 
+  if (roleSkill) return `${role.title}에서 반복되는 ${roleSkill} 역량을 교육자료와 산출물로 보완합니다.`;
   if (gapMatch) return `현재 역량 체크에서 비어 있는 ${gapMatch} 역량을 직접 보완합니다.`;
   if (roleKeyword) return `${role.title} 채용공고 키워드인 ${roleKeyword}와 바로 연결됩니다.`;
   if (state.profile.goal === "portfolio" || state.profile.goal === "interview") return "짧은 기간 안에 설명 가능한 산출물을 남기는 과제입니다.";
@@ -8175,6 +8212,7 @@ function getRoadmapResourcesForTask(track, task, context, resourceUseCounts = ne
     && !isRoleExcludedResource(resource, context.role)
   ));
   const selectedResources = trackResources.filter((resource) => state.saved.includes(resource.id));
+  const taskCompetencyLinked = trackResources.filter((resource) => isTaskRoleCompetencyResource(resource, task, context));
   const gapLinked = trackResources.filter((resource) => getResourceGapMatches(resource, context).length);
   const roleLinked = trackResources.filter((resource) => getRoleLinkedResourceIds(context.role).includes(resource.id));
   const directlyLinked = trackResources.filter((resource) => getResourceLinkedTasks(resource.id, [task]).length);
@@ -8183,7 +8221,7 @@ function getRoadmapResourcesForTask(track, task, context, resourceUseCounts = ne
     || getTaskResourceKeywordMatches(resource, task).length
     || getTaskRoleKeywordMatches(resource, task, context.role).length
   ));
-  const preferredPool = uniqueResources([...selectedResources, ...gapLinked, ...directlyLinked, ...roleLinked, ...taskMatched]);
+  const preferredPool = uniqueResources([...selectedResources, ...taskCompetencyLinked, ...gapLinked, ...directlyLinked, ...roleLinked, ...taskMatched]);
   const pool = preferredPool.length >= 3
     ? preferredPool
     : uniqueResources([...preferredPool, ...trackResources]);
@@ -8202,9 +8240,21 @@ function getRoadmapResourcesForTask(track, task, context, resourceUseCounts = ne
       if (scoreDiff !== 0) return scoreDiff;
       return sortResourcesForLearning(a.resource, b.resource, context);
     });
-  const unusedRelevant = ranked.filter((item) => getRoadmapResourceUseCount(resourceUseCounts, item.resource.id) === 0 && item.score >= 8);
   const resourceLimit = getRoadmapResourceLimit(context);
-  const selected = unusedRelevant.slice(0, resourceLimit);
+  const selected = [];
+  const addRankedResources = (items) => {
+    items.forEach((item) => {
+      if (selected.length >= resourceLimit) return;
+      if (!selected.some((selectedItem) => selectedItem.resource.id === item.resource.id)) selected.push(item);
+    });
+  };
+
+  const savedRanked = ranked.filter((item) => state.saved.includes(item.resource.id));
+  const directCompetencyRanked = ranked.filter((item) => isTaskRoleCompetencyResource(item.resource, task, context));
+  const unusedRelevant = ranked.filter((item) => getRoadmapResourceUseCount(resourceUseCounts, item.resource.id) === 0 && item.score >= 8);
+  addRankedResources(savedRanked);
+  addRankedResources(directCompetencyRanked);
+  addRankedResources(unusedRelevant);
 
   if (selected.length < resourceLimit) {
     selected.push(...ranked
@@ -8213,6 +8263,19 @@ function getRoadmapResourcesForTask(track, task, context, resourceUseCounts = ne
   }
 
   return selected.map((item) => item.resource);
+}
+
+function getTaskRoleCompetencySkills(task, context) {
+  if (!context.role) return [];
+  const text = getTaskSearchText(task);
+  return (roleDiagnostics[context.role.id] || [])
+    .map(([skill]) => skill)
+    .filter((skill) => text.includes(skill));
+}
+
+function isTaskRoleCompetencyResource(resource, task, context) {
+  return getTaskRoleCompetencySkills(task, context)
+    .some((skill) => getRoleCompetencyResourceIds(context.role, skill).includes(resource.id));
 }
 
 function getRoadmapResourceLimit(context) {

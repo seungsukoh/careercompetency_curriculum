@@ -1824,6 +1824,8 @@ export function applyRoleExpansions(context) {
     resources.push(...priorityResources.filter((resource) => !existingResourceIds.has(resource.id)).map(normalizeResource));
 
     [
+      "ansys-innovation-courses",
+      "simscape-onramp",
       "mathworks-simscape-electrical",
       "mathworks-simscape-examples",
       "mathworks-predictive-maintenance",
@@ -1926,7 +1928,7 @@ export function applyRoleExpansions(context) {
 
     Object.entries({
       "data-center-electrical-infra-engineer": ["kdcc-data-center-operation-study", "smartspace-data-center-electrical-guide", "keea-electrical-facility-operation-training", "mathworks-simscape-electrical", "ti-power-management-training", "ni-learn-test-measurement"],
-      "data-center-cooling-engineer": ["kdcc-data-center-operation-study", "mathworks-simscape-fluids-examples", "mathworks-simscape-examples", "ansys-innovation-courses"],
+      "data-center-cooling-engineer": ["kdcc-data-center-operation-study", "mathworks-simscape-fluids-examples", "mathworks-simscape-examples", "ansys-innovation-courses", "simscape-onramp"],
       "dcim-bms-operations-engineer": ["kdcc-data-center-operation-study", "mathworks-predictive-maintenance", "freecodecamp-python-data", "boostcourse-data-ai-basic"],
       "advanced-packaging-engineer": ["semiengineering-advanced-packaging", "semiengineering-failure-analysis", "statistics-onramp", "nist-control-charts", "nist-process-capability", "letuin-semiconductor-field-practice"],
       "semiconductor-test-engineer": ["semiengineering-semiconductor-test", "letuin-spotfire-defect-analysis", "statistics-onramp", "freecodecamp-python-data", "google-ml-crash-course", "nist-control-charts", "nist-process-capability"],
@@ -1945,10 +1947,10 @@ export function applyRoleExpansions(context) {
 
     addRoleCompetencyLinks({
       "data-center-cooling-engineer": {
-        "열부하": ["kdcc-data-center-operation-study", "mathworks-simscape-fluids-examples", "ansys-innovation-courses"],
-        "Airflow": ["kdcc-data-center-operation-study", "mathworks-simscape-fluids-examples", "ansys-innovation-courses"],
+        "열부하": ["kdcc-data-center-operation-study", "mathworks-simscape-fluids-examples", "ansys-innovation-courses", "simscape-onramp"],
+        "Airflow": ["kdcc-data-center-operation-study", "mathworks-simscape-fluids-examples", "ansys-innovation-courses", "simscape-onramp"],
         "온도로그": ["mathworks-predictive-maintenance", "mathworks-simscape-fluids-examples", "kdcc-data-center-operation-study"],
-        "공조": ["kdcc-data-center-operation-study", "mathworks-simscape-fluids-examples", "mathworks-simscape-examples"]
+        "공조": ["kdcc-data-center-operation-study", "mathworks-simscape-fluids-examples", "mathworks-simscape-examples", "simscape-onramp"]
       },
       "dcim-bms-operations-engineer": {
         "반복 알람": ["kdcc-data-center-operation-study", "mathworks-predictive-maintenance", "freecodecamp-python-data"],

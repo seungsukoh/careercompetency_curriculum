@@ -3,6 +3,9 @@ dist/
 npm-debug.log*
 vite-dev*.log
 vite-preview*.log
+vite-career-*.log
 static-dev*.log
+edge-headless*.log
+.edge-headless-profile/
 tmp/
 .tmp-edge-*/
