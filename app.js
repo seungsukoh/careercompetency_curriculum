@@ -14,6 +14,10 @@ import {
   starterKeywords,
   industryLabels,
   majorLabels,
+  durationLabels,
+  durationStrategies,
+  learningGoals,
+  roleResourceExclusions,
   industryDiagnostics
 } from "./data/baseData.js";
 
@@ -2380,14 +2384,18 @@ function renderEducationSummaryPanel(context, tasks, selectedText) {
 
 function getEducationSummaryResources(context, tasks) {
   const rankedResources = getRecommendedResources(context.track, context);
+  const starterResourceIds = new Set(getStarterPackResources(context, tasks).map((resource) => resource.id));
   const focusedResources = rankedResources.filter((resource) => {
+    if (starterResourceIds.has(resource.id)) return false;
     if (state.saved.includes(resource.id)) return true;
     if (getRoleLinkedResourceIds(context.role).includes(resource.id)) return true;
     if (getResourceGapMatches(resource, context).length) return true;
     if (getResourceLinkedTasks(resource.id, tasks).length) return true;
     return !resource.broad;
   });
-  return uniqueResources([...focusedResources, ...rankedResources]).slice(0, 4);
+  return uniqueResources([...focusedResources, ...rankedResources])
+    .filter((resource) => !starterResourceIds.has(resource.id))
+    .slice(0, 4);
 }
 
 function renderEducationSummaryCard(resource, index, context, tasks) {

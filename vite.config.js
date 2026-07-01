@@ -1,6 +1,11 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  server: {
+    watch: {
+      ignored: ["**/tmp/**", "**/.tmp-edge-qa*/**"]
+    }
+  },
   build: {
     outDir: "dist",
     rollupOptions: {

@@ -5323,5 +5323,9 @@ export {
   starterKeywords,
   industryLabels,
   majorLabels,
+  durationLabels,
+  durationStrategies,
+  learningGoals,
+  roleResourceExclusions,
   industryDiagnostics
 };

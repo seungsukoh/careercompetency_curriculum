@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "smoke:render": "node scripts/smoke-render.mjs",
+    "qa:ux": "node scripts/browser-ux-sample.mjs",
     "coverage:summary": "node scripts/coverage-summary.mjs",
     "audit:education": "node scripts/audit-education-alignment.mjs",
     "validate:data": "node scripts/validate-data.mjs",
