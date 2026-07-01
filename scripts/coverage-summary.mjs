@@ -4,8 +4,9 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const coverageRoot = path.join(rootDir, "tmp", "coverage-summary");
+const coverageRoot = path.join(rootDir, "tmp", "coverage-summary", `run-${process.pid}-${Date.now()}`);
 const appPath = path.join(rootDir, "app.js");
+const baseDataPath = path.join(rootDir, "data", "baseData.js");
 const expansionPath = path.join(rootDir, "data", "roleExpansions.js");
 
 const runs = [
@@ -15,7 +16,6 @@ const runs = [
   { id: "smoke-render", script: "scripts/smoke-render.mjs" }
 ];
 
-fs.rmSync(coverageRoot, { recursive: true, force: true });
 fs.mkdirSync(coverageRoot, { recursive: true });
 
 runs.forEach((run) => {
@@ -32,10 +32,13 @@ runs.forEach((run) => {
 });
 
 const appSource = fs.readFileSync(appPath, "utf8")
-  .replace(/^import\s+\{\s*applyRoleExpansions\s*\}\s+from\s+["']\.\/data\/roleExpansions\.js["'];\s*/m, "");
+  .replace(/^import\s+\{[\s\S]*?\}\s+from\s+["']\.\/data\/baseData\.js["'];\s*/m, "");
+const baseDataSource = fs.readFileSync(baseDataPath, "utf8")
+  .replace(/^import\s+\{\s*applyRoleExpansions\s*\}\s+from\s+["']\.\/roleExpansions\.js["'];\s*/m, "")
+  .replace(/\nexport\s+\{[\s\S]*?\};\s*$/m, "");
 const expansionSource = fs.readFileSync(expansionPath, "utf8")
   .replace("export function applyRoleExpansions", "function applyRoleExpansions");
-const appStartOffset = expansionSource.length + 2;
+const appStartOffset = expansionSource.length + baseDataSource.length + 3;
 
 const appFunctions = [...appSource.matchAll(/^function\s+([A-Za-z_$][\w$]*)\s*\(/gm)]
   .map((match) => ({

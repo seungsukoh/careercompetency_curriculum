@@ -5,10 +5,14 @@ import { fileURLToPath } from "node:url";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const appPath = path.join(rootDir, "app.js");
+const baseDataPath = path.join(rootDir, "data", "baseData.js");
 const expansionPath = path.join(rootDir, "data", "roleExpansions.js");
 
 const appSource = fs.readFileSync(appPath, "utf8")
-  .replace(/^import\s+\{\s*applyRoleExpansions\s*\}\s+from\s+["']\.\/data\/roleExpansions\.js["'];\s*/m, "");
+  .replace(/^import\s+\{[\s\S]*?\}\s+from\s+["']\.\/data\/baseData\.js["'];\s*/m, "");
+const baseDataSource = fs.readFileSync(baseDataPath, "utf8")
+  .replace(/^import\s+\{\s*applyRoleExpansions\s*\}\s+from\s+["']\.\/roleExpansions\.js["'];\s*/m, "")
+  .replace(/\nexport\s+\{[\s\S]*?\};\s*$/m, "");
 const expansionSource = fs.readFileSync(expansionPath, "utf8")
   .replace("export function applyRoleExpansions", "function applyRoleExpansions");
 
@@ -188,6 +192,7 @@ sandbox.globalThis = sandbox;
 vm.createContext(sandbox);
 vm.runInContext(`
 ${expansionSource}
+${baseDataSource}
 ${appSource}
 globalThis.__runPostingQaCase = function runPostingQaCase(fixture) {
   state = {

@@ -6,6 +6,9 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          if (id.includes("data/baseData.js")) {
+            return "base-data";
+          }
           if (id.includes("data/roleExpansions.js")) {
             return "role-expansions";
           }
