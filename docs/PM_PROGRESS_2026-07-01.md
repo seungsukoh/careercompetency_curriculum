@@ -679,3 +679,34 @@ VM 기반 persona QA에 이어, 오해 위험이 큰 페르소나 3개를 실제
 1. 학생 5명 인터뷰 후 CSV에 결과를 입력한다.
 2. `npm.cmd run summarize:interviews -- docs/STUDENT_INTERVIEW_RESULTS_TEMPLATE_2026-07-01.csv`로 반복 이슈를 확인한다.
 3. 반복 이슈가 있으면 교육 데이터 추가보다 추천 이유 문구, 상세직무 카드, 주차 순서 로직을 먼저 수정한다.
+
+## 추가 진행 - 인터뷰 요약 로직 검증 고정
+
+인터뷰 결과 요약 스크립트가 실제로 2회 이상 반복된 이슈만 수정 후보로 올리는지 검증하기 위해 fixture 기반 검증 스크립트를 추가했다.
+
+산출물:
+
+- `scripts/validate-interview-summary.mjs`
+- `npm.cmd run validate:interviews`
+
+주요 내용:
+
+- 임시 CSV fixture 3건을 생성한다.
+- `first_recommendation_reason`이 2회 반복될 때만 반복 이슈로 잡히는지 확인한다.
+- 단발성 `concept_confusion`, `week_sequence` 이슈는 반복 이슈로 올리지 않는지 확인한다.
+- `npm.cmd run check`에 `validate:interviews`를 포함해 인터뷰 분석 파이프라인도 일반 회귀 검증에 들어가게 했다.
+
+검증 결과:
+
+- `node --check scripts/summarize-student-interviews.mjs` PASS
+- `node --check scripts/validate-interview-summary.mjs` PASS
+- `npm.cmd run summarize:interviews` PASS
+- `npm.cmd run validate:interviews` PASS
+  - fixture interviews 3
+  - repeatedIssue `first_recommendation_reason` count 2
+  - nextPriority `첫 추천 교육 이유`
+
+판단:
+
+- 실제 학생 데이터가 들어오기 전에도 CSV 요약 로직의 핵심 판정 기준은 재현 가능하게 검증된다.
+- 이제 파일럿 결과가 들어오면 같은 명령으로 반복 이슈를 바로 PM 수정 후보로 전환할 수 있다.

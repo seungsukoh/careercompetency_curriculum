@@ -1,10 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const defaultCsvPath = path.join(rootDir, "docs", "STUDENT_INTERVIEW_RESULTS_TEMPLATE_2026-07-01.csv");
-const inputPath = path.resolve(rootDir, process.argv[2] || defaultCsvPath);
 
 const requiredFields = [
   "interview_id",
@@ -127,69 +126,91 @@ function sortIssues(entries) {
   });
 }
 
-if (!fs.existsSync(inputPath)) {
-  console.error(`CSV file not found: ${inputPath}`);
-  process.exit(1);
-}
+export function summarizeStudentInterviews(csvPath = defaultCsvPath) {
+  const inputPath = path.resolve(rootDir, csvPath);
 
-const csvRows = parseCsv(fs.readFileSync(inputPath, "utf8"));
-const [header, ...rawRows] = csvRows;
-const missing = requiredFields.filter((field) => !header.includes(field));
+  if (!fs.existsSync(inputPath)) {
+    throw new Error(`CSV file not found: ${inputPath}`);
+  }
 
-if (missing.length) {
-  console.error(`Missing required columns: ${missing.join(", ")}`);
-  process.exit(1);
-}
+  const csvRows = parseCsv(fs.readFileSync(inputPath, "utf8"));
+  const [header, ...rawRows] = csvRows;
 
-const rows = rawRows
-  .map((rawRow) => Object.fromEntries(header.map((field, index) => [field, rawRow[index] || ""])))
-  .filter((row) => row.interview_id.trim());
+  if (!header) {
+    throw new Error(`CSV file is empty: ${inputPath}`);
+  }
 
-const overall = countBy(rows, (row) => normalizeResult(row.overall_result));
-const areaResults = Object.fromEntries(areaFields.map((field) => [
-  field,
-  countBy(rows, (row) => normalizeResult(row[field]))
-]));
+  const missing = requiredFields.filter((field) => !header.includes(field));
 
-const issues = new Map();
-rows.forEach((row) => {
-  splitCategories(row.issue_category).forEach((category) => {
-    const current = issues.get(category) || {
-      category,
-      label: issueLabels[category] || category,
-      count: 0,
-      interviewIds: [],
-      severities: {}
-    };
-    current.count += 1;
-    current.interviewIds.push(row.interview_id);
-    const severity = String(row.severity || "blank").trim().toUpperCase() || "BLANK";
-    current.severities[severity] = (current.severities[severity] || 0) + 1;
-    issues.set(category, current);
+  if (missing.length) {
+    throw new Error(`Missing required columns: ${missing.join(", ")}`);
+  }
+
+  const rows = rawRows
+    .map((rawRow) => Object.fromEntries(header.map((field, index) => [field, rawRow[index] || ""])))
+    .filter((row) => row.interview_id.trim());
+
+  const overall = countBy(rows, (row) => normalizeResult(row.overall_result));
+  const areaResults = Object.fromEntries(areaFields.map((field) => [
+    field,
+    countBy(rows, (row) => normalizeResult(row[field]))
+  ]));
+
+  const issues = new Map();
+  rows.forEach((row) => {
+    splitCategories(row.issue_category).forEach((category) => {
+      const current = issues.get(category) || {
+        category,
+        label: issueLabels[category] || category,
+        count: 0,
+        interviewIds: [],
+        severities: {}
+      };
+      current.count += 1;
+      current.interviewIds.push(row.interview_id);
+      const severity = String(row.severity || "blank").trim().toUpperCase() || "BLANK";
+      current.severities[severity] = (current.severities[severity] || 0) + 1;
+      issues.set(category, current);
+    });
   });
-});
 
-const repeatedIssues = sortIssues([...issues.values()].filter((issue) => issue.count >= 2));
-const nextPriorities = repeatedIssues.map((issue) => ({
-  issue: issue.label,
-  count: issue.count,
-  interviewIds: issue.interviewIds,
-  action: `${issue.label} 항목을 코드/문구 수정 후보로 올린다.`
-}));
+  const repeatedIssues = sortIssues([...issues.values()].filter((issue) => issue.count >= 2));
+  const nextPriorities = repeatedIssues.map((issue) => ({
+    issue: issue.label,
+    count: issue.count,
+    interviewIds: issue.interviewIds,
+    action: `${issue.label} 항목을 코드/문구 수정 후보로 올린다.`
+  }));
 
-const summary = {
-  input: path.relative(rootDir, inputPath),
-  interviews: rows.length,
-  overall,
-  areaResults,
-  repeatedIssueThreshold: 2,
-  repeatedIssues,
-  nextPriorities
-};
+  return {
+    input: path.relative(rootDir, inputPath),
+    interviews: rows.length,
+    overall,
+    areaResults,
+    repeatedIssueThreshold: 2,
+    repeatedIssues,
+    nextPriorities
+  };
+}
 
-console.log("Student interview summary:");
-console.log(JSON.stringify(summary, null, 2));
+export function printStudentInterviewSummary(summary) {
+  console.log("Student interview summary:");
+  console.log(JSON.stringify(summary, null, 2));
 
-if (!rows.length) {
-  console.log("\nNo interview rows found. Add rows to the CSV template or pass a filled CSV path.");
+  if (!summary.interviews) {
+    console.log("\nNo interview rows found. Add rows to the CSV template or pass a filled CSV path.");
+  }
+}
+
+function runCli() {
+  try {
+    printStudentInterviewSummary(summarizeStudentInterviews(process.argv[2] || defaultCsvPath));
+  } catch (error) {
+    console.error(error.message);
+    process.exit(1);
+  }
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  runCli();
 }

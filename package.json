@@ -11,11 +11,12 @@
     "qa:ux": "node scripts/browser-ux-sample.mjs",
     "qa:persona": "node scripts/persona-qa.mjs",
     "summarize:interviews": "node scripts/summarize-student-interviews.mjs",
+    "validate:interviews": "node scripts/validate-interview-summary.mjs",
     "coverage:summary": "node scripts/coverage-summary.mjs",
     "audit:education": "node scripts/audit-education-alignment.mjs",
     "validate:data": "node scripts/validate-data.mjs",
     "validate:posting": "node scripts/validate-posting-qa.mjs",
-    "check": "node scripts/validate-data.mjs && node scripts/validate-posting-qa.mjs && node scripts/smoke-render.mjs && node scripts/persona-qa.mjs && vite build"
+    "check": "node scripts/validate-data.mjs && node scripts/validate-posting-qa.mjs && node scripts/smoke-render.mjs && node scripts/persona-qa.mjs && node scripts/validate-interview-summary.mjs && vite build"
   },
   "devDependencies": {
     "vite": "6.4.3"
