@@ -2911,15 +2911,23 @@ const industryLabels = {
 
 const majorLabels = {
   mechanical: "기계공학",
+  electrical_power: "전기공학",
   electrical: "전자공학",
   chemical: "화학공학",
+  computer: "컴퓨터공학·소프트웨어",
+  industrial: "산업공학",
+  materials: "신소재·재료공학",
   both: "공학 융합/전체"
 };
 
 const majorBridgeTracks = {
   mechanical: ["electronics-pcb", "chemical-process"],
+  electrical_power: ["electronics-pcb", "embedded-control", "automotive-mobility", "semiconductor-equipment", "robotics-automation", "ai-engineering"],
   electrical: ["mechanical-cae", "chemical-process"],
-  chemical: ["electronics-pcb", "embedded-control", "mechanical-cae"]
+  chemical: ["electronics-pcb", "embedded-control", "mechanical-cae"],
+  computer: ["electronics-pcb", "robotics-automation", "automotive-mobility", "semiconductor-equipment", "manufacturing-dx", "data-center-infra"],
+  industrial: ["automotive-mobility", "semiconductor-equipment", "semiconductor-packaging-test", "data-center-infra", "ai-engineering"],
+  materials: ["production-quality", "automotive-mobility", "energy-ess", "semiconductor-equipment", "semiconductor-packaging-test"]
 };
 
 const majorRoleFitProfiles = {
@@ -5065,7 +5073,7 @@ function loadState() {
     const stored = JSON.parse(localStorage.getItem(storageKey));
     const { year: _ignoredYear, ...storedProfile } = stored?.profile || {};
     const profile = { ...defaultState.profile, ...storedProfile };
-    if (!["mechanical", "electrical_power", "electrical", "chemical"].includes(profile.major)) {
+    if (!["mechanical", "electrical_power", "electrical", "chemical", "computer", "industrial", "materials"].includes(profile.major)) {
       profile.major = defaultState.profile.major;
     }
     profile.goal = defaultState.profile.goal;

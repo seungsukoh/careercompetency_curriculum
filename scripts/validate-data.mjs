@@ -162,8 +162,10 @@ Object.entries(data.resourceTaskLinks).forEach(([resourceId]) => {
 });
 
 Object.entries(data.majorRoleFitProfiles).forEach(([major, profile]) => {
-  [...(profile.direct || []), ...(profile.bridge || [])].forEach((roleId) => {
-    if (!roleIds.has(roleId)) fail(`majorRoleFitProfiles.${major} references missing role "${roleId}"`);
+  ["direct", "bridge", "challenge"].forEach((level) => {
+    (profile[level] || []).forEach((roleId) => {
+      if (!roleIds.has(roleId)) fail(`majorRoleFitProfiles.${major}.${level} references missing role "${roleId}"`);
+    });
   });
 });
 
