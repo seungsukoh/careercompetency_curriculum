@@ -1,13 +1,18 @@
 :root {
   color-scheme: light;
-  /* Color ratio: Cream 60 / Navy 30 / Gold 10. Gold is reserved for emphasis only. */
-  --paper-cream: #f2f1ec;
+  /* Restrained engineering palette: navy is primary, warm surfaces carry density, semantic colors mark state. */
+  --paper-cream: #f5f2ea;
   --cream: var(--paper-cream);
-  --cream-surface: var(--paper-cream);
+  --cream-surface: #fffdf7;
   --heritage-navy: #0e2750;
-  --signal-gold: #c9a86a;
+  --signal-gold: #b8873b;
+  --success-green: #17634a;
+  --warning-amber: #965a08;
+  --danger-red: #9b2f35;
+  --analysis-teal: #0f6674;
+  --focus-violet: #5f4b8b;
   --deep-bg: #061328;
-  --cream-muted: color-mix(in srgb, var(--paper-cream) 92%, var(--signal-gold) 8%);
+  --cream-muted: color-mix(in srgb, var(--paper-cream) 88%, var(--signal-gold) 12%);
   --navy: var(--heritage-navy);
   --navy-dark: var(--heritage-navy);
   --navy-muted: color-mix(in srgb, var(--heritage-navy) 72%, var(--paper-cream) 28%);
@@ -22,24 +27,24 @@
   --surface-raised: var(--cream-surface);
   --ink: var(--navy-dark);
   --muted: var(--navy-muted);
-  --line: color-mix(in srgb, var(--paper-cream) 72%, var(--signal-gold) 28%);
+  --line: color-mix(in srgb, var(--paper-cream) 78%, var(--heritage-navy) 22%);
   --line-strong: color-mix(in srgb, var(--heritage-navy) 45%, var(--paper-cream) 55%);
   --primary: var(--navy);
   --primary-dark: var(--navy-dark);
   --primary-soft: var(--navy-soft);
   --accent: var(--gold);
   --accent-ink: var(--gold-dark);
-  --teal: var(--navy);
-  --teal-soft: var(--cream-muted);
-  --green: var(--navy);
-  --green-soft: var(--cream-muted);
-  --yellow: var(--gold);
-  --yellow-soft: color-mix(in srgb, var(--paper-cream) 82%, var(--signal-gold) 18%);
-  --violet: var(--navy);
-  --violet-soft: var(--cream-muted);
-  --danger: var(--heritage-navy);
-  --danger-soft: color-mix(in srgb, var(--paper-cream) 86%, var(--signal-gold) 14%);
-  --danger-line: color-mix(in srgb, var(--signal-gold) 48%, var(--paper-cream) 52%);
+  --teal: var(--analysis-teal);
+  --teal-soft: color-mix(in srgb, var(--paper-cream) 86%, var(--analysis-teal) 14%);
+  --green: var(--success-green);
+  --green-soft: color-mix(in srgb, var(--paper-cream) 86%, var(--success-green) 14%);
+  --yellow: var(--warning-amber);
+  --yellow-soft: color-mix(in srgb, var(--paper-cream) 84%, var(--warning-amber) 16%);
+  --violet: var(--focus-violet);
+  --violet-soft: color-mix(in srgb, var(--paper-cream) 87%, var(--focus-violet) 13%);
+  --danger: var(--danger-red);
+  --danger-soft: color-mix(in srgb, var(--paper-cream) 86%, var(--danger-red) 14%);
+  --danger-line: color-mix(in srgb, var(--danger-red) 42%, var(--paper-cream) 58%);
   --shadow: 0 16px 36px rgb(14 39 80 / 0.1);
   --shadow-soft: 0 8px 20px rgb(14 39 80 / 0.07);
   --focus-ring: 0 0 0 3px rgb(201 168 106 / 0.24);
@@ -199,7 +204,7 @@ a:focus-visible {
 .app-header h1 {
   font-size: var(--type-display);
   font-weight: 700;
-  letter-spacing: -0.028em;
+  letter-spacing: 0;
   line-height: 1.15;
   overflow-wrap: normal;
   white-space: nowrap;
@@ -472,9 +477,9 @@ input::placeholder {
 
 .danger-button:hover,
 .danger-button:focus-visible {
-  color: var(--primary);
+  color: var(--danger);
   background: var(--danger-soft);
-  border-color: var(--accent);
+  border-color: var(--danger);
 }
 
 .section-actions {
@@ -585,8 +590,8 @@ input::placeholder {
 .workflow-status {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 5px;
-  padding: 8px 10px;
+  gap: 8px;
+  padding: 10px 12px;
   background: var(--surface-raised);
   border-bottom: 1px solid var(--line);
 }
@@ -594,10 +599,10 @@ input::placeholder {
 .workflow-step {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 9px;
   min-width: 0;
-  min-height: 42px;
-  padding: 7px 8px;
+  min-height: 46px;
+  padding: 9px 10px;
   color: var(--muted);
   background: var(--surface-raised);
   border: 1px solid var(--line);
@@ -655,18 +660,18 @@ input::placeholder {
 }
 
 .workflow-step:nth-child(2) .workflow-step-number {
-  color: var(--muted);
-  background: var(--surface-muted);
+  color: var(--teal);
+  background: var(--teal-soft);
 }
 
 .workflow-step:nth-child(3) .workflow-step-number {
-  color: var(--muted);
-  background: var(--surface-muted);
+  color: var(--yellow);
+  background: var(--yellow-soft);
 }
 
 .workflow-step:nth-child(4) .workflow-step-number {
-  color: var(--muted);
-  background: var(--surface-muted);
+  color: var(--violet);
+  background: var(--violet-soft);
 }
 
 .workflow-step.is-complete .workflow-step-number {
@@ -861,7 +866,7 @@ input::placeholder {
 .track-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 14px;
 }
 
 .role-screen-note {
@@ -1034,11 +1039,11 @@ input::placeholder {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 9px;
+  gap: 11px;
   width: 100%;
   height: auto;
   min-height: 250px;
-  padding: 14px;
+  padding: 16px;
   appearance: none;
   -webkit-appearance: none;
   overflow: visible;
@@ -1115,7 +1120,7 @@ input::placeholder {
 .badge-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 7px;
   align-items: flex-start;
   min-width: 0;
 }
@@ -1125,8 +1130,8 @@ input::placeholder {
   align-items: center;
   min-width: 0;
   max-width: 100%;
-  min-height: 24px;
-  padding: 3px 8px;
+  min-height: 26px;
+  padding: 4px 9px;
   color: var(--muted);
   background: var(--surface-raised);
   border: 1px solid var(--line);
@@ -1150,13 +1155,13 @@ input::placeholder {
 }
 
 .badge-row .badge:nth-child(4n + 1) {
-  color: var(--accent-ink);
+  color: var(--primary-dark);
   background: var(--surface-raised);
   border-color: var(--line);
 }
 
 .badge-row .badge:nth-child(4n + 2) {
-  color: var(--accent-ink);
+  color: var(--teal);
   background: var(--surface-raised);
   border-color: var(--line);
 }
@@ -1168,7 +1173,7 @@ input::placeholder {
 }
 
 .badge-row .badge:nth-child(4n) {
-  color: var(--accent-ink);
+  color: var(--violet);
   background: var(--surface-raised);
   border-color: var(--line);
 }
@@ -1897,9 +1902,9 @@ input::placeholder {
 
 .word-cloud-panel {
   display: grid;
-  gap: 8px;
+  gap: 10px;
   margin: 14px 0 0;
-  padding: 12px;
+  padding: 14px;
   background: var(--surface-raised);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -2019,7 +2024,7 @@ input::placeholder {
 }
 
 .word-cloud-term.weight-4 {
-  color: var(--green);
+  color: var(--teal);
 }
 
 .word-cloud-term.weight-5 {
@@ -2093,7 +2098,7 @@ li {
 .roadmap,
 .gap-list {
   display: grid;
-  gap: 10px;
+  gap: 12px;
 }
 
 .reference-guidance,
@@ -2140,8 +2145,8 @@ li {
 .today-action-panel,
 .posting-compare-panel {
   display: grid;
-  gap: 12px;
-  padding: 14px;
+  gap: 14px;
+  padding: 16px;
   background: var(--surface-raised);
   border: 1px solid var(--line);
   border-radius: 6px;
@@ -2157,7 +2162,7 @@ li {
 .posting-compare-head > div,
 .posting-result-block {
   display: grid;
-  gap: 6px;
+  gap: 8px;
   min-width: 0;
 }
 
@@ -2509,14 +2514,14 @@ li {
 .education-summary-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 16px;
 }
 
 .education-summary-card {
   display: grid;
-  gap: 10px;
+  gap: 12px;
   min-width: 0;
-  padding: 14px;
+  padding: 16px;
   background: var(--surface-raised);
   border: 1px solid var(--line);
   border-left: 4px solid var(--primary);
@@ -2689,8 +2694,8 @@ li {
 
 .reference-section {
   display: grid;
-  gap: 10px;
-  padding: 12px;
+  gap: 12px;
+  padding: 14px;
   background: var(--surface-raised);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -3248,8 +3253,8 @@ li {
 .check-item {
   display: grid;
   grid-template-columns: 26px 1fr;
-  gap: 10px;
-  padding: 13px;
+  gap: 12px;
+  padding: 14px;
   background: var(--surface-raised);
 }
 
@@ -3263,7 +3268,7 @@ li {
   width: 20px;
   height: 20px;
   margin: 2px 0 0;
-  accent-color: var(--primary);
+  accent-color: var(--green);
 }
 
 .check-item > span {
@@ -3343,8 +3348,8 @@ li {
 
 .week-card {
   display: grid;
-  gap: 10px;
-  padding: 14px;
+  gap: 12px;
+  padding: 16px;
   background: var(--surface-raised);
 }
 
@@ -3414,7 +3419,7 @@ li {
 
 .roadmap-resource-list {
   display: grid;
-  gap: 12px;
+  gap: 14px;
 }
 
 .roadmap-resource-item {
@@ -3435,9 +3440,9 @@ li {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  min-height: 46px;
-  padding: 10px;
+  gap: 12px;
+  min-height: 50px;
+  padding: 12px;
   background: var(--surface);
   cursor: pointer;
   list-style: none;

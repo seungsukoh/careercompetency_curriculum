@@ -14,9 +14,10 @@
     "validate:interviews": "node scripts/validate-interview-summary.mjs",
     "coverage:summary": "node scripts/coverage-summary.mjs",
     "audit:education": "node scripts/audit-education-alignment.mjs",
+    "audit:colors": "node scripts/audit-ui-colors.mjs",
     "validate:data": "node scripts/validate-data.mjs",
     "validate:posting": "node scripts/validate-posting-qa.mjs",
-    "check": "node scripts/validate-data.mjs && node scripts/validate-posting-qa.mjs && node scripts/smoke-render.mjs && node scripts/persona-qa.mjs && node scripts/validate-interview-summary.mjs && vite build"
+    "check": "node scripts/validate-data.mjs && node scripts/validate-posting-qa.mjs && node scripts/smoke-render.mjs && node scripts/persona-qa.mjs && node scripts/validate-interview-summary.mjs && node scripts/audit-ui-colors.mjs && vite build"
   },
   "devDependencies": {
     "vite": "6.4.3"
