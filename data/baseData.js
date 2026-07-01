@@ -3142,7 +3142,13 @@ const industryLabels = {
   semiconductor: "반도체",
   manufacturing: "제조·품질",
   robotics: "로봇·자동화",
+  infrastructure: "데이터센터·인프라",
+  aerospace: "항공·우주",
+  defense: "국방·방산",
   electronics: "전자·하드웨어",
+  energy: "전력·ESS",
+  ai: "AI·데이터",
+  environment: "환경·수처리",
   chemical: "화학·정유",
   battery: "배터리·소재",
   bio: "바이오·제약"

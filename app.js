@@ -3401,7 +3401,7 @@ function getRoadmapResourcesForTask(track, task, context, resourceUseCounts = ne
     items.forEach((item) => {
       if (selected.length >= resourceLimit) return;
       if (selected.some((selectedItem) => selectedItem.resource.id === item.resource.id)) return;
-      if (shouldSkipRepeatedRoadmapResource(item.resource, resourceUseCounts)) return;
+      if (shouldSkipRepeatedRoadmapResource(item.resource, resourceUseCounts, task)) return;
       if (shouldDeferRoadmapResourceForPrerequisites(item.resource, context, resourceUseCounts)) return;
       if (shouldReserveRoadmapResourceForLaterTask(item.resource, task, context)) return;
       selected.push(item);
@@ -3427,7 +3427,7 @@ function getRoadmapResourcesForTask(track, task, context, resourceUseCounts = ne
   if (selected.length < resourceLimit) {
     selected.push(...ranked
       .filter((item) => !selected.some((selectedItem) => selectedItem.resource.id === item.resource.id))
-      .filter((item) => !shouldSkipRepeatedRoadmapResource(item.resource, resourceUseCounts))
+      .filter((item) => !shouldSkipRepeatedRoadmapResource(item.resource, resourceUseCounts, task))
       .filter((item) => !shouldDeferRoadmapResourceForPrerequisites(item.resource, context, resourceUseCounts))
       .filter((item) => !shouldReserveRoadmapResourceForLaterTask(item.resource, task, context))
       .slice(0, resourceLimit - selected.length));
@@ -3463,8 +3463,9 @@ function isRelevantRoadmapResource(resource, task, context) {
     || getTaskRoleKeywordMatches(resource, task, context.role).length;
 }
 
-function shouldSkipRepeatedRoadmapResource(resource, resourceUseCounts) {
-  return getRoadmapResourceUseCount(resourceUseCounts, resource.id) > 0 && !isReusableRoadmapResource(resource);
+function shouldSkipRepeatedRoadmapResource(resource, resourceUseCounts, task = null) {
+  if (!getRoadmapResourceUseCount(resourceUseCounts, resource.id)) return false;
+  return !(state.saved.includes(resource.id) && isExtendedRoadmapTask(task));
 }
 
 function isReusableRoadmapResource(resource) {

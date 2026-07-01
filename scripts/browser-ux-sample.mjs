@@ -18,6 +18,7 @@ const samples = [
     label: "컴퓨터공학 -> 임베디드 펌웨어",
     major: "computer",
     industry: "mobility",
+    expectedIndustryLabel: "자동차·모빌리티",
     trackId: "embedded-control",
     roleId: "embedded-firmware-engineer",
     roleTitle: "임베디드 펌웨어 엔지니어"
@@ -27,6 +28,7 @@ const samples = [
     label: "산업공학 -> 품질보증/품질관리",
     major: "industrial",
     industry: "manufacturing",
+    expectedIndustryLabel: "제조·품질",
     trackId: "production-quality",
     roleId: "quality-engineer",
     roleTitle: "품질보증·품질관리 엔지니어"
@@ -36,6 +38,7 @@ const samples = [
     label: "신소재/재료공학 -> 배터리 공정",
     major: "materials",
     industry: "battery",
+    expectedIndustryLabel: "배터리·소재",
     trackId: "chemical-process",
     roleId: "battery-process-engineer",
     roleTitle: "배터리 공정 엔지니어"
@@ -45,6 +48,7 @@ const samples = [
     label: "화학공학 -> 소재 R&D",
     major: "chemical",
     industry: "chemical",
+    expectedIndustryLabel: "화학·정유",
     trackId: "chemical-process",
     roleId: "materials-rnd-engineer",
     roleTitle: "소재 R&D 엔지니어"
@@ -54,9 +58,60 @@ const samples = [
     label: "기계공학 -> UAV 비행제어",
     major: "mechanical",
     industry: "aerospace",
+    expectedIndustryLabel: "항공·우주",
     trackId: "aerospace-defense",
     roleId: "uav-flight-control-engineer",
     roleTitle: "드론·UAM 비행제어 엔지니어"
+  },
+  {
+    id: "computer-autonomous-perception",
+    label: "컴퓨터공학 -> 자율주행 인지",
+    major: "computer",
+    industry: "ai",
+    expectedIndustryLabel: "AI·데이터",
+    trackId: "autonomous-sdv",
+    roleId: "autonomous-perception-engineer",
+    roleTitle: "자율주행 인지 알고리즘 엔지니어"
+  },
+  {
+    id: "electrical-power-data-center",
+    label: "전기공학 -> 데이터센터 전력설비",
+    major: "electrical_power",
+    industry: "infrastructure",
+    expectedIndustryLabel: "데이터센터·인프라",
+    trackId: "data-center-infra",
+    roleId: "data-center-electrical-infra-engineer",
+    roleTitle: "데이터센터 전력설비 엔지니어"
+  },
+  {
+    id: "industrial-manufacturing-dx",
+    label: "산업공학 -> 제조 데이터",
+    major: "industrial",
+    industry: "manufacturing",
+    expectedIndustryLabel: "제조·품질",
+    trackId: "manufacturing-dx",
+    roleId: "industrial-data-engineer",
+    roleTitle: "제조 데이터 엔지니어"
+  },
+  {
+    id: "materials-semiconductor-packaging",
+    label: "신소재/재료공학 -> 반도체 패키징",
+    major: "materials",
+    industry: "semiconductor",
+    expectedIndustryLabel: "반도체",
+    trackId: "semiconductor-packaging-test",
+    roleId: "advanced-packaging-engineer",
+    roleTitle: "반도체 패키징 공정 엔지니어"
+  },
+  {
+    id: "electrical-power-inverter",
+    label: "전기공학 -> 전력전자/인버터",
+    major: "electrical_power",
+    industry: "energy",
+    expectedIndustryLabel: "전력·ESS",
+    trackId: "energy-ess",
+    roleId: "power-electronics-inverter-engineer",
+    roleTitle: "전력전자·인버터 엔지니어"
   }
 ];
 
@@ -363,6 +418,7 @@ async function browserScenario(sample) {
   const overviewText = textOf("#selectedRoleOverview");
   const roadmapText = textOf("#roadmapList");
   const headerText = textOf("#headerStatus");
+  const roleContextText = textOf("#roleContextBar");
   const todayText = textOf(".today-action-panel");
   const todayEvidenceCount = document.querySelectorAll(".today-action-evidence span").length;
   const educationSummaryTitles = [...document.querySelectorAll(".education-summary-card h4")]
@@ -397,10 +453,18 @@ async function browserScenario(sample) {
   const weekDuplicateResources = firstTwoWeeks.flatMap((week) => (
     week.resources.filter((title, index) => week.resources.indexOf(title) !== index)
   ));
+  const firstTwoWeekResourceTitles = firstTwoWeeks.flatMap((week) => week.resources);
+  const duplicateAcrossFirstTwoWeeks = firstTwoWeekResourceTitles.filter((title, index) => (
+    firstTwoWeekResourceTitles.indexOf(title) !== index
+  ));
   const requiredOverviewLabels = ["전공", "상세직무내용", "직무 관련 교육"];
   const failures = [];
 
   if (!overviewText.includes(sample.roleTitle)) failures.push(`selected role title missing: ${sample.roleTitle}`);
+  if (!roleContextText.includes(sample.expectedIndustryLabel)) {
+    failures.push(`industry label missing from role context: ${sample.expectedIndustryLabel}`);
+  }
+  if (roleContextText.includes(sample.industry)) failures.push(`raw industry code visible in role context: ${sample.industry}`);
   requiredOverviewLabels.forEach((label) => {
     if (!overviewText.includes(label)) failures.push(`overview label missing: ${label}`);
   });
@@ -413,6 +477,7 @@ async function browserScenario(sample) {
   if (firstTwoWeeks.some((week) => week.resources.length === 0)) failures.push("first two roadmap weeks include an empty resource list");
   if (duplicateSummaryTitles.length) failures.push(`duplicate education summary titles: ${duplicateSummaryTitles.join(", ")}`);
   if (weekDuplicateResources.length) failures.push(`duplicate resources within a week: ${weekDuplicateResources.join(", ")}`);
+  if (duplicateAcrossFirstTwoWeeks.length) failures.push(`duplicate resources across first two weeks: ${duplicateAcrossFirstTwoWeeks.join(", ")}`);
   if (visibleOverflow.length) failures.push(`visible horizontal overflow: ${visibleOverflow.length}`);
 
   return {
@@ -420,6 +485,7 @@ async function browserScenario(sample) {
     majorLabel,
     industryLabel,
     headerText,
+    roleContextText,
     roleTitle: sample.roleTitle,
     educationSummaryTitles: educationSummaryTitles.slice(0, 5),
     firstTwoWeeks: firstTwoWeeks.map((week) => ({
