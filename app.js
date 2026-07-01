@@ -8094,10 +8094,18 @@ function getTaskPriorityReason(task, trackId) {
 
   if (roleSkill) return `${role.title}에서 반복되는 ${roleSkill} 역량을 교육자료와 산출물로 보완합니다.`;
   if (gapMatch) return `현재 역량 체크에서 비어 있는 ${gapMatch} 역량을 직접 보완합니다.`;
-  if (roleKeyword) return `${role.title} 채용공고 키워드인 ${roleKeyword}와 바로 연결됩니다.`;
+  if (roleKeyword) return `${role.title} 채용공고 키워드인 ${roleKeyword}${getAndParticle(roleKeyword)} 바로 연결됩니다.`;
   if (state.profile.goal === "portfolio" || state.profile.goal === "interview") return "짧은 기간 안에 설명 가능한 산출물을 남기는 과제입니다.";
   if (state.profile.goal === "explore") return "업무 흐름과 핵심 용어를 확인하는 과제입니다.";
   return "짧은 기간에서 직무 이해와 기본 산출물을 빠르게 만드는 과제입니다.";
+}
+
+function getAndParticle(value = "") {
+  const lastChar = [...String(value).trim()].pop();
+  if (!lastChar) return "와";
+  const code = lastChar.charCodeAt(0);
+  if (code < 0xac00 || code > 0xd7a3) return "와";
+  return (code - 0xac00) % 28 === 0 ? "와" : "과";
 }
 
 function createExtendedRoadmapTask(task, phase, planWeek) {
