@@ -112,6 +112,45 @@ const samples = [
     trackId: "energy-ess",
     roleId: "power-electronics-inverter-engineer",
     roleTitle: "전력전자·인버터 엔지니어"
+  },
+  {
+    id: "persona-short-embedded",
+    label: "페르소나: 단기 준비 학생 -> 임베디드 펌웨어",
+    major: "computer",
+    industry: "mobility",
+    expectedIndustryLabel: "자동차·모빌리티",
+    durationWeeks: "2",
+    checkedMode: "all",
+    expectedPersona: "단기 준비 학생",
+    trackId: "embedded-control",
+    roleId: "embedded-firmware-engineer",
+    roleTitle: "임베디드 펌웨어 엔지니어"
+  },
+  {
+    id: "persona-major-extension-data-center",
+    label: "페르소나: 전공 확장 학생 -> 데이터센터 전력설비",
+    major: "electrical",
+    industry: "infrastructure",
+    expectedIndustryLabel: "데이터센터·인프라",
+    durationWeeks: "4",
+    checkedMode: "all",
+    expectedPersona: "전공 확장 학생",
+    trackId: "data-center-infra",
+    roleId: "data-center-electrical-infra-engineer",
+    roleTitle: "데이터센터 전력설비 엔지니어"
+  },
+  {
+    id: "persona-challenge-autonomous",
+    label: "페르소나: 도전 직무 학생 -> 자율주행 인지",
+    major: "mechanical",
+    industry: "mobility",
+    expectedIndustryLabel: "자동차·모빌리티",
+    durationWeeks: "4",
+    checkedMode: "all",
+    expectedPersona: "도전 직무 학생",
+    trackId: "autonomous-sdv",
+    roleId: "autonomous-perception-engineer",
+    roleTitle: "자율주행 인지 알고리즘 엔지니어"
   }
 ];
 
@@ -378,6 +417,24 @@ async function browserScenario(sample) {
     select.dispatchEvent(new Event("change", { bubbles: true }));
     return select.options[select.selectedIndex]?.textContent || select.value;
   };
+  const applyDiagnosticChecks = async (mode) => {
+    if (!mode || mode === "none") return 0;
+    const allIds = [...document.querySelectorAll("[data-check-id]")]
+      .map((input) => input.dataset.checkId)
+      .filter(Boolean);
+    const checkCount = mode === "all" ? allIds.length : Math.max(0, Number(mode) || 0);
+    const targetIds = allIds.slice(0, checkCount);
+    for (const id of targetIds) {
+      const input = [...document.querySelectorAll("[data-check-id]")]
+        .find((item) => item.dataset.checkId === id);
+      if (input && !input.checked) {
+        input.checked = true;
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+        await waitFrame();
+      }
+    }
+    return targetIds.length;
+  };
   const isVisible = (element) => {
     const style = getComputedStyle(element);
     const rect = element.getBoundingClientRect();
@@ -388,7 +445,7 @@ async function browserScenario(sample) {
   await waitFrame();
   const majorLabel = setSelect("majorSelect", sample.major);
   const industryLabel = setSelect("industrySelect", sample.industry);
-  setSelect("durationSelect", "4");
+  const durationLabel = setSelect("durationSelect", sample.durationWeeks || "4");
   await waitFrame();
 
   const availableCards = [...document.querySelectorAll("[data-track-id][data-role-id]")];
@@ -412,6 +469,7 @@ async function browserScenario(sample) {
 
   roleCard.click();
   await waitFrame();
+  const checkedCount = await applyDiagnosticChecks(sample.checkedMode);
   document.querySelector("[data-view-target='roadmap']")?.click();
   await waitFrame();
 
@@ -419,6 +477,7 @@ async function browserScenario(sample) {
   const roadmapText = textOf("#roadmapList");
   const headerText = textOf("#headerStatus");
   const roleContextText = textOf("#roleContextBar");
+  const personaText = textOf(".roadmap-decision-panel");
   const todayText = textOf(".today-action-panel");
   const todayEvidenceCount = document.querySelectorAll(".today-action-evidence span").length;
   const educationSummaryTitles = [...document.querySelectorAll(".education-summary-card h4")]
@@ -465,6 +524,9 @@ async function browserScenario(sample) {
     failures.push(`industry label missing from role context: ${sample.expectedIndustryLabel}`);
   }
   if (roleContextText.includes(sample.industry)) failures.push(`raw industry code visible in role context: ${sample.industry}`);
+  if (sample.expectedPersona && !personaText.includes(sample.expectedPersona)) {
+    failures.push(`expected persona missing: ${sample.expectedPersona}`);
+  }
   requiredOverviewLabels.forEach((label) => {
     if (!overviewText.includes(label)) failures.push(`overview label missing: ${label}`);
   });
@@ -484,8 +546,11 @@ async function browserScenario(sample) {
     label: sample.label,
     majorLabel,
     industryLabel,
+    durationLabel,
+    checkedCount,
     headerText,
     roleContextText,
+    personaText: personaText.slice(0, 500),
     roleTitle: sample.roleTitle,
     educationSummaryTitles: educationSummaryTitles.slice(0, 5),
     firstTwoWeeks: firstTwoWeeks.map((week) => ({
